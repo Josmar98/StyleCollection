@@ -1,0 +1,74 @@
+<?php
+
+session_start();
+ini_set('date.timezone', 'america/caracas');
+define('SERVERURL', 'StyleCollection');
+define('ROOTURL', '/StyleCollection/oficina.stylecollection');
+$fucsia = "#ED2A77";
+$negro = "#000000";
+$blanco = "#FFFFFF";
+//"#2B73F7"
+// 237
+// 42
+// 119
+
+$color_btn_sweetalert = "#ED2A77";
+if(isset($_SESSION['recuerdame'])){
+	if($_SESSION['recuerdame']==0){
+		$timeLimiteExits = 60*30;
+		if(!isset($_SESSION['timeLimiteSystem'])){
+			$_SESSION['timeLimiteSystem'] = time();
+		}
+		$resTime = time()-$_SESSION['timeLimiteSystem'];
+		if($resTime > $timeLimiteExits){
+			unset($_SESSION['cuenta']);
+			unset($_SESSION['accesos']);
+			unset($_SESSION['id_usuario']);
+			unset($_SESSION['id_rol']);
+			unset($_SESSION['nombre_rol']);
+			unset($_SESSION['id_cliente']);
+			unset($_SESSION['username']);
+			unset($_SESSION['pass']);
+			unset($_SESSION['system_style']);
+			unset($_SESSION['admin1']);
+			unset($_SESSION['recuerdame']);
+			unset($_SESSION['timeLimiteSystem']);
+			session_unset();
+			session_destroy();
+			header("location:./");
+		}
+	}
+	$_SESSION['timeLimiteSystem'] = time();
+}
+
+if(!empty($_SESSION['id_usuario']) && !empty($_SESSION['cuenta']) && !empty($_SESSION['system_style'])){
+	$url = "home";
+	if(!empty($_GET['route'])){
+		$url = $_GET['route'];
+	}
+	if(!empty($_GET['action'])){
+		$action = $_GET['action'];
+	}
+	if(!empty($_GET['cod'])){
+		$cod = $_GET['cod'];
+	}
+	if(!empty($_GET['id'])){
+		$id = $_GET['id'];
+	}
+	$cuenta=$_SESSION['cuenta'];
+	$accesos=$_SESSION['accesos'];
+	if (is_file(__DIR__.'/app/controllers/index.php')) {
+		require_once __DIR__.'/app/controllers/index.php';
+    }else{
+        require_once __DIR__.'public/views/error404.php';
+    }
+
+####En caso de que no exista petición vía GET
+} else {
+	$url = "login";
+	if (is_file(__DIR__.'/app/controllers/index.php')) {
+		require_once __DIR__.'/app/controllers/index.php';
+    }else{
+        require_once __DIR__.'public/views/error404.php';
+    }
+}

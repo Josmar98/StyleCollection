@@ -1,0 +1,205 @@
+==========================================================================================================
+	-Se maneja Venta de cosmeticos por colecciones, al cliente se le factura X cantidad de colecciones a un precio especifico en $
+==========================================================================================================
+	********************
+	Pedido
+	********************
+	-Que cada cliente autorizado a tr4abes de una clave pueda introducir el numero de colecciones que desea que le sea despachada, este modulo de pedido debe ser accesible en untiempo estpulado un vez finalizado no podra ser modificado por el cliente.
+	
+	-La empresa analiza y aprueba el pedido para ello se requiere que el cliente pueda visualizar en su oficina virtual la cantidad de colecciones que le seran despachada.
+==========================================================================================================
+	********************
+	Facturacion
+	********************
+	-Montar factrura por cliente tomando en cuenta el nivel adquirido segun el numero de colecciones, que al registrar el cliente el sistema sea capaza de ubicarlo en un nivel(junio, senior, ... etc.). y hacer los descuentos correspondientes.
+	-Una vez totalizada la factura, el cliente puede acceder a realizar sus abonos en linea, he ir viendo el progreso de su cuenta.
+
+	(Duda: los descuentos por distribucion, se realizan desde que se reciben las colecciones? o se realizan los descuentos al realizar los pagos puntualmente)
+
+	-La factura debe ser pagada en 2 quincenas, para ello se estableceran 2 cuotas en 2 fechas topes, el pago de cada cuota arroja bonos por pago puntual que el sistema debe descontar automaticamente.
+	(Estos descuentos, son especificados por el admin, al crear el plan). 
+
+	-El sistema debe reconocer si se esta cargando algun pago que haya sido cargado por el cliente o por otro cliuente en otra factura. (Modulo de pago - con validacion)
+
+	-El sistema debe recibir pago en divisas, para ello se requiere que el cliente pueda subir los sereales y denominacion de cada billete si nque estos se descuente en la factura hasta que no hayan sido recibidos por la empresa, donde solo la persona autorizada pueda introducir el monto a descontar en divisas, despues de recibir fisicamente dicho pago.
+	(Duda: se quiere llevar registro de la fecha en que se reporta pago en divisa, y asi si se reporta tarde no cuenta como pago puntual.).
+
+	-El sistema debe arrojar la tasa (Recibida por algun autorizado) correspondiente al dia en que el abono entre a la cuenta destino. Y debe reconocer cuando se realizo en un dia, no habil bancario y que dicho calculo sea traladado al dia inmediato habil bancario.
+	(Modulo de Tasa de $, (Modulo de pago - Validado con Fecha))
+
+	-Aparte el sistema debe ser alimentado con los siguientes datos.
+	*Banco*
+	*Tipo de Transaccion*
+	*Fecha*
+	*Monto*
+	(En los pagos)
+	(Duda: Tipo de transaccion se refiere a?).
+
+	-Debe Mostrar las fechas topes de pago establecidas por la empresa(En el despacho de campaña)
+
+
+	-Debe mostrar el record de registros realizados por el lider.
+	*Monto abonado*
+	*Saldo Pendiente*
+	*Cantidad de Vouches cargados*
+
+	(Duda: record de registros realizados?)
+	(Duda: con Vouche cargado es. por cada abono - como la cantidad de registros de pago realizados? o al final de cada fecha tope? )
+
+	- Que quede guardado en el sistema
+	El historico de facturacion, Tasa del $, entre otros.
+	(Duda: Que es entre otros.)
+
+==========================================================================================================
+	************************
+	Sistema de Premiacion
+	************************
+	Cada Cliente debe hacer el pedido de sus Premios en lapso de tiempo estilapo por la empresa, al finalizar el tiempo ya no habra opcion de modificar.
+==========================================================================================================
+	*****************************
+	Niveles de liderazgo
+	*****************************
+	-AGENTE : 1 - 4 Colecciones
+	-JUNIOR: 5 - 24 Colecciones
+	-SENOR: 25 - 74 Colecciones
+	-GOLD: 75 - 174 Colecciones
+	-PLATINUM: 175 - 399 Colecciones
+	-DIAMANTE: 400 - mas Colecciones
+
+
+==========================================================================================================
+
+*******************************************************************************************************************************************
+*******************************************************************************************************************************************
+
+
+		(1, Agente, 1, 4, 10, 1)
+
+	TABLA liderazgo
+	(id_liderazgo, nombre_liderazgo, minima_cantidad, maxima_cantidad, descuento_coleccion, total_descuento, estatus)
+
+	(1, Junior, 5, 24, 6, 6, 1)			6 = 6
+	(2, Senior, 25, 74, 4, 10, 1) 			6+4 = 10
+	(3, Gold, 75, 174, 2, 12, 1)  			6+4+2 = 12
+	(4, Platinum, 175, 399, 1,50, 13,50,  1) 	6+4+2+1,50 = 13,50
+	(5, Diamante, 400, , 0,80, 14,30, 1)		6+4+2+1,50+0,80 = 14,30
+
+	TABLA Cliente
+	(id_cliente, id_liderazgo, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cedula, telefono, correo, rif y direccion de vivienda segun el rif, estatus)
+
+	TABLA nombre_productos
+	(id_np, producto, estatus)	
+
+	TABLA Productos
+	(id_producto, id_np, fragancia, precio, estatus)
+	
+	TABLA Campania
+	(id_campania, nombre_campania, anio_campania, numero_campania, estatus)
+
+	TABLA Despacho
+	(id_despacho, id_campania, numero_despacho, fecha_inicial, fecha_primera, fecha_segunda, precio_coleccion, estatus)
+	
+	TABLA Colecciones
+	(id_coleccion, id_despacho, id_producto, estatus)
+
+	TABLA Encargos (Pedido / Responsabilidad)
+	(id_encargo, id_cliente, id_despacho, cantidad_pedido, cantidad_aprobado, total_debido, total_descuento, total_pagar, estatus)
+
+	
+	TABLA Planes
+	(id_plan, nombre_plan, descuento_directo, primer_descuento, segundo_descuento, estatus)
+	(1, Standard, 10, 5, 5, 1)
+	(2, Hogar, 10, 0, 0, 1)
+	(3, Triple, 0, 0, 0, 1)
+
+	
+	tipos_colecciones
+	(id_tp, id_encargo, id_plan, cantidad_coleccion, cantidad_pagar_plan, cantidad_descuento_directo, estatus)
+	
+	
+*******************************************************************************************************************************************
+*******************************************************************************************************************************************
+	-Modulo cliente, con sus datos y su cuenta de usuario. (Solicita las colecciones que desea)
+	
+	
+	-modulo nivel de liderazgo
+
+
+	-Modulo Productos ->
+	-Modulo de Colecciones -> (depende de Productos)
+	-Modulo de Campaña - lleva las fechas topes de pago -> (depende de colecciones, nivel de liderazgo)
+	|| /*-Modulo Fechas de Campaña ->*/
+			/*-Modulo Despachos.*/
+
+	
+	-Modulo Planes de colecciones(standard, hogar, etc.) -> (depende de campaña)
+
+	-Modulo de Encargo -> (depende de usuario, campaña)
+
+	-Modulo de tipo de Colecciones(se carga por el usuario) -> (depende de pedido y planes)
+
+
+
+	*************************************************************************************
+
+	-Modulo Facturacion (Reporte) .
+
+	-Modulo de Tasa de Dolar. (lleva fecha).
+
+	-Modulo Transacciones (el admin o gerente, carga los movimientos de los banco)
+
+	-Modulo de pago (Validaciones) - (depende de tasa $, usuario, Transacciones).
+	
+
+	-Modulo Premios.
+
+	-Modulo de Premiacion -> (depende de premios y campaña)
+
+	-Modulo Seleccion de Premios -> (depende de usuario y premiacion)
+
+	-Modulo de reportes.
+
+==========================================================================================================
+	*****************
+	Data faltante
+	*****************
+
+	(Duda: 
+		¿los descuentos por distribucion, se realizan desde que se reciben las colecciones o se realizan los descuentos al realizar los pagos puntualmente?
+	)
+	(Duda: 
+		El sistema debe ser alimentado por:
+		*Banco*
+		*Tipo de Transaccion*
+		*Fecha*
+		*Monto* 
+		¿El 'tipo de transaccion' se refiere a si es trasnferencia o divisa?
+	)
+
+	(Duda: 
+		El sistema debe mostrar record de registros realizados.
+		Esos Records con los especificados? 
+		*Monto abonado*
+		*Saldo Pendiente*
+		*Cantidad de Vouches cargados*
+	)
+	(Duda: 
+		con Cantidad de Vouches cargado.
+		¿se refiere, a los abonos realizados?
+
+		-o al final de cada fecha tope? 
+	)
+	(Duda: 
+		Al cliente o Usuario: ¿que datos se deben solicitar para agregarlo? (Deberian ser los que toman al realizar el contrato)
+	)
+	(Duda:
+		Se manejarian los roles
+		-Administrador
+		-Gerente
+		-Distribuidor?
+
+		o algun otro mas.
+	)
+
+
+------------------------------------------------------------------------------------

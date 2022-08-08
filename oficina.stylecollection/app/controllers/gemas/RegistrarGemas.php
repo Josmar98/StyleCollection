@@ -1,14 +1,14 @@
 <?php 
 
-// if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
-
 		  $id_campana = $_GET['campaing'];
 		  $numero_campana = $_GET['n'];
 		  $anio_campana = $_GET['y'];
 			$id_despacho = $_GET['dpid'];
 			$num_despacho = $_GET['dp'];
 			$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
-		
+		$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+    $estado_campana = $estado_campana2[0]['estado_campana'];
+if($estado_campana=="1"){
 
 		if(!empty($_POST['clientes']) && !empty($_POST['cantidad_correspondiente']) && !empty($_POST['cantidad_gemas'])){
 			// print_r($_POST);
@@ -158,7 +158,7 @@ function consultarEstructura($id_c, $lider){
 		}
 	}
 }
-// }else{
-//    require_once 'public/views/error404.php';
-// }
+}else{
+   require_once 'public/views/error404.php';
+}
 ?>

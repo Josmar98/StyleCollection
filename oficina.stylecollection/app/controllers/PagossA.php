@@ -1,6 +1,6 @@
 <?php 
 
-if($_SESSION['nombre_rol']!="Vendedor"){	
+if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){		
 
 	$id_campana = $_GET['campaing'];
 	$numero_campana = $_GET['n'];
@@ -135,80 +135,47 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 		$bancos = $lider->consultarQuery("SELECT * FROM bancos WHERE estatus = 1");
 		$despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and campanas.estatus = 1 and despachos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho}");
 		$despacho = $despachos[0];
+		
 
 		if($pagos['ejecucion']==1){
 			$reportado = 0;
 			$diferido = 0;
 			$abonado = 0;
 			if(count($pagos)){
-				$conBancos = 0; // asdasd
-				$sinBancos = 0; // asdasd
-				$conBancosCorrectos = 0; // asdasd
-				$conBancosAlterados = 0; // asdasd
-				$eqvSinBanco = 0; // asdasd
-				$eqvConBanco = 0; // asdasd
-				$eqvConBancoCorrectos = 0; // asdasd
-				$eqvConBancoAlterados = 0; // asdasd
               foreach ($pagos as $data) {
                 if(!empty($data['id_pago'])){
-                  if($data['id_banco']==""){
-                  	$sinBancos++; // asdasd
-						if($data['estado']=="Diferido"){
-							$diferido += $data['equivalente_pago'];
-							$reportado += $data['equivalente_pago'];
-						}else if($data['estado']=="Abonado"){
-							$abonado += $data['equivalente_pago'];
-							$reportado += $data['equivalente_pago'];
-							$eqvSinBanco += $data['equivalente_pago']; // asdasd
-						}else{
-							$reportado += $data['equivalente_pago'];
-						}
-                  }
+      //             if($data['id_banco']==""){
+						// if($data['estado']=="Diferido"){
+						// 	$diferido += $data['equivalente_pago'];
+						// 	$reportado += $data['equivalente_pago'];
+						// }else if($data['estado']=="Abonado"){
+						// 	$abonado += $data['equivalente_pago'];
+						// 	$reportado += $data['equivalente_pago'];
+						// }else{
+						// 	$reportado += $data['equivalente_pago'];
+						// }
+      //             }
                   if($data['id_banco']!=""){
                   	foreach ($movimientos as $mov) {
                   		if(!empty($mov['id_pago'])){
                   			if($mov['id_pago']==$data['id_pago']){
-                  				$conBancos++;  // asdasd
-                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
-                  					$conBancosCorrectos++; // asdasd
-
+                  				if($mov['fecha_movimiento']!=$data['fecha_pago']){
 						if($data['estado']=="Diferido"){
 							$diferido += $data['equivalente_pago'];
 							$reportado += $data['equivalente_pago'];
 						}else if($data['estado']=="Abonado"){
 							$abonado += $data['equivalente_pago'];
 							$reportado += $data['equivalente_pago'];
-                  			$eqvConBancoCorrectos += $data['equivalente_pago']; // asdasd
 						}else{
 							$reportado += $data['equivalente_pago'];
 						}
-                  				}else{ // asdasd
-                  					if($data['estado']=='Abonado'){
-                  						$conBancosAlterados++;// asdasd
-                  						$eqvConBancoAlterados += $data['equivalente_pago']; // asdasd
-                  					}
                   				}
-
-                  			$eqvConBanco += $data['equivalente_pago']; // asdasd
                   			}
                   		}
                   	}
                   }
                 }
               }
-				// echo "Movimientos Totales: ".(count($movimientos)-1)."<br>"; // asdasd
-				// echo "Pagos Totales: ".(count($pagos)-1)."<br>"; // asdasd
-				// echo "Sin Bancos: ".$sinBancos."<br>"; // asdasd
-				// echo "Con Bancos: ".$conBancos."<br>"; // asdasd
-				// echo "Con Bancos Correctos: ".$conBancosCorrectos."<br>"; // asdasd
-				// echo "Con Bancos Alterados: ".$conBancosAlterados."<br>"; // asdasd
-				// echo "Equivalente_pago Sin Bancos: ".$eqvSinBanco." === ".number_format($eqvSinBanco,2,',','.')." <br>"; // asdasd
-				// echo "Equivalente_pago CON Bancos y MOVIMIENTOS: ".$eqvConBanco." === ".number_format($eqvConBanco,2,',','.')." <br>"; // asdasd
-				// echo "Equivalente_pago CON Bancos y MOVIMIENTOS CORRECTOS: ".$eqvConBancoCorrectos." === ".number_format($eqvConBancoCorrectos,2,',','.')." <br>"; // asdasd
-				// echo "Equivalente_pago CON Bancos y MOVIMIENTOS ALTERADOS: ".$eqvConBancoAlterados." === ".number_format($eqvConBancoAlterados,2,',','.')." <br>"; // asdasd
-				// echo "Equivalente_pago MOVIMIENTOS Correctos: ".($eqvConBancoAlterados+$eqvSinBanco)." === ".number_format(($eqvConBancoAlterados+$eqvSinBanco),2,',','.')." <br>"; // asdasd
-
-
 			}
 
 			if(!empty($action)){

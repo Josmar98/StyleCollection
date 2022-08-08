@@ -29,6 +29,7 @@ class Excel{
 
 	public function exportarPagosExcel($dat, $lider){
 		$pagos = $dat['pagos'];
+		$movimientos = $dat['movimientos'];
 		$bancos = $dat['bancos'];
 		$despacho = $dat['despachos'];
 		$planes = $dat['planes'];
@@ -181,63 +182,133 @@ class Excel{
 		$acumEqvContado = 0;
 		foreach ($pagos as $pago) {
 			if($pago['id_pago']){
-				if($pago['tipo_pago']=="Contado"){
-					$bank = "";
-					foreach ($bancos as $banco) {
-						if(!empty($banco['id_banco'])){
-							if($banco['id_banco']==$pago['id_banco']){
-								$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+				if($pago['id_banco']==""){
+					if($pago['tipo_pago']=="Contado"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoContado += $pago['monto_pago'];
+						$acumEqvContado += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+				}
+				if($pago['id_banco']!=""){
+					foreach ($movimientos as $mov) {
+						if(!empty($mov['id_pago'])){
+							if($mov['id_pago']==$pago['id_pago']){
+								if($mov['fecha_movimiento']==$pago['fecha_pago']){		
+					if($pago['tipo_pago']=="Contado"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoContado += $pago['monto_pago'];
+						$acumEqvContado += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+								}
 							}
 						}
 					}
-					if($pago['tipo_pago']=="Contado"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-					if($pago['tipo_pago']=="Inicial"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-                    if($pago['tipo_pago']=="Primer Pago"){
-                      $restriccion = $despacho['fecha_primera_senior'];
-                    }
-                    if($pago['tipo_pago']=="Segundo Pago"){
-                      $restriccion = $despacho['fecha_segunda_senior'];
-                    }
-                    $temporalidad = "";
-                    if($pago['fecha_pago'] <= $restriccion){
-                      $temporalidad = "Puntual";
-                    }else{
-                      $temporalidad = "Impuntual";
-                    }
-					$acumMontoContado += $pago['monto_pago'];
-					$acumEqvContado += $pago['equivalente_pago'];
-					$totalAcumMonto += $pago['monto_pago'];
-					$totalAcumEqv += $pago['equivalente_pago'];
-					$sheetInicial->setCellValue('A'.$num, $num2);
-					$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
-					$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
-					$sheetInicial->setCellValue('D'.$num, $bank);
-					$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
-					$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
-					$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
-					$sheetInicial->setCellValue('H'.$num, '$');
-					$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
-					$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
-					$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
-					$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
-					$reportado+=$pago['equivalente_pago'];
-					if($pago['estado']=="Abonado"){
-						$abonado+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
-					}
-					if($pago['estado']=="Diferido"){
-						$diferido+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
-					}
-					
-					$num++;
-					$num2++;
 				}
 			}
 		}
@@ -261,19 +332,44 @@ class Excel{
 				$abonadoContado=0;
 				foreach ($pagos as $data):
 					if(!empty($data['id_pago'])):
-						if($data['tipo_pago']=="Contado"):
-							if($data['estado']=="Abonado"){
-								$reportadoContado += $data['equivalente_pago'];
-								$abonadoContado += $data['equivalente_pago'];
-							}
-							else if($data['estado']=="Diferido"){
-								$reportadoContado += $data['equivalente_pago'];
-								$diferidoContado += $data['equivalente_pago'];
-							}else{
-								$reportadoContado += $data['equivalente_pago'];
+
+						if($data['id_banco']==""){
+							if($data['tipo_pago']=="Contado"):
+								if($data['estado']=="Abonado"){
+									$reportadoContado += $data['equivalente_pago'];
+									$abonadoContado += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoContado += $data['equivalente_pago'];
+									$diferidoContado += $data['equivalente_pago'];
+								}else{
+									$reportadoContado += $data['equivalente_pago'];
 								}
 							endif;
-						endif;
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['tipo_pago']=="Contado"):
+								if($data['estado']=="Abonado"){
+									$reportadoContado += $data['equivalente_pago'];
+									$abonadoContado += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoContado += $data['equivalente_pago'];
+									$diferidoContado += $data['equivalente_pago'];
+								}else{
+									$reportadoContado += $data['equivalente_pago'];
+								}
+							endif;
+										}
+									}
+								}
+							}
+						}
+					endif;
 				endforeach;
 			$sheetInicial->setCellValue('B'.$num, 'Reportado Contado');
 			$sheetInicial->setCellValue('C'.$num, 'Diferido Contado');
@@ -336,63 +432,133 @@ class Excel{
 		$acumEqvInicial = 0;
 		foreach ($pagos as $pago) {
 			if($pago['id_pago']){
-				if($pago['tipo_pago']=="Inicial"){
-					$bank = "";
-					foreach ($bancos as $banco) {
-						if(!empty($banco['id_banco'])){
-							if($banco['id_banco']==$pago['id_banco']){
-								$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+				if($pago['id_banco']==""){
+					if($pago['tipo_pago']=="Inicial"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoInicial += $pago['monto_pago'];
+						$acumEqvInicial += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+				}
+				if($pago['id_banco']!=""){
+					foreach ($movimientos as $mov) {
+						if(!empty($mov['id_pago'])){
+							if($mov['id_pago']==$pago['id_pago']){
+								if($mov['fecha_movimiento']==$pago['fecha_pago']){
+					if($pago['tipo_pago']=="Inicial"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoInicial += $pago['monto_pago'];
+						$acumEqvInicial += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+								}
 							}
 						}
 					}
-					if($pago['tipo_pago']=="Contado"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-					if($pago['tipo_pago']=="Inicial"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-                    if($pago['tipo_pago']=="Primer Pago"){
-                      $restriccion = $despacho['fecha_primera_senior'];
-                    }
-                    if($pago['tipo_pago']=="Segundo Pago"){
-                      $restriccion = $despacho['fecha_segunda_senior'];
-                    }
-                    $temporalidad = "";
-                    if($pago['fecha_pago'] <= $restriccion){
-                      $temporalidad = "Puntual";
-                    }else{
-                      $temporalidad = "Impuntual";
-                    }
-					$acumMontoInicial += $pago['monto_pago'];
-					$acumEqvInicial += $pago['equivalente_pago'];
-					$totalAcumMonto += $pago['monto_pago'];
-					$totalAcumEqv += $pago['equivalente_pago'];
-					$sheetInicial->setCellValue('A'.$num, $num2);
-					$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
-					$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
-					$sheetInicial->setCellValue('D'.$num, $bank);
-					$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
-					$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
-					$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
-					$sheetInicial->setCellValue('H'.$num, '$');
-					$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
-					$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
-					$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
-					$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
-					$reportado+=$pago['equivalente_pago'];
-					if($pago['estado']=="Abonado"){
-						$abonado+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
-					}
-					if($pago['estado']=="Diferido"){
-						$diferido+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
-					}
-					
-					$num++;
-					$num2++;
 				}
 			}
 		}
@@ -417,19 +583,43 @@ class Excel{
 				$abonadoInicial=0;
 				foreach ($pagos as $data):
 					if(!empty($data['id_pago'])):
-						if($data['tipo_pago']=="Inicial"):
-							if($data['estado']=="Abonado"){
-								$reportadoInicial += $data['equivalente_pago'];
-								$abonadoInicial += $data['equivalente_pago'];
-							}
-							else if($data['estado']=="Diferido"){
-								$reportadoInicial += $data['equivalente_pago'];
-								$diferidoInicial += $data['equivalente_pago'];
-							}else{
-								$reportadoInicial += $data['equivalente_pago'];
+						if($data['id_banco']==""){
+							if($data['tipo_pago']=="Inicial"):
+								if($data['estado']=="Abonado"){
+									$reportadoInicial += $data['equivalente_pago'];
+									$abonadoInicial += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoInicial += $data['equivalente_pago'];
+									$diferidoInicial += $data['equivalente_pago'];
+								}else{
+									$reportadoInicial += $data['equivalente_pago'];
 								}
 							endif;
-						endif;
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['tipo_pago']=="Inicial"):
+								if($data['estado']=="Abonado"){
+									$reportadoInicial += $data['equivalente_pago'];
+									$abonadoInicial += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoInicial += $data['equivalente_pago'];
+									$diferidoInicial += $data['equivalente_pago'];
+								}else{
+									$reportadoInicial += $data['equivalente_pago'];
+								}
+							endif;
+										}
+									}
+								}
+							}
+						}
+					endif;
 				endforeach;
 			$sheetInicial->setCellValue('B'.$num, 'Reportado Inicial');
 			$sheetInicial->setCellValue('C'.$num, 'Diferido Inicial');
@@ -492,63 +682,133 @@ class Excel{
 		$acumEqvPrimerPago = 0;
 		foreach ($pagos as $pago) {
 			if($pago['id_pago']){
-				if($pago['tipo_pago']=="Primer Pago"){
-					$bank = "";
-					foreach ($bancos as $banco) {
-						if(!empty($banco['id_banco'])){
-							if($banco['id_banco']==$pago['id_banco']){
-								$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+				if($pago['id_banco']==""){
+					if($pago['tipo_pago']=="Primer Pago"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoPrimerPago += $pago['monto_pago'];
+						$acumEqvPrimerPago += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':I'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+				}
+				if($pago['id_banco']!=""){
+					foreach ($movimientos as $mov) {
+						if(!empty($mov['id_pago'])){
+							if($mov['id_pago']==$pago['id_pago']){
+								if($mov['fecha_movimiento']==$pago['fecha_pago']){
+					if($pago['tipo_pago']=="Primer Pago"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoPrimerPago += $pago['monto_pago'];
+						$acumEqvPrimerPago += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':I'.$num)->getAlignment()->setHorizontal('center');
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						
+						$num++;
+						$num2++;
+					}
+								}
 							}
 						}
 					}
-					if($pago['tipo_pago']=="Contado"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-					if($pago['tipo_pago']=="Inicial"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-                    if($pago['tipo_pago']=="Primer Pago"){
-                      $restriccion = $despacho['fecha_primera_senior'];
-                    }
-                    if($pago['tipo_pago']=="Segundo Pago"){
-                      $restriccion = $despacho['fecha_segunda_senior'];
-                    }
-                    $temporalidad = "";
-                    if($pago['fecha_pago'] <= $restriccion){
-                      $temporalidad = "Puntual";
-                    }else{
-                      $temporalidad = "Impuntual";
-                    }
-					$acumMontoPrimerPago += $pago['monto_pago'];
-					$acumEqvPrimerPago += $pago['equivalente_pago'];
-					$totalAcumMonto += $pago['monto_pago'];
-					$totalAcumEqv += $pago['equivalente_pago'];
-					$sheetInicial->setCellValue('A'.$num, $num2);
-					$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
-					$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
-					$sheetInicial->setCellValue('D'.$num, $bank);
-					$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
-					$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
-					$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
-					$sheetInicial->setCellValue('H'.$num, '$');
-					$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
-					$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
-					$sheetInicial->getStyle('A'.$num.':I'.$num)->getAlignment()->setHorizontal('center');
-					$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
-					$reportado+=$pago['equivalente_pago'];
-					if($pago['estado']=="Abonado"){
-						$abonado+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
-					}
-					if($pago['estado']=="Diferido"){
-						$diferido+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
-					}
-					
-					$num++;
-					$num2++;
 				}
 			}
 		}
@@ -573,19 +833,43 @@ class Excel{
 				$abonadoPrimer=0;
 				foreach ($pagos as $data):
 					if(!empty($data['id_pago'])):
-						if($data['tipo_pago']=="Primer Pago"):
-							if($data['estado']=="Abonado"){
-								$reportadoPrimer += $data['equivalente_pago'];
-								$abonadoPrimer += $data['equivalente_pago'];
-							}
-							else if($data['estado']=="Diferido"){
-								$reportadoPrimer += $data['equivalente_pago'];
-								$diferidoPrimer += $data['equivalente_pago'];
-							}else{
-								$reportadoPrimer += $data['equivalente_pago'];
+						if($data['id_banco']==""){
+							if($data['tipo_pago']=="Primer Pago"):
+								if($data['estado']=="Abonado"){
+									$reportadoPrimer += $data['equivalente_pago'];
+									$abonadoPrimer += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoPrimer += $data['equivalente_pago'];
+									$diferidoPrimer += $data['equivalente_pago'];
+								}else{
+									$reportadoPrimer += $data['equivalente_pago'];
 								}
 							endif;
-						endif;
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['tipo_pago']=="Primer Pago"):
+								if($data['estado']=="Abonado"){
+									$reportadoPrimer += $data['equivalente_pago'];
+									$abonadoPrimer += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoPrimer += $data['equivalente_pago'];
+									$diferidoPrimer += $data['equivalente_pago'];
+								}else{
+									$reportadoPrimer += $data['equivalente_pago'];
+									}
+							endif;
+										}
+									}
+								}
+							}
+						}
+					endif;
 				endforeach;
 			$sheetInicial->setCellValue('B'.$num, 'Reportado 1er.P.');
 			$sheetInicial->setCellValue('C'.$num, 'Diferido 1er.P.');
@@ -647,63 +931,133 @@ class Excel{
 		$acumEqvSegundoPago = 0;
 		foreach ($pagos as $pago) {
 			if($pago['id_pago']){
-				if($pago['tipo_pago']=="Segundo Pago"){
-					$bank = "";
-					foreach ($bancos as $banco) {
-						if(!empty($banco['id_banco'])){
-							if($banco['id_banco']==$pago['id_banco']){
-								$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+				if($pago['id_banco']==""){
+					if($pago['tipo_pago']=="Segundo Pago"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoSegundoPago += $pago['monto_pago'];
+						$acumEqvSegundoPago += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+
+						$num++;
+						$num2++;
+					}
+				}
+				if($pago['id_banco']!=""){
+					foreach ($movimientos as $mov) {
+						if(!empty($mov['id_pago'])){
+							if($mov['id_pago']==$pago['id_pago']){
+								if($mov['fecha_movimiento']==$pago['fecha_pago']){
+					if($pago['tipo_pago']=="Segundo Pago"){
+						$bank = "";
+						foreach ($bancos as $banco) {
+							if(!empty($banco['id_banco'])){
+								if($banco['id_banco']==$pago['id_banco']){
+									$bank = $banco['nombre_banco']." - ".$banco['nombre_propietario'];
+								}
+							}
+						}
+						if($pago['tipo_pago']=="Contado"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+						if($pago['tipo_pago']=="Inicial"){
+	                      $restriccion = $despacho['fecha_inicial_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Primer Pago"){
+	                      $restriccion = $despacho['fecha_primera_senior'];
+	                    }
+	                    if($pago['tipo_pago']=="Segundo Pago"){
+	                      $restriccion = $despacho['fecha_segunda_senior'];
+	                    }
+	                    $temporalidad = "";
+	                    if($pago['fecha_pago'] <= $restriccion){
+	                      $temporalidad = "Puntual";
+	                    }else{
+	                      $temporalidad = "Impuntual";
+	                    }
+						$acumMontoSegundoPago += $pago['monto_pago'];
+						$acumEqvSegundoPago += $pago['equivalente_pago'];
+						$totalAcumMonto += $pago['monto_pago'];
+						$totalAcumEqv += $pago['equivalente_pago'];
+						$sheetInicial->setCellValue('A'.$num, $num2);
+						$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
+						$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
+						$sheetInicial->setCellValue('D'.$num, $bank);
+						$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
+						$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
+						$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
+						$sheetInicial->setCellValue('H'.$num, '$');
+						$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
+						$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
+						$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+						$reportado+=$pago['equivalente_pago'];
+						if($pago['estado']=="Abonado"){
+							$abonado+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
+						}
+						if($pago['estado']=="Diferido"){
+							$diferido+=$pago['equivalente_pago'];
+							$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
+						}
+						$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
+						$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
+
+						$num++;
+						$num2++;
+					}
+								}
 							}
 						}
 					}
-					if($pago['tipo_pago']=="Contado"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-					if($pago['tipo_pago']=="Inicial"){
-                      $restriccion = $despacho['fecha_inicial_senior'];
-                    }
-                    if($pago['tipo_pago']=="Primer Pago"){
-                      $restriccion = $despacho['fecha_primera_senior'];
-                    }
-                    if($pago['tipo_pago']=="Segundo Pago"){
-                      $restriccion = $despacho['fecha_segunda_senior'];
-                    }
-                    $temporalidad = "";
-                    if($pago['fecha_pago'] <= $restriccion){
-                      $temporalidad = "Puntual";
-                    }else{
-                      $temporalidad = "Impuntual";
-                    }
-					$acumMontoSegundoPago += $pago['monto_pago'];
-					$acumEqvSegundoPago += $pago['equivalente_pago'];
-					$totalAcumMonto += $pago['monto_pago'];
-					$totalAcumEqv += $pago['equivalente_pago'];
-					$sheetInicial->setCellValue('A'.$num, $num2);
-					$sheetInicial->setCellValue('B'.$num, $lider->formatFecha($pago['fecha_pago'])." - ".$temporalidad);
-					$sheetInicial->setCellValue('C'.$num, $pago['forma_pago']);
-					$sheetInicial->setCellValue('D'.$num, $bank);
-					$sheetInicial->setCellValue('E'.$num, $pago['referencia_pago']);
-					$sheetInicial->setCellValue('F'.$num, number_format($pago['monto_pago'],2,',','.'));
-					$sheetInicial->setCellValue('G'.$num, $pago['tasa_pago']);
-					$sheetInicial->setCellValue('H'.$num, '$');
-					$sheetInicial->setCellValue('I'.$num, number_format($pago['equivalente_pago'],2,',','.'));
-					$sheetInicial->setCellValue('J'.$num, $pago['tipo_pago']);
-					$sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
-					$reportado+=$pago['equivalente_pago'];
-					if($pago['estado']=="Abonado"){
-						$abonado+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('7744DD44');
-					}
-					if($pago['estado']=="Diferido"){
-						$diferido+=$pago['equivalente_pago'];
-						$sheetInicial->getStyle('A'.$num.':J'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('77DD4444');
-					}
-					$sheetInicial->getStyle('F'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('H'.$num)->getAlignment()->setHorizontal('right');
-					$sheetInicial->getStyle('I'.$num)->getAlignment()->setHorizontal('right');
-
-					$num++;
-					$num2++;
 				}
 			}
 		}
@@ -725,19 +1079,43 @@ class Excel{
 				$abonadoSegundo=0;
 				foreach ($pagos as $data):
 					if(!empty($data['id_pago'])):
-						if($data['tipo_pago']=="Segundo Pago"):
-							if($data['estado']=="Abonado"){
-								$reportadoSegundo += $data['equivalente_pago'];
-								$abonadoSegundo += $data['equivalente_pago'];
-							}
-							else if($data['estado']=="Diferido"){
-								$reportadoSegundo += $data['equivalente_pago'];
-								$diferidoSegundo += $data['equivalente_pago'];
-							}else{
-								$reportadoSegundo += $data['equivalente_pago'];
+						if($data['id_banco']==""){
+							if($data['tipo_pago']=="Segundo Pago"):
+								if($data['estado']=="Abonado"){
+									$reportadoSegundo += $data['equivalente_pago'];
+									$abonadoSegundo += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoSegundo += $data['equivalente_pago'];
+									$diferidoSegundo += $data['equivalente_pago'];
+								}else{
+									$reportadoSegundo += $data['equivalente_pago'];
 								}
 							endif;
-						endif;
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['tipo_pago']=="Segundo Pago"):
+								if($data['estado']=="Abonado"){
+									$reportadoSegundo += $data['equivalente_pago'];
+									$abonadoSegundo += $data['equivalente_pago'];
+								}
+								else if($data['estado']=="Diferido"){
+									$reportadoSegundo += $data['equivalente_pago'];
+									$diferidoSegundo += $data['equivalente_pago'];
+								}else{
+									$reportadoSegundo += $data['equivalente_pago'];
+								}
+							endif;
+										}
+									}
+								}
+							}
+						}
+					endif;
 				endforeach;
 			$sheetInicial->setCellValue('B'.$num, 'Reportado 2do.P.');
 			$sheetInicial->setCellValue('C'.$num, 'Diferido 2do.P.');

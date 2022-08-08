@@ -78,46 +78,41 @@
                       <?php if ($data2['estado_canjeo']=="Asignado"): ?>
                           <tr>
                             <td>
-                              
-                        <span class="contenido2" style='color:#CCC'>
-                          <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
-                          foreach ($campanas as $camp) {
-                            if(!empty($camp['id_campana'])){
-                              if($data2['id_campana'] == $camp['id_campana']){
-                                echo "(Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
-                              }
-                            }
-                          }
-                          // echo "<br>"; 
-                          ?>
-                        </span>
+                              <span class="contenido2" style='color:#CCC'>
+                                <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
+                                foreach ($campanas as $camp) {
+                                  if(!empty($camp['id_campana'])){
+                                    if($data2['id_campana'] == $camp['id_campana']){
+                                      echo "(Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
+                                    }
+                                  }
+                                }
+                                // echo "<br>"; 
+                                ?>
+                              </span>
                             </td>
+                            <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Analista2"): ?>
                             <td>
-                              <!-- <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_ruta'] ?>"> -->
-                                <!-- <span class="fa fa-wrench"></span> -->
-                              <!-- </button> -->
                               <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data2['id_canjeo'] ?>&permission=1">
                                 <span class="fa fa-trash"></span>
                               </button>
                             </td>
+                            <?php endif ?>
                           </tr>
                       <?php else: ?>
                         <tr>
                           <td>
-                            
-                        <span class="contenido2">
-                          <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']."<br>"; ?>
-                        </span>
-
+                            <span class="contenido2">
+                              <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']."<br>"; ?>
+                            </span>
                           </td>
+                          <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Analista2"): ?>
                           <td>
-                            <!-- <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_ruta'] ?>"> -->
-                              <!-- <span class="fa fa-wrench"></span> -->
-                            <!-- </button> -->
                             <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data2['id_canjeo'] ?>&permission=1">
                               <span class="fa fa-trash"></span>
                             </button>
                           </td>
+                          <?php endif ?>
                         </tr>
                       <?php endif; ?>
                     <?php 

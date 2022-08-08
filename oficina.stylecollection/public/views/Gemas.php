@@ -34,6 +34,24 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
+
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
+
+
         <div class="col-xs-12">
           <!-- /.box -->
           <div class="box">
@@ -127,6 +145,7 @@
                     </span>
                   </td>
                   <td style="width:8%">
+                    <?php if($estado_campana=="1"){ ?>
 
                       <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
                         <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
@@ -136,11 +155,11 @@
                         <?php } ?>
                       <?php endif ?>
 
-                        <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
-                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
-                            <span class="fa fa-trash"></span>
-                          </button>
-                        <?php } ?>
+                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
+                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
+                          <span class="fa fa-trash"></span>
+                        </button>
+                      <?php } ?>
 
                       <?php if ($data['estado']=="Disponible"): ?>
                         <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
@@ -149,6 +168,8 @@
                           </button>
                         <?php } ?>
                       <?php endif; ?>
+
+
                       <?php if ($data['estado']=="Bloqueado"): ?>
                         <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
                           <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
@@ -156,6 +177,8 @@
                           </button>
                         <?php } ?>
                       <?php endif; ?>
+
+                    <?php } ?>
                   </td>
                   <td style="width:16%">
                     <span class="contenido2">

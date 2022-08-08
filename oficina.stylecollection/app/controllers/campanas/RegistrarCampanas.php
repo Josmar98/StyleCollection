@@ -64,7 +64,7 @@ if($amCampanasR == 1){
         $num_campana = $_POST['num_campana'];
         $anio = $_POST['anio'];
         
-        $query = "INSERT INTO campanas (id_campana, nombre_campana, anio_campana, numero_campana, visibilidad, estatus) VALUES (DEFAULT, '$nombre_campana', '$anio', $num_campana, 0, 1)";
+        $query = "INSERT INTO campanas (id_campana, nombre_campana, anio_campana, numero_campana, visibilidad, estado_campana, estatus) VALUES (DEFAULT, '$nombre_campana', '$anio', $num_campana, 0, 1, 1)";
 
         $exec = $lider->registrar($query, "campanas", "id_campana");
         if($exec['ejecucion']==true){

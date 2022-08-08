@@ -16,6 +16,7 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 		$bancos = $lider->consultarQuery("SELECT * FROM bancos WHERE bancos.estatus = 1");
 		
 		$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+		$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 		$id_cliente = $_SESSION['id_cliente'];
 
 
@@ -31,20 +32,54 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			if(!empty($bank['id_banco'])){
 				$temp = [];
 				$pagoss = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$bank['id_banco']} ");
+				$movimientoss = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1 and movimientos.id_banco = {$bank['id_banco']}");
 				$reportados = 0;
 				$diferidos = 0;
 				$abonados = 0;
 				$pendientes = 0;
 				foreach ($pagoss as $pag) {
+					// if(!empty($pag['id_pago'])){
+					// 	// if($pag['id_pago'])
+					// 	if($pag['estado']=="Abonado"){
+					// 		$abonados += $pag['equivalente_pago'];
+					// 		$reportados += $pag['equivalente_pago'];
+					// 	}else if($pag['estado']=="Diferido"){
+					// 		$diferidos += $pag['equivalente_pago'];
+					// 		$reportados += $pag['equivalente_pago'];
+					// 	}else {
+					// 		$reportados += $pag['equivalente_pago'];
+					// 	}
+					// }
 					if(!empty($pag['id_pago'])){
-						if($pag['estado']=="Abonado"){
-							$abonados += $pag['equivalente_pago'];
-							$reportados += $pag['equivalente_pago'];
-						}else if($pag['estado']=="Diferido"){
-							$diferidos += $pag['equivalente_pago'];
-							$reportados += $pag['equivalente_pago'];
-						}else {
-							$reportados += $pag['equivalente_pago'];
+						if($pag['id_banco']==""){
+							if($pag['estado']=="Diferido"){
+								$diferidos += $pag['equivalente_pago'];
+								$reportados += $pag['equivalente_pago'];
+							}else if($pag['estado']=="Abonado"){
+								$abonados += $pag['equivalente_pago'];
+								$reportados += $pag['equivalente_pago'];
+							}else{
+								$reportados += $pag['equivalente_pago'];
+							}
+						}
+						if($pag['id_banco']!=""){
+							foreach ($movimientoss as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$pag['id_pago']){
+										if($mov['fecha_movimiento']==$pag['fecha_pago']){
+							if($pag['estado']=="Diferido"){
+								$diferidos += $pag['equivalente_pago'];
+								$reportados += $pag['equivalente_pago'];
+							}else if($pag['estado']=="Abonado"){
+								$abonados += $pag['equivalente_pago'];
+								$reportados += $pag['equivalente_pago'];
+							}else{
+								$reportados += $pag['equivalente_pago'];
+							}
+										}
+									}
+								}
+							}
 						}
 					}
 				}
@@ -173,17 +208,49 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			$abonado = 0;
 			$pendienteConciliar = 0;
 			if(count($pagos)>1){
-              foreach ($pagos as $data) {
-                if(!empty($data['id_pago'])){
-                  $reportado += $data['equivalente_pago'];
-                  if($data['estado']=="Diferido"){
-                    $diferido += $data['equivalente_pago'];
-                  }
-                  if($data['estado']=="Abonado"){
-                    $abonado += $data['equivalente_pago'];
-                  }
-                }
-              }
+				foreach ($pagos as $data) {
+	                // if(!empty($data['id_pago'])){
+	                //   $reportado += $data['equivalente_pago'];
+	                //   if($data['estado']=="Diferido"){
+	                //     $diferido += $data['equivalente_pago'];
+	                //   }
+	                //   if($data['estado']=="Abonado"){
+	                //     $abonado += $data['equivalente_pago'];
+	                //   }
+	                // }
+	                if(!empty($data['id_pago'])){
+	                	if($data['id_banco']==""){
+	                		if($data['estado']=="Diferido"){
+	                			$diferido += $data['equivalente_pago'];
+	                			$reportado += $data['equivalente_pago'];
+	                		}else if($data['estado']=="Abonado"){
+	                			$abonado += $data['equivalente_pago'];
+	                			$reportado += $data['equivalente_pago'];
+	                		}else{
+	                			$reportado += $data['equivalente_pago'];
+	                		}
+	                	}
+	                	if($data['id_banco']!=""){
+	                		foreach ($movimientos as $mov) {
+	                			if(!empty($mov['id_pago'])){
+	                				if($mov['id_pago']==$data['id_pago']){
+	                					if($mov['fecha_movimiento']==$data['fecha_pago']){
+	                			if($data['estado']=="Diferido"){
+	                				$diferido += $data['equivalente_pago'];
+	                				$reportado += $data['equivalente_pago'];
+	                			}else if($data['estado']=="Abonado"){
+	                				$abonado += $data['equivalente_pago'];
+	                				$reportado += $data['equivalente_pago'];
+	                			}else{
+	                				$reportado += $data['equivalente_pago'];
+	                			}
+	                					}
+	                				}
+								}
+							}
+						}
+					}
+				}
 			}
 			$pendienteConciliar = $reportado-$diferido-$abonado;
 

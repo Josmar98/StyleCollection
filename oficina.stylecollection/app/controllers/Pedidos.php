@@ -250,18 +250,42 @@ if(!empty($_POST['id_cliente']) && !empty($_POST['id']) && !empty($_POST['descue
 					// print_r($bonosEstructura);
 				}
 				$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				$reportado = 0;
 				$diferido = 0;
 				$abonado = 0;
 				if(count($pagos)){
 	              foreach ($pagos as $data) {
 	                if(!empty($data['id_pago'])){
-	                  $reportado += $data['equivalente_pago'];
-	                  if($data['estado']=="Diferido"){
-	                    $diferido += $data['equivalente_pago'];
+	                  if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
 	                  }
-	                  if($data['estado']=="Abonado"){
-	                    $abonado += $data['equivalente_pago'];
+	                  if($data['id_banco']!=""){
+	                  	foreach ($movimientos as $mov) {
+	                  		if(!empty($mov['id_pago'])){
+	                  			if($mov['id_pago']==$data['id_pago']){
+	                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+	                  				}
+	                  			}
+	                  		}
+	                  	}
 	                  }
 	                }
 	              }
@@ -466,18 +490,42 @@ if(!empty($_POST['id_pedido_modal']) && !empty($_POST['tipo_bono']) && !empty($_
 					// print_r($bonosEstructura);
 				}
 				$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				$reportado = 0;
 				$diferido = 0;
 				$abonado = 0;
 				if(count($pagos)){
 	              foreach ($pagos as $data) {
 	                if(!empty($data['id_pago'])){
-	                  $reportado += $data['equivalente_pago'];
-	                  if($data['estado']=="Diferido"){
-	                    $diferido += $data['equivalente_pago'];
+	                  if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
 	                  }
-	                  if($data['estado']=="Abonado"){
-	                    $abonado += $data['equivalente_pago'];
+	                  if($data['id_banco']!=""){
+	                  	foreach ($movimientos as $mov) {
+	                  		if(!empty($mov['id_pago'])){
+	                  			if($mov['id_pago']==$data['id_pago']){
+	                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+	                  				}
+	                  			}
+	                  		}
+	                  	}
 	                  }
 	                }
 	              }
@@ -696,18 +744,42 @@ if(!empty($_POST['id_pedido_modal']) && !empty($_POST['id']) && !empty($_POST['t
 					// print_r($bonosEstructura);
 				}
 				$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				$reportado = 0;
 				$diferido = 0;
 				$abonado = 0;
 				if(count($pagos)){
 	              foreach ($pagos as $data) {
 	                if(!empty($data['id_pago'])){
-	                  $reportado += $data['equivalente_pago'];
-	                  if($data['estado']=="Diferido"){
-	                    $diferido += $data['equivalente_pago'];
+	                  if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
 	                  }
-	                  if($data['estado']=="Abonado"){
-	                    $abonado += $data['equivalente_pago'];
+	                  if($data['id_banco']!=""){
+	                  	foreach ($movimientos as $mov) {
+	                  		if(!empty($mov['id_pago'])){
+	                  			if($mov['id_pago']==$data['id_pago']){
+	                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+	                  				}
+	                  			}
+	                  		}
+	                  	}
 	                  }
 	                }
 	              }
@@ -951,6 +1023,7 @@ if(isset($_POST['cantidadTraspaso']) && !empty($_POST['restoDisponible']) && !em
 					// print_r($bonosEstructura);
 				}
 				$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				$reportado = 0;
 				$diferido = 0;
 				$abonado = 0;
@@ -985,12 +1058,35 @@ if(isset($_POST['cantidadTraspaso']) && !empty($_POST['restoDisponible']) && !em
 				if(count($pagos)){
 	              foreach ($pagos as $data) {
 	                if(!empty($data['id_pago'])){
-	                  $reportado += $data['equivalente_pago'];
-	                  if($data['estado']=="Diferido"){
-	                    $diferido += $data['equivalente_pago'];
+	                  if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
 	                  }
-	                  if($data['estado']=="Abonado"){
-	                    $abonado += $data['equivalente_pago'];
+	                  if($data['id_banco']!=""){
+	                  	foreach ($movimientos as $mov) {
+	                  		if(!empty($mov['id_pago'])){
+	                  			if($mov['id_pago']==$data['id_pago']){
+	                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+	                  				}
+	                  			}
+	                  		}
+	                  	}
 	                  }
 	                }
 	              }
@@ -1235,6 +1331,8 @@ if(!empty($_POST['cantidad'])){
 					// print_r($bonosEstructura);
 				}
 				$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				$reportado = 0;
 				$diferido = 0;
 				$abonado = 0;
@@ -1269,12 +1367,35 @@ if(!empty($_POST['cantidad'])){
 				if(count($pagos)){
 	              foreach ($pagos as $data) {
 	                if(!empty($data['id_pago'])){
-	                  $reportado += $data['equivalente_pago'];
-	                  if($data['estado']=="Diferido"){
-	                    $diferido += $data['equivalente_pago'];
+	                  if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
 	                  }
-	                  if($data['estado']=="Abonado"){
-	                    $abonado += $data['equivalente_pago'];
+	                  if($data['id_banco']!=""){
+	                  	foreach ($movimientos as $mov) {
+	                  		if(!empty($mov['id_pago'])){
+	                  			if($mov['id_pago']==$data['id_pago']){
+	                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+	                  				}
+	                  			}
+	                  		}
+	                  	}
 	                  }
 	                }
 	              }
@@ -1510,6 +1631,7 @@ if($accesoSinPost == "1"){
 					}
 
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 					$reportado = 0;
 					$diferido = 0;
 					$abonado = 0;
@@ -1524,12 +1646,35 @@ if($accesoSinPost == "1"){
 					if(count($pagos)){
 		              foreach ($pagos as $data) {
 		                if(!empty($data['id_pago'])){
-		                  $reportado += $data['equivalente_pago'];
-		                  if($data['estado']=="Diferido"){
-		                    $diferido += $data['equivalente_pago'];
+		                  if($data['id_banco']==""){
+								if($data['estado']=="Diferido"){
+									$diferido += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else if($data['estado']=="Abonado"){
+									$abonado += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else{
+									$reportado += $data['equivalente_pago'];
+								}
 		                  }
-		                  if($data['estado']=="Abonado"){
-		                    $abonado += $data['equivalente_pago'];
+		                  if($data['id_banco']!=""){
+		                  	foreach ($movimientos as $mov) {
+		                  		if(!empty($mov['id_pago'])){
+		                  			if($mov['id_pago']==$data['id_pago']){
+		                  				if($mov['fecha_movimiento']==$data['fecha_pago']){
+								if($data['estado']=="Diferido"){
+									$diferido += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else if($data['estado']=="Abonado"){
+									$abonado += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else{
+									$reportado += $data['equivalente_pago'];
+								}
+		                  				}
+		                  			}
+		                  		}
+		                  	}
 		                  }
 		                }
 		              }
@@ -1543,7 +1688,20 @@ if($accesoSinPost == "1"){
 					if(count($pagosGemas)>1){
 						foreach ($pagosGemas as $key) {
 							if(!empty($key['fecha_pago'])){
-								$abonado_lider_gemas += $key['equivalente_pago']; 
+								if($key['id_banco']==""){
+									$abonado_lider_gemas += $key['equivalente_pago']; 
+								}
+								if($key['id_banco']!=""){
+									foreach ($movimientos as $mov) {
+				                  		if(!empty($mov['id_pago'])){
+				                  			if($mov['id_pago']==$key['id_pago']){
+				                  				if($mov['fecha_movimiento']==$key['fecha_pago']){
+									$abonado_lider_gemas += $key['equivalente_pago']; 
+				                  				}
+				                  			}
+				                  		}
+				                  	}
+								}
 							}
 						}
 						$fecha_pago_cierre_lider = $pagosGemas[0]['fecha_pago'];

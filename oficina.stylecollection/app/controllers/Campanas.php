@@ -59,6 +59,33 @@ if($amCampanasC == 1){
 	  echo $response;
 	}
 
+	if(!empty($_POST['validarEstadoCamp'])){
+	  $estadoCamp = $_POST['estadoCamp'];
+	  $id = $_POST['id_camp'];
+	  $campAnt = $lider->consultarQuery("SELECT * FROM campanas WHERE id_campana = $id");
+	  $query = "UPDATE campanas SET estado_campana = $estadoCamp WHERE id_campana = $id";
+	  $exec = $lider->modificar($query);
+	  if($exec['ejecucion']==true){
+	    $response = "1";
+	    if(!empty($modulo) && !empty($accion)){
+	        $campAnt = $campAnt[0];
+	        $elementos = array(
+	          "Nombres"=> [0=>"Id", 1=>ucwords("Nombre De Campaña"), 2=> ucwords("Anio De Campaña"), 3=> ucwords("Numero De Campaña"), 4=>"Estado de Campaña", 5=>"Estatus"],
+	          "Anterior"=> [ 0 =>$id, 1 =>$campAnt['nombre_campana'], 2 =>$campAnt['anio_campana'], 3 =>$campAnt['numero_campana'], 4=>$campAnt['estado_campana'], 5=>$campAnt['estatus'] ],
+	          "Actual"=> [ 0=> $id, 1=> $campAnt['nombre_campana'], 2=> $campAnt['anio_campana'] , 3=>$campAnt['numero_campana'], 4=>$estadoCamp, 5=>$campAnt['estatus'] ]
+	        );
+	        $elementosJson = json_encode($elementos, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
+	        $fecha = date('Y-m-d');
+	        $hora = date('H:i:a');
+	        $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora, elementos) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Campañas', 'Editar', '{$fecha}', '{$hora}', '{$elementosJson}')";
+	        $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+	      }
+	  }else{
+	    $response = "2";
+	  }
+	  echo $response;
+	}
+
 	if(!empty($_GET['permission']) && $_GET['permission'] == 1 ){
 		if($amCampanasB == 1){
 

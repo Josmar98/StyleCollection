@@ -31,7 +31,7 @@
       </ol>
     </section>
           <br>
-              <?php if($_SESSION['nombre_rol']!="Vendedor"){$rut = "Pagos";}else{$rut="MisPagos";} ?>
+              <?php if($_SESSION['nombre_rol']!="Vendedor"){$rut = "Pagoss";}else{$rut="MisPagos";} ?>
               <div style="width:100%;text-align:center;"><a href="?<?php echo $menu3; ?>route=<?php echo $rut ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$url?></a></div>
     <!-- Main content -->
     <section class="content">
@@ -101,13 +101,33 @@
               if(!empty($pagos) && count($pagos)>1){
                 foreach ($pagos as $pag) {
                   if(!empty($pag['equivalente_pago'])){
-                    if($pag['estado']=="Abonado"){
-                      if($pag['tipo_pago']=="Contado"){
-                        $contado += $pag['equivalente_pago'];
+                    if($pag['id_banco']==""){
+                        if($pag['estado']=="Abonado"){
+                          if($pag['tipo_pago']=="Contado"){
+                            $contado += $pag['equivalente_pago'];
+                          }
+                          if($pag['tipo_pago']=="Primer Pago"){
+                            $abonos += $pag['equivalente_pago'];
+                          }                  
+                        }
+                    }
+                    if($pag['id_banco']!=""){
+                      foreach ($movimientos as $mov) {
+                        if(!empty($mov['id_pago'])){
+                          if($mov['id_pago']==$pag['id_pago']){
+                            if($mov['fecha_movimiento']==$pag['fecha_pago']){
+                        if($pag['estado']=="Abonado"){
+                          if($pag['tipo_pago']=="Contado"){
+                            $contado += $pag['equivalente_pago'];
+                          }
+                          if($pag['tipo_pago']=="Primer Pago"){
+                            $abonos += $pag['equivalente_pago'];
+                          }                  
+                        }
+                            }
+                          }
+                        }
                       }
-                      if($pag['tipo_pago']=="Primer Pago"){
-                        $abonos += $pag['equivalente_pago'];
-                      }                  
                     }
                   }
                 }

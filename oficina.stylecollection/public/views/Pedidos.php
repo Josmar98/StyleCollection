@@ -53,11 +53,28 @@
     <!-- Main content -->
     <section class="content">
 
-      <div class="row">
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        </div>
+        <?php endif; ?>
         
+      <div class="row">
         <!-- /.col -->
-        <div class="col-md-12">
-          <div class="nav-tabs-custom">
+        <div class=" col-md-12">
+          <div class="box nav-tabs-custom">
             <div class="tab-content">
               <div class="active tab-pane" id="activity">
                   <a href="?<?=$menu?>&route=Homing2" id="link" class="btn" style="border-radius:50%;padding:10px 12.5px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>">
@@ -168,7 +185,6 @@
                 <div class="row">
                   <div class="col-xs-12">
                     <span style="color:#000;font-size:2em">Aprobacion de Pedidos</span>
-                    
                   </div>
                 </div>
 
@@ -219,7 +235,7 @@
                                 <?php } ?>
                                 <?php if(count($planesCol)<2){ ?>
                                   <b><u>
-                                    <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>">Seleccionar Planes</a>
+                                    <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Planes</a>
                                   </u></b>
                                 <?php } ?>
                               
@@ -231,7 +247,7 @@
                                   </u></b>
                                 <?php }else if(count($planesCol)>1){ ?>
                                   <b><u>
-                                    <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>">Seleccionar Premios</a>
+                                    <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Premios</a>
                                   </u></b>
                                 <?php } ?>
                               
@@ -276,49 +292,54 @@
                                   }
                                 }
                                ?>
-                              <?php if($configbonoContado=="1"): ?>
-                              <b><u>
-                                  <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
-                              </u></b> 
-                              <br>
-                              <?php endif; ?>
+                              <?php if($estado_campana=="1"){ ?>
+                                <?php if($configbonoContado=="1"): ?>
+                                <b><u>
+                                    <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
+                                </u></b> 
+                                <br>
+                                <?php endif; ?>
 
-                              <?php if($configbonoPrimerPago=="1"): ?>
-                              <br>
-                              <b><u>
-                                  <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
-                              </u></b> 
-                              <br>
-                              <?php endif; ?>
+                                <?php if($configbonoPrimerPago=="1"): ?>
+                                <br>
+                                <b><u>
+                                    <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
+                                </u></b> 
+                                <br>
+                                <?php endif; ?>
 
-                              <?php if($configbonoSegundoPago=="1"): ?>
-                              <br>
-                              <b><u>
-                                  <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
-                              </u></b>                                
-                              <?php endif; ?>
+                                <?php if($configbonoSegundoPago=="1"): ?>
+                                <br>
+                                <b><u>
+                                    <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
+                                </u></b>                                
+                                <?php endif; ?>
+                              <?php  } ?>
                             </div>
 
-                            <?php 
-                            if(!empty($estructuraLideres)){
-                              if(count($estructuraLideres) > 0){
-                                if($pedido['cantidad_aprobado']>0){
-                                  if($configbonoCierreEstructura=="1"):
-                                    if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
-                                    <div class="col-xs-12 col-sm-6" style="text-align:right;">
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
-                                      </u></b>                              
-                                    </div>
-                                  <?php 
-                                    }
-                                  endif; 
-                                } 
+                            <?php if($estado_campana=="1"){ ?>
+                              <?php 
+                              if(!empty($estructuraLideres)){
+                                if(count($estructuraLideres) > 0){
+                                  if($pedido['cantidad_aprobado']>0){
+                                    if($configbonoCierreEstructura=="1"):
+                                      if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
+                                      <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                                        <br>
+                                        <b><u>
+                                            <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
+                                        </u></b>                              
+                                      </div>
+                                    <?php 
+                                      }
+                                    endif; 
+                                  } 
+                                }
                               }
-                            }
 
-                            ?>
+                              ?>
+                            <?php  } ?>
+
                           </div>
                         <?php endif; ?>
 
@@ -349,10 +370,9 @@
                       <div class="col-xs-12">
 
                         <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                        <input class="form-control" id="cantidad" step="1" name="cantidad" min="1" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?>>
+                        <input class="form-control" id="cantidad" step="1" name="cantidad" min="1" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
                         <span id="error_cantidad" class="errors"></span>
                       </div>
-                      
                     </div>
                     <br>
                     <div class="row">
@@ -360,7 +380,7 @@
                         <!-- <button class="form-control" style="background:<?php echo $color_btn_sweetalert ?>;color:#FFF;">Enviar</button> -->  
                         <?php if ($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"): ?>
                           
-                        <span type="submit" class="btn enviar">Aprobar</span>
+                        <span type="submit" <?php if($estado_campana=="1"){ echo 'class="btn enviar"'; } ?>  <?php if($estado_campana=="0"){ echo "disabled class='btn enviar2'"; } ?>>Aprobar</span>
                         <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
                         <button class="btn-enviar d-none" disabled="" >aprobar</button>
 
@@ -368,8 +388,6 @@
                       </div>
                     </div>
                   </form>
-
-
 
 
                         <?php }  ?>
@@ -386,6 +404,7 @@
                       $ruta = "Pagos&admin=1&lider=".$pedido['id_cliente'];
                     }
                   ?>
+
                   <hr>
                   <div class="row text-center" style="padding:10px 20px;">
                     <div class="col-xs-4" style="padding:10px 0px;background:;border:1px solid #ccc">
@@ -1130,7 +1149,7 @@
                                 ?>
                                 <b>$<?php echo number_format($restaTotalResponsabilidad,2,',','.') ?></b>
                               </span>
-
+                              <?php if($estado_campana=="1"){ ?>
                               <?php
                                 if ($Opttraspasarexcedente=="1"):
                                   $restoDisponible = $restaTotalResponsabilidad*-1;
@@ -1144,13 +1163,16 @@
                                 <?php 
                                   }else{
                                     if($newrestoDisponible > 0 ): ?>
-                                      <br>
-                                      <style>.traspasar:hover{cursor:pointer;}</style>
-                                      <span class="modalTraspasar" style="color:#C00;"><u class="traspasar"><b>Traspasar</b></u></span>
+                                      <?php if ($cliente['id_cliente'] == $cuenta['id_cliente']): ?>
+                                        <br>
+                                        <style>.traspasar:hover{cursor:pointer;}</style>
+                                        <span class="modalTraspasar" style="color:#C00;"><u class="traspasar"><b>Traspasar</b></u></span>
+                                      <?php endif ?>
                                     <?php endif;
                                   }
                               ?>
                               <?php endif; ?>
+                              <?php } ?>
 
 
                             </div>

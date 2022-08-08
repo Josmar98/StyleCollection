@@ -164,15 +164,19 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.estatus = 1");
 				}
 			}else{
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}
 			}
 		}else{
@@ -182,15 +186,19 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.estatus = 1");
 				}
 			}else{
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}
 			}
 			$id_cliente = $_SESSION['id_cliente'];
@@ -240,16 +248,20 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.estatus = 1");
 				}
 			}else{
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}
 			}
 		}else{
@@ -259,15 +271,19 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.fecha_pago BETWEEN '$rangoI' and '$rangoF' ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.fecha_movimiento BETWEEN '$rangoI' and '$rangoF' and movimientos.estatus = 1");
 				}
 			}else{
 				if(!empty($_GET['Banco'])){
 					$id_banco = $_GET['Banco'];
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pagos.id_banco = {$id_banco} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.id_banco = {$id_banco} and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}
 			}
 			$id_cliente = $_SESSION['id_cliente'];
@@ -388,17 +404,49 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			$diferido = 0;
 			$abonado = 0;
 			if(count($pagos)){
-              foreach ($pagos as $data) {
-                if(!empty($data['id_pago'])){
-                  $reportado += $data['equivalente_pago'];
-                  if($data['estado']=="Diferido"){
-                    $diferido += $data['equivalente_pago'];
-                  }
-                  if($data['estado']=="Abonado"){
-                    $abonado += $data['equivalente_pago'];
-                  }
-                }
-              }
+				foreach ($pagos as $data) {
+					// if(!empty($data['id_pago'])){
+					// 	$reportado += $data['equivalente_pago'];
+					// 	if($data['estado']=="Diferido"){
+					// 		$diferido += $data['equivalente_pago'];
+					// 	}
+					// 	if($data['estado']=="Abonado"){
+					// 		$abonado += $data['equivalente_pago'];
+					// 	}
+					// }
+					if(!empty($data['id_pago'])){
+						if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			if(!empty($action)){

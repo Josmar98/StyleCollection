@@ -29,8 +29,10 @@
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.estado = 'Diferido' and  campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id_cliente}  ORDER BY fecha_pago asc");
 				}else if(!empty($_GET['Abonado'])){
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.estado = 'Abonado' and  campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id_cliente}  ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id_cliente} ORDER BY fecha_pago asc");
+					$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 				}
 			
 		
@@ -110,17 +112,50 @@
 			$diferido = 0;
 			$abonado = 0;
 			if(count($pagos)){
-              foreach ($pagos as $data) {
-                if(!empty($data['id_pago'])){
-                  $reportado += $data['equivalente_pago'];
-                  if($data['estado']=="Diferido"){
-                    $diferido += $data['equivalente_pago'];
-                  }
-                  if($data['estado']=="Abonado"){
-                    $abonado += $data['equivalente_pago'];
-                  }
-                }
-              }
+				foreach ($pagos as $data) {
+              //   if(!empty($data['id_pago'])){
+              //     $reportado += $data['equivalente_pago'];
+              //     if($data['estado']=="Diferido"){
+              //       $diferido += $data['equivalente_pago'];
+              //     }
+              //     if($data['estado']=="Abonado"){
+              //       $abonado += $data['equivalente_pago'];
+              //     }
+              //   }
+					if(!empty($data['id_pago'])){
+						if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+						}
+						if($data['id_banco']!=""){
+
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -131,6 +166,7 @@
 
 	$libro = new Excel($file, "Xlsx");
 	$dat['pagos'] = $pagos;
+	$dat['movimientos'] = $movimientos;
 	$dat['bancos'] = $bancos;
 	$dat['despachos'] = $despacho;
 	$dat['planes'] = $planes;

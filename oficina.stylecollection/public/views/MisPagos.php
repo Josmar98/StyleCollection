@@ -36,6 +36,21 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
         <div class="col-xs-12">
           <!-- /.box -->
               <?php 
@@ -54,9 +69,11 @@
               }
               ?>
           <div class="box">
-            <?php if ($optHabilitarPagos=="1" && $registropagosboton=="1"): ?>
-              <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
-            <?php endif; ?>
+            <?php if($estado_campana=="1"){ ?>
+              <?php if ($optHabilitarPagos=="1" && $registropagosboton=="1"): ?>
+                <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
+              <?php endif; ?>
+            <?php } ?>
             <div class="box-header">
               <a onclick="regresarAtras()" id="link" class="btn" style="border-radius:50%;padding:10px 12.5px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>">
                 <i class="fa fa-arrow-left" style="font-size:2em"></i>
@@ -285,6 +302,9 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"):
+                              if($data['id_banco']==""):
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosContado += $data['monto_pago'];
@@ -843,6 +863,584 @@
                       </tr>
                         <?php
                               }
+
+
+                              endif;
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                  if(!empty($mov['id_pago'])){
+                                    if($mov['id_pago']==$data['id_pago']){
+                                      if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                              if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                      ?>
+                      <?php if($data['estado']=="Abonado"){ 
+                          if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                        $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                                <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }
+                              else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+                                      }
+                                    }
+                                  }
+                                }
+                              endif;
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -894,18 +1492,42 @@
                   $abonadoContado=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Contado"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoContado += $data['equivalente_pago'];
-                              $abonadoContado += $data['equivalente_pago'];
+                          if($data['id_banco']==""){
+                            if($data['tipo_pago']=="Contado"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $abonadoContado += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $diferidoContado += $data['equivalente_pago'];
+                              }else{
+                                $reportadoContado += $data['equivalente_pago'];
+                              }
+                            endif;
+                          }
+                          if($data['id_banco']!=""){
+                            foreach ($movimientos as $mov) {
+                              if(!empty($mov['id_pago'])){
+                                if($mov['id_pago']==$data['id_pago']){
+                                  if($mov['fecha_movimiento']==$data['fecha_pago']){
+                            if($data['tipo_pago']=="Contado"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $abonadoContado += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $diferidoContado += $data['equivalente_pago'];
+                              }else{
+                                $reportadoContado += $data['equivalente_pago'];
+                              }
+                            endif;
+                                  }
+                                }
+                              }
                             }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoContado += $data['equivalente_pago'];
-                              $diferidoContado += $data['equivalente_pago'];
-                            }else{
-                              $reportadoContado += $data['equivalente_pago'];
-                            }
-                          endif;
+                          }
                         endif;
                   endforeach;
                 ?>
@@ -976,6 +1598,10 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
+                              
+                              if($data['id_banco']==""):
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosI += $data['monto_pago'];
@@ -1534,6 +2160,587 @@
                       </tr>
                         <?php
                               }
+
+
+                              endif;
+
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                  if(!empty($mov['id_pago'])){
+                                    if($mov['id_pago']==$data['id_pago']){
+                                      if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                                if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                      ?>
+                      <?php if($data['estado']=="Abonado"){ 
+                          if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                        $equivalenciasAbonadasI += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                                <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }
+                              else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasI += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasI += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              
+                          $equivalenciasAbonadasI += $data['equivalente_pago'];
+                            }
+                         ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+
+                                      }
+                                    }
+                                  }
+                                }
+                              endif;  
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -1584,18 +2791,42 @@
                   $abonadoInicial=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Inicial"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoInicial += $data['equivalente_pago'];
-                              $abonadoInicial += $data['equivalente_pago'];
+                          if($data['id_banco']==""){
+                            if($data['tipo_pago']=="Inicial"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $abonadoInicial += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $diferidoInicial += $data['equivalente_pago'];
+                              }else{
+                                $reportadoInicial += $data['equivalente_pago'];
+                              }
+                            endif;                                                      
+                          }
+                          if($data['id_banco']!=""){
+                            foreach ($movimientos as $mov) {
+                              if(!empty($mov['id_pago'])){
+                                if($mov['id_pago']==$data['id_pago']){
+                                  if($mov['fecha_movimiento']==$data['fecha_pago']){
+                            if($data['tipo_pago']=="Inicial"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $abonadoInicial += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $diferidoInicial += $data['equivalente_pago'];
+                              }else{
+                                $reportadoInicial += $data['equivalente_pago'];
+                              }
+                            endif;    
+                                  }
+                                }
+                              }
                             }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoInicial += $data['equivalente_pago'];
-                              $diferidoInicial += $data['equivalente_pago'];
-                            }else{
-                              $reportadoInicial += $data['equivalente_pago'];
-                            }
-                          endif;
+                          }
                         endif;
                   endforeach;
                 ?>
@@ -1666,6 +2897,11 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
+
+                              if($data['id_banco']==""):
+
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosP1 += $data['monto_pago'];
@@ -2223,6 +3459,585 @@
                       </tr>
                         <?php
                               }
+
+                              endif;
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                  if(!empty($mov['id_pago'])){
+                                    if($mov['id_pago']==$data['id_pago']){
+                                      if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                                if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                      ?>
+                      <?php if($data['estado']=="Abonado"){ 
+                        if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                          
+                                $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                        }
+                      ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                              
+                                    $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                            }
+                        ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                              
+                                    $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                            }
+                          ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." ".$bank['nombre_propietario'] ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                              
+                                    $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                            }
+                        ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+
+
+                                      }
+                                    }
+                                  }
+                                }
+                              endif;
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -2286,18 +4101,42 @@
                   $abonadoPrimer=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Primer Pago"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoPrimer += $data['equivalente_pago'];
-                              $abonadoPrimer += $data['equivalente_pago'];
+                          if($data['id_banco']==""){
+                            if($data['tipo_pago']=="Primer Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $abonadoPrimer += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $diferidoPrimer += $data['equivalente_pago'];
+                              }else{
+                                $reportadoPrimer += $data['equivalente_pago'];
+                              }
+                            endif;
+                          }
+                          if($data['id_banco']!=""){
+                            foreach ($movimientos as $mov) {
+                              if(!empty($mov['id_pago'])){
+                                if($mov['id_pago']==$data['id_pago']){
+                                  if($mov['fecha_movimiento']==$data['fecha_pago']){
+                            if($data['tipo_pago']=="Primer Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $abonadoPrimer += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $diferidoPrimer += $data['equivalente_pago'];
+                              }else{
+                                $reportadoPrimer += $data['equivalente_pago'];
+                              }
+                            endif;
+                                  }
+                                }
+                              }
                             }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoPrimer += $data['equivalente_pago'];
-                              $diferidoPrimer += $data['equivalente_pago'];
-                            }else{
-                              $reportadoPrimer += $data['equivalente_pago'];
-                            }
-                          endif;
+                          }
                         endif;
                   endforeach;
                 ?>
@@ -2369,6 +4208,10 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="SEGUNDO PAGO"):
+
+                              if($data['id_banco']==""):
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosC += $data['monto_pago'];
@@ -2906,6 +4749,565 @@
                       </tr>
                         <?php
                               }
+
+
+                              endif;
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                  if(!empty($mov['id_pago'])){
+                                    if($mov['id_pago']==$data['id_pago']){
+                                      if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                                if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                      ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              } else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr style="background:#00DD0077">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr style="background:#DD000077">
+                      <?php } else{ ?>
+                      <tr>
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                        <td style="width:10%">
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&admin=1">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                        </td>
+                        <?php else: ?>
+                          <td style="width:10%">
+                          <?php if($data['fecha_registro']==date('Y-m-d')){ ?>
+                              <?php if ($data['estado']!="Abonado"): ?>
+                                <button class="btn modificarBtn " style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>">
+                                  <span class="fa fa-wrench">
+                                    
+                                  </span>
+                                </button>
+                              <?php endif; ?>
+
+
+                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button> -->
+                          <?php } ?>
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                          </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo  $lider->formatFecha($data['fecha_pago']); ?>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "impuntual";
+                              }
+                            ?>
+                            <small><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <?php echo  $forma_pago; ?>
+                          </span>
+                        </td>
+                        <td>
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['referencia_pago']; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['tasa_pago']!=""){ echo $data['tasa_pago']; }else{ echo ""; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php if($data['equivalente_pago']!=""){ echo "$".number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <?php echo $data['tipo_pago']; ?>
+                          </span>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+
+                                      }
+                                    }
+                                  }
+                                }
+                              endif;
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -2954,18 +5356,46 @@
                   $abonadoSegundo=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Segundo Pago"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoSegundo += $data['equivalente_pago'];
-                              $abonadoSegundo += $data['equivalente_pago'];
+                          if($data['id_banco']==""){
+                            if($data['tipo_pago']=="Segundo Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $abonadoSegundo += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $diferidoSegundo += $data['equivalente_pago'];
+                              }else{
+                                $reportadoSegundo += $data['equivalente_pago'];
+                              }
+                            endif;
+                          }
+
+                          if($data['id_banco']!=""){
+                            foreach ($movimientos as $mov) {
+                              if(!empty($mov['id_pago'])){
+                                if($mov['id_pago']==$data['id_pago']){
+                                  if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+                            if($data['tipo_pago']=="Segundo Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $abonadoSegundo += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $diferidoSegundo += $data['equivalente_pago'];
+                              }else{
+                                $reportadoSegundo += $data['equivalente_pago'];
+                              }
+                            endif;
+
+
+                                  }
+                                }
+                              }
                             }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoSegundo += $data['equivalente_pago'];
-                              $diferidoSegundo += $data['equivalente_pago'];
-                            }else{
-                              $reportadoSegundo += $data['equivalente_pago'];
-                            }
-                          endif;
+                          }
                         endif;
                   endforeach;
                 ?>

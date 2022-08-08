@@ -16,6 +16,9 @@
 	$despachos=$lider->consultarQuery("SELECT * FROM despachos WHERE estatus = 1 and id_campana = $id_campana");
 	$colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = $id_campana");
 
+	$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+	$estado_campana = $estado_campana2[0]['estado_campana'];
+	
 	$visibilidad2 = $lider->consultarQuery("SELECT visibilidad FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
 	$visibilidad = $visibilidad2[0]['visibilidad'];
 

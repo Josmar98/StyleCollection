@@ -71,6 +71,24 @@
           </div>
         <?php } ?>
 
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        </div>
+        <?php endif; ?>
+
       <div class="row">
 
         <div class="col-md-12">
@@ -78,12 +96,13 @@
           <div class="box">
             <div class="box-header">
               <h3 class="box-title"><?php echo "Estado de cuentas - Campaña ".$numero_campana."/".$anio_campana; ?></h3>
-
-                <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                  <?php if($estado_campana=="1"): ?>
+                        <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
                             <br>
                             <a class="btn" style="float:right;margin-right:20px;margin-top:10px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Pedidos&action=Registrar&admin=1"><b>Realizar solicitud de Pedido de Lider</b></a>
                             <br><br>
-                <?php } ?>
+                        <?php } ?>
+                  <?php endif; ?>
               <span style="clear:both;"></span>
             </div>
             <!-- /.box-header -->

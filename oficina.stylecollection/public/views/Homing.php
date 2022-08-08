@@ -100,7 +100,48 @@
           </div>
         </div>
       <?php }} ?>
-        
+
+      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+        <?php if(date('Y-m-d') > $despachos[0]['fecha_segunda_senior']){ ?>
+        <div class="col-xs-12 col-md-12">
+          <div class="box">
+            <div style="width:100%;text-align:right;position:absolute;z-index:1">
+              <button class="btnBoxEstado" style="margin-top:0%;margin-right:1%;background:none;border:none;">
+                <span id="fasEstado" class="fa fa-chevron-down" ></span>
+              </button>
+            </div>
+            <div class="box-header">
+              <h3 class="box-title">
+                Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+              </h3>
+              <div class="box_Estados" style="display:none;">
+              <select class="form-control" id="estadoCamp" name="estado_campanaCamp">
+                <option value="0" <?php if($estado_campana == "0"){echo "selected=''";} ?>>Cerrada</option>
+                <option value="1" <?php if($estado_campana == "1"){echo "selected=''";} ?>>Abierta</option>
+              </select>
+              <button class="btn enviar enviarEstadoCamp" style="">Enviar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <?php } ?>
+      <?php else: ?>
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
+      <?php endif; ?>
 
 
 
@@ -379,6 +420,12 @@
 .d-none{
   display:none;
 }
+.btnBoxEstado:hover{
+  background:rgba(240,240,240,1) !important;
+}
+.btnBoxEstado:active{
+  border:1px solid #DDD !important;
+}
 </style>
                 <tfoot>
                 <tr class="totales total1" style="background:#eee">
@@ -495,6 +542,18 @@ $(document).ready(function(){
     
   }
 
+  $(".btnBoxEstado").click(function(){
+    var clase = $("#fasEstado").attr("class");
+    if(clase=="fa fa-chevron-up"){
+      $("#fasEstado").attr("class","fa fa-chevron-down");
+      $(".box_Estados").slideUp();
+    }
+    if(clase=="fa fa-chevron-down"){
+      $("#fasEstado").attr("class","fa fa-chevron-up");
+      $(".box_Estados").slideDown();
+    }
+  });
+
   var filter = $(".filter").val();
   $("."+filter).hide(); 
   $(".title_ocultar").hide();
@@ -534,6 +593,65 @@ $(document).ready(function(){
                     data: {
                       validarVisibilidad: true,
                       visibilidad: $("#visibilidadCamp").val(),
+                      id_camp: $("#id_camp").val(),
+                    },
+                    success: function(respuesta){
+                      // alert(respuesta);
+                      if (respuesta == "1"){
+                          swal.fire({
+                              type: 'success',
+                              title: '¡Datos guardados correctamente!',
+                              confirmButtonColor: "#ED2A77",
+                          }).then(function(){
+                            window.location = "";
+                          });
+                      }
+                      if (respuesta == "9"){
+                        swal.fire({
+                            type: 'error',
+                            title: '¡Los datos ingresados estan repetidos!',
+                            confirmButtonColor: "#ED2A77",
+                        });
+                      }
+                      if (respuesta == "5"){ 
+                        swal.fire({
+                            type: 'error',
+                            title: '¡Error de conexion con la base de datos, contacte con el soporte!',
+                            confirmButtonColor: "#ED2A77",
+                        });
+                      }
+                    }
+                });
+              
+          }else { 
+              swal.fire({
+                  type: 'error',
+                  title: '¡Proceso cancelado!',
+                  confirmButtonColor: "#ED2A77",
+              });
+          } 
+      });
+  });
+
+  $(".enviarEstadoCamp").click(function(){
+    swal.fire({ 
+          title: "¿Desea guardar los datos?",
+          text: "Se guardaran los datos ingresados, ¿desea continuar?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#ED2A77",
+          confirmButtonText: "¡Guardar!",
+          cancelButtonText: "Cancelar", 
+          closeOnConfirm: false,
+          closeOnCancel: false 
+        }).then((isConfirm) => {
+          if (isConfirm.value){
+              $.ajax({
+                    url: '?route=Campanas',
+                    type: 'POST',
+                    data: {
+                      validarEstadoCamp: true,
+                      estadoCamp: $("#estadoCamp").val(),
                       id_camp: $("#id_camp").val(),
                     },
                     success: function(respuesta){

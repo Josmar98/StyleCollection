@@ -44,6 +44,25 @@
         <!-- left column -->
         <div class="col-xs-12" >
           <!-- general form elements -->
+
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        </div>
+        <?php endif; ?>
+
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -65,12 +84,14 @@
                     <table style="background:none;text-align:right;width:100%;margin-bottom:30px">
                       <tr>
                         <td style="width:50%">
+                          <?php if($estado_campana=="1"){ ?>
                       <?php 
                         if((date('Y-m-d') > $desp['limite_seleccion_plan'])){}else{ if(empty($_GET['id']) && empty($_GET['admin'])){ ?>
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar">
                             Editar<span class="fa fa-wrench"></span>
                           </button>
                       <?php }} 
+                          }
                         if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
                             <div class="row">
                                 <div class="col-xs-12 col-sm-6" style="text-align:left;">
@@ -80,10 +101,13 @@
                                   
                                 </div>
                                 <div class="col-xs-12 col-sm-6" style="text-align:right;">
+
+                                  <?php if($estado_campana=="1"){ ?>
                                   
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
                             Editar<span class="fa fa-wrench"></span>
                           </button>
+                                  <?php } ?>
                                 </div>
                             </div>
                       <?php  

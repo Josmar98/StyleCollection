@@ -36,6 +36,25 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
+
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
+
+
+
         <div class="col-xs-12">
           <!-- /.box -->
               <?php 
@@ -50,11 +69,15 @@
               }
               ?>
           <div class="box"> 
-            <?php if ($registropagosboton=="1"): ?>
-              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
-                <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
-              <?php } ?>
-            <?php endif; ?>
+            <?php if($estado_campana=="1"){ ?>
+                <?php if ($registropagosboton=="1"): ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
+                    <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
+                  <?php } ?>
+                <?php endif; ?>
+            <?php } ?>
+
+            
                <?php
                 $aux = $url;
                 $aux2 = "";
@@ -602,6 +625,10 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"):
+
+                              if($data['id_banco']==""):
+
+                              
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosContado += $data['monto_pago'];
@@ -619,112 +646,126 @@
                       <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:;">
                         <?php } ?>
                         <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
-                        <td style="width:10%;">
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
 
-                            <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <td style="width:5%">
@@ -815,87 +856,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -919,110 +959,125 @@
                         <?php } ?>
                         <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -1114,87 +1169,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -1217,110 +1271,125 @@
                         <?php } ?>
                         <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -1412,87 +1481,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -1514,110 +1582,125 @@
                         <?php } ?>
                         <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -1709,91 +1792,1362 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
                               }
+
+                              endif;
+
+
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                  if(!empty($mov['id_pago'])){
+                                    if($mov['id_pago']==$data['id_pago']){
+                                      // echo $mov['fecha_movimiento']." // ".$data['fecha_pago'];
+                                      // if($mov['fecha_movimiento']==$data['fecha_pago']){
+                                      //   echo " - IGUALES";
+                                      // }else{
+                                      //   echo " - DIFERENTES XD - ".$data['equivalente_pago'];
+                                      // }
+                                      // echo "<br>";
+                                      if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+                              
+                              if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                       ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }
+                              else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                       ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                              $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                            }
+                       ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosContado += $data['monto_pago'];
+                                  $equivalenciasContado += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                        $equivalenciasAbonadasContado += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class='elementos_tr_contado_<?=$data['id_pago']?> tr<?=$data['id_pago']?>' style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                          
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+                                    }
+                                  }
+                                }
+                              }
+                              endif;
 
                             endif; endif; endforeach;
                         ?>
@@ -1954,6 +3308,8 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
+
+                            if($data['id_banco']==""):
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosI += $data['monto_pago'];
@@ -1973,110 +3329,125 @@
                         <?php } ?>
                         <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -2140,7 +3511,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -2168,87 +3538,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -2271,112 +3640,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -2440,7 +3824,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -2468,87 +3851,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -2569,112 +3951,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -2738,7 +4135,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -2766,87 +4162,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -2866,112 +4261,456 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
+                            } 
+                          ?>
+                        </td>                       
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
                             ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+                            endif; 
+                            
+
+
+                            if($data['id_banco']!=""):
+                              foreach ($movimientos as $mov) {
+                                if(!empty($mov['id_pago'])){
+                                  if($mov['id_pago']==$data['id_pago']){
+                                    // echo $mov['fecha_movimiento']." // ".$data['fecha_pago'];
+                                    // if($mov['fecha_movimiento']==$data['fecha_pago']){
+                                    //   echo " - IGUALES";
+                                    // }else{
+                                    //   echo " - DIFERENTES XD - ".$data['equivalente_pago'];
+                                    // }
+                                    // echo "<br>";
+                                    if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+                              if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                        ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                            $equivalenciasAbonadasI += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -3035,7 +4774,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -3063,92 +4801,1033 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }
+                              else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
                             
+                        $equivalenciasAbonadasI += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
 
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>                       
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                        $equivalenciasAbonadasI += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosI += $data['monto_pago'];
+                                  $equivalenciasI += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_inicial']){
+                            
+                        $equivalenciasAbonadasI += $data['equivalente_pago'];
+                          }
+                       ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_inicial_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
                               }
-                            endif; endif; endforeach;
+
+                                    }
+                                  }
+                                }
+                              }
+                            endif; 
+
+                            endif;
+                          endif; endforeach;
                         ?>
                     </tbody>
 
@@ -3305,6 +5984,11 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
+
+                                if($data['id_banco']==""):
+
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosP1 += $data['monto_pago'];
@@ -3322,112 +6006,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -3518,87 +6217,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -3620,112 +6318,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -3788,8 +6501,7 @@
                                   <?php endif ?>
                                 <?php endif ?>
                             <?php endforeach ?>
-                          </span>
-                          
+                          </span>                        
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -3817,87 +6529,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -3918,112 +6629,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -4086,8 +6812,7 @@
                                   <?php endif ?>
                                 <?php endif ?>
                             <?php endforeach ?>
-                          </span>
-                          
+                          </span>                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -4115,87 +6840,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -4215,112 +6939,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -4329,7 +7068,6 @@
                             <?php echo $num++; ?>
                           </span>
                         </td>
-
                         <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
                           <span class="contenido2">
                             <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
@@ -4412,91 +7150,1367 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
                               }
+                              endif;
+
+
+                              if($data['id_banco']!=""):
+                              foreach ($movimientos as $mov) {
+                                if(!empty($mov['id_pago'])){
+                                  if($mov['id_pago']==$data['id_pago']){
+                                    // echo $mov['fecha_movimiento']." // ".$data['fecha_pago'];
+                                    // if($mov['fecha_movimiento']==$data['fecha_pago']){
+                                    //   echo " - IGUALES";
+                                    // }else{
+                                    //   echo " - DIFERENTES XD - ".$data['equivalente_pago'];
+                                    //   $cantidades += $data['equivalente_pago'];
+                                    //   echo " ====== ".$cantidades;
+                                    // }
+                                    // echo "<br>";
+                                    if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                              if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                          ?>
+                          <?php if($data['estado']=="Abonado"){ 
+                              if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                                
+                                  $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                          }
+                        ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="conten">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2" class="td_monto">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2" class="td_equivalente">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                            
+                                  $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                          }
+                        ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>                          
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                            
+                                  $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                          }
+                        ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosP1 += $data['monto_pago'];
+                                  $equivalenciasP1 += $data['equivalente_pago'];
+                          ?>
+                        <?php if($data['estado']=="Abonado"){ 
+                            if($data['fecha_pago'] <= $despacho['fecha_primera_senior']){
+                            
+                                  $equivalenciasAbonodasP1 += $data['equivalente_pago'];
+                          }
+                        ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_primer_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="conten">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2" class="td_monto">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2" class="td_equivalente">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+
+
+                                    }
+                                  }
+                                }
+                              }
+                            endif; 
+
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -4665,6 +8679,10 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"):
+
+
+                              if($data['id_banco']==""):
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosC += $data['monto_pago'];
@@ -4677,112 +8695,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -4846,7 +8879,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -4874,87 +8906,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -4971,112 +9002,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -5140,7 +9186,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -5168,87 +9213,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -5264,112 +9308,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -5433,7 +9492,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -5461,87 +9519,86 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
@@ -5556,112 +9613,127 @@
                       <?php } else{ ?>
                       <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
                         <?php } ?>
-                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                         <td style="width:10%">
-                                <?php 
-                              if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                                
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                  <span class="fa fa-wrench">
-                                    
-                                  </span>
-                                </button>
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
                                 
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
 
-                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                  <span class="fa fa-trash"></span>
-                                </button>
-
-                                <?php }else{ ?>
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                                <?php } ?>
-                                <?php 
-                              }else{
-                                if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
-
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-
-                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                      <span class="fa fa-trash"></span>
-                                    </button>
-                                    
-                                  <?php
-                                }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
-                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    
-                                    <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                      <span class="fa fa-wrench">
-                                        
-                                      </span>
-                                    </button>
-                                  <?php endif ?>
-                                  
-                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
+                                <?php if($estado_campana=="1"): ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                    
                                     <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
                                       <span class="fa fa-trash"></span>
                                     </button>
-                                  <?php endif ?>
-                                <?php
-                                }else{
-                                  if($data['estado']!="Abonado"){  
-                                ?>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
                                   <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                     <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
                                       <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      <?php endif ?>                                  
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
                                       
                                       <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
-                                      <?php endif ?>
-                                    <?php else: ?>
-
-                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
-                                        <span class="fa fa-wrench">
-                                        </span>
-                                      </button>
-                                      
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-
-                                      <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
                                       <?php endif; ?>
-                                      <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
-                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
-                                        <span class="fa fa-trash"></span>
-                                      </button>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
                                       <?php endif; ?>
                                     <?php endif; ?>
                                   <?php else: ?>
-                                        <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
                                   <?php endif; ?>
-                            <?php 
-                                  }else{ ?>
-                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
-                              <?php }
-                                } 
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
                               } 
-                            ?>
+                            } 
+                          ?>
                         </td>
                         <?php endif ?>
                         <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
@@ -5725,7 +9797,6 @@
                                 <?php endif ?>
                             <?php endforeach ?>
                           </span>
-                          
                         </td>
                         <td style="width:20%" class="td_referencias">
                           <span class="contenido2">
@@ -5753,91 +9824,1343 @@
                           </span>
                         </td>
                         <td style="width:20%">
-                          <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
-                          <?php 
-                          if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
-                            <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
-                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                            <span class="fa fa-pencil"></span>
-                          </button>
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
                             <?php } ?>
-                          <?php }else{ ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-                                <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
-                                      <?php if ($analistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?> 
-                                <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($superanalistaaccesorapido=="1"): ?>
-                                          <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                            <span class="fa fa-pencil"></span>
-                                          </button>
-                                      <?php endif; ?>
-                                <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
-                                      <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                      <?php } ?>
-                                <?php else: ?>
-                                    <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-pencil"></span>
-                                    </button>
-                                <?php endif; ?>
-                              <?php } ?>
-                          <?php } ?>
-                          <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
-                                  <?php if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
 
-                                  <?php if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php } ?>
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
 
-                          <?php }else{ ?>
-                              <?php  if($data['estado']!="Abonado"){  ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
-                                    <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
 
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
-                                    <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
-                                    </button>
-                                    <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
-                                      <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
-                                    </button>
-                                  <?php }} ?>
-                              <?php } ?>
-
-                          <?php } ?>
-                            
-
-
-
+                            <?php } ?>
+                          <?php endif; ?>
                         </td>
                       </tr>
                         <?php
                               }
+
+                              endif;
+
+                              if($data['id_banco']!=""):
+                                foreach ($movimientos as $mov) {
+                                if(!empty($mov['id_pago'])){
+                                  if($mov['id_pago']==$data['id_pago']){
+                                    // echo $mov['fecha_movimiento']." // ".$data['fecha_pago'];
+                                    // if($mov['fecha_movimiento']==$data['fecha_pago']){
+                                    //   echo " - IGUALES";
+                                    // }else{
+                                    //   echo " - DIFERENTES XD - ".$data['equivalente_pago'];
+                                    //   $cantidades += $data['equivalente_pago'];
+                                    //   echo " ====== ".$cantidades;
+                                    // }
+                                    // echo "<br>";
+                                    if($mov['fecha_movimiento']==$data['fecha_pago']){
+
+
+
+                              if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
+                                if($data['estado']=="Diferido"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                      ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              } else if(!empty($_GET['Abonado']) && $_GET['Abonado']=="Abonado"){
+                                if($data['estado']=="Abonado"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                                }
+                              }else if(!empty($_GET['Reportado']) && $_GET['Reportado']=="Reportado"){
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }else {
+                                  $montosC += $data['monto_pago'];
+                                  $equivalenciasC += $data['equivalente_pago'];
+                        ?>
+                      <?php if($data['estado']=="Abonado"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(0,210,0,.5)">
+                      <?php }else if($data['estado']=="Diferido"){ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:rgba(210,0,0,.5)">
+                      <?php } else{ ?>
+                      <tr class="elementos_tr_cierre_<?=$data['id_pago']?> tr<?=$data['id_pago']?>" style="background:;">
+                        <?php } ?>
+                        <?php if( $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" ||$_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                        <td style="width:10%">
+                          <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                              
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=ModificarAutorizados&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                              <?php endif; ?>
+                              
+                              <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                            
+                              <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                              <?php endif; ?>
+                                  <?php }else{ ?>
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php } ?>
+                              <?php 
+                            }else{
+                              if( (($_SESSION['nombre_rol']=="Superusuario" && $superoppagodiviauto=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminoppagodiviauto=="1")) && ($data['forma_pago']=="Divisas Dolares" || $data['forma_pago']=="Efectivo Bolivares" || $data['forma_pago']=="Divisas Euros")){ ?>
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                <?php endif; ?>
+
+                                  <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                    <span class="fa fa-trash"></span>
+                                  </button>
+                                <?php endif; ?>
+                                  
+                                <?php
+                              }else if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionpago=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionpago=="1")){ ?>
+                                <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($estado_campana=="1"): ?>
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                    <span class="fa fa-wrench">
+                                      
+                                    </span>
+                                  </button>
+                                  <?php endif; ?>
+                                <?php endif ?>
+                                
+                                <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                <?php if($estado_campana=="1"): ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                    </button>
+                                  <?php endif; ?>
+                                <?php endif; ?>
+                              <?php
+                              }else{
+                                if($data['estado']!="Abonado"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Analista"||$_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                      <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaeditarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditarpago=="1")): ?>
+                                        <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>                                  
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <?php if (($_SESSION['nombre_rol']=="Analista" && $analistaborrarpago=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrarpago=="1")): ?>
+                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                        </button>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php else: ?>
+                                      <?php if($estado_campana=="1"): ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=Pagos&action=Modificar&id=<?php echo $data['id_pago'] ?>&aux=<?=$aux?>">
+                                          <span class="fa fa-wrench">
+                                          </span>
+                                        </button>
+                                      <?php endif; ?>
+                                      
+                                      <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
+                                      <?php if($estado_campana=="1"): ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Administrador" && $adminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                          <?php if ($_SESSION['nombre_rol']=="Superusuario" && $superadminborrarpago=="1"): ?>
+                                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?=$url?>&id=<?php echo $data['id_pago'] ?>&permission=1">
+                                            <span class="fa fa-trash"></span>
+                                          </button>
+                                          <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php else: ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php endif; ?>
+                                  <?php 
+                                }else{ 
+                                  ?>
+                                    <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+                                  <?php 
+                                }
+                              } 
+                            } 
+                          ?>
+                        </td>
+                        <?php endif ?>
+                        <!-- <td class="fichas"><button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button></td> -->
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class='td_fechas' value="<?=$data['id_pago']?>">
+                          <span class="contenido2">
+                            <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
+                            <br>
+                            <?php
+                              if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"){
+                                $restriccion = $despacho['fecha_inicial'];
+                              }
+                              if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"){
+                                $restriccion = $despacho['fecha_primera_senior'];
+                              }
+                              if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"){
+                                $restriccion = $despacho['fecha_segunda_senior'];
+                              }
+                              $temporalidad = "";
+                              if($data['fecha_pago'] <= $restriccion){
+                                $temporalidad = "Puntual";
+                              }else{
+                                $temporalidad = "Impuntual";
+                              }
+                            ?>
+                            <small class='contenido_temporalidad'><?=$temporalidad?></small>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_forma_de_pago">
+                          <?php
+                            if($data['forma_pago']=="Transferencia Banco a Banco"){
+                              $forma_pago = "T-BB";
+                            } else if($data['forma_pago']=="Transferencia de Otros Bancos"){
+                              $forma_pago = "T-OB";
+                            } else if($data['forma_pago']=="Pago Movil Banco a Banco"){
+                              $forma_pago = "PM-BB";
+                            } else if($data['forma_pago']=="Pago Movil de Otros Bancos"){
+                              $forma_pago = "PM-OB";
+                            }else{
+                              $forma_pago = $data['forma_pago'];
+                            }
+                          ?>
+                          <span class="contenido2">
+                            <span class='contenido_forma_pago'><?php echo $forma_pago; ?></span>
+                          </span>
+                        </td>
+                        <td class="td_bancos">
+                          <span class="contenido2">
+                            <?php foreach ($bancos as $bank): ?>
+                                <?php if (!empty($bank['id_banco'])): ?>
+                                  <?php if ($bank['id_banco']==$data['id_banco']): ?>
+                                    <span class='contenido_banco'><?php echo $bank['nombre_banco']." <small>".$bank['nombre_propietario']."</small>" ?></span>
+                                  <?php endif ?>
+                                <?php endif ?>
+                            <?php endforeach ?>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_referencias">
+                          <span class="contenido2">
+                            <span class='contenido_referencia'><?php echo $data['referencia_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_monto">
+                          <span class="contenido2">
+                            <span class='contenido_monto'><?php if($data['monto_pago']!=""){ echo number_format($data['monto_pago'],2,',','.'); }else{ echo "0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tasa'><?php if($data['tasa_pago']!=""){ echo number_format($data['tasa_pago'],2,',','.'); }else{ echo ""; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%" class="td_equivalente">
+                          <span class="contenido2">
+                            <span class='contenido_equivalente'><?php if($data['equivalente_pago']!=""){ if($data['forma_pago']=="Divisas Euros"){ echo "€"; }else { echo "$"; } echo number_format($data['equivalente_pago'],2,',','.'); }else{ echo "$0,00"; } ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <span class="contenido2">
+                            <span class='contenido_tipo_pago'><?php echo $data['tipo_pago']; ?></span>
+                          </span>
+                        </td>
+                        <td style="width:20%">
+                          <?php if($estado_campana=="1"): ?>
+
+                            <!-- <button class="btn editarPagoBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_modulo'] ?>"> -->
+                            <?php 
+                            if($data['forma_pago'][0]=="A"&&$data['forma_pago'][1]=="u"&&$data['forma_pago'][2]=="t"&&$data['forma_pago'][3]=="o"&&$data['forma_pago'][4]=="r"&&$data['forma_pago'][5]=="i"&&$data['forma_pago'][6]=="z"&&$data['forma_pago'][7]=="a"&&$data['forma_pago'][8]=="d"&&$data['forma_pago'][9]=="o"){ ?>
+                              <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"){ ?>
+                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                              <span class="fa fa-pencil"></span>
+                            </button>
+                              <?php } ?>
+                            <?php }else{ ?>
+
+                                <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
+                                  <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                        <?php if ($analistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?> 
+                                  <?php elseif($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                        <?php if ($superanalistaaccesorapido=="1"): ?>
+                                            <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                              <span class="fa fa-pencil"></span>
+                                            </button>
+                                        <?php endif; ?>
+                                  <?php elseif($_SESSION['nombre_rol']=="Conciliador"): ?>
+                                        <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn editarPagoBtnConciliador" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                        <?php } ?>
+                                  <?php else: ?>
+                                      <button class="btn editarPagoBtn" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-pencil"></span>
+                                      </button>
+                                  <?php endif; ?>
+                                <?php } ?>
+                            <?php } ?>
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superopcionconcilio=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminopcionconcilio=="1")){ ?>
+                                    <?php if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                                    <?php if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php } ?>
+
+                            <?php }else{ ?>
+                                <?php  if($data['estado']!="Abonado"){  ?>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Conciliador"){ if($data['id_banco']!=""){ ?>
+                                      <button class="btn diferirPagoBtnConciliadores" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnConciliadores" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ if($data['id_banco']==""){ ?>
+                                      <button class="btn diferirPagoBtnAnalista" style="border:0;background:none;color:#CC0000" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-times-circle" style='background:#FFF;border-radius:100%;'></span>
+                                      </button>
+                                      <button class="btn aprobarPagoBtnAnalista" style="border:0;background:none;color:#00CC00" value="<?=$data['id_pago']?>">
+                                        <span class="fa fa-check-circle" style='background:#fff;border-radius:100%;'></span>
+                                      </button>
+                                    <?php }} ?>
+                                <?php } ?>
+
+                            <?php } ?>
+                          <?php endif; ?>
+                        </td>
+                      </tr>
+                        <?php
+                              }
+
+
+                                    }
+                                  }
+                                }
+                              }
+                              endif;
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>

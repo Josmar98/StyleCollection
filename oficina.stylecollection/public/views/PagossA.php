@@ -36,25 +36,6 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
-
-        <?php
-          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
-          $estado_campana = $estado_campana2[0]['estado_campana'];
-        ?>
-        <?php if($estado_campana=="0"): ?>
-          <div class="col-xs-12 col-md-12">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title">
-                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
-                </h3>
-              </div>
-            </div>
-          </div>  
-        <?php endif; ?>
-
-
-        
         <div class="col-xs-12">
           <!-- /.box -->
           <div class="box"> 
@@ -124,17 +105,17 @@
                 </style>
                 <div class="row">
                       <div class="col-xs-12 col-sm-4 text-xs" style="margin-bottom:15px">
-                        <a href="?<?=$menu?>&route=PagosBancarios" class="btn" style="background:#099;color:#FFF;border-radius:7px !important;" ><b><u>Ver Solo Movimientos Bancarios<u></b></a>
+                        <!-- <a href="?<?=$menu?>&route=PagosBancarios" class="btn" style="background:#099;color:#FFF;border-radius:7px !important;" ><b><u>Ver Solo Movimientos Bancarios<u></b></a> -->
                       </div>
                       <div class="col-xs-12 col-sm-4 text-xs" style="margin-bottom:15px">
-                        <a href="?<?=$menu?>&route=Pagos" class="btn" style="background:#099;color:#FFF;border-radius:7px !important;" ><b><u>Ver Todos los Pagos<u></b></a>
+                        <a href="?<?=$menu?>&route=PagosA" class="btn" style="background:#099;color:#FFF;border-radius:7px !important;" ><b><u>Ver Todos los Pagos<u></b></a>
                       </div>
                     <?php if ($_SESSION['nombre_rol']!="Conciliador"): ?>
                         
                         <div class="col-xs-12 col-sm-4 text-xs" style="margin-bottom:15px">
-                          <a href="?<?=$menu?>&route=PagosDivisas" class="btn" style="background:#0A0;color:#FFF;border-radius:7px !important;" ><b><u>Ver Solo Divisas<u></b></a>
-                          <br><br>
-                          <a href="?<?=$menu?>&route=PagosBolivares" class="btn" style="color:#0A0;" ><b><u>Ver Solo Bolivares<u></b></a>
+                          <!-- <a href="?<?=$menu?>&route=PagosDivisas" class="btn" style="background:#0A0;color:#FFF;border-radius:7px !important;" ><b><u>Ver Solo Divisas<u></b></a> -->
+                          <!-- <br><br> -->
+                          <!-- <a href="?<?=$menu?>&route=PagosBolivares" class="btn" style="color:#0A0;" ><b><u>Ver Solo Bolivares<u></b></a> -->
                         </div>
                     <?php endif; ?>
                 </div>
@@ -183,16 +164,16 @@
                 <hr>
                 <div class="row">
                       <div class="col-xs-12 col-sm-4" style="text-align:center;margin-bottom:15px">
-                        <a style="background:#099;color:#FFF;border-radius:7px !important" class="btn BancariosFiltro"><b><u>Ver Movimientos Bancarios con Filtros<u></b></a>
+                        <!-- <a style="background:#099;color:#FFF;border-radius:7px !important" class="btn BancariosFiltro"><b><u>Ver Movimientos Bancarios con Filtros<u></b></a> -->
                       </div>
                       <div class="col-xs-12 col-sm-4" style="text-align:center;margin-bottom:15px">
                         <a style="background:#099;color:#FFF;border-radius:7px !important" class="btn PagosFiltro"><b><u>Ver Pagos con Filtros<u></b></a>
                       </div>
                     <?php if ($_SESSION['nombre_rol']!="Conciliador"): ?>
                         <div class="col-xs-12 col-sm-4" style="text-align:center;margin-bottom:15px">
-                          <a style="background:#0A0;color:#FFF;border-radius:7px !important" class="btn DivisasFitro"><b><u>Ver Divisas con Filtros<u></b></a>
-                          <br><br>
-                          <a style="color:#0A0;" class="btn BolivaresFitro"><b><u>Ver Bolivares con Filtros<u></b></a>
+                          <!-- <a style="background:#0A0;color:#FFF;border-radius:7px !important" class="btn DivisasFitro"><b><u>Ver Divisas con Filtros<u></b></a> -->
+                          <!-- <br><br> -->
+                          <!-- <a style="color:#0A0;" class="btn BolivaresFitro"><b><u>Ver Bolivares con Filtros<u></b></a> -->
                         </div>
                     <?php endif; ?>
                 </div>
@@ -487,7 +468,7 @@ $(document).ready(function(){
   }
    
   $(".PagosFiltro").click(function(){
-    var ruta = "Pagos";
+    var ruta = "PagosA";
     var menu = "<?=$menu?>";
     var rangoI = $("#rangoI").val();
     var rangoF = $("#rangoF").val();
@@ -539,167 +520,8 @@ $(document).ready(function(){
       });
     }
   });
-  $(".BancariosFiltro").click(function(){
-    var ruta = "PagosBancarios";
-    var menu = "<?=$menu?>";
-    var rangoI = $("#rangoI").val();
-    var rangoF = $("#rangoF").val();
-    var lider = $("#lider").val();
-    var banco = $("#banco").val();
 
-    var menuInicial = menu+"&route="+ruta;
-    var menuFinal = menu+"&route="+ruta;
-    if(rangoI!=""){
-       menuFinal += "&rangoI="+rangoI;
-    }
-    if(rangoF!=""){
-       menuFinal += "&rangoF="+rangoF;
-    }
-    if(lider!=""){
-       menuFinal += "&admin=1&lider="+lider;
-    }
-    if(banco!=""){
-       menuFinal += "&Banco="+banco;
-    }
-    if(menuInicial != menuFinal){
-
-      swal.fire({ 
-        title: "¿Buscar Pagos de Movimientos Bancarios?",
-        text: "Se Buscaran los pagos de movimientos bancarios con las opciones seleccionadas, ¿Desea continuar?",
-        type: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#ED2A77",
-        confirmButtonText: "Buscar",
-        cancelButtonText: "Cancelar", 
-        closeOnConfirm: false,
-        closeOnCancel: false 
-      }).then((isConfirm) => {
-        if (isConfirm.value){            
-          // window.location = $(this).val();
-          location.href = "?"+menuFinal;
-        }else { 
-          swal.fire({
-              type: 'error',
-              title: '¡Proceso cancelado!',
-              confirmButtonColor: "#ED2A77",
-          });
-        } 
-      });
-    }else{
-      swal.fire({
-          type: 'warning',
-          title: '¡Debe seleccionar alguna opción para filtrar!',
-          confirmButtonColor: "#ED2A77",
-      });
-    }
-
-  });
-  $(".DivisasFitro").click(function(){
-    var ruta = "PagosDivisas";
-    var menu = "<?=$menu?>";
-    var rangoI = $("#rangoI").val();
-    var rangoF = $("#rangoF").val();
-    var lider = $("#lider").val();
-    var banco = $("#banco").val();
-
-    var menuInicial = menu+"&route="+ruta;
-    var menuFinal = menu+"&route="+ruta;
-    if(rangoI!=""){
-       menuFinal += "&rangoI="+rangoI;
-    }
-    if(rangoF!=""){
-       menuFinal += "&rangoF="+rangoF;
-    }
-    if(lider!=""){
-       menuFinal += "&admin=1&lider="+lider;
-    }
-    if(banco!=""){
-       menuFinal += "&Banco="+banco;
-    }
-    if(menuInicial!=menuFinal){
-      swal.fire({ 
-        title: "¿Buscar Pagos en Divisas?",
-        text: "Se Buscaran los pagos en divisas con las opciones seleccionadas, ¿Desea continuar?",
-        type: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#ED2A77",
-        confirmButtonText: "Buscar",
-        cancelButtonText: "Cancelar", 
-        closeOnConfirm: false,
-        closeOnCancel: false 
-      }).then((isConfirm) => {
-        if (isConfirm.value){            
-          // window.location = $(this).val();
-          location.href = "?"+menuFinal;
-        }else { 
-          swal.fire({
-              type: 'error',
-              title: '¡Proceso cancelado!',
-              confirmButtonColor: "#ED2A77",
-          });
-        } 
-      });
-    }else{
-      swal.fire({
-          type: 'warning',
-          title: '¡Debe seleccionar alguna opción para filtrar!',
-          confirmButtonColor: "#ED2A77",
-      });
-    }
-  });
-  $(".BolivaresFitro").click(function(){
-    var ruta = "PagosBolivares";
-    var menu = "<?=$menu?>";
-    var rangoI = $("#rangoI").val();
-    var rangoF = $("#rangoF").val();
-    var lider = $("#lider").val();
-    var banco = $("#banco").val();
-
-    var menuInicial = menu+"&route="+ruta;
-    var menuFinal = menu+"&route="+ruta;
-    if(rangoI!=""){
-       menuFinal += "&rangoI="+rangoI;
-    }
-    if(rangoF!=""){
-       menuFinal += "&rangoF="+rangoF;
-    }
-    if(lider!=""){
-       menuFinal += "&admin=1&lider="+lider;
-    }
-    if(banco!=""){
-       menuFinal += "&Banco="+banco;
-    }
-    if(menuInicial!=menuFinal){
-      swal.fire({ 
-        title: "¿Buscar Pagos en Efectivo Bolivares?",
-        text: "Se Buscaran los pagos en bolivares con las opciones seleccionadas, ¿Desea continuar?",
-        type: "question",
-        showCancelButton: true,
-        confirmButtonColor: "#ED2A77",
-        confirmButtonText: "Buscar",
-        cancelButtonText: "Cancelar", 
-        closeOnConfirm: false,
-        closeOnCancel: false 
-      }).then((isConfirm) => {
-        if (isConfirm.value){            
-          // window.location = $(this).val();
-          location.href = "?"+menuFinal;
-        }else { 
-          swal.fire({
-              type: 'error',
-              title: '¡Proceso cancelado!',
-              confirmButtonColor: "#ED2A77",
-          });
-        } 
-      });
-    }else{
-      swal.fire({
-          type: 'warning',
-          title: '¡Debe seleccionar alguna opción para filtrar!',
-          confirmButtonColor: "#ED2A77",
-      });
-    }
-  });
+  
   // DivisasFitro
   // BancariosFiltro
   // PagosFiltro

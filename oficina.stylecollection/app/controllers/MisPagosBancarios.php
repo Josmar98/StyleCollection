@@ -141,6 +141,7 @@
 		$planes = $lider->consultarQuery("SELECT * FROm planes, planes_campana, tipos_colecciones, pedidos, despachos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id_cliente} and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_despacho = despachos.id_despacho and despachos.estatus = 1 and planes.estatus = 1 and pedidos.estatus = 1");
 		
 		$pagos = $lider->consultarQuery("SELECT * FROM campanas, despachos, pedidos, pagos WHERE pagos.id_banco != '' and campanas.id_campana = despachos.id_despacho and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = pedidos.id_despacho and pedidos.estatus = 1 and pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.id_cliente = {$id_cliente} and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} ORDER BY fecha_pago asc");
+		$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 
 		$despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and campanas.estatus = 1 and despachos.estatus = 1 and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho}");
 		$despacho = $despachos[0];
@@ -151,17 +152,49 @@
 			$diferido = 0;
 			$abonado = 0;
 			if(count($pagos)){
-              foreach ($pagos as $data) {
-                if(!empty($data['id_pago'])){
-                  $reportado += $data['equivalente_pago'];
-                  if($data['estado']=="Diferido"){
-                    $diferido += $data['equivalente_pago'];
-                  }
-                  if($data['estado']=="Abonado"){
-                    $abonado += $data['equivalente_pago'];
-                  }
-                }
-              }
+				foreach ($pagos as $data) {
+					// if(!empty($data['id_pago'])){
+					// 	$reportado += $data['equivalente_pago'];
+					// 	if($data['estado']=="Diferido"){
+					// 		$diferido += $data['equivalente_pago'];
+					// 	}
+					// 	if($data['estado']=="Abonado"){
+					// 		$abonado += $data['equivalente_pago'];
+					// 	}
+					// }
+					if(!empty($data['id_pago'])){
+						if($data['id_banco']==""){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+						}
+						if($data['id_banco']!=""){
+							foreach ($movimientos as $mov) {
+								if(!empty($mov['id_pago'])){
+									if($mov['id_pago']==$data['id_pago']){
+										if($mov['fecha_movimiento']==$data['fecha_pago']){
+							if($data['estado']=="Diferido"){
+								$diferido += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else if($data['estado']=="Abonado"){
+								$abonado += $data['equivalente_pago'];
+								$reportado += $data['equivalente_pago'];
+							}else{
+								$reportado += $data['equivalente_pago'];
+							}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 
 			if(!empty($action)){

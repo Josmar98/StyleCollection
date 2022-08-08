@@ -328,7 +328,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 ?>
     <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador" || $_SESSION['nombre_rol']=="Vendedor"): ?>
       
-                            <?php if($url=="Pagos" || $url=="Pagoss" || $url=="ReportePagos" || $url=="PagosBancarios" || $url=="PagosBolivares" || $url=="PagosDivisas" || $url=="PagosBorrados" || $url=="MisPagos" || $url=="MisPagosBancarios" || $url=="MisPagosBolivares" || $url=="MisPagosDivisas"){ ?>
+                            <?php if($url=="Pagos" || $url=="PagosA" || $url=="Pagoss" || $url=="PagossA" || $url=="ReportePagos" || $url=="PagosBancarios" || $url=="PagosBolivares" || $url=="PagosDivisas" || $url=="PagosBorrados" || $url=="MisPagos" || $url=="MisPagosBancarios" || $url=="MisPagosBolivares" || $url=="MisPagosDivisas"){ ?>
         <li class="active treeview">
                             <?php }else{ ?>
         <li class="treeview">
@@ -386,7 +386,24 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                             <?php } ?>
                   <?php endif; ?>
 
-                  <?php if($_SESSION['nombre_rol']!="Vendedor"): ?>
+
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                            <?php if( ($url=="PagosA") && empty($action)){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=PagosA"><i class="fa fa-money"></i> Ver Pagos Alterados</a></li>
+                            <?php }else{ ?>
+            <li><a href="?<?php echo $menu ?>&route=PagosA"><i class="fa fa-money"></i> Ver Pagos Alterados</a></li>
+                            <?php } ?>
+                  <?php endif; ?>
+
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                            <?php if($url=="PagossA" && empty($action)){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=PagossA"><i class="fa fa-money"></i>Filtro de Pagos Alterados</a></li>
+                            <?php }else{ ?>
+            <li><a href="?<?php echo $menu ?>&route=PagossA"><i class="fa fa-money"></i>Filtro de Pagos Alterados</a></li>
+                            <?php } ?>
+                  <?php endif; ?>
+
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                             <?php if($url=="ReportePagos" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ReportePagos"><i class="fa fa-money"></i>Reporte de Pagos</a></li>
                             <?php }else{ ?>
@@ -1341,7 +1358,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 
             <?php } ?>
 <!-- ======================================================================================================================= -->
-        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista"){ ?>
+        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>
 
                             <?php if($url=="Nombramientos" || $url=="NombramientosBorrados"){ ?>

@@ -36,6 +36,21 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
         <div class="col-xs-12">
           <!-- /.box -->
               <?php 
@@ -54,9 +69,11 @@
               }
               ?>
           <div class="box">
-            <?php if ($optHabilitarPagos=="1" && $registropagosboton=="1"): ?>
-              <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
-            <?php endif; ?>
+            <?php if($estado_campana=="1"){ ?>
+              <?php if ($optHabilitarPagos=="1" && $registropagosboton=="1"): ?>
+                <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
+              <?php endif; ?>
+            <?php } ?>
             <div class="box-header">
               <a onclick="regresarAtras()" id="link" class="btn" style="border-radius:50%;padding:10px 12.5px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>">
                 <i class="fa fa-arrow-left" style="font-size:2em"></i>

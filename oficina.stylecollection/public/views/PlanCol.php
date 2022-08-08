@@ -46,6 +46,26 @@
         <!-- left column -->
         <div class="col-xs-12" >
           <!-- general form elements -->
+
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+        <div class="row">
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        </div>
+        <?php endif; ?>
+
+
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">
@@ -60,6 +80,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
+
             <!-- <form action="" method="post" role="form" class="form_register"> -->
             <div class="box-body">
                     <table style="background:none;text-align:right;width:100%;margin-bottom:30px">
@@ -68,14 +89,14 @@
 
                       ?>
                                 <tr>
-                                  <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar" class="btn enviar">Seleccionar premios</a></th>
+                                  <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar" class="btn enviar" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar premios</a></th>
                                 </tr>
                       <?php }}
                             if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
                               <?php $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$_GET['id']}"); 
                               if(Count($premioscol)<2){ ?>
                                 <tr>
-                                  <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$_GET['id']?>" class="btn enviar">Seleccionar premios</a></th>
+                                  <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$_GET['id']?>" class="btn enviar" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar premios</a></th>
                                 </tr>
                       <?php   }
                               if(Count($premioscol)>1){ ?>
@@ -91,6 +112,8 @@
                       ?>
                       <tr>
                         <td style="width:50%">
+                          <?php if($estado_campana=="1"){ ?>
+
                           <?php  if(date('Y-m-d') <= $desp['limite_seleccion_plan']){ if(empty($_GET['id']) && empty($_GET['admin'])){?>
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar">
                             Editar<span class="fa fa-wrench"></span>
@@ -107,6 +130,8 @@
                           <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&permission=1">
                             Borrar<span class="fa fa-trash"></span>
                           </button> -->
+                          <?php } ?>
+
                         </td>
                       </tr>
                     </table>

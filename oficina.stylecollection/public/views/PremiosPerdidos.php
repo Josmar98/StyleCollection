@@ -34,7 +34,21 @@
       <div class="row">
 
 
-
+        <?php
+          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+          $estado_campana = $estado_campana2[0]['estado_campana'];
+        ?>
+        <?php if($estado_campana=="0"): ?>
+          <div class="col-xs-12 col-md-12">
+            <div class="box">
+              <div class="box-header">
+                <h3 class="box-title">
+                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
+                </h3>
+              </div>
+            </div>
+          </div>  
+        <?php endif; ?>
 
 
 
@@ -87,12 +101,14 @@
 
                           <tr class="elementTR">
                             <td>
+                              <?php if($estado_campana=="1"): ?>
                                   <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&admin=1&select=1&lider=<?php echo $data['id_cliente']; ?>">
                                     <span class="fa fa-wrench"></span>
                                   </button>
                                   <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
                                     <span class="fa fa-trash"></span>
                                   </button> -->
+                              <?php endif; ?>
                             </td>
                             <td style="width:10%;"><?=$num?></td>
                             <td style="width:20%">

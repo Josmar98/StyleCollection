@@ -1,6 +1,5 @@
 <?php 
 
-// if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
 
 		  $id_campana = $_GET['campaing'];
 		  $numero_campana = $_GET['n'];
@@ -8,6 +7,10 @@
 			$id_despacho = $_GET['dpid'];
 			$num_despacho = $_GET['dp'];
 			$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
+	$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+    $estado_campana = $estado_campana2[0]['estado_campana'];
+if($estado_campana=="1"){
+
 
 		if(!empty($_POST['validarData'])){
 			$id_liderazgo = $_POST['id_liderazgo'];
@@ -275,7 +278,8 @@
 					// echo "Todo OK<br><br>";
 					if($id_banco==""){
 						// echo "Si depende de un banco sera Automatico";
-						$query = "INSERT INTO pagos (id_pago, id_pedido, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 1)";
+						// $query = "INSERT INTO pagos (id_pago, id_pedido, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 1)";
+						$query = "INSERT INTO pagos (id_pago, id_pedido, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, '".date('Y-m-d')."', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 1)";
 
 					}else{
 						if($referencia!=""){
@@ -395,6 +399,7 @@
 				}else{
 					$pagos = $lider->consultarQuery("SELECT * FROM pedidos, pagos WHERE pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.estatus = 1 and pedidos.id_cliente = {$id_cliente}");					
 				}
+				$movimientos = $lider->consultarQuery("SELECT * FROM movimientos WHERE movimientos.estado_movimiento = 'Firmado' and movimientos.estatus = 1");
 			}
 
 			$bancos = $lider->consultarQuery("SELECT * FROM bancos WHERE estatus = 1");
@@ -460,7 +465,7 @@
 
 		}
 
-// }else{
-//    require_once 'public/views/error404.php';
-// }
+}else{
+   require_once 'public/views/error404.php';
+}
 ?>

@@ -374,7 +374,29 @@
                 <li class="user-footer">
                   <div class="text-center">
                     <?php if ($catalagomenusuperior=="1"): ?>
-                      <a href="?route=Catalogo&action=Ver" class="btn enviar2 btn-flat col-xs-12">Ver catálogo</a>
+                      <?php
+                        $buscar = $lider->consultarQuery("SELECT * FROM fechas_catalogo WHERE id_fecha_catalogo = 1");
+                        $apertura = "";
+                        $cierre = "";
+                        if(count($buscar)>1){
+                          $apertura = $buscar[0]['fecha_apertura_catalogo'];
+                          $cierre = $buscar[0]['fecha_cierre_catalogo'];
+                        }
+                        if($apertura != "" && $cierre != ""){
+                          if((date('Y-m-d') >= $apertura) && date('Y-m-d') <= $cierre){ ?>
+                            <a href="?route=Catalogo&action=Ver" class="btn enviar2 btn-flat col-xs-12">Ver catálogo</a>
+                        <?php
+                          }else{
+                        ?>
+                            <a style="color:#FFF;background:#999" class="btn btn-flat col-xs-12">Ver catálogo</a>
+                        <?php
+                          }
+                        }else{
+                        ?>
+                          <a style="color:#FFF;background:#999" class="btn btn-flat col-xs-12">Ver catálogo</a>
+                        <?php
+                        }
+                      ?> 
                     <?php elseif ($catalagomenusuperior=="0"): ?>
                       <a style="color:#FFF;background:#999" class="btn btn-flat col-xs-12">Ver catálogo</a>
                     <?php endif; ?>

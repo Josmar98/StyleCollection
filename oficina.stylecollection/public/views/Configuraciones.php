@@ -35,21 +35,7 @@
     <section class="content">
       <div class="row">
 
-        <?php
-          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
-          $estado_campana = $estado_campana2[0]['estado_campana'];
-        ?>
-        <?php if($estado_campana=="0"): ?>
-          <div class="col-xs-12 col-md-12">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title">
-                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
-                </h3>
-              </div>
-            </div>
-          </div>  
-        <?php endif; ?>
+       
 
 
         <div class="col-xs-12">
@@ -84,7 +70,6 @@
                     </span>
                   </td>
                   <td style="width:10%">
-                    <?php if($estado_campana=="1"){ ?>
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_configuracion'] ?>">
                             <span class="fa fa-wrench"></span>
                           </button>
@@ -93,7 +78,6 @@
                             <span class="fa fa-trash"></span>
                           </button>
                         <?php } ?>
-                    <?php } ?>
                   </td>
                   <td style="width:20%">
                     <span class="contenido2">

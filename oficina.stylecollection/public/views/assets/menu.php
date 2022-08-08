@@ -1173,7 +1173,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
         <li class="treeview">
                             <?php } ?>
           <a href="#">
-            <i class="fa fa-tags"></i> <span>Pedidos</span>
+            <i class="fa fa-tags"></i> <span>Agregar y Editar Pedidos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -2223,8 +2223,8 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           </a>
           <ul class="treeview-menu">
 
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
             
+            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
 
                             <?php if($url=="Catalogos" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?route=Catalogos&action=Registrar"><i class="fa fa-object-ungroup"></i> Registrar Catalogo</a></li>
@@ -2241,6 +2241,16 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
                             <?php }else{ ?>
             <li><a href="?route=Catalogos"><i class="fa fa-object-ungroup"></i> Ver Catalogos</a></li>
                             <?php } ?>
+            <?php } ?>
+
+
+            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
+                          <?php if($url=="Catalogos" && !empty($action) && $action == "RegistrarFechas"){ ?>
+            <li class="active"><a href="?route=Catalogos&action=RegistrarFechas"><i class="fa fa-object-ungroup"></i> Configurar fechas<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp del Catálogo</a></li>
+                            <?php }else{ ?>
+            <li class=""><a href="?route=Catalogos&action=RegistrarFechas"><i class="fa fa-object-ungroup"></i> Configurar fechas<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp del Catálogo</a></li>
+                            <?php } ?>
+                
             <?php } ?>
 
                       <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>

@@ -53,33 +53,11 @@
     <!-- Main content -->
     <section class="content">
 
-        <?php
-          $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
-          $estado_campana = $estado_campana2[0]['estado_campana'];
-        ?>
-        <?php if($estado_campana=="0"): ?>
-        <div class="row">
-          <div class="col-xs-12 col-md-12">
-            <div class="box">
-              <div class="box-header">
-                <h3 class="box-title">
-                  Estado de Campaña ~ <?php if($estado_campana=="1"){ echo "Abierta"; } if($estado_campana=="0"){ echo "Cerrada"; } ?> ~
-                </h3>
-              </div>
-            </div>
-          </div>  
-        </div>
-        <?php endif; ?>
-        <?php
-          if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
-            $estado_campana = "1";
-          }
-        ?>
         
       <div class="row">
         <!-- /.col -->
-        <div class=" col-md-12">
-          <div class="box nav-tabs-custom">
+        <div class="col-md-12">
+          <div class="nav-tabs-custom">
             <div class="tab-content">
               <div class="active tab-pane" id="activity">
                   <a href="?<?=$menu?>&route=Homing2" id="link" class="btn" style="border-radius:50%;padding:10px 12.5px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>">
@@ -190,6 +168,7 @@
                 <div class="row">
                   <div class="col-xs-12">
                     <span style="color:#000;font-size:2em">Aprobacion de Pedidos</span>
+                    
                   </div>
                 </div>
 
@@ -240,7 +219,7 @@
                                 <?php } ?>
                                 <?php if(count($planesCol)<2){ ?>
                                   <b><u>
-                                    <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Planes</a>
+                                    <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>">Seleccionar Planes</a>
                                   </u></b>
                                 <?php } ?>
                               
@@ -252,7 +231,7 @@
                                   </u></b>
                                 <?php }else if(count($planesCol)>1){ ?>
                                   <b><u>
-                                    <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Premios</a>
+                                    <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>">Seleccionar Premios</a>
                                   </u></b>
                                 <?php } ?>
                               
@@ -280,16 +259,6 @@
                                 $configbonoPrimerPago = 0;
                                 $configbonoSegundoPago = 0;
                                 $configbonoCierreEstructura = 0;
-
-                                $analistabonoContado = 0;
-                                $analistabonoPrimerPago = 0;
-                                $analistabonoSegundoPago = 0;
-                                $analistabonoCierreEstructura = 0;
-
-                                $superanalistabonoContado = 0;
-                                $superanalistabonoPrimerPago = 0;
-                                $superanalistabonoSegundoPago = 0;
-                                $superanalistabonoCierreEstructura = 0;
                                 foreach ($configuraciones as $config) {
                                   if(!empty($config['id_configuracion'])){
                                     if($config['clausula']=="Bonocontado"){
@@ -304,190 +273,52 @@
                                     if($config['clausula']=="Bonocierreestructura"){
                                       $configbonoCierreEstructura = $config['valor'];
                                     }
-                                    
-                                    if($config['clausula']=="Analistabonocontado"){
-                                      $analistabonoContado = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Analistabonoprimerpago"){
-                                      $analistabonoPrimerPago = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Analistabonosegundopago"){
-                                      $analistabonoSegundoPago = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Analistabonocierreestructura"){
-                                      $analistabonoCierreEstructura = $config['valor'];
-                                    }
-
-                                    if($config['clausula']=="Superanalistabonocontado"){
-                                      $superanalistabonoContado = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Superanalistabonoprimerpago"){
-                                      $superanalistabonoPrimerPago = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Superanalistabonosegundopago"){
-                                      $superanalistabonoSegundoPago = $config['valor'];
-                                    }
-                                    if($config['clausula']=="Superanalistabonocierreestructura"){
-                                      $superanalistabonoCierreEstructura = $config['valor'];
-                                    }
                                   }
                                 }
                                ?>
-                              <?php if($estado_campana=="1"){ ?>
-                                <?php if($configbonoContado=="1"): ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                      <b><u>
-                                          <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
-                                      </u></b> 
-                                      <br>
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($superanalistabonoContado=="1"): ?>
-                                      <b><u>
-                                          <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
-                                      </u></b> 
-                                      <br>
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista"): ?>
-                                    <?php if ($analistabonoContado=="1"): ?>
-                                      <b><u>
-                                          <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
-                                      </u></b> 
-                                      <br>
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                <?php endif; ?>
+                              <?php if($configbonoContado=="1"): ?>
+                              <b><u>
+                                  <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
+                              </u></b> 
+                              <br>
+                              <?php endif; ?>
 
+                              <?php if($configbonoPrimerPago=="1"): ?>
+                              <br>
+                              <b><u>
+                                  <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
+                              </u></b> 
+                              <br>
+                              <?php endif; ?>
 
-                                <?php if($configbonoPrimerPago=="1"): ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
-                                      </u></b> 
-                                      <br>
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($superanalistabonoPrimerPago=="1"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
-                                      </u></b> 
-                                      <br>
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista"): ?>
-                                    <?php if ($analistabonoPrimerPago=="1"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosPago1Puntual"><span style="font-size:1.4em">+</span> Descuentos Por Primer Pago Puntual</a>
-                                      </u></b> 
-                                      <br>
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                <?php endif; ?>
-
-                                <?php if($configbonoSegundoPago=="1"): ?>
-                                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
-                                      </u></b>  
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                    <?php if ($superanalistabonoSegundoPago=="1"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
-                                      </u></b>  
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista"): ?>
-                                    <?php if ($analistabonoSegundoPago=="1"): ?>
-                                      <br>
-                                      <b><u>
-                                          <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
-                                      </u></b>  
-                                    <?php endif ?>
-                                  <?php endif; ?>
-                                                                  
-                                <?php endif; ?>
-                              <?php  } ?>
+                              <?php if($configbonoSegundoPago=="1"): ?>
+                              <br>
+                              <b><u>
+                                  <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
+                              </u></b>                                
+                              <?php endif; ?>
                             </div>
 
-                            <?php if($estado_campana=="1"){ ?>
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                      <?php 
-                                      if(!empty($estructuraLideres)){
-                                        if(count($estructuraLideres) > 0){
-                                          if($pedido['cantidad_aprobado']>0){
-                                            if($configbonoCierreEstructura=="1"):
-                                              if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
-                                              <div class="col-xs-12 col-sm-6" style="text-align:right;">
-                                                <br>
-                                                <b><u>
-                                                    <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
-                                                </u></b>                              
-                                              </div>
-                                            <?php 
-                                              }
-                                            endif; 
-                                          } 
-                                        }
-                                      }
-                                      ?>
-                                <?php endif; ?>
-                                <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                  <?php if ($superanalistabonoCierreEstructura=="1"): ?>
-                                      <?php 
-                                      if(!empty($estructuraLideres)){
-                                        if(count($estructuraLideres) > 0){
-                                          if($pedido['cantidad_aprobado']>0){
-                                            if($configbonoCierreEstructura=="1"):
-                                              if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
-                                              <div class="col-xs-12 col-sm-6" style="text-align:right;">
-                                                <br>
-                                                <b><u>
-                                                    <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
-                                                </u></b>                              
-                                              </div>
-                                            <?php 
-                                              }
-                                            endif; 
-                                          } 
-                                        }
-                                      }
-                                      ?>
-                                  <?php endif ?>
-                                <?php endif; ?>
-                                <?php if($_SESSION['nombre_rol']=="Analista"): ?>
-                                  <?php if ($analistabonoCierreEstructura=="1"): ?>
-                                      <?php 
-                                      if(!empty($estructuraLideres)){
-                                        if(count($estructuraLideres) > 0){
-                                          if($pedido['cantidad_aprobado']>0){
-                                            if($configbonoCierreEstructura=="1"):
-                                              if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
-                                              <div class="col-xs-12 col-sm-6" style="text-align:right;">
-                                                <br>
-                                                <b><u>
-                                                    <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
-                                                </u></b>                              
-                                              </div>
-                                            <?php 
-                                              }
-                                            endif; 
-                                          } 
-                                        }
-                                      }
-                                      ?>
-                                  <?php endif ?>
-                                <?php endif; ?>
+                            <?php 
+                            if(!empty($estructuraLideres)){
+                              if(count($estructuraLideres) > 0){
+                                if($pedido['cantidad_aprobado']>0){
+                                  if($configbonoCierreEstructura=="1"):
+                                    if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
+                                    <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                                      <br>
+                                      <b><u>
+                                          <a class="asignarDescuentoCierreEstructura"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
+                                      </u></b>                              
+                                    </div>
+                                  <?php 
+                                    }
+                                  endif; 
+                                } 
+                              }
+                            }
 
-
-                            <?php  } ?>
-
+                            ?>
                           </div>
                         <?php endif; ?>
 
@@ -518,9 +349,10 @@
                       <div class="col-xs-12">
 
                         <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                        <input class="form-control" id="cantidad" step="1" name="cantidad" min="1" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
+                        <input class="form-control" id="cantidad" step="1" name="cantidad" min="1" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?>>
                         <span id="error_cantidad" class="errors"></span>
                       </div>
+                      
                     </div>
                     <br>
                     <div class="row">
@@ -528,7 +360,7 @@
                         <!-- <button class="form-control" style="background:<?php echo $color_btn_sweetalert ?>;color:#FFF;">Enviar</button> -->  
                         <?php if ($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"): ?>
                           
-                        <span type="submit" <?php if($estado_campana=="1"){ echo 'class="btn enviar"'; } ?>  <?php if($estado_campana=="0"){ echo "disabled class='btn enviar2'"; } ?>>Aprobar</span>
+                        <span type="submit" class="btn enviar">Aprobar</span>
                         <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
                         <button class="btn-enviar d-none" disabled="" >aprobar</button>
 
@@ -536,6 +368,8 @@
                       </div>
                     </div>
                   </form>
+
+
 
 
                         <?php }  ?>
@@ -552,7 +386,6 @@
                       $ruta = "Pagos&admin=1&lider=".$pedido['id_cliente'];
                     }
                   ?>
-
                   <hr>
                   <div class="row text-center" style="padding:10px 20px;">
                     <div class="col-xs-4" style="padding:10px 0px;background:;border:1px solid #ccc">
@@ -1271,15 +1104,9 @@
                           <div class="row">
                             <?php 
                               $bg_debe_haber = "#"; 
-                              $cantidad_excedente = 0;
-                              $excedentes = $lider->consultarQuery("SELECT * FROM excedentes WHERE id_pedido = {$_GET['id']}");
-                              if(count($excedentes)>1){
-                                $excedent = $excedentes[0];
-                                $cantidad_excedente = $excedent['cantidad_excedente'];
-                              }
                     // $total_responsabilidad = $total_costo - $total_descuento_distribucion;
                                 $total_responsabilidad = $total_costo - $totalDescuentoVendedor;
-                                $restaTotalResponsabilidad = $total_responsabilidad-$abonado + $cantidad_excedente;
+                                $restaTotalResponsabilidad = $total_responsabilidad-$abonado;
                             ?>
                             <div class="col-md-4" style="background:<?php echo $bg_debe_haber; ?>;position:relative;top:5px">
                               <br>
@@ -1303,12 +1130,11 @@
                                 ?>
                                 <b>$<?php echo number_format($restaTotalResponsabilidad,2,',','.') ?></b>
                               </span>
-                              <?php if($estado_campana=="1"){ ?>
+
                               <?php
                                 if ($Opttraspasarexcedente=="1"):
-                                  $restoDisponible = ($restaTotalResponsabilidad*(-1));
+                                  $restoDisponible = $restaTotalResponsabilidad*-1;
                                   $newrestoDisponible = number_format($restoDisponible,2);
-                                  $newrestoDisponibleNegativo = number_format($restaTotalResponsabilidad,2);
                                   if($_SESSION['nombre_rol']!="Vendedor"){ ?>
                                     <?php if ($newrestoDisponible > 0 ): ?>
                                       <br>
@@ -1318,23 +1144,15 @@
                                 <?php 
                                   }else{
                                     if($newrestoDisponible > 0 ): ?>
-                                      <?php if ($cliente['id_cliente'] == $cuenta['id_cliente']): ?>
-                                        <br>
-                                        <style>.traspasar:hover{cursor:pointer;}</style>
-                                        <span class="modalTraspasar" style="color:#C00;"><u class="traspasar"><b>Traspasar</b></u></span>
-                                      <?php endif ?>
+                                      <br>
+                                      <style>.traspasar:hover{cursor:pointer;}</style>
+                                      <span class="modalTraspasar" style="color:#C00;"><u class="traspasar"><b>Traspasar</b></u></span>
                                     <?php endif;
                                   }
                               ?>
                               <?php endif; ?>
-                              <?php } ?>
 
-                              <br>
-                              <?php
-                                if($cantidad_excedente>0){
-                                  echo "<span style='color:#000;'><b>Excedente pagado</b></span>";
-                                }
-                              ?>
+
                             </div>
 
                             <div class="col-md-4" style="background:<?php echo $bg_debe_haber; ?>;position:relative;top:5px">
@@ -1367,20 +1185,6 @@
 
                           <?php endif; ?>
 
-                        <?php
-                          if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
-                            // echo $newrestoDisponible = $newrestoDisponible-0.00;
-                            // echo $newrestoDisponible;
-                            // echo "<br>";
-                            // echo $newrestoDisponibleNegativo;
-                            if($newrestoDisponible > 0){
-                        ?>
-                            <br>                              
-                            <button class="btn enviar2 btncerrarExcedente" style="background:#c00 !important;">Pagar excedente</button>
-                        <?php
-                            }
-                          }
-                        ?>
 
 
                           <?php
@@ -1499,6 +1303,14 @@
                             endif;
 
                             ?>
+
+                            <?php if($restaTotalResponsabilidad){ ?>
+
+                              <br>
+                              <?=$restaTotalResponsabilidad;?> 
+                              asdasdasd
+
+                            <?php } ?>
 
                       </div>
 
@@ -2135,93 +1947,7 @@
       </div>
   </div>
 
-  <div class="box-modalExcedente" style="display:none;background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050">
-      <div class="content">
-        <div class="row">
-          <div class="col-xs-12 col-md-8 col-md-offset-2">
-            <div class="container-fluid">
-              <div class="box">
-                  <div class="box-header with-border">
-                    <div style="text-align:right;"><span class="btn cerrarModalExcedente" style="background:#CCC"><b>X</b></span></div>
-                    <div class="user-block">
-                      <img style="width:50px;height:50px;margin-left:5px;margin-right:5px;" class="img-circle img-bordered-sm modal-img" src="<?=$fotoPerfilCliente?>" alt="user image">
-                      <span class="username">
-                        <h4><?=$cliente['primer_nombre']." ".$cliente['primer_apellido']?></h4>
-                      </span>
-                    </div>
-                      <br>
-                      <h3 class="box-title">Cierre de Excendente </h3>
-                  </div>
-
-           
-                <div action="" method="POST" class="form">
-                    <div class="row">
-                      <div class="col-xs-12" style="padding:1% 5%;font-size:1.3em;">
-                          Se realizo la devolución de excedentes
-                          <?php if($cliente['sexo']=="Femenino"){ ?> a la <?php } ?>
-                          <?php if($cliente['sexo']=="Masculino"){ ?> al <?php } ?>
-                          lider <?=$cliente['primer_nombre']." ".$cliente['primer_apellido']?>
-                          <br>
-                          Por precio total de: 
-                          <?php 
-                            // $restopositivo = ($restaTotalResponsabilidad * (-1));
-                          ?>
-
-                          <b>$<?=number_format($newrestoDisponible,2,',','.');?></b>
-                          <!-- <b>$<?=number_format($restopositivo,2,',','.');?></b> -->
-                      </div>
-                      <input type="hidden" class="id_pedido_excedente" value="<?=$_GET['id']; ?>">
-                      <input type="hidden" class="cantidad_excedente" value="<?=$newrestoDisponible; ?>">
-                      <!-- <input type="hidden" class="cantidad_excedente" value="<?=$restopositivo; ?>"> -->
-                      <!-- <table class="text-center" style="width:90%;">
-                        <thead>
-                          <th>Líder</th>
-                          <th>Excedente</th>
-                          <th>Concepto</th>
-                          <th>Cantidad</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                              <td style="width:25%"><?=$liderEmisor['primer_nombre']." ".$liderEmisor['primer_apellido']?></td>
-                              <?php if (count($traspasoEmitido)>1):
-                                $traspasoEmitido1 = $traspasoEmitido[0];
-                                if ($traspasoEmitido1['cantidad_traspaso'] != 0) {
-                                  $restoDisponible += $traspasoEmitido1['cantidad_traspaso'];
-                                }
-                              endif; ?>
-                              <td style="width:25%">$<?=number_format($restoDisponible,2,',','.');?></td>
-                              <td style="width:25%">Traspasar</td>
-                              <td style="width:25%">
-                                <div class="input-group">
-                                  <span class="input-group-addon">$</span>
-                                  <input type="number" max="<?=$restoDisponible?>" class="form-control cantidadTraspaso" min="0" <?php if (count($traspasoEmitido)>1): $traspasoEmitido2 = $traspasoEmitido[0]; if ($traspasoEmitido2['cantidad_traspaso']!="0") { ?> value="<?=$traspasoEmitido2['cantidad_traspaso'];?>" <?php }else{ ?> value='0.00' <?php } else: ?> value='0.00' <?php endif; ?> value='0.00' id="cantidadTraspaso" step="0.01" name="cantidadTraspaso">
-                                    
-                                </div>
-                              </td>
-                            </tr>
-
-                          <input type="hidden" value="<?=$restoDisponible?>" class="restoDisponible" name="restoDisponible">
-                          <input type="hidden" value="<?=$liderEmisor['id_cliente']?>" class="id_cliente_receptor" name="id_cliente_receptor">
-                          <input type="hidden" value="<?=$liderEmisor['id_pedido']?>" class="id_pedido_receptor" name="id_pedido_receptor">
-                          <input type="hidden" value="<?=$pedido['id_cliente']?>" class="id_cliente_emisor" name="id_cliente_emisor">
-                          <input type="hidden" value="<?=$pedido['id_pedido']?>" class="id_pedido_emisor" name="id_pedido_emisor">
-
-                        </tbody>
-                      </table> -->
-                    </div>
-                    <div class="box-footer">
-                      <span type="submit" class="btn enviar enviarModalExcedente">Enviar</span>
-                      <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
-                      <button class="btn-enviar-modalExcedente d-none" disabled="" >enviar</button>
-                    </div>
-                </div>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-  </div>  
+  
 
   <!-- /.content-wrapper -->
   <?php require_once 'public/views/assets/footer.php'; ?>
@@ -2239,14 +1965,14 @@
 <input type="hidden" class="dpid" value="<?php echo $id_despacho ?>">
 <input type="hidden" class="dp" value="<?php echo $num_despacho ?>">
 <?php endif; ?>
+
+<?php if (!empty($responseGema)): ?>
+<input type="hidden" class="responseGema" value="<?php echo $responseGema; ?>">
 <input type="hidden" class="campaing" value="<?php echo $id_campana ?>">
 <input type="hidden" class="n" value="<?php echo $numero_campana ?>">
 <input type="hidden" class="y" value="<?php echo $anio_campana ?>">
 <input type="hidden" class="dpid" value="<?php echo $id_despacho ?>">
 <input type="hidden" class="dp" value="<?php echo $num_despacho ?>">
-
-<?php if (!empty($responseGema)): ?>
-<input type="hidden" class="responseGema" value="<?php echo $responseGema; ?>">
 <input type="hidden" class="gemasdisponibles" value="<?=$gemasAdquiridasDisponiblesCliente;?>">
 <input type="hidden" class="gemasbloqueadas" value="<?=$gemasAdquiridasBloqueadasCliente;?>">
 <?php endif ?>
@@ -2379,90 +2105,6 @@ $(document).ready(function(){
     $(".btn-enviar-modalTraspasoget").click();
   });
 
-  $(".btncerrarExcedente").click(function(){
-    $(".box-modalExcedente").fadeIn(500);
-  });
-  $(".cerrarModalExcedente").click(function(){
-    $(".box-modalExcedente").fadeOut(500);
-  });
-  $(".enviarModalExcedente").click(function(){
-    var id = $(".id_pedido_excedente").val();
-    var cantidad = $(".cantidad_excedente").val();
-    // alert(id);
-    // alert(cantidad);  
-    swal.fire({ 
-      title: "¿Desea marcar como excedente ya pagado? <br><br> ¿Desea continuar?",
-      text: "Se guardaran estos cambios y el excedente quedará en $0,00",
-      type: "question",
-      showCancelButton: true,
-      confirmButtonColor: "#ED2A77",
-      confirmButtonText: "¡Confirmar!",
-      cancelButtonText: "Cancelar", 
-      closeOnConfirm: false,
-      closeOnCancel: false 
-    }).then((isConfirm) => {
-      if (isConfirm.value){
-        // $(".btn-enviar").removeAttr("disabled");
-        // $(".btn-enviar").click();
-        $.ajax({
-            url: '',
-            type: 'POST',
-            data: {
-              cerrarExcedenteLider: true,
-              cantidad_excedente: cantidad,
-            },
-            success: function(respuesta){
-              // alert(respuesta);
-              if (respuesta == "1"){
-                swal.fire({
-                    type: 'success',
-                    title: '¡Excedente pagado correctamente!',
-                    confirmButtonColor: "#ED2A77",
-                }).then(function(){
-                  var campaing = $(".campaing").val();
-                  var n = $(".n").val();
-                  var y = $(".y").val();
-                  var dpid = $(".dpid").val();
-                  var dp = $(".dp").val();
-                  window.location = "?campaing="+campaing+"&n="+n+"&y="+y+"&dpid="+dpid+"&dp="+dp+"&route=Pedidos&id=<?=$_GET['id']?>";
-                });
-              }
-              if (respuesta == "2"){
-                swal.fire({
-                    type: 'error',
-                    title: '¡No se pudo guardar el cambio!',
-                    text: 'Vuelva a intentar, si el error persiste comuniquese con el soporte',
-                    confirmButtonColor: "#ED2A77",
-                });
-              }
-              if (respuesta == "9"){
-                swal.fire({
-                    type: 'warning',
-                    title: '¡El excedente ya fue pagado!',
-                    text: 'Ya existe un excedente aplicado a esta factura',
-                    confirmButtonColor: "#ED2A77",
-                });
-              }
-              if (respuesta == "5"){ 
-                swal.fire({
-                    type: 'error',
-                    title: '¡Error de conexion con la base de datos, contacte con el soporte!',
-                    confirmButtonColor: "#ED2A77",
-                });
-              }
-            }
-        });
-          
-      }else { 
-          swal.fire({
-              type: 'error',
-              title: '¡Proceso cancelado!',
-              confirmButtonColor: "#ED2A77",
-          });
-      } 
-    });
-
-  });
 
   $(".cerrarDetalleModalCierre").click(function(){
     $(".box-modalDetalleCierre").fadeOut(500);
@@ -2639,7 +2281,7 @@ $(document).ready(function(){
     if(response == true){
       $(".btn-enviar").attr("disabled");
 
-        swal.fire({ 
+      swal.fire({ 
           title: "¿Desea guardar los datos?",
           text: "Se guardaran los datos ingresados, ¿desea continuar?",
           type: "question",
@@ -2691,7 +2333,7 @@ $(document).ready(function(){
                   confirmButtonColor: "#ED2A77",
               });
           } 
-        });
+      });
 
     } //Fin condicion
 

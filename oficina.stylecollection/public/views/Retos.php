@@ -55,6 +55,11 @@
             </div>
           </div>  
         <?php endif; ?>
+        <?php
+          if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+            $estado_campana = "1";
+          }
+        ?>
 
 
         <!-- left column -->

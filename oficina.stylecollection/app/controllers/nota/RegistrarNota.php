@@ -17,6 +17,9 @@
 
 	$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
     $estado_campana = $estado_campana2[0]['estado_campana'];
+    if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+		$estado_campana = "1";
+	}
 if($estado_campana=="1"){
 
 	function separateDatosCuentaTel($num){

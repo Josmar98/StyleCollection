@@ -6,7 +6,12 @@
 			$id_despacho = $_GET['dpid'];
 			$num_despacho = $_GET['dp'];
 			$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
-
+		$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+    $estado_campana = $estado_campana2[0]['estado_campana'];
+    if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+		$estado_campana = "1";
+	}
+	if($estado_campana=="1"){
 		if(!empty($_POST['validarData'])){
 			$id_liderazgo = $_POST['id_liderazgo'];
 			$query = "SELECT * FROM liderazgos_campana WHERE id_liderazgo = $id_liderazgo and id_campana = $id_campana and estatus = 1";
@@ -405,5 +410,7 @@
 
 		}
 
-
+	}else{
+		require_once 'public/views/error404.php'
+	}
 ?>

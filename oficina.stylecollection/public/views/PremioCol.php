@@ -37,10 +37,6 @@
       <div class="row">
 
 
-
-
-
-
         <!-- left column -->
         <div class="col-xs-12" >
           <!-- general form elements -->
@@ -62,6 +58,11 @@
           </div>  
         </div>
         <?php endif; ?>
+        <?php
+          if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+            $estado_campana = "1";
+          }
+        ?>
 
           <div class="box">
             <div class="box-header with-border">

@@ -53,6 +53,11 @@
             </div>
           </div>  
         <?php endif; ?>
+        <?php
+          if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+            $estado_campana = "1";
+          }
+        ?>
 
         <div class="col-xs-12">
           <!-- /.box -->

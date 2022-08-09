@@ -252,6 +252,8 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"):
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosContado += $data['monto_pago'];
@@ -292,13 +294,14 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
+
                           <?php } ?>
                                 <button class="btn btnFichaDetalle" style="border:0;background:none;color:#9904a7" value="<?=$data['id_pago']?>"><span class="fa fa-file-text"></span></button>
+
                           </td>
                         <?php endif ?>
                         <td style="width:5%">
@@ -432,8 +435,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -570,8 +574,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -707,8 +712,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -806,6 +812,7 @@
                       </tr>
                         <?php
                               }
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -857,18 +864,20 @@
                   $abonadoContado=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Contado"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoContado += $data['equivalente_pago'];
-                              $abonadoContado += $data['equivalente_pago'];
-                            }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoContado += $data['equivalente_pago'];
-                              $diferidoContado += $data['equivalente_pago'];
-                            }else{
-                              $reportadoContado += $data['equivalente_pago'];
-                            }
-                          endif;
+                          
+                            if($data['tipo_pago']=="Contado"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $abonadoContado += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoContado += $data['equivalente_pago'];
+                                $diferidoContado += $data['equivalente_pago'];
+                              }else{
+                                $reportadoContado += $data['equivalente_pago'];
+                              }
+                            endif;
+                                  
                         endif;
                   endforeach;
                 ?>
@@ -939,6 +948,7 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
+                              
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosI += $data['monto_pago'];
@@ -979,8 +989,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1119,8 +1130,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1257,8 +1269,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1394,8 +1407,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1493,6 +1507,8 @@
                       </tr>
                         <?php
                               }
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -1543,18 +1559,19 @@
                   $abonadoInicial=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Inicial"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoInicial += $data['equivalente_pago'];
-                              $abonadoInicial += $data['equivalente_pago'];
-                            }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoInicial += $data['equivalente_pago'];
-                              $diferidoInicial += $data['equivalente_pago'];
-                            }else{
-                              $reportadoInicial += $data['equivalente_pago'];
-                            }
-                          endif;
+                          
+                            if($data['tipo_pago']=="Inicial"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $abonadoInicial += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoInicial += $data['equivalente_pago'];
+                                $diferidoInicial += $data['equivalente_pago'];
+                              }else{
+                                $reportadoInicial += $data['equivalente_pago'];
+                              }
+                            endif;    
                         endif;
                   endforeach;
                 ?>
@@ -1625,6 +1642,10 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
+
+
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosP1 += $data['monto_pago'];
@@ -1665,8 +1686,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1804,8 +1826,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -1942,8 +1965,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2079,8 +2103,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2178,6 +2203,7 @@
                       </tr>
                         <?php
                               }
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -2241,18 +2267,20 @@
                   $abonadoPrimer=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Primer Pago"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoPrimer += $data['equivalente_pago'];
-                              $abonadoPrimer += $data['equivalente_pago'];
-                            }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoPrimer += $data['equivalente_pago'];
-                              $diferidoPrimer += $data['equivalente_pago'];
-                            }else{
-                              $reportadoPrimer += $data['equivalente_pago'];
-                            }
-                          endif;
+                          
+                          
+                            if($data['tipo_pago']=="Primer Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $abonadoPrimer += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoPrimer += $data['equivalente_pago'];
+                                $diferidoPrimer += $data['equivalente_pago'];
+                              }else{
+                                $reportadoPrimer += $data['equivalente_pago'];
+                              }
+                            endif;
                         endif;
                   endforeach;
                 ?>
@@ -2324,6 +2352,8 @@
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
                             if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="SEGUNDO PAGO"):
+
+
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
                                   $montosC += $data['monto_pago'];
@@ -2359,8 +2389,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2493,8 +2524,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2626,8 +2658,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2758,8 +2791,9 @@
                                     
                                   </span>
                                 </button>
-
                               <?php endif; ?>
+
+
                                 <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_modulo'] ?>&permission=1">
                                   <span class="fa fa-trash"></span>
                                 </button> -->
@@ -2857,6 +2891,8 @@
                       </tr>
                         <?php
                               }
+
+
                             endif; endif; endforeach;
                         ?>
                     </tbody>
@@ -2905,18 +2941,19 @@
                   $abonadoSegundo=0;
                   foreach ($pagos as $data):
                         if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Segundo Pago"):
-                            if($data['estado']=="Abonado"){
-                              $reportadoSegundo += $data['equivalente_pago'];
-                              $abonadoSegundo += $data['equivalente_pago'];
-                            }
-                            else if($data['estado']=="Diferido"){
-                              $reportadoSegundo += $data['equivalente_pago'];
-                              $diferidoSegundo += $data['equivalente_pago'];
-                            }else{
-                              $reportadoSegundo += $data['equivalente_pago'];
-                            }
-                          endif;
+
+                            if($data['tipo_pago']=="Segundo Pago"):
+                              if($data['estado']=="Abonado"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $abonadoSegundo += $data['equivalente_pago'];
+                              }
+                              else if($data['estado']=="Diferido"){
+                                $reportadoSegundo += $data['equivalente_pago'];
+                                $diferidoSegundo += $data['equivalente_pago'];
+                              }else{
+                                $reportadoSegundo += $data['equivalente_pago'];
+                              }
+                            endif;
                         endif;
                   endforeach;
                 ?>

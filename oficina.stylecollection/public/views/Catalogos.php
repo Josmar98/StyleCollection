@@ -87,49 +87,76 @@
                       <?php if (!empty($data['id_catalogo'])): ?>
                         <?php if ($data['cantidad_gemas']==$cant['cantidad_gemas']): ?>
                           <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
-                          <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style="text-align:center;font-size:1.1em">
+                          <div class="col-xs-12 col-sm-6 col-md-4" style="text-align:center;font-size:1.1em">
                           <?php endif; ?>
                           <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
-                          <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2" style="text-align:center;font-size:1.1em">
+                          <div class="col-xs-6 col-sm-4 col-md-3" style="text-align:center;font-size:1.1em">
                           <?php endif; ?>
-                            <div style="border:1px solid <?=$color?>;">
-                              <div class="">
+                          <?php
+                            $imagen = getimagesize($data['imagen_catalogo']); //Sacamos la información.
+                            $ancho = $imagen[0]; //Ancho.
+                            $alto = $imagen[1]; //Alto.
+                          ?>
+                          <style>
+                            .boxCatalogo:hover{
+                              /*border:1px solid rgba(230,230,230,1) !important;*/
+                              box-shadow:0px 8px 15px rgba(230,230,230,1) !important;
+                            }
+                          </style>
+                            <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:25em;">
+                              <div class="" style="width:90%;height:65%;margin-left:auto;margin-right:auto;">
                                 <?php if (!empty($data['imagen_catalogo'])): ?>
-                                  <img style="margin:0;padding:0;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
+                                  <?php if ($alto > $ancho): ?>
+                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="" src="<?=$data['imagen_catalogo']?>">
+                                  <?php endif ?>
+                                  <?php if ($alto < $ancho): ?>
+                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
+                                  <?php endif ?>
+
                                 <?php endif; ?>
                               </div>
-                              <div class="" style="border-bottom:1px solid <?=$color?>;">
-                                <b><?=$data['nombre_catalogo']?></b>
+                              <div class="row" style="height:12.5%;padding:2% 0;">
+                                <div class="col-xs-10 col-xs-offset-1" style="border-bottom:0px solid <?=$color?>;">
+                                  <b style="color:<?=$fucsia?>"><?=$data['nombre_catalogo']?></b>
+                                </div>
                               </div>
-                              <div style="border-bottom:1px solid <?=$color?>;">
-                                <img style="width:20px" src="<?=$fotoGema?>">
-                                <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
+
+                              <div class="row" style="height:10%;">
+                                <div style="color:<?=$fucsia;?>;background:#fff;border:1px solid <?=$fucsia?>;" class="btn col-xs-8 col-xs-offset-2">
+                                  <img style="width:15px" src="<?=$fotoGema?>">
+                                  <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
+                                </div>
                               </div>
                               <?php if ($data['codigo_catalogo']!=""): ?>
-                              <div class="" style="border-bottom:1px solid <?=$color?>;">
+                              <!-- <div class="" style="border-bottom:1px solid <?=$color?>;">
                                 <b>#<?=$data['codigo_catalogo']?></b>
-                              </div>
+                              </div> -->
                               <?php endif; ?>
                               
 
                               <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                              <div class="" >
-                                      
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                  <button class="btn modificarBtn" style="font-size:1em;border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_catalogo'] ?>">
-                                    <span class="fa fa-wrench">
-                                      
-                                    </span>
-                                  </button>
-                                <?php endif; ?>
+                               
+                                <div class="row">
+                                    
+                                  <div class="col-xs-12" style="height:12.5%;width:100%;margin-top:2%;" >
+                                          
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                      <button class="modificarBtn btn" style="font-size:1em;border:0;background:none;background:#04a7c9;color:#FFF;width:40%;height:auto;margin-left:auto;margin-right:auto;display:inline-block;" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_catalogo'] ?>">
+                                        <span class="fa fa-wrench">
+                                          
+                                        </span>
+                                      </button>
+                                    <?php endif; ?>
 
-                                <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                  <button class="btn eliminarBtn" style="font-size:1em;border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_catalogo'] ?>&permission=1">
-                                    <span class="fa fa-trash"></span>
-                                  </button>
-                                <?php endif; ?>
-                              
-                              </div>
+                                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                      <button class="eliminarBtn btn" style="font-size:1em;border:0;background:none;background:red;color:#FFF;width:40%;height:auto;margin-left:auto;margin-right:auto;display:inline-block;" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_catalogo'] ?>&permission=1">
+                                        <span class="fa fa-trash"></span>
+                                      </button>
+                                    <?php endif; ?>
+                                  
+                                  </div>
+                                </div>
+
                               <?php endif; ?>
                               
                             </div>

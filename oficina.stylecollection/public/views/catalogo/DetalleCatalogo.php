@@ -46,7 +46,7 @@
                   <?php if (!empty($data['id_catalogo'])): ?>
                   <div class="row">
                     <div class="col-xs-12" style="border-top:1px solid <?=$color?>;border-bottom:1px solid <?=$color?>;">
-                      <h2>
+                      <h2 style="color:<?=$fucsia;?>">
                         <img style="width:55px;margin-left:15px" src="<?=$fotoGema?>">
                         <b><?=number_format($data['cantidad_gemas'],2,',','.');?> Gemas</b>
                       </h2>
@@ -57,74 +57,88 @@
                   <div class="row box<?=$cant['cantidad_gemas']?>" style="margin-top:5px">
 
                           <div class="col-xs-12 col-sm-6" style="text-align:center;font-size:1.1em">
+                            <div class="row">
                               <div class="">
                                 <?php if (!empty($data['imagen_catalogo'])): ?>
-                                  <img style="margin:0;padding:0;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
+                                  <div class="col-xs-3 col-md-3"></div>
+                                  <img style="margin:0;padding:0;" class="col-xs-6 col-sm-6 col-md-6" src="<?=$data['imagen_catalogo']?>">
+                                  <div class="col-xs-3 col-md-3"></div>
                                 <?php endif; ?>
                               </div>
+                            </div>
                           </div>
+                          <style>
+                            .title{
+                              color:<?=$fucsia; ?>;
+                              /*text-transform:uppercase;*/
+                              font-size:1.3em;
+                            }
+                            .info{
+                              font-size:1.1em;
+                            }
+                          </style>
                           <div class="col-xs-12 col-sm-6" style="text-align:left;font-size:1.1em">
                             <table class="tablee" style="width:100%;font-size:1.1em">
                               <?php if ($data['nombre_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Nombre: </label> </td>
-                                  <td style=""> <b><?=$data['nombre_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Nombre: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['nombre_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['codigo_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Codigo: </label> </td>
-                                  <td style=""> <b>#<?=$data['codigo_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Codigo: </label> </td>
+                                  <td class="info" style=""> <b>#<?=$data['codigo_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['marca_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Marca: </label> </td>
-                                  <td style=""> <b><?=$data['marca_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Marca: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['marca_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['color_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Color: </label> </td>
-                                  <td style=""> <b><?=$data['color_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Color: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['color_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['voltaje_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Voltaje: </label> </td>
-                                  <td style=""> <b><?=$data['voltaje_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Voltaje: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['voltaje_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['caracteristicas_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Caracteristicas: </label> </td>
-                                  <td style=""> <b><?=$data['caracteristicas_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Caracteristicas: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['caracteristicas_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['puestos_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Puestos: </label> </td>
-                                  <td style=""> <b><?=$data['puestos_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Puestos: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['puestos_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['otros_catalogo']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Otros: </label> </td>
-                                  <td style=""> <b><?=$data['otros_catalogo']?></b> </td>
+                                  <td class="title" style=""> <label>Otros: </label> </td>
+                                  <td class="info" style=""> <b><?=$data['otros_catalogo']?></b> </td>
                                 </tr>
                               <?php endif; ?>
 
                               <?php if ($data['cantidad_gemas']!=""): ?>
                                 <tr>
-                                  <td style=""> <label>Costo: </label> </td>
-                                  <td style="">
+                                  <td class="title" style=""> <label>Costo: </label> </td>
+                                  <td class="info" style="">
                                     <img style="width:20px" src="<?=$fotoGema?>">
                                     <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
                                   </td>

@@ -1332,7 +1332,7 @@
                               <br>
                               <?php
                                 if($cantidad_excedente>0){
-                                  echo "<span style='color:#000;'><b>Excedente pagado</b></span>";
+                                  echo "<span style='color:#000;'><b>Excedente pagado $".number_format($cantidad_excedente,2,',','.')."</b></span>";
                                 }
                               ?>
                             </div>

@@ -66,13 +66,13 @@
                     </span>
                   </td>
                   <td style="width:20%">
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_producto'] ?>">
+                         <!--  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_producto'] ?>">
                             <span class="fa fa-wrench">
                               
                             </span>
-                          </button>
+                          </button> -->
 
-                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_producto'] ?>&permission=1">
+                          <button class="btn eliminarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_producto'] ?>&permission=1">
                             <span class="fa fa-trash"></span>
                           </button>
                   </td>

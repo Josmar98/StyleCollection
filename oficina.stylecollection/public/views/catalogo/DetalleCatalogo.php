@@ -47,7 +47,7 @@
                   <div class="row">
                     <div class="col-xs-12" style="border-top:1px solid <?=$color?>;border-bottom:1px solid <?=$color?>;">
                       <h2 style="color:<?=$fucsia;?>">
-                        <img style="width:55px;margin-left:15px" src="<?=$fotoGema?>">
+                        <img style="width:60px;padding:0;margin:0;margin-left:15px;" src="<?=$fotoGema?>">
                         <b><?=number_format($data['cantidad_gemas'],2,',','.');?> Gemas</b>
                       </h2>
                       <div style="clear:both;"></div>
@@ -139,14 +139,14 @@
                                 <tr>
                                   <td class="title" style=""> <label>Costo: </label> </td>
                                   <td class="info" style="">
-                                    <img style="width:20px" src="<?=$fotoGema?>">
+                                    <img style="width:35px" src="<?=$fotoGema?>">
                                     <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
                                   </td>
                                 </tr>
                               <?php endif; ?>
                             </table>
                             
-                            <div class="">
+                            <div class="" style="margin-top:2%;">
                               <?php if ($gemasAdquiridasDisponibles >= $data['cantidad_gemas']): ?>
                                   <span class="btn enviar2 canjearBtn col-xs-12" style="font-size:1em;border:0;background:none;" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_catalogo'] ?>"><span class="fa fa-diamond"></span> Canjear <span class="fa fa-diamond"></span></span>
                               <?php else: ?>

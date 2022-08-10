@@ -8,11 +8,10 @@
 	// }
 
 	if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" ){
-		$campanas=$lider->consultar("campanas");
+		$campanas=$lider->consultarQuery("SELECT * FROM campanas WHERE estatus = 1 ORDER BY id_campana DESC");
 	}else{
-		$campanas=$lider->consultarQuery("SELECT * FROM campanas WHERE estatus = 1 and visibilidad = 1");
+		$campanas=$lider->consultarQuery("SELECT * FROM campanas WHERE estatus = 1 and visibilidad = 1 ORDER BY id_campana DESC");
 	}
-
 
 
 if(empty($_POST)){

@@ -1,7 +1,9 @@
 <?php 
-
 	if(is_file('config/database.php')){
 		require_once'config/database.php';
+	}
+	if(is_file('admin/config/database.php')){
+		require_once'admin/config/database.php';
 	}
 	if(is_file('../config/database.php')){
 		require_once'../config/database.php';

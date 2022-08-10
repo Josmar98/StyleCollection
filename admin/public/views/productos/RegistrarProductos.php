@@ -80,25 +80,8 @@
                       <textarea class="form-control" id="descripcion" name="descripcion" placeholder="Descripcion del producto" maxlength="200" style="height:60px;max-height:60px;min-height:60px;width:100%;min-width:100%;max-width:100%;"></textarea>
                       <span id="error_descripcion" class="errors"></span>
                     </div> 
-                    <div class="form-group col-sm-6">
-                      <label for="fragancias">Fragancias</label>
-                      
-                      <!-- <textarea class="form-control" id="fragancias" name="fragancias" placeholder="Fragancias que contiene el producto" maxlength="200" style="height:60px;max-height:60px;min-height:60px;width:100%;min-width:100%;max-width:100%;" readonly=""></textarea> -->
-                      <select class="form-control select2" id="fragancias" multiple="multiple" name="fragancias[]">
-                         <!-- <option value=""></option> -->
-                        <option value="0">Ninguna</option>
-                        <?php 
-                        foreach ($fragancias as $data) {
-                          if( !empty($data['id_fragancia']) ){
-                            ?>
-                              <option value="<?php echo $data['id_fragancia'] ?>"><?php echo $data['fragancia'] ?></option>
-                            <?php
-                          }
-                        } ?>
-                      </select>
 
-                      <span id="error_fragancias" class="errors"></span>
-                    </div> 
+
                   </div>
                   <!-- <div class="row">
                     <div class="form-group">

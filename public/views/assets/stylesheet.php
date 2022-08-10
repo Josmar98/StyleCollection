@@ -11,16 +11,401 @@
 .icon-enlace-menu:hover{ color:#000; cursor:pointer; }
 .barcorte, .list-corte{ display:none; }
 
+
 /*
-				FIN BANNER AND FOOTER
+        FIN BANNER AND FOOTER
 */
 
 
 
 
 /*
-			INICIO PAGINA
+      INICIO PAGINA
 */
+
+/*=================================================*/
+  /* CINTILLO 4-22 */
+/*=================================================*/
+
+
+.box1cintillo{
+  width:100%;
+}
+.box2cintillo{
+  width:7%;
+  position:absolute;
+  right:9%;
+  top:12.5%;
+  /*margin:auto;*/
+}
+
+/*=================================================*/
+  /* EMBLEMA 4-22 */
+/*=================================================*/
+.box1emblema{
+  width:100%;
+  /*background:red;*/
+}
+.box2emblema{
+  width:60%;
+  position:absolute;
+  left:12%;
+  top:25%;
+  /*margin: auto; */
+}
+
+
+/*=================================================*/
+  /* ESCALERAS 4-22 */
+/*=================================================*/
+
+.box1escaleras{
+  position:absolute;
+  bottom:2%;
+  right:0;
+  width:65%;
+  /*background:blue;*/
+}
+.box2escaleras img{
+  width:117.5vh !important;
+  height:75vh !important;
+}
+.box2escaleras{
+  /*max-width:100%;*/
+  /*width:125%;*/
+  /*height:75vh;*/
+  /*margin-right:0%;*/
+  /*margin:auto;*/
+  margin-left:12.5%;
+  /*background:orange;*/
+}
+
+/*=================================================*/
+   /* LOGOTIPO 4-22 */
+/*=================================================*/
+
+.box1logotipotop{
+  display:none;
+}
+.box1logotipobottom{
+  position:absolute;
+  bottom:2%;
+  width:42.5%;
+  /*background:red !important;*/
+}
+.box2logotipo{
+  margin:auto;
+  margin-left:25%;
+  width:75%;
+  /*background:blue;*/
+}
+/*=================================================*/
+
+
+/*=================================================*/
+@media screen and (min-width: 1024px) and (max-width: 1280px){
+  .box1escaleras{
+    /*background:blue;*/
+  }
+  .box2cintillo{
+    width:7%;
+    position:absolute;
+    right:9%;
+    top:14%;
+  }
+}
+
+
+@media screen and (min-width: 860px) and (max-width: 1024px){
+  .box1escaleras{
+    position:absolute;
+    bottom:5%;
+    right:0;
+    width:80%;
+    /*background:red;*/
+  }
+  .box2escaleras img{
+    /*width:117.5vh !important;*/
+    height:50vh !important;
+  }
+  .box2emblema{
+    width:75%;
+    position:absolute;
+    /*margin: auto; */
+    left:5%;
+    top:27.5%;
+  }
+  .box2cintillo{
+    width:10vh;
+    position:absolute;
+    right:9%;
+    top:12.5%;
+  }
+  .box1logotipobottom{
+    /*position:absolute;*/
+    bottom:12.5%;
+    width:40%;
+    /*background:red !important;*/
+  }
+  .box2logotipo{
+    margin:auto;
+    margin-left:10%;
+    width:100%;
+    /*background:blue;*/
+  }
+}
+
+
+@media screen and (min-width: 640px) and (max-width: 860px){
+  .box2cintillo{
+    width:10vh;
+    position:absolute;
+    right:9%;
+    top:15%;
+  }
+  .box1escaleras{
+    /*background:green;*/
+  }
+  .box2escaleras img{
+    height:auto !important;
+  }
+  .box2escaleras{
+    width:100%;
+    margin-left:0%;
+  }
+  .box2emblema{
+    width:70%;
+    position:absolute;
+    left:12%;
+    top:25%;
+  }
+  .box1logotipobottom{
+    position:absolute;
+    bottom:5%;
+    width:40%;
+  }
+  .box2logotipo{
+    margin:auto;
+    margin-left:0%;
+    width:90%;
+    /*background:blue;*/
+  }
+}
+
+
+
+
+@media screen and (min-width: 520px) and (max-width: 640px){
+  /*=================================================*/
+    /* CINTILLO 4-22 */
+  /*=================================================*/
+  .box1cintillo{
+    width:100%;
+  }
+  .box2cintillo{
+    width:10vh;
+    position:absolute;
+    left:9%;
+    top:12.5%;
+  }
+  /*=================================================*/
+    /* EMBLEMA 4-22 */
+  /*=================================================*/
+  .box2emblema{
+    width:80%;
+    margin:auto;
+    position:absolute;
+    left:10%;
+    right:10%;
+    top:30%;
+    z-index:10;
+  }
+  /*=================================================*/
+    /* ESCALERAS 4-22 */
+  /*=================================================*/
+  .box1escaleras{
+    position:absolute;
+    bottom:2%;
+    right:0;
+    width:100%;
+    /*background:yellow;*/
+  }
+  .box2escaleras img{
+    /*width:117.5vh !important;*/
+    height:auto !important;
+  }
+  .box2escaleras{
+    /*margin:auto;*/
+    width:60%;
+    margin-left:40%;
+  }
+  /*=================================================*/
+     /* LOGOTIPO 4-22 */
+  /*=================================================*/
+  .box1logotipobottom{
+    display:none;
+  }
+  .box1logotipotop{
+    position:absolute;
+    top:12%;
+    right:2%;
+    width:35%;
+    display:block;
+  }
+  .box2logotipo{
+    margin:auto;
+    margin-left:15%;
+    width:80%;
+  }
+  /*=================================================*/
+}
+
+
+@media screen and (min-width: 360px) and (max-width: 520px){
+  /*=================================================*/
+    /* CINTILLO 4-22 */
+  /*=================================================*/
+  .box1cintillo{
+    width:100%;
+  }
+  .box2cintillo{
+    width:10vh;
+    position:absolute;
+    left:9%;
+    top:10%;
+  }
+  /*=================================================*/
+    /* EMBLEMA 4-22 */
+  /*=================================================*/
+  .box2emblema{
+    width:95%;
+    margin:auto;
+    position:absolute;
+    left:2.5%;
+    right:2.5%;
+    top:33%;
+    z-index:10;
+  }
+  /*=================================================*/
+    /* ESCALERAS 4-22 */
+  /*=================================================*/
+  .box1escaleras{
+    position:absolute;
+    bottom:7.5%;
+    right:0;
+    width:100%;
+    /*background:purple;*/
+  }
+  .box2escaleras img{
+    /*width:117.5vh !important;*/
+    /*height:auto !important;*/
+    height:35vh !important;
+  }
+  .box2escaleras{
+    /*margin:auto;*/
+    /*background:pink;*/
+    width:80%;
+    margin-left:20%;
+  }
+  /*=================================================*/
+     /* LOGOTIPO 4-22 */
+  /*=================================================*/
+  .box1logotipobottom{
+    display:none;
+  }
+  .box1logotipotop{
+    position:absolute;
+    top:10%;
+    right:2%;
+    width:50%;
+    display:block;
+    /*background:red;*/
+  }
+  .box2logotipo{
+    margin:auto;
+    margin-left:10%;
+    width:90%;
+    /*background:blue;*/
+  }
+  /*=================================================*/
+}
+@media screen and (min-width: 100px) and (max-width: 360px){
+  /*=================================================*/
+    /* CINTILLO 4-22 */
+  /*=================================================*/
+  .box1cintillo{
+    width:100%;
+  }
+  .box2cintillo{
+    width:10vh;
+    position:absolute;
+    left:9%;
+    top:12%;
+  }
+  /*=================================================*/
+    /* EMBLEMA 4-22 */
+  /*=================================================*/
+  .box2emblema{
+    width:95%;
+    margin:auto;
+    position:absolute;
+    left:2.5%;
+    right:2.5%;
+    top:33%;
+    z-index:10;
+    /*background:blue;*/
+  }
+  /*=================================================*/
+    /* ESCALERAS 4-22 */
+  /*=================================================*/
+  .box1escaleras{
+    position:absolute;
+    bottom:7.5%;
+    right:0;
+    width:100%;
+    /*background:purple;*/
+  }
+  .box2escaleras img{
+    /*width:117.5vh !important;*/
+    /*height:auto !important;*/
+    height:35vh !important;
+  }
+  .box2escaleras{
+    /*margin:auto;*/
+    width:80%;
+    margin-left:20%;
+    /*background:orange;*/
+  }
+  /*=================================================*/
+     /* LOGOTIPO 4-22 */
+  /*=================================================*/
+  .box1logotipobottom{
+    display:none;
+  }
+  .box1logotipotop{
+    position:absolute;
+    top:12%;
+    right:2%;
+    width:50%;
+    display:block;
+    /*background:red;*/
+  }
+  .box2logotipo{
+    margin:auto;
+    margin-left:10%;
+    width:90%;
+    /*background:blue;*/
+  }
+  /*=================================================*/
+}
+
+
+
+
+
+
+
+
 .d-none{ display:none; }
 th{text-align:center;} 
 /*.seccion1Cintillo{ position:absolute;top:13% !important;left:47%; }*/

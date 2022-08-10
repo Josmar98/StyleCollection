@@ -27,10 +27,8 @@
         <li class="active"><?php echo "Lideres Suspendidos"; ?></li>
       </ol>
     </section>
-              <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $amClientesR==1){ ?>
               <br>
               <div style="width:100%;text-align:center;"><a href="?route=<?php echo $url ?>&action=Registrar" class="color_btn_sweetalert" style="text-decoration-line:underline;">Registrar Lideres</a></div>
-              <?php } ?>
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -47,9 +45,7 @@
                 <thead>
                 <tr>
                   <th>Nº</th>
-                  <?php if ($amClientesE==1 || $amClientesB==1): ?>
                   <th>---</th>
-                  <?php endif ?>
                   <th>Cedula</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>
@@ -71,30 +67,16 @@
                       <?php echo $num++; ?>
                     </span>
                   </td>
-                  <?php if ($amClientesE==1||$amClientesB==1): ?>                    
                   <td style="width:10%">
-                    <!-- <table style="background:none;text-align:center;width:100%"> -->
-                      <!-- <tr> -->
-                        <?php if ($amClientesE==1): ?>
-                        <!-- <td style="width:50%"> -->
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_cliente'] ?>">
+                          <!-- <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_cliente'] ?>">
                             <span class="fa fa-wrench">
                               
                             </span>
-                          </button>
-                        <!-- </td> -->
-                        <?php endif ?>
-                        <?php if ($amClientesB): ?>
-                        <!-- <td style="width:50%"> -->
-                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_cliente'] ?>&permission=1">
+                          </button> -->
+                          <button class="btn eliminarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_cliente'] ?>&permission=1">
                             <span class="fa fa-trash"></span>
                           </button>
-                        <!-- </td> -->
-                        <?php endif ?>
-                      <!-- </tr> -->
-                    <!-- </table> -->
                   </td>
-                  <?php endif ?>
                   <td style="width:5%">
                     <span class="contenido2">
                     <a href="?route=<?php echo $url ?>&action=Detalles&id=<?php echo $data['id_cliente'] ?>">
@@ -150,9 +132,7 @@
                 <tfoot>
                 <tr>
                   <th>Nº</th>
-                  <?php if ($amClientesE==1||$amClientesB==1): ?>                    
                   <th>---</th>
-                  <?php endif ?>
                   <th>Cedula</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>

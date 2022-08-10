@@ -1,31 +1,5 @@
 <?php 
 
-$amClientes = 0;
-$amClientesR = 0;
-$amClientesC = 0;
-$amClientesE = 0;
-$amClientesB = 0;
-foreach ($accesos as $access) {
-  if(!empty($access['id_acceso'])){
-    if($access['nombre_modulo'] == "Clientes"){
-      $amClientes = 1;
-      if($access['nombre_permiso'] == "Registrar"){
-        $amClientesR = 1;
-      }
-      if($access['nombre_permiso'] == "Ver"){
-        $amClientesC = 1;
-      }
-      if($access['nombre_permiso'] == "Editar"){
-        $amClientesE = 1;
-      }
-      if($access['nombre_permiso'] == "Borrar"){
-        $amClientesB = 1;
-      }
-
-    }
-  }
-}
-if($amClientesR == 1){
 
     if(!empty($_POST['validarData'])){
       $cedula = $_POST['cedula'];
@@ -98,21 +72,6 @@ if($amClientesR == 1){
       $exec = $lider->registrar($query, "clientes", "id_cliente");
       if($exec['ejecucion']==true){
         $response = "1";
-          if(!empty($modulo) && !empty($accion)){
-            $id = $exec['id'];
-            $elementos = array(
-              "Nombres"=> [0=>"Id", 1=>ucwords("Primer Nombre"), 2=> ucwords("Segundo Nombre"), 3=> ucwords("Primer Apellido"), 4=>ucwords("Segundo Apellido"), 5=>ucwords("Codigo de Cedula"), 6=>ucwords("Cedula"), 7=> ucwords("Sexo"), 8=>ucwords("Fecha de Nacimiento"), 9=>ucwords("Primer Telefono"), 10=>ucwords("Segundo Telefono"), 11=>ucwords("Correo electronico"), 12=>ucwords("Codigo de Rif"), 13=>ucwords("Rif"), 14=>ucwords("Direccion"), 15=>ucwords("Id del Lider"), 16=>ucwords("Estatus")],
-              "Anterior"=> "",
-              "Actual"=> [ 0=> $id, 1=> $nombre1, 2=> $nombre2 , 3=>$apellido1, 4=>$apellido2, 5=>$cod_cedula, 6=>$cedula, 7=>$sexo, 8=>$lider->formatFecha($fechaNacimiento), 9=>$telefono, 10=>$telefono2, 11=>$correo, 12=>$cod_rif, 13=>$rif, 14=>$direccion, 15=>$id_lider, 16=>"1"]
-            );
-            $elementosJson = json_encode($elementos, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
-
-            $fecha = date('Y-m-d');
-            $hora = date('H:i:a');
-            $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora, elementos) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Clientes', 'Registrar', '{$fecha}', '{$hora}', '{$elementosJson}')";
-            $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-          }
-
       }else{
         $response = "2";
       }
@@ -153,8 +112,5 @@ if($amClientesR == 1){
       } 
     }
 
-}else{
-    require_once 'public/views/error404.php';
-}
 
 ?>

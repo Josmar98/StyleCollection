@@ -52,7 +52,7 @@
                     
                   <div class="row">
 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-xs-6">
                       <label for="cliente">Usuario</label>                      
                       <select class="form-control select2" id="cliente" name="cliente" readonly>
                          <!-- <option value=""></option> -->
@@ -69,40 +69,24 @@
                       <span id="error_cliente" class="errors"></span>
                     </div>
 
-                    <div class="form-group col-sm-6">
-                      <label for="rol">Rol de usuario</label>                      
-                      <select class="form-control select2" id="rol" name="rol">
-                         <option value=""></option>
-                        <!-- <option value="0">Ninguna</option> -->
-                        <?php 
-                        foreach ($roles as $data) {
-                          if( !empty($data['id_rol']) ){
-                            ?>
-                              <option value="<?php echo $data['id_rol'] ?>" <?php if($data['id_rol']==$usuario['id_rol']){ echo "selected=''"; } ?>  ><?php echo $data['nombre_rol'] ?></option>
-                            <?php
-                          }
-                        } ?>
-                      </select>
-                      <span id="error_rol" class="errors"></span>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                        <label for="nombre_usuario">Nombre de usuario</label>
                        <input type="text" class="form-control" id="nombre_usuario" value="<?php echo $usuario['nombre_usuario'] ?>" name="nombre_usuario" maxlength="30" placeholder="Ingresar nombre de usuario">
                        <span id="error_nombre" class="errors"></span>
                     </div>
+                  </div>
+
+                  <div class="row">
 
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                       <label for="password">Contraseña</label>
                       <input type="password" class="form-control" id="password" value="<?php echo $usuario['password']; ?>" name="password" maxlength="30" placeholder="Contraseña">
                       <span id="info_password" class="info"></span>
                       <span id="error_password" class="errors"></span>
                     </div>
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                       <label for="password2">Confirmar Contraseña</label>
                       <input type="password" class="form-control" id="password2" value="<?php echo $usuario['password']; ?>" name="password2" maxlength="30" placeholder="Confirmar la Contraseña">
                       <span id="info_password2" class="info2"></span>

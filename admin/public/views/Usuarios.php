@@ -27,10 +27,8 @@
         <li class="active"><?php if(!empty($action)){echo $action;} echo " ". $url; ?></li>
       </ol>
     </section>
-            <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $amUsuariosR==1){ ?>
               <br>
               <div style="width:100%;text-align:center;"><a href="?route=<?php echo $url ?>&action=Registrar" class="color_btn_sweetalert" style="text-decoration-line:underline;">Registrar <?php echo $url; ?></a></div>
-            <?php } ?>
     <!-- Main content -->
     <section class="content">
       <div class="row">
@@ -47,12 +45,9 @@
                 <thead>
                 <tr>
                   <th>Nº</th>
-                  <?php if ($amUsuariosE==1||$amUsuariosB==1): ?>
                   <th>---</th>
-                  <?php endif ?>
                   <th>Nombre y Apellido</th>
                   <th>Nombre de Usuario</th>
-                  <th>Rol</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -68,30 +63,16 @@
                       <?php echo $num++; ?>
                     </span>
                   </td>
-                  <?php if ($amUsuariosE==1||$amUsuariosB==1): ?>
                   <td style="width:10%">
-                    <!-- <table style="background:none;text-align:center;width:100%"> -->
-                      <!-- <tr> -->
-                        <?php if ($amUsuariosE==1): ?>
-                        <!-- <td style="width:50%"> -->
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_usuario'] ?>">
                             <span class="fa fa-wrench">
                               
                             </span>
                           </button>
-                        <!-- </td> -->
-                        <?php endif; ?>
-                        <?php if ($amUsuariosB==1): ?>
-                        <!-- <td style="width:50%"> -->
                           <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_usuario'] ?>&permission=1">
                             <span class="fa fa-trash"></span>
                           </button>
-                        <!-- </td> -->
-                        <?php endif; ?>
-                      <!-- </tr> -->
-                    <!-- </table> -->
                   </td>
-                  <?php endif ?>
                   <td style="width:20%">
                     <span class="contenido2">
                       <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
@@ -102,12 +83,6 @@
                       <?php echo $data['nombre_usuario']; ?>
                     </span>
                   </td>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                      <?php echo $data['nombre_rol']; ?>
-                    </span>
-                  </td>
-                      
                       
                 </tr>
                 <?php
@@ -117,12 +92,9 @@
                 <tfoot>
                 <tr>
                   <th>Nº</th>
-                  <?php if ($amUsuariosE==1||$amUsuariosB==1): ?>
                   <th>---</th>
-                  <?php endif ?>
                   <th>Nombre y Apellido</th>
                   <th>Nombre de Usuario</th>
-                  <th>Rol</th>
                 </tr>
                 </tfoot>
               </table>

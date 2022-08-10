@@ -1311,13 +1311,13 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
               if($amClientes == 1){
           ?>
 
-                            <?php if($url=="Clientes"){ ?>
+                            <?php if($url=="Clientes" || $url=="ClientesBorrados"){ ?>
         <li class="active treeview">
                             <?php }else{ ?>
         <li class="treeview">
                             <?php } ?>
           <a href="#">
-            <i class="fa fa-users"></i> <span>Lideres</span>
+            <i class="fa fa-users"></i> <span>Líderes</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -1325,18 +1325,18 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           <ul class="treeview-menu">
                 <?php if($amClientesR==1){ ?>
                             <?php if($url=="Clientes" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Lider</a></li>
+            <li class="active"><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Líder</a></li>
                             <?php }else{ ?>
-            <li class=""><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Lider</a></li>
+            <li class=""><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Líder</a></li>
                             <?php } ?>
 
                 <?php } ?>
                 <?php if($amClientesC==1){ ?>
 
                             <?php if($url=="Clientes" && empty($action)){ ?>
-            <li class="active"><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Lideres</a></li>
+            <li class="active"><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Líderes</a></li>
                             <?php }else{ ?>
-            <li><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Lideres</a></li>
+            <li><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Líderes</a></li>
                             <?php } ?>
 
                     <?php 
@@ -1344,9 +1344,9 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
                       if($_SESSION['nombre_rol']=="Superusuario"){
                     ?>
                             <?php if($url=="ClientesBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Lideres Suspendidos</a></li>
+            <li class="active"><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Líderes Suspendidos</a></li>
                             <?php }else{ ?>
-            <li><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Lideres Suspendidos</a></li>
+            <li><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Líderes Suspendidos</a></li>
                             <?php } ?>
                     <?php } ?>
 
@@ -1355,8 +1355,47 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           </ul>
         </li>
 
+            <?php } ?>
+
+
+          <?php 
+              if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+          ?>
+
+                            <?php if($url=="Estructuras"){ ?>
+        <li class="active treeview">
+                            <?php }else{ ?>
+        <li class="treeview">
+                            <?php } ?>
+          <a href="#">
+            <i class="fa fa-users"></i> <span>Estructuras de Líderes</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+
+                            <?php if($url=="Estructuras" && !empty($action) && $action == "Registrar"){ ?>
+            <li class="active"><a href="?route=Estructuras&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Estructuras</a></li>
+                            <?php }else{ ?>
+            <li class=""><a href="?route=Estructuras&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Estructuras</a></li>
+                            <?php } ?>
+
+
+                            <?php if($url=="Estructuras" && empty($action)){ ?>
+            <li class="active"><a href="?route=Estructuras"><i class="fa fa-user"></i> Ver Estructuras</a></li>
+                            <?php }else{ ?>
+            <li><a href="?route=Estructuras"><i class="fa fa-user"></i> Ver Estructuras</a></li>
+                            <?php } ?>
+          </ul>
+        </li>
+
 
             <?php } ?>
+
+
+
+
 <!-- ======================================================================================================================= -->
         <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>

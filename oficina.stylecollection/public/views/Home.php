@@ -75,7 +75,7 @@
             <!-- /.box-header -->
 
             <div class="box-body">
-              <table id="datatable2" class="table table-bordered table-striped" style="text-align:center;width:100%;">
+              <table id="datatable" class="table table-bordered table-striped" style="text-align:center;width:100%;">
                 <thead>
                 <tr>
                   <th>Nº</th>

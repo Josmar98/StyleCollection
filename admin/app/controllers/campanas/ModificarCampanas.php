@@ -30,20 +30,6 @@
       $exec = $lider->modificar($query);
       if($exec['ejecucion']==true){
         $response = "1";
-
-          if(!empty($modulo) && !empty($accion)){
-            $campAnt = $campAnt[0];
-            $elementos = array(
-              "Nombres"=> [0=>"Id", 1=>ucwords("Nombre De Campaña"), 2=> ucwords("Anio De Campaña"), 3=> ucwords("Numero De Campaña"), 4=>"Estatus"],
-              "Anterior"=> [ 0 =>$id, 1 =>$campAnt['nombre_campana'], 2 =>$campAnt['anio_campana'], 3 =>$campAnt['numero_campana'], 4 =>$campAnt['estatus'] ],
-              "Actual"=> [ 0=> $id, 1=> $nombre_campana, 2=> $anio , 3=>$num_campana, 4=>"1"]
-            );
-            $elementosJson = json_encode($elementos, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
-            $fecha = date('Y-m-d');
-            $hora = date('H:i:a');
-            $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora, elementos) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Campañas', 'Editar', '{$fecha}', '{$hora}', '{$elementosJson}')";
-            $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-          }
       }else{
         $response = "2";
       }

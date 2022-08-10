@@ -32,7 +32,9 @@
 				
 				<h3 style="margin-top:0;font-size:1.5em;">	
 					<!-- <a href="https://www.google.co.ve/maps/@10.0666275,-69.3226345,18z" target="_blank"> -->
-					<a href="https://goo.gl/maps/r7drQjRavQQqyEes8" target="_blank">
+					<a href="https://goo.gl/maps/b1LNoGSxNYwNeZu69" target="_blank">
+					<!-- <a href="https://goo.gl/maps/r7drQjRavQQqyEes8" target="_blank"> -->
+						
 					<!-- <a href="https://goo.gl/maps/iFRTyT8kCdfCojDN9" target="_blank"> -->
 
 						<span class="fa fa-map-pin color-style" style="font-size:1.5em;margin-right:10px;"></span>

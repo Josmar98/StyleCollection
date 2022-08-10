@@ -18,7 +18,7 @@
       
       <!-- Sidebar toggle button-->
       <!-- <style type="text/css">.sidebar-toggle:hover{background: red}</style> -->
-      <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
+      <a href="#" class="sidebar-toggle text-center" data-toggle="push-menu" role="button" style="font-size:;">
         <span class="sr-only">Toggle navigation</span>
       </a>
 
@@ -106,7 +106,7 @@
 
 
           <!-- Notifications: style can be found in dropdown.less -->
-          <li class="dropdown notifications-menu">
+          <li class="dropdown notifications-menu" style="font-size:;">
             <a href="#" class="dropdown-toggle box_notificaciones" data-toggle="dropdown">
               <i class="fa fa-bell-o" style="font-size:1.2em"></i>
               <span class="label cantidad_notificaciones d-none">10</span>
@@ -144,7 +144,7 @@
 
 
           <!-- Tasks: style can be found in dropdown.less -->
-          <li class="dropdown tasks-menu">
+          <li class="dropdown tasks-menu" style="font-size:;">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
               <i class="fa fa-flag-o" ></i>
               <span class="label Informaciones d-none">#</span>
@@ -183,7 +183,7 @@
             </ul>
           </li>
 
-          <li>
+          <!-- <li style=""> -->
               <!-- <i class="fa fa-gears"></i> -->
               <!-- <i class="fa fa-envelope" ></i> -->
             <?php 
@@ -227,7 +227,7 @@
                 <i class="fa fa-envelope-o" ></i>
               </a> -->
             <?php } ?>
-          </li>
+          <!-- </li> -->
             
 
 
@@ -306,11 +306,13 @@
             <li class="dropdown user user-menu">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" style="padding-left:17px;padding-right:17px">
                 <!-- <i class="fa fa-envelope-o" ></i> -->
-                <div style="background:#FFF;border-radius:100%;margin-bottom:-5px;margin-top:-6px;margin-right:-10px;height:30px;">
-                  <img style="width:30px;padding:0;margin:0;position:relative;left:-10px;top:3px;" src="<?=$fotoGema?>">
-                  <span style="color:<?=$fucsia?>;position:relative;top:4px;left:-12px">
+                <div style="background:#FFF;border-radius:100px;margin-bottom:-5px;margin-top:-6px;margin-right:-10px;height:30px;">
+                  <img style="width:40px;padding:0;margin:0;position:relative;left:-12px;top:-4px;" src="<?=$fotoGema?>">
+                  <span style="color:<?=$fucsia?>;position:relative;top:-3px;left:-12px">
                     <b style="font-size:.9em">
                     <?php 
+                      // $gemasAdquiridasDisponibles = 99999.50;
+                      // $gemasAdquiridasBloqueadas = 5150;
                       echo number_format($gemasAdquiridasDisponibles,2,',','.'); 
                       // if($gemasAdquiridasDisponibles==1){ echo " Gema"; }else{ echo " Gemas"; } 
                     ?>
@@ -322,19 +324,27 @@
                 
               </a>
               <ul class="dropdown-menu" style="box-shadow:0px 0px 2px #000">
-                <li class="user-header " style="background:#AAA;background-size:100% 100%;">
+                <?php
+                  $fondoImg = "1";
+                  $fondoBoxImageGema = "background:#AAA";
+                  if($fondoImg=="1"){
+                    $fondoBoxImageGema = "background:url('public/assets/img/gemas/fondos/5.jpg')";
+                  }
+                ?>
+                <!-- <style>.box{ <?=$fondoBoxImageGema;?>;background-size:100% 100%; }</style> -->
+                <li class="user-header " style="<?=$fondoBoxImageGema?>;background-size:100% 100%;">
                       <!-- <img src="<?=$fotoPerfil?>" style='background:#fff' class="img-circle" alt="User Image"> -->
                       <!-- <img style="width:100px;" src="<?=$fotoGema?>"> -->
 
 
                       <p style="color:#fff;text-shadow:0px 0px 3px #000;margin:0;padding:0">
-                        <span style="margin:0;padding:0">Gemas</span>
+                        <span style="margin:0;padding:0"><b><u>Gemas</u></b></span>
                       </p>
-                <span style="position:relative;top:10px;right:50px;text-align:left;">
-                  <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-right:50px;"><small>Disponibles</small></span>
+                <span style="position:relative;top:-5px;right:35px;text-align:left;">
+                  <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-right:50px;"><small><b>Disponibles</b></small></span>
                   <br>
-                  <div class="" style="background:#FFF;border-radius:100%;display:inline-block;rotate:50;">
-                    <img style="width:70px;padding:0;margin:0;position:relative;left:-10px;top:3px;" src="<?=$fotoGema?>">
+                  <div class="" style="background:#FFF;border-radius:100px;display:inline-block;rotate:50;box-shadow:0px 0px 5px #DDD">
+                    <img style="width:65px;padding:0;margin:0;position:relative;left:-10px;top:0px;" src="<?=$fotoGema?>">
                     <span style="color:<?=$fucsia?>;position:relative;top:4px;left:-12px">
                       <b style="font-size:1.5em">
                       <?php 
@@ -348,11 +358,11 @@
 
                 <br>
                 
-                <span style="position:relative;top:-30px;left:55px;text-align:right;">
-                  <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-left:30px"><small>Bloqueadas</small></span>
+                <span style="position:relative;top:-20px;left:50px;text-align:right;">
+                  <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-left:30px"><small><b>Bloqueadas</b></small></span>
                   <br>
-                  <div class="" style="background:#FFF;border-radius:100%;display:inline-block;">
-                    <img style="width:30px;padding:0;margin:0;position:relative;left:-10px;top:2px;" src="<?=$fotoGemaBloqueadas?>">
+                  <div class="" style="background:#FFF;border-radius:100px;display:inline-block;">
+                    <img style="width:35px;padding:0;margin:0;position:relative;left:-10px;top:2px;" src="<?=$fotoGemaBloqueadas?>">
                     <span style="color:#00000055;position:relative;top:3px;left:-12px">
                       <b style="font-size:1em">
                       <?php 
@@ -366,12 +376,19 @@
 
                       
                         
-                      <p style="color:#fff;">
-                        <small><a style="color:#fff;" href="?route=Gemas&action=Historial"><b><u>Historial de gemas</u></b></a></small>
-                      </p>
                     
+                <!-- </li> -->
+                <!-- <li> -->
+                  
                 </li>
                 <li class="user-footer">
+                  <div class="text-center" style="padding:0;margin:0;">
+                    
+                      <!-- <span style="color:#000;background:red;width:100%;display:block;z-index:100;"> -->
+                      <p style="color:#fff;position:absolute;width:100%;display:block;margin:0;margin-top:-30px;">
+                        <small><a style="color:#FFF;text-shadow:0px 0px 3px #000;" href="?route=Gemas&action=Historial"><b><u>Historial de gemas</u></b></a></small>
+                      </p>
+                  </div>
                   <div class="text-center">
                     <?php if ($catalagomenusuperior=="1"): ?>
                       <?php
@@ -443,14 +460,21 @@
                 // $fotoPortada = "public/assets/img/images/img53.jpg";
                 // $fotoPerfil = "public/assets/img/profile/perfil.jpg";
               ?>
-              <img src="<?=$fotoPerfil?>" style='background:#fff;margin-right:4px' class="user-image" alt="User Image">
-              <span style="font-size:.9em;">
-                <?php echo $cuenta['primer_nombre']; ?>
-                <?php echo $cuenta['primer_apellido']; ?>
-              </span>
-              <span class="hidden-xs">
+                
+                <style>
+                  @media screen and (max-width: 690px){
+                    .txtNombre{float:right;margin-top:-10px; }
+                  }
+                </style>
+                <img src="<?=$fotoPerfil?>" style='background:#fff;margin-right:4px;font-size:.9em' class="user-image" alt="User Image">
+                <span class="txtNombre" style="font-size:.8em;">
+                  <?php echo $cuenta['primer_nombre']; ?>
+                  <span class="hidden-md hidden-sm hidden-lg"><br></span>
+                  <?php echo $cuenta['primer_apellido']; ?>
+                </span>
+              <!-- <span class="hidden-xs"> -->
                 <!-- Alexander Pierce -->
-              </span>
+              <!-- </span> -->
             </a>
             <ul class="dropdown-menu" style="box-shadow:0px 0px 2px #000">
               <!-- User image --><!-- bg-fucsia -->

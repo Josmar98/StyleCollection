@@ -50,7 +50,7 @@ if(isset($_SESSION['recuerdamePage'])){
 
 // print_r($_SESSION['cuentaPage']);
 if(!empty($_SESSION['id_usuarioPage']) && !empty($_SESSION['cuentaPage']) && !empty($_SESSION['page_style'])){
-	$url = "home";
+	$url = "Home";
 	if(!empty($_GET['route'])){
 		$url = $_GET['route'];
 	}

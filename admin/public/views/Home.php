@@ -67,9 +67,9 @@
                   </td>
                   <td style="width:20%">
                     <span class="contenido2">
-                      <a href="?campaing=<?php echo $data['id_campana'] ?>&n=<?php echo $data['numero_campana'] ?>&y=<?php echo $data['anio_campana'] ?>&route=Homing">
+                      <!-- <a href="?campaing=<?php echo $data['id_campana'] ?>&n=<?php echo $data['numero_campana'] ?>&y=<?php echo $data['anio_campana'] ?>&route=Homing"> -->
                         <?php echo $data['nombre_campana'] ?>
-                      </a>
+                      <!-- </a> -->
                     </span>
                   </td>                  
                   <td style="width:20%">

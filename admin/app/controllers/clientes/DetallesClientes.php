@@ -1,33 +1,7 @@
 <?php 
-$amClientes = 0;
-$amClientesR = 0;
-$amClientesC = 0;
-$amClientesE = 0;
-$amClientesB = 0;
-foreach ($accesos as $access) {
-  if(!empty($access['id_acceso'])){
-    if($access['nombre_modulo'] == "Clientes"){
-      $amClientes = 1;
-      if($access['nombre_permiso'] == "Registrar"){
-        $amClientesR = 1;
-      }
-      if($access['nombre_permiso'] == "Ver"){
-        $amClientesC = 1;
-      }
-      if($access['nombre_permiso'] == "Editar"){
-        $amClientesE = 1;
-      }
-      if($access['nombre_permiso'] == "Borrar"){
-        $amClientesB = 1;
-      }
-
-    }
-  }
-}
-if($amClientesC == 1){
 
 	$cliente=$lider->consultarQuery("SELECT * FROM clientes, usuarios WHERE usuarios.id_cliente = clientes.id_cliente and clientes.id_cliente = '$id'");
-	$userCliente=$lider->consultarQuery("SELECT * FROM usuarios,roles WHERE usuarios.id_rol = roles.id_rol and usuarios.id_cliente = '$id'");
+	$userCliente=$lider->consultarQuery("SELECT * FROM usuarios WHERE usuarios.id_cliente = '$id'");
 
 	if(!empty($_POST['selectedPedido'])){
 		$id_despacho = $_POST['selectedPedido'];
@@ -36,6 +10,7 @@ if($amClientesC == 1){
 		$pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho and despachos.id_despacho = pedidos.id_despacho");
 
 	}
+		print_r($cliente);
 
 	if(count($cliente)>1){
 		$cliente = $cliente[0];
@@ -99,9 +74,6 @@ if($amClientesC == 1){
 		require_once 'public/views/error404.php';		
 	}
 
-}else{
-    require_once 'public/views/error404.php';
-}
 
 
 ?>

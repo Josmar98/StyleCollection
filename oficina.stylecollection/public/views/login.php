@@ -94,8 +94,8 @@
                            
                            <input style="border:none;width:80%;padding-left:3px;" type="password" class="form-control" id="pass" name="pass" placeholder="Contraseña">
 
-                           <span id="texto-oculto" class="buttonvisibility input-group-addon fa fa-eye" style="float:right;"></span>
-                           <span id="texto-visible" class="buttonvisibility d-none input-group-addon fa fa-eye-slash" style="float:right;"></span>
+                           <span id="buttonvisibility" class="buttonvisibility input-group-addon fa fa-eye" style="float:right;"></span>
+                           <!-- <span id="texto-visible" class="buttonvisibility d-none input-group-addon fa fa-eye-slash" style="float:right;"></span> -->
                          </div>
                          <span id="error_pass" class="errors"></span>
                       </div>
@@ -161,15 +161,16 @@
 $(document).ready(function(){
   
   var response = $(".responses").val();
-  $("#texto-oculto").click(function(){
-    $("#texto-visible").removeClass("d-none");
-    $("#texto-oculto").addClass("d-none");
-    $("#pass").attr("type","text");
-  });
-  $("#texto-visible").click(function(){
-    $("#texto-oculto").removeClass("d-none");
-    $("#texto-visible").addClass("d-none");
-    $("#pass").attr("type","password");
+  $("#buttonvisibility").click(function(){
+    var clase = $(this).attr("class");
+    if(clase == "buttonvisibility input-group-addon fa fa-eye"){
+      $("#pass").attr("type","text");
+      $(this).attr("class", "buttonvisibility input-group-addon fa fa-eye-slash");
+    }
+    if(clase == "buttonvisibility input-group-addon fa fa-eye-slash"){
+      $("#pass").attr("type","password");
+      $(this).attr("class", "buttonvisibility input-group-addon fa fa-eye");
+    }
   });
   
   $("#recuerdamebox").val("0");

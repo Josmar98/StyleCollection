@@ -37,10 +37,10 @@
             </a>
           </li>
           <li class="list-corte">
-            <a href="javascript:void(0)">
+            <a href="?route=Posts">
               <i class="menu-icon fa fa-home" style="font-size:1.5em;color:#fff;"></i>
               <div class="menu-info">
-                <h4 class="control-sidebar-home-tab" style="font-size:1em"><b>Posts de campaña</b></h4>
+                <h4 class="control-sidebar-home-tab" style="font-size:1em"><b>Posts</b></h4>
               </div>
             </a>
           </li>

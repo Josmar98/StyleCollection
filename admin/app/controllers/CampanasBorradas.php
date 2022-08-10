@@ -11,13 +11,6 @@
 		if($res1['ejecucion']==true){
 			$response = "1";
 
-	        if(!empty($modulo) && !empty($accion)){
-	        	
-	          $fecha = date('Y-m-d');
-	          $hora = date('H:i:a');
-	          $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Campañas', 'Restaurar', '{$fecha}', '{$hora}')";
-	          $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-	        }
 		}else{
 			$response = "2"; // echo 'Error en la conexion con la bd';
 		}

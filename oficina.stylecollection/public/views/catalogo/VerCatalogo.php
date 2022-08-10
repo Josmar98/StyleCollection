@@ -61,7 +61,7 @@
                     <div class="col-xs-12" style="border-top:1px solid <?=$color?>;border-bottom:1px solid <?=$color?>;">
                       <!-- <span class="btn btn-primary"></span> -->
                       <h4>
-                        <img style="width:25px;margin-left:15px" src="<?=$fotoGema?>">
+                        <img style="width:35px;margin-left:15px" src="<?=$fotoGema?>">
                         <b><?=number_format($cant['cantidad_gemas'],2,',','.');?> Gemas</b>
                       <button class="btn enviar2" onclick="
                         var canid=$(this).val();
@@ -83,60 +83,70 @@
                     <?php foreach ($catalogos as $data): ?>
                       <?php if (!empty($data['id_catalogo'])): ?>
                         <?php if ($data['cantidad_gemas']==$cant['cantidad_gemas']): ?>
-                          <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
-                          <div class="col-xs-12 col-sm-6 col-md-4" style="text-align:center;font-size:1.1em">
-                          <?php endif; ?>
-                          <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
-                          <div class="col-xs-6 col-sm-4 col-md-3" style="text-align:center;font-size:1.1em">
-                          <?php endif; ?>
-                          <?php
-                            $imagen = getimagesize($data['imagen_catalogo']); //Sacamos la información.
-                            $ancho = $imagen[0]; //Ancho.
-                            $alto = $imagen[1]; //Alto.
-                          ?>
-                          <style>
-                            .boxCatalogo:hover{
-                              /*border:1px solid rgba(230,230,230,1) !important;*/
-                              box-shadow:0px 8px 15px rgba(230,230,230,1) !important;
-                            }
-                          </style>
-                            <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:25em;">
-                              <div class="" style="width:90%;height:65%;margin-left:auto;margin-right:auto;">
-                                <?php if (!empty($data['imagen_catalogo'])): ?>
-                                  <?php if ($alto > $ancho): ?>
-                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="" src="<?=$data['imagen_catalogo']?>">
-                                  <?php endif ?>
-                                  <?php if ($alto < $ancho): ?>
-                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
-                                  <?php endif ?>
+                            <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
+                          <div class="col-xs-12 col-sm-6 col-md-4" style="text-align:center;font-size:1.1em;padding:0 5px;">
+                            <?php endif; ?>
+                           <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
+                          <div class="col-xs-6 col-sm-4 col-md-3" style="text-align:center;font-size:1.1em;padding:0 5px;">
+                            <?php endif; ?>
+                            <?php
+                              $ancho = "";
+                              $alto = "";
+                              if($data['imagen_catalogo'] != ""){
+                                if(file_exists($data['imagen_catalogo'])){
 
+                                $imagen = getimagesize($data['imagen_catalogo']); //Sacamos la información.
+                                $ancho = $imagen[0]; //Ancho.
+                                $alto = $imagen[1]; //Alto.
+                                }
+                              }
+                            ?>
+                            <style>
+                              .boxCatalogo:hover{
+                                /*border:1px solid rgba(230,230,230,1) !important;*/
+                                box-shadow:0px 8px 15px rgba(230,230,230,1) !important;
+                              }
+                            </style>
+                            <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
+                              <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:35em;">
+                            <?php endif; ?>
+                            <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
+                              <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:25em;">
+                            <?php endif; ?>
+                                <div class="" style="width:90%;height:65%;margin-left:auto;margin-right:auto;">
+                                  <?php if (!empty($data['imagen_catalogo'])): ?>
+                                    <?php if ($alto > $ancho): ?>
+                                      <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;max-width:100%;" class="" src="<?=$data['imagen_catalogo']?>">
+                                    <?php endif ?>
+                                    <?php if ($alto < $ancho): ?>
+                                      <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
+                                    <?php endif ?>
+
+                                  <?php endif; ?>
+                                </div>
+                                <div class="row" style="height:12.5%;padding:2% 0;">
+                                  <div class="col-xs-10 col-xs-offset-1" style="border-bottom:0px solid <?=$color?>;">
+                                    <b style="color:<?=$fucsia?>"><?=$data['nombre_catalogo']?></b>
+                                  </div>
+                                </div>
+                                <div class="row" style="height:10%;">
+                                  <div style="color:<?=$fucsia;?>;background:#fff;border:1px solid <?=$fucsia?>;" class="btn col-xs-8 col-xs-offset-2">
+                                    <img style="width:25px" src="<?=$fotoGema?>">
+                                    <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
+                                  </div>
+                                </div>
+                                <?php if ($data['codigo_catalogo']!=""): ?>
+                                <!-- <div class="" style="border-bottom:1px solid <?=$color?>;">
+                                  <b>#<?=$data['codigo_catalogo']?></b>
+                                </div> -->
                                 <?php endif; ?>
-                              </div>
-                              <div class="row" style="height:12.5%;padding:2% 0;">
-                                <div class="col-xs-10 col-xs-offset-1" style="border-bottom:0px solid <?=$color?>;">
-                                  <b style="color:<?=$fucsia?>"><?=$data['nombre_catalogo']?></b>
-                                </div>
-                              </div>
-                              <div class="row" style="height:10%;">
-                                <div style="color:<?=$fucsia;?>;background:#fff;border:1px solid <?=$fucsia?>;" class="btn col-xs-8 col-xs-offset-2">
-                                  <img style="width:15px" src="<?=$fotoGema?>">
-                                  <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
-                                </div>
-                              </div>
-                              <?php if ($data['codigo_catalogo']!=""): ?>
-                              <!-- <div class="" style="border-bottom:1px solid <?=$color?>;">
-                                <b>#<?=$data['codigo_catalogo']?></b>
-                              </div> -->
-                              <?php endif; ?>
-                              
+                                
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                              <div class="" style="height:12.5%;width:100%;margin-top:2%;" >
-                                      
-                                <a href="?route=<?=$url?>&action=Detalle&id=<?=$data['id_catalogo']?>" class="btn enviar2" style="font-size:1em;border:0;background:none;width:80%;"><b>Ver Detalle</b></a>
-                              
-                              </div>
-                              <?php endif; ?>
+                                <div class="" style="height:12.5%;width:100%;margin-top:2%;" >
+                                        
+                                  <a href="?route=<?=$url?>&action=Detalle&id=<?=$data['id_catalogo']?>" class="btn enviar2" style="font-size:1em;border:0;background:none;width:80%;"><b>Ver Detalle</b></a>
+                                
+                                </div>
                               
                             </div>
 

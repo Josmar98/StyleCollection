@@ -51,6 +51,7 @@
                   <th>---</th>
                   <th>Nombre Campaña</th>
                   <th>Numero</th>
+                  <th>---</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -87,7 +88,20 @@
                       <!-- </a> -->
                     </span>
                   </td>
-                      
+                  <td style="width:20%;">
+                    <span class="contenido2">
+                      <form action="" method="post">
+                        <div class="input-group">
+                          <select class="input-group-addon" name="visibilidad">
+                            <option <?php if($data['visibilidad']=="1"){ echo "selected"; } ?> value="1" >Visible</option>
+                            <option <?php if($data['visibilidad']=="0"){ echo "selected"; } ?> value="0" >Oculto</option>
+                          </select>
+                          <input type="hidden" name="id" value="<?=$data['id_campana']?>">
+                          <button class="btn enviar">Enviar</button>
+                        </div>
+                      </form>
+                    </span>
+                  </td>
                 </tr>
           <?php
               endif; endforeach;
@@ -99,6 +113,7 @@
                   <th>---</th>
                   <th>Nombre Campaña</th>
                   <th>Numero</th>
+                  <th>---</th>
                 </tr>
                 </tfoot>
               </table>
@@ -124,25 +139,48 @@
 
 
   <?php require_once 'public/views/assets/footered.php'; ?>
+<?php if(!empty($response2)): ?>
+<input type="hidden" class="responses2" value="<?php echo $response2 ?>">
+<?php endif; ?>
 <?php if(!empty($response)): ?>
 <input type="hidden" class="responses" value="<?php echo $response ?>">
 <?php endif; ?>
 <script>
 $(document).ready(function(){ 
     var response = $(".responses").val();
+    var response2 = $(".responses2").val();
   if(response==undefined){
-
   }else{
     if(response == "1"){
       swal.fire({
           type: 'success',
           title: '¡Datos borrados correctamente!',
-                  confirmButtonColor: "#ED2A77",
+          confirmButtonColor: "#ED2A77",
       }).then(function(){
         window.location = "?route=Campanas";
       });
     }
     if(response == "2"){
+      swal.fire({
+          type: 'error',
+          title: '¡Error al realizar la operacion!',
+                  confirmButtonColor: "#ED2A77",
+      });
+    }
+    
+  }
+  if(response2==undefined){
+  }else{
+    if(response2 == "1"){
+      swal.fire({
+          type: 'success',
+          title: '¡Datos guardados correctamente!',
+          confirmButtonColor: "#ED2A77",
+      }).then(function(){
+        window.location = "?route=Campanas";
+      });
+    }
+    if(response2 == "2"){
       swal.fire({
           type: 'error',
           title: '¡Error al realizar la operacion!',

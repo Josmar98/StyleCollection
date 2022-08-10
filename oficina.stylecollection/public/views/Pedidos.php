@@ -1352,6 +1352,7 @@
                           </div>
                           <?php
                             $porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$total_responsabilidad;
+                            // echo $porcentajeAbonadoPuntual;
                           ?>
                           <?php if (date('Y-m-d') >= $despacho['fecha_segunda_senior']): ?>
                             
@@ -1385,7 +1386,11 @@
 
                           <?php
                             $restaTotalGemas = $total_responsabilidad - $abonado_lider_gemas;
+                            // echo $abonado_lider_gemas;
                             // $restaTotalGemas = 0;
+                            // echo $restaTotalGemas;
+                            // echo $restaTotalResponsabilidad;
+
                             // $restaTotalResponsabilidad = 0;
 
                             // echo "Cantidad de pagos: ".(count($pagosGemas)-1)."<br>";
@@ -1408,7 +1413,7 @@
 
                             // echo "Resta actual: ".number_format($restaTotalResponsabilidad,1,',','.')."<br>";
                             // echo "Resta Gemas: ".number_format($restaTotalGemas,1,',','.')."<br>";
-                            // $reclamargemasporcentaje = 0;
+                            // $reclamargemasporcentaje = 1;
 
                             if (count($gemasReclamar)>1): 
                               $gemaReclamar = $gemasReclamar[0];
@@ -1418,7 +1423,6 @@
                                 $porcentajeAbonadoPuntual = 100;
                               }
                               $gemasAReclamarPorcentaje = ($gemaReclamar['cantidad_gemas']/100)*$porcentajeAbonadoPuntual;
-
                               if ($reclamargemasporcentaje=="0") {
                                 if( ($fecha_pago_cierre_lider <= $despacho['fecha_segunda_senior']) && (number_format($restaTotalGemas,1,',','.') <= 0) ){ ?>
                                   <?php if ($_SESSION['id_cliente'] == $pedido['id_cliente']): ?>

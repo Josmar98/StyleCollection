@@ -18,66 +18,32 @@
 				<img class="imgFondoResor" src="public/assets/img/resources/web_work1.png">
 			</div>
 		</div> -->
-		<div style="background:url('public/assets/img/resources/fondo2-3.22.png');background-size:100% 100%;max-width:100%;min-width:100%;height:90vh;">
-			<div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/mata3.22.png" style="width:20%;position:absolute;left:0;" >
-				</div>
-			</div>
+		<div style="background:url('public/assets/img/resources/fondo4.22.png');background-size:100% 100%;max-width:100%;min-width:100%;height:90vh;">
 
-			<div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/gafas3.22.png" class="gafas" >
+			<div style="" class="box1cintillo">
+				<div style="" class="box2cintillo">
+					<img src="public/assets/img/resources/cintillo_campana4.22.png" style="max-width:100%;">
 				</div>
 			</div>
-
-			<div style="width:100%;">
-				<div style="width:60%;margin:auto;">
-					<img src="public/assets/img/resources/libreta3.22.png" style="width:100%;" >
-				</div>
-			</div>
-			<div style="width:100%;">
-				<div style="width:80%;margin:auto;position:absolute;left:10%;bottom:0">
-					<img src="public/assets/img/resources/teclado3.22.png" style="width:100%;height:8vh;" >
-				</div>
-			</div>
-
-			<div style="width:100%;">
-				<div style="width:15vh;margin:auto;" class="cintillo">
-					<img src="public/assets/img/resources/cintillo_campana3.22.png" style="width:100%;">
+			<div style="" class="box1logotipotop">
+				<div style="" class="box2logotipo">
+					<img src="public/assets/img/resources/logotipo4.22.png" style="max-width:100%;">
 				</div>
 			</div>
 			<br>
-			<div style="width:100%;">
-				<div style="" class="emblema">
-					<img src="public/assets/img/resources/emblema3.22.png" style="width:100%;">
-					<!-- <img src="public/assets/img/resources/productos3.22.png" style="width:35Vh;position:absolute;bottom:0;"> -->
+			<div style="" class="box1emblema">
+				<div style="" class="box2emblema">
+					<img src="public/assets/img/resources/emblema4.22.png" style="max-width:100%;">
 				</div>
 			</div>
-			<!-- <div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/mano3.22.png" class="mano" >
-				</div>
-			</div> -->
-			<div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/celular3.22.png" class="celular">
+			<div style="" class="box1escaleras">
+				<div style="" class="box2escaleras">
+					<img src="public/assets/img/resources/escalera4.22.png" style="max-width:100%;">
 				</div>
 			</div>
-			<div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/tablet3.22.png" class="tablet">
-				</div>
-			</div>
-			<div style="width:100%;">
-				<div style="width:100%;margin:auto;">
-					<img src="public/assets/img/resources/boligrafo3.22.png" class="boligrafo">
-				</div>
-			</div>
-			<br>
-			<div style="width:100%;position:absolute;bottom:10%;">
-				<div style="width:40vh;margin:auto;">
-					<img src="public/assets/img/resources/logotipo3.22.png" style="width:100%;">
+			<div style="" class="box1logotipobottom">
+				<div style="" class="box2logotipo">
+					<img src="public/assets/img/resources/logotipo4.22.png" style="max-width:100%;">
 				</div>
 			</div>
 		</div>
@@ -141,7 +107,7 @@
 }
 
 @media screen and (min-width: 860px) and (max-width: 1024px){
-	.emblema{
+	/*.emblema{
 		width:55%;margin-top:0%;
 	}
 	.tablet{
@@ -155,11 +121,11 @@
 	}
 	.gafas{
 		width:15%;position:absolute;right:0;
-	}
+	}*/
 
 }
 @media screen and (min-width: 640px) and (max-width: 860px){
-	.emblema{
+	/*.emblema{
 		width:55%;margin-top:3vh;
 	}
 	.mano{
@@ -176,11 +142,11 @@
 	}
 	.gafas{
 		width:19%;position:absolute;right:0;
-	}
+	}*/
 	
 }
 @media screen and (min-width: 520px) and (max-width: 640px){
-	.emblema{
+	/*.emblema{
 		width:55%;margin-top:5vh;
 	}
 	.cintillo { padding-top:1vh }
@@ -198,10 +164,10 @@
 	}
 	.gafas{
 		width:20%;position:absolute;right:0;
-	}
+	}*/
 }
 @media screen and (min-width: 360px) and (max-width: 520px){
-	.emblema{
+	/*.emblema{
 		width:65%;margin-top:13vh;
 	}
 	.mano{
@@ -219,10 +185,10 @@
 	}
 	.gafas{
 		width:21%;position:absolute;right:0;
-	}
+	}*/
 }
 @media screen and (min-width: 100px) and (max-width: 360px){
-	.emblema{
+	/*.emblema{
 		width:60%;margin-top:15vh;
 	}
 	.mano{
@@ -240,7 +206,7 @@
 	}
 	.gafas{
 		width:21%;position:absolute;right:0;
-	}
+	}*/
 }
 </style>
 <script>

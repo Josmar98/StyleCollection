@@ -64,7 +64,7 @@
                     <div class="col-xs-12" style="border-top:1px solid <?=$color?>;border-bottom:1px solid <?=$color?>;">
                       <!-- <span class="btn btn-primary"></span> -->
                       <h4>
-                        <img style="width:25px;margin-left:15px" src="<?=$fotoGema?>">
+                        <img style="width:35px;margin-left:15px" src="<?=$fotoGema?>">
                         <b><?=number_format($cant['cantidad_gemas'],2,',','.');?> Gemas</b>
                       <button class="btn enviar2" onclick="
                         var canid=$(this).val();
@@ -76,7 +76,7 @@
                           $('.box'+canid).slideUp(); 
                           $('#btn'+canid).attr('class', 'fa fa-caret-square-o-down'); 
                         } 
-                        " value="<?=$cant['cantidad_gemas']?>" style="background:none;float:right;margin-top:-7.5px"><span class="fa fa-caret-square-o-up" id="btn<?=$cant['cantidad_gemas']?>" style="font-size:1.2em"></span></button>
+                        " value="<?=$cant['cantidad_gemas']?>" style="background:none;float:right;margin-top:0px"><span class="fa fa-caret-square-o-up" id="btn<?=$cant['cantidad_gemas']?>" style="font-size:1.2em"></span></button>
                       </h4>
                       <div style="clear:both;"></div>
                     </div>
@@ -87,15 +87,22 @@
                       <?php if (!empty($data['id_catalogo'])): ?>
                         <?php if ($data['cantidad_gemas']==$cant['cantidad_gemas']): ?>
                           <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
-                          <div class="col-xs-12 col-sm-6 col-md-4" style="text-align:center;font-size:1.1em">
+                          <div class="col-xs-12 col-sm-6 col-md-4" style="text-align:center;font-size:1.1em;padding:0 5px;">
                           <?php endif; ?>
                           <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
-                          <div class="col-xs-6 col-sm-4 col-md-3" style="text-align:center;font-size:1.1em">
+                          <div class="col-xs-6 col-sm-4 col-md-3" style="text-align:center;font-size:1.1em;padding:0 5px;">
                           <?php endif; ?>
                           <?php
-                            $imagen = getimagesize($data['imagen_catalogo']); //Sacamos la información.
-                            $ancho = $imagen[0]; //Ancho.
-                            $alto = $imagen[1]; //Alto.
+                            $ancho = "";
+                            $alto = "";
+                            if($data['imagen_catalogo'] != ""){
+                              if(file_exists($data['imagen_catalogo'])){
+
+                              $imagen = getimagesize($data['imagen_catalogo']); //Sacamos la información.
+                              $ancho = $imagen[0]; //Ancho.
+                              $alto = $imagen[1]; //Alto.
+                              }
+                            }
                           ?>
                           <style>
                             .boxCatalogo:hover{
@@ -103,11 +110,16 @@
                               box-shadow:0px 8px 15px rgba(230,230,230,1) !important;
                             }
                           </style>
+                          <?php if (!empty($_GET['t']) && $_GET['t']=="1"): ?>
+                            <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:35em;">
+                          <?php endif; ?>
+                          <?php if ((!empty($_GET['t']) && $_GET['t']=="0") || empty($_GET['t'])): ?>
                             <div class='boxCatalogo' style="border:0px solid <?=$color?>;background:rgba(252,252,252,1);height:25em;">
+                          <?php endif; ?>
                               <div class="" style="width:90%;height:65%;margin-left:auto;margin-right:auto;">
                                 <?php if (!empty($data['imagen_catalogo'])): ?>
                                   <?php if ($alto > $ancho): ?>
-                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="" src="<?=$data['imagen_catalogo']?>">
+                                    <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;max-width:100%;" class="" src="<?=$data['imagen_catalogo']?>">
                                   <?php endif ?>
                                   <?php if ($alto < $ancho): ?>
                                     <img style="margin:0;padding:0 0;padding-top:5%;min-height:50%;max-height:100%;" class="col-xs-12" src="<?=$data['imagen_catalogo']?>">
@@ -123,7 +135,7 @@
 
                               <div class="row" style="height:10%;">
                                 <div style="color:<?=$fucsia;?>;background:#fff;border:1px solid <?=$fucsia?>;" class="btn col-xs-8 col-xs-offset-2">
-                                  <img style="width:15px" src="<?=$fotoGema?>">
+                                  <img style="width:25px" src="<?=$fotoGema?>">
                                   <b><?=number_format($data['cantidad_gemas'],2,',','.');?></b>
                                 </div>
                               </div>

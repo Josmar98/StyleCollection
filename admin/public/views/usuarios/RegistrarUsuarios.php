@@ -52,7 +52,7 @@
                     
                   <div class="row">
 
-                    <div class="form-group col-sm-6">
+                    <div class="form-group col-xs-6">
                       <label for="cliente">Usuario</label>                      
                       <select class="form-control select2" id="cliente" name="cliente">
                          <option value=""></option>
@@ -75,40 +75,25 @@
                       <span id="error_cliente" class="errors"></span>
                     </div>
 
-                    <div class="form-group col-sm-6">
-                      <label for="rol">Rol de usuario</label>                      
-                      <select class="form-control select2" id="rol" name="rol">
-                         <option value=""></option>
-                        <!-- <option value="0">Ninguna</option> -->
-                        <?php 
-                        foreach ($roles as $data) {
-                          if( !empty($data['id_rol']) ){
-                            ?>
-                              <option value="<?php echo $data['id_rol'] ?>"><?php echo $data['nombre_rol'] ?></option>
-                            <?php
-                          }
-                        } ?>
-                      </select>
-                      <span id="error_rol" class="errors"></span>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                        <label for="nombre_usuario">Nombre de usuario</label>
                        <input type="text" class="form-control" id="nombre_usuario" name="nombre_usuario" maxlength="30" placeholder="Ingresar nombre de usuario">
                        <span id="error_nombre" class="errors"></span>
                     </div>
+    
+                  </div>
+
+                  <div class="row">
 
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                       <label for="password">Contraseña</label>
                       <input type="password" class="form-control" id="password" name="password" maxlength="30" placeholder="Contraseña">
                       <span id="info_password" class="info"></span>
                       <span id="error_password" class="errors"></span>
                     </div>
 
-                    <div class="form-group col-sm-4">
+                    <div class="form-group col-xs-6">
                       <label for="password2">Confirmar Contraseña</label>
                       <input type="password" class="form-control" id="password2" name="password2" maxlength="30" placeholder="Confirmar la Contraseña">
                       <span id="info_password2" class="info2"></span>
@@ -346,23 +331,13 @@ function validar(){
   /*===================================================================*/
 
   /*===================================================================*/
-  var rol = $("#rol").val();
-  var rrol = false;
-  if(rol == ""){
-    rrol = false;
-    $("#error_rol").html("Debe seleccionar un rol para el usuario");
-  }else{
-    rrol = true;
-    $("#error_rol").html("");
-  }
-  /*===================================================================*/
   var rPassRes = false;
   if(password==password2){
     rPassRes = true;
   }
   // /*===================================================================*/
   var result = false;
-  if( rnombre==true && rpassword==true && rpassword2==true && rPassRes==true && rcliente==true && rrol==true){
+  if( rnombre==true && rpassword==true && rpassword2==true && rPassRes==true && rcliente==true){
     result = true;
   }else{
     result = false;

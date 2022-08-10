@@ -20,7 +20,7 @@
           <span class="salto" style=""><br></span>
           <span class="sr-only">Toggle navigation</span>
           <a href="?route=Home" class="icon-enlace-menu col"><b>Inicio</b></a>
-          <a href="?route=PostCampana" class="icon-enlace-menu col"><b>Posts de campaña</b></a>
+          <a href="?route=Posts" class="icon-enlace-menu col"><b>Posts</b></a>
           <!-- <a  class="icon-enlace-menu"><b>Blog</b></a> -->
           <!-- <a  class="icon-enlace-menu"><b>Productos</b></a> -->
           <!-- <a  class="icon-enlace-menu"><b>Contactanos</b></a> -->

@@ -37,7 +37,33 @@
       <div class="row">
 
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
 
 
@@ -65,14 +91,39 @@
                        <select class="form-control select2" id="pedido" name="pedido">
                           <option value=""></option>
                         <?php  foreach ($pedidosFull as $data) { if(!empty($data['id_pedido'])){  ?>
-                            <option value="<?php echo $data['id_pedido'] ?>" 
-                                  <?php foreach ($facturas as $key): if (!empty($key['id_pedido'])):
-                                    if ($data['id_pedido'] == $key['id_pedido']): ?>
-                                      disabled
-                                  <?php endif; endif; endforeach; ?> 
-                            ><!-- Aqui cierra el Option de apertura  -->
-                                  <?php echo $data['cedula']." ".$data['primer_nombre']." ".$data['primer_apellido']. " Pedido: ". $data['cantidad_aprobado'] . " colecciones"; ?>
-                              
+                          <?php
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                        ?>
+                                      <option value="<?php echo $data['id_pedido'] ?>" 
+                                            <?php foreach ($facturas as $key): if (!empty($key['id_pedido'])):
+                                              if ($data['id_pedido'] == $key['id_pedido']): ?>
+                                                disabled
+                                            <?php endif; endif; endforeach; ?> 
+                                      ><!-- Aqui cierra el Option de apertura  -->
+                                            <?php echo $data['cedula']." ".$data['primer_nombre']." ".$data['primer_apellido']. " Pedido: ". $data['cantidad_aprobado'] . " colecciones"; ?>
+                                        <?php 
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                                ?>
+
+                              <option value="<?php echo $data['id_pedido'] ?>" 
+                                    <?php foreach ($facturas as $key): if (!empty($key['id_pedido'])):
+                                      if ($data['id_pedido'] == $key['id_pedido']): ?>
+                                        disabled
+                                    <?php endif; endif; endforeach; ?> 
+                              ><!-- Aqui cierra el Option de apertura  -->
+                                    <?php echo $data['cedula']." ".$data['primer_nombre']." ".$data['primer_apellido']. " Pedido: ". $data['cantidad_aprobado'] . " colecciones"; ?>
+
+                                <?php
+                            }
+                          ?>
                             </option>
                         <?php  }  } ?>
                        </select>

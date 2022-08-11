@@ -628,12 +628,12 @@
 
 
                     <div class="row" style="border-radius:50%;text-align:right;margin-bottom:-3%;display:inline-block;float:right;padding:5px 20px 20px 20px;">
-                      <div style="text-align:center;width:100%;color:#FFF;text-shadow:0px 0px 3px #000;">Gemas</div>
+                      <div style="text-align:center;width:100%;color:#FFF;text-shadow:0px 0px 3px #000;"><b>Gemas</b></div>
                       <div style="display:inline-block;">
                         <span style="text-align:left;">
-                            <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-right:50px;"><small>Disponibles</small></span>
+                            <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-right:50px;"><small><b>Disponibles</b></small></span>
                             <br>
-                            <div class="" style="background:#FFF;border-radius:100%;display:inline-block;rotate:50;">
+                            <div class="" style="background:#FFF;border-radius:100px;display:inline-block;rotate:50;">
                               <img style="width:70px;padding:0;margin:0;position:relative;left:-10px;top:3px;" src="<?=$fotoGema?>">
                               <span style="color:<?=$fucsia?>;position:relative;top:4px;left:-12px">
                                 <b style="font-size:1.5em">
@@ -647,9 +647,9 @@
                       </div>
                       <div style="display:inline-block;">
                         <span style="text-align:right;">
-                            <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-left:30px"><small>Bloqueadas</small></span>
+                            <span style="color:#FFF;text-shadow:0px 0px 3px #000;margin-left:30px"><small><b>Bloqueadas</b></small></span>
                             <br>
-                            <div class="" style="background:#FFF;border-radius:100%;display:inline-block;">
+                            <div class="" style="background:#FFF;border-radius:100px;display:inline-block;">
                               <img style="width:30px;padding:0;margin:0;position:relative;left:-10px;top:2px;" src="<?=$fotoGemaBloqueadas?>">
                               <span style="color:#00000055;position:relative;top:3px;left:-12px">
                                 <b style="font-size:1em">
@@ -1387,11 +1387,11 @@
                           <?php
                             $restaTotalGemas = $total_responsabilidad - $abonado_lider_gemas;
                             // echo $abonado_lider_gemas;
-                            // $restaTotalGemas = 0;
+                            $restaTotalGemas = 0;
                             // echo $restaTotalGemas;
                             // echo $restaTotalResponsabilidad;
 
-                            // $restaTotalResponsabilidad = 0;
+                            $restaTotalResponsabilidad = 0;
 
                             // echo "Cantidad de pagos: ".(count($pagosGemas)-1)."<br>";
                             // echo "Pedido: ".$id."<br>";
@@ -1413,7 +1413,7 @@
 
                             // echo "Resta actual: ".number_format($restaTotalResponsabilidad,1,',','.')."<br>";
                             // echo "Resta Gemas: ".number_format($restaTotalGemas,1,',','.')."<br>";
-                            // $reclamargemasporcentaje = 1;
+                            $reclamargemasporcentaje = 0;
 
                             if (count($gemasReclamar)>1): 
                               $gemaReclamar = $gemasReclamar[0];
@@ -1471,7 +1471,7 @@
                                             <input type="hidden" id="cantidad_gemas_lider_porcent" value="<?=number_format($gemasAReclamar,2,',','.')?>">
                                             <input type="hidden" id="porcentaje_gemas_lider" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
 
-                                            <button class="btn enviar2 reclamarGemasPorcentajeBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamarporcentaje=1&gema=<?=$gemaReclamar['id_gema'];?>&porcentaje=<?=$gemasAReclamarPorcentaje;?>">
+                                            <button class="btn enviar2 reclamarGemasPorcentajeBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamarporcentaje=1&gema=<?=$gemaReclamar['id_gema'];?>&porcentaje=<?=$gemasAReclamarPorcentaje;?>&porcentPago=<?=number_format($porcentajeAbonadoPuntual,2,'.',''); ?>">
                                               <span class="fa fa-diamond"></span>
                                               Reclamar Gemas 
                                               <span class="fa fa-diamond"></span>
@@ -1588,7 +1588,7 @@
       </div>
       <!-- /.row -->
 
-<!-- <?php echo $response; ?> -->
+      <!-- <?php echo $response; ?> -->
     </section>
     <!-- /.content -->
   </div>
@@ -2328,7 +2328,7 @@ $(document).ready(function(){
     var porcentajeGemas = $("#porcentaje_gemas_lider").val();
      swal.fire({ 
           title: "¿Desea reclamar sus gemas? <br> Puede reclamar "+porcentajeGemas+" de sus "+cantidadGemas+" gemas?",
-          text: "Sus gemas reclamadas pasarán a estar disponibles.<br>¿Desea continuar?",
+          text: "Sus gemas reclamadas pasarán a estar disponibles. ¿Desea continuar?",
           type: "question",
           showCancelButton: true,
           confirmButtonColor: "#ED2A77",
@@ -2352,7 +2352,7 @@ $(document).ready(function(){
     var cantidadGemas = $("#cantidad_gemas_lider").val();
      swal.fire({ 
           title: "¿Desea reclamar sus "+cantidadGemas+" gemas?",
-          text: "Sus gemas reclamadas pasarán a estar disponibles.______ ¿Desea continuar?",
+          text: "Sus gemas reclamadas pasarán a estar disponibles. ¿Desea continuar?",
           type: "question",
           showCancelButton: true,
           confirmButtonColor: "#ED2A77",

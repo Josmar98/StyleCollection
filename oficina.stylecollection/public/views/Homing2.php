@@ -96,6 +96,34 @@
 
       <div class="row">
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
+
         <div class="col-md-12">
           <!-- /.box -->
           <div class="box">
@@ -296,6 +324,8 @@
 
             <!-- /.box-body -->
           </div>
+
+
           <?php if($_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
 
           <div class="box">
@@ -303,129 +333,223 @@
               <h3 class="box-title">Pedidos Realizados en la <?php echo " Campaña ".$numero_campana."/".$anio_campana; ?> </h3>
             </div>
             <div class="box-body">
-                    <table id="" class="datatable table table-bordered table-striped" style="text-align:center;width:100%;">
-                            <thead>
-                            <tr>
-                              <th>---</th>
-                              <th>Nombre Apellido y Cedula</th>
-                              <!-- <th></th> -->
-                              <th>Colecciones Solicitadas</th>
-                              <th>Colecciones Confirmadas</th>
-                              <!-- <th>---</th> -->
-                            </tr>
-                            </thead>
-                            <tbody>
-                             <?php 
-                            $num = 1;
-                            if(Count($pedidosFull)>1){
-                              foreach ($pedidosFull as $data):
-                                if(!empty($data['id_pedido'])):  
-                              ?>
-                              <tr>
-                                <td style="width:20%">
-                                  <span class="contenido2">
-                                    <?php if($_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol'] == "Analista Supervisor"){ ?>
-                                        
-                                        <?php if ($data['cantidad_aprobado']==0): ?>
-                                            <b style="color:#898989">* Ver Pedido</b>
-                                        <?php else: ?>
-                                          <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
-                                            <b>Ver Estado de cuentas</b>
-                                          </a>
-                                        <?php endif; ?>
+              <table id="" class="datatable table table-bordered table-striped" style="text-align:center;width:100%;">
+                <thead>
+                  <tr>
+                    <th>---</th>
+                    <th>Nombre Apellido y Cedula</th>
+                    <!-- <th></th> -->
+                    <th>Colecciones Solicitadas</th>
+                    <th>Colecciones Confirmadas</th>
+                    <!-- <th>---</th> -->
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php 
+                    $num = 1;
+                    if(Count($pedidosFull)>1){
+                      foreach ($pedidosFull as $data):
+                        if(!empty($data['id_pedido'])): 
 
-                                    <?php } else { ?>
+                          if($accesoBloqueo=="1"){
+                            if(!empty($accesosEstructuras)){
+                              foreach ($accesosEstructuras as $struct) {
+                                if(!empty($struct['id_cliente'])){
+                                  if($struct['id_cliente']==$data['id_cliente']){
 
-                                      <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
-                                        <?php if ($data['cantidad_aprobado']>0): ?>
-                                          <b>Ver Estado de cuentas</b>
-                                        <?php else: ?>
-                                          <b>* Ver Pedido</b>
-                                        <?php endif; ?>
-                                      </a>
-
-                                    <?php } ?>
-
-                                  </span>
-                                </td>
-                                <td style="width:20%">
-                                  <span class="contenido2">
-                                    <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
-                                      <?php echo $data['primer_nombre']; ?>
-                                      <?php echo $data['primer_apellido']; ?>
-                                      <?php echo $data['cedula']; ?>
-                                    <!-- </a>   -->
-                                  </span>
-                                </td>
-                                <!-- <td style="width:20%">
-                                  <span class="contenido2">
-                                    <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
-                                    </a>
-                                  </span>
-                                </td> -->
-                                <td style="width:20%">
-                                  <span class="contenido2">
-                                    <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
-                                      <?php echo $data['cantidad_pedido']." Col Solicitadas" ?>
-                                    <!-- </a> -->
-                                  </span>
-                                </td>                  
-                                <td style="width:20%">
-                                  <span class="contenido2">
-                                    <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
-                                    <?php if($data['cantidad_aprobado']!="0"){ ?>
-                                      <span style="color:#0d0;">
-                                       <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
-                                      </span>
-                                     <?php } else { ?>
-                                       <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
-                                     <?php } ?>
-
-                                    <!-- </a> -->
-                                  </span>
-                                </td>
-                                <!-- <td style="width:10%">
-                                  <table style="background:none;text-align:center;width:100%">
-                                    <tr>
-                                      <td style="width:50%">
-                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_campana'] ?>">
-                                          <span class="fa fa-wrench">
+                                    ?>
+                                  <tr>
+                                    <td style="width:20%">
+                                      <span class="contenido2">
+                                        <?php if($_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol'] == "Analista Supervisor"){ ?>
                                             
+                                            <?php if ($data['cantidad_aprobado']==0): ?>
+                                                <b style="color:#898989">* Ver Pedido</b>
+                                            <?php else: ?>
+                                              <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                                <b>Ver Estado de cuentas</b>
+                                              </a>
+                                            <?php endif; ?>
+
+                                        <?php } else { ?>
+
+                                          <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                            <?php if ($data['cantidad_aprobado']>0): ?>
+                                              <b>Ver Estado de cuentas</b>
+                                            <?php else: ?>
+                                              <b>* Ver Pedido</b>
+                                            <?php endif; ?>
+                                          </a>
+
+                                        <?php } ?>
+
+                                      </span>
+                                    </td>
+                                    <td style="width:20%">
+                                      <span class="contenido2">
+                                        <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                          <?php echo $data['primer_nombre']; ?>
+                                          <?php echo $data['primer_apellido']; ?>
+                                          <?php echo $data['cedula']; ?>
+                                        <!-- </a>   -->
+                                      </span>
+                                    </td>
+                                    <!-- <td style="width:20%">
+                                      <span class="contenido2">
+                                        <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                        </a>
+                                      </span>
+                                    </td> -->
+                                    <td style="width:20%">
+                                      <span class="contenido2">
+                                        <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                          <?php echo $data['cantidad_pedido']." Col Solicitadas" ?>
+                                        <!-- </a> -->
+                                      </span>
+                                    </td>                  
+                                    <td style="width:20%">
+                                      <span class="contenido2">
+                                        <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                        <?php if($data['cantidad_aprobado']!="0"){ ?>
+                                          <span style="color:#0d0;">
+                                           <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
                                           </span>
-                                        </button>
-                                      </td>
-                                      <td style="width:50%">
-                                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_campana'] ?>&permission=1">
-                                          <span class="fa fa-trash"></span>
-                                        </button>
-                                      </td>
-                                    </tr>
-                                  </table>
-                                    
-                                    
-                                </td> -->
-                                </tr>
-                                <?php
-                                
-                                endif; endforeach;
-                            }else{
-                              ?>
-                              <tr><td colspan='7'>Ningún dato disponible en esta tabla</td></tr>
-                              <?php 
+                                         <?php } else { ?>
+                                           <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
+                                         <?php } ?>
+
+                                        <!-- </a> -->
+                                      </span>
+                                    </td>
+                                    <!-- <td style="width:10%">
+                                      <table style="background:none;text-align:center;width:100%">
+                                        <tr>
+                                          <td style="width:50%">
+                                            <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_campana'] ?>">
+                                              <span class="fa fa-wrench">
+                                                
+                                              </span>
+                                            </button>
+                                          </td>
+                                          <td style="width:50%">
+                                            <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_campana'] ?>&permission=1">
+                                              <span class="fa fa-trash"></span>
+                                            </button>
+                                          </td>
+                                        </tr>
+                                      </table>
+                                    </td> -->
+                                  </tr>
+                                    <?php
+                                  }
+                                }
+                              }
                             }
-                            ?>
-                            </tbody>
-                            <tfoot>
+                          } else if($accesoBloqueo=="0"){
+                              ?>
                             <tr>
-                              <th>---</th>
-                              <th>Nombre Apellido y Cedula</th>
-                              <!-- <th></th> -->
-                              <th>Colecciones Solicitadas</th>
-                              <th>Colecciones Confirmadas</th>
-                              <!-- <th>---</th> -->
+                              <td style="width:20%">
+                                <span class="contenido2">
+                                  <?php if($_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol'] == "Analista Supervisor"){ ?>
+                                      
+                                      <?php if ($data['cantidad_aprobado']==0): ?>
+                                          <b style="color:#898989">* Ver Pedido</b>
+                                      <?php else: ?>
+                                        <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                          <b>Ver Estado de cuentas</b>
+                                        </a>
+                                      <?php endif; ?>
+
+                                  <?php } else { ?>
+
+                                    <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                      <?php if ($data['cantidad_aprobado']>0): ?>
+                                        <b>Ver Estado de cuentas</b>
+                                      <?php else: ?>
+                                        <b>* Ver Pedido</b>
+                                      <?php endif; ?>
+                                    </a>
+
+                                  <?php } ?>
+
+                                </span>
+                              </td>
+                              <td style="width:20%">
+                                <span class="contenido2">
+                                  <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                    <?php echo $data['primer_nombre']; ?>
+                                    <?php echo $data['primer_apellido']; ?>
+                                    <?php echo $data['cedula']; ?>
+                                  <!-- </a>   -->
+                                </span>
+                              </td>
+                              <!-- <td style="width:20%">
+                                <span class="contenido2">
+                                  <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>">
+                                  </a>
+                                </span>
+                              </td> -->
+                              <td style="width:20%">
+                                <span class="contenido2">
+                                  <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                    <?php echo $data['cantidad_pedido']." Col Solicitadas" ?>
+                                  <!-- </a> -->
+                                </span>
+                              </td>                  
+                              <td style="width:20%">
+                                <span class="contenido2">
+                                  <!-- <a href="?<?php echo $menu ?>&route=Pedidos&id=<?php echo $data['id_pedido'] ?>"> -->
+                                  <?php if($data['cantidad_aprobado']!="0"){ ?>
+                                    <span style="color:#0d0;">
+                                     <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
+                                    </span>
+                                   <?php } else { ?>
+                                     <?php echo $data['cantidad_aprobado']. " Col Aprobadas";?> 
+                                   <?php } ?>
+
+                                  <!-- </a> -->
+                                </span>
+                              </td>
+                              <!-- <td style="width:10%">
+                                <table style="background:none;text-align:center;width:100%">
+                                  <tr>
+                                    <td style="width:50%">
+                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_campana'] ?>">
+                                        <span class="fa fa-wrench">
+                                          
+                                        </span>
+                                      </button>
+                                    </td>
+                                    <td style="width:50%">
+                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_campana'] ?>&permission=1">
+                                        <span class="fa fa-trash"></span>
+                                      </button>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td> -->
                             </tr>
-                            </tfoot>
-                    </table>
+                              <?php
+                          }
+                        endif; endforeach;
+                    }else{
+                      ?>
+                      <tr><td colspan='7'>Ningún dato disponible en esta tabla</td></tr>
+                      <?php 
+                    }
+                  ?>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>---</th>
+                    <th>Nombre Apellido y Cedula</th>
+                    <!-- <th></th> -->
+                    <th>Colecciones Solicitadas</th>
+                    <th>Colecciones Confirmadas</th>
+                    <!-- <th>---</th> -->
+                  </tr>
+                </tfoot>
+              </table>
             </div>
             
           </div>

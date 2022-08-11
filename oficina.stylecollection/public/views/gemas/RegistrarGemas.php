@@ -35,7 +35,33 @@
 
 
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
 
         <!-- left column -->
@@ -64,7 +90,25 @@
                        <select class="form-control select2 lideres" style="width:100%" name="lider" id="lideres">
                         <option value="0"></option>
                           <?php foreach ($lideres as $data): if (!empty($data['id_cliente'])): ?>
-                        <option <?php if(!empty($_GET['lider']) && !empty($_GET['tipo'])){ if($data['id_cliente']==$_GET['lider']){ echo "selected=''"; } } ?>  value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." - ".$data['cedula']?></option>
+                            <?php
+                              if($accesoBloqueo=="1"){
+                                if(!empty($accesosEstructuras)){
+                                  foreach ($accesosEstructuras as $struct) {
+                                    if(!empty($struct['id_cliente'])){
+                                      if($struct['id_cliente']==$data['id_cliente']){
+                                          ?>
+                                        <option <?php if(!empty($_GET['lider']) && !empty($_GET['tipo'])){ if($data['id_cliente']==$_GET['lider']){ echo "selected=''"; } } ?>  value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." - ".$data['cedula']?></option>
+                                          <?php 
+                                      }
+                                    }
+                                  }
+                                }
+                              }else if($accesoBloqueo=="0"){
+                                  ?>
+                                <option <?php if(!empty($_GET['lider']) && !empty($_GET['tipo'])){ if($data['id_cliente']==$_GET['lider']){ echo "selected=''"; } } ?>  value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." - ".$data['cedula']?></option>
+                                  <?php
+                              }
+                            ?>
                           <?php endif; endforeach; ?>
                        </select>
                        <span id="error_lideres" class="errors"></span>

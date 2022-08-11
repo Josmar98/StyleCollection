@@ -85,7 +85,7 @@
                       </div>
 
                       <div class="form-group col-xs-12 col-sm-6">
-                         <label for="cantidad_gemas">Gemas gemas</label>
+                         <label for="cantidad_gemas">Lideres</label>
                          <input type="text" class="form-control cantidad_gemas" value="<?=$gema['cantidad_gemas']?>" id="cantidad_gemas" name="cantidad_gemas" readonly>
                          <span id="error_cantidad_gemas" class="errors"></span>
                       </div>

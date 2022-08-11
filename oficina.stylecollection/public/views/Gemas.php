@@ -36,6 +36,34 @@
       <div class="row">
 
         <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
+
+        <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
           $estado_campana = $estado_campana2[0]['estado_campana'];
         ?>
@@ -143,103 +171,216 @@
                 foreach ($gemas as $data):
                 if(!empty($data['id_gema'])):  
                 ?>
-                <tr>
-                  <td style="width:5%">
-                    <span class="contenido2">
-                      <?php echo $num++; ?>
-                    </span>
-                  </td>
-                  <td style="width:8%">
-                    <?php if($estado_campana=="1"){ ?>
+                  <?php
+                    if($accesoBloqueo=="1"){
+                      if(!empty($accesosEstructuras)){
+                        foreach ($accesosEstructuras as $struct) {
+                          if(!empty($struct['id_cliente'])){
+                            if($struct['id_cliente']==$data['id_cliente']){
+                                ?>
+                              <tr>
+                                <td style="width:5%">
+                                  <span class="contenido2">
+                                    <?php echo $num++; ?>
+                                  </span>
+                                </td>
+                                <td style="width:8%">
+                                  <?php if($estado_campana=="1"){ ?>
 
-                      <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
-                        <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
-                            <span class="fa fa-wrench"></span>
-                          </button>
-                        <?php } ?>
-                      <?php endif ?>
+                                    <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
+                                          <span class="fa fa-wrench"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif ?>
 
-                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
-                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
-                          <span class="fa fa-trash"></span>
-                        </button>
-                      <?php } ?>
+                                    <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
+                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
+                                        <span class="fa fa-trash"></span>
+                                      </button>
+                                    <?php } ?>
 
-                      <?php if ($data['estado']=="Disponible"): ?>
-                        <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
-                          <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
-                            <span class="fa fa-lock"></span>
-                          </button>
-                        <?php } ?>
-                      <?php endif; ?>
+                                    <?php if ($data['estado']=="Disponible"): ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                        <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
+                                          <span class="fa fa-lock"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif; ?>
 
 
-                      <?php if ($data['estado']=="Bloqueado"): ?>
-                        <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
-                          <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
-                            <span class="fa fa-unlock"></span>
-                          </button>
-                        <?php } ?>
-                      <?php endif; ?>
+                                    <?php if ($data['estado']=="Bloqueado"): ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                        <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
+                                          <span class="fa fa-unlock"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif; ?>
 
-                    <?php } ?>
-                  </td>
-                  <td style="width:16%">
-                    <span class="contenido2">
-                      <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
-                    </span>
-                  </td>
-                  <td style="width:16%">
-                    <span class="contenido2">
-                      <?php echo "Campaña ".$data['numero_campana']."/".$data['anio_campana']."<br>"."<small>".$data['nombre_campana']."</small>"; ?>
-                    </span>
-                  </td>
-                  <td style="width:16%">
-                    <span class="contenido2">
-                      <?php echo $data['nombreconfiggema'] ?>
-                    </span>
-                  </td>
-                  <td style="width:16%">
-                    <span class="contenido2">
-                      <?=number_format($data['cantidad_gemas'],2,',','.')?>
-                      <?php if ($data['cantidad_gemas']=="1"): ?> Gema <?php elseif($data['cantidad_gemas']>"0"): ?> Gemas <?php endif; ?>
-                    </span>
-                  </td> 
-                  <td style="width:16%">
-                    <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
-                    <span class="contenido2" style="text-align:center;">
-                      <u>
-                      <span class="buttonexpandedhijo1 buttonexpandedhijo1<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Ver mas ▼</span>
-                      <span style="display:none;" class="buttonexpandedhijo2 buttonexpandedhijo2<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Dejar de ver ▲</span>
-                      </u>
-                        
-                      <div style="display:none;" class='boxexpandedhijo boxexpandedhijo<?=$data['id_gema']?>' >
-                      <table style="text-align:left;">
-                      <?php foreach ($lideresHijos as $hijos): ?>
-                        <?php if (!empty($hijos['id_gema_cliente'])): ?>
-                        <?php if ($hijos['id_gema']==$data['id_gema']): ?>
-                          <tr>
-                            <td>
-                          <?=$hijos['primer_nombre']." ".$hijos['primer_apellido']?>
+                                  <?php } ?>
+                                </td>
+                                <td style="width:16%">
+                                  <span class="contenido2">
+                                    <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                                  </span>
+                                </td>
+                                <td style="width:16%">
+                                  <span class="contenido2">
+                                    <?php echo "Campaña ".$data['numero_campana']."/".$data['anio_campana']."<br>"."<small>".$data['nombre_campana']."</small>"; ?>
+                                  </span>
+                                </td>
+                                <td style="width:16%">
+                                  <span class="contenido2">
+                                    <?php echo $data['nombreconfiggema'] ?>
+                                  </span>
+                                </td>
+                                <td style="width:16%">
+                                  <span class="contenido2">
+                                    <?=number_format($data['cantidad_gemas'],2,',','.')?>
+                                    <?php if ($data['cantidad_gemas']=="1"): ?> Gema <?php elseif($data['cantidad_gemas']>"0"): ?> Gemas <?php endif; ?>
+                                  </span>
+                                </td> 
+                                <td style="width:16%">
+                                  <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
+                                  <span class="contenido2" style="text-align:center;">
+                                    <u>
+                                    <span class="buttonexpandedhijo1 buttonexpandedhijo1<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Ver mas ▼</span>
+                                    <span style="display:none;" class="buttonexpandedhijo2 buttonexpandedhijo2<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Dejar de ver ▲</span>
+                                    </u>
+                                      
+                                    <div style="display:none;" class='boxexpandedhijo boxexpandedhijo<?=$data['id_gema']?>' >
+                                    <table style="text-align:left;">
+                                    <?php foreach ($lideresHijos as $hijos): ?>
+                                      <?php if (!empty($hijos['id_gema_cliente'])): ?>
+                                      <?php if ($hijos['id_gema']==$data['id_gema']): ?>
+                                        <tr>
+                                          <td>
+                                        <?=$hijos['primer_nombre']." ".$hijos['primer_apellido']?>
+                                            
+                                          </td>
+                                        </tr>
+                                      <?php endif ?>                        
+                                      <?php endif ?>                        
+                                    <?php endforeach ?>
+                                    </table>
+                                    </div>
+                                  </span>
+                                  <?php endif; ?>
+                                </td>
+                                <td style="width:7%">
+                                  <span class="contenido2">
+                                    <?php echo $data['estado'] ?>
+                                  </span>
+                                </td>  
+                              </tr>
+                                <?php 
+                            }
+                          }
+                        }
+                      }
+                    }else if($accesoBloqueo=="0"){
+                        ?>
+                      <tr>
+                        <td style="width:5%">
+                          <span class="contenido2">
+                            <?php echo $num++; ?>
+                          </span>
+                        </td>
+                        <td style="width:8%">
+                          <?php if($estado_campana=="1"){ ?>
+
+                            <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
+                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
+                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
+                                  <span class="fa fa-wrench"></span>
+                                </button>
+                              <?php } ?>
+                            <?php endif ?>
+
+                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
+                              <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
+                                <span class="fa fa-trash"></span>
+                              </button>
+                            <?php } ?>
+
+                            <?php if ($data['estado']=="Disponible"): ?>
+                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
+                                  <span class="fa fa-lock"></span>
+                                </button>
+                              <?php } ?>
+                            <?php endif; ?>
+
+
+                            <?php if ($data['estado']=="Bloqueado"): ?>
+                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
+                                  <span class="fa fa-unlock"></span>
+                                </button>
+                              <?php } ?>
+                            <?php endif; ?>
+
+                          <?php } ?>
+                        </td>
+                        <td style="width:16%">
+                          <span class="contenido2">
+                            <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                          </span>
+                        </td>
+                        <td style="width:16%">
+                          <span class="contenido2">
+                            <?php echo "Campaña ".$data['numero_campana']."/".$data['anio_campana']."<br>"."<small>".$data['nombre_campana']."</small>"; ?>
+                          </span>
+                        </td>
+                        <td style="width:16%">
+                          <span class="contenido2">
+                            <?php echo $data['nombreconfiggema'] ?>
+                          </span>
+                        </td>
+                        <td style="width:16%">
+                          <span class="contenido2">
+                            <?=number_format($data['cantidad_gemas'],2,',','.')?>
+                            <?php if ($data['cantidad_gemas']=="1"): ?> Gema <?php elseif($data['cantidad_gemas']>"0"): ?> Gemas <?php endif; ?>
+                          </span>
+                        </td> 
+                        <td style="width:16%">
+                          <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
+                          <span class="contenido2" style="text-align:center;">
+                            <u>
+                            <span class="buttonexpandedhijo1 buttonexpandedhijo1<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Ver mas ▼</span>
+                            <span style="display:none;" class="buttonexpandedhijo2 buttonexpandedhijo2<?=$data['id_gema']?>" id='<?=$data['id_gema']?>'>Dejar de ver ▲</span>
+                            </u>
                               
-                            </td>
-                          </tr>
-                        <?php endif ?>                        
-                        <?php endif ?>                        
-                      <?php endforeach ?>
-                      </table>
-                      </div>
-                    </span>
-                    <?php endif; ?>
-                  </td>
-                  <td style="width:7%">
-                    <span class="contenido2">
-                      <?php echo $data['estado'] ?>
-                    </span>
-                  </td>  
+                            <div style="display:none;" class='boxexpandedhijo boxexpandedhijo<?=$data['id_gema']?>' >
+                            <table style="text-align:left;">
+                            <?php foreach ($lideresHijos as $hijos): ?>
+                              <?php if (!empty($hijos['id_gema_cliente'])): ?>
+                              <?php if ($hijos['id_gema']==$data['id_gema']): ?>
+                                <tr>
+                                  <td>
+                                <?=$hijos['primer_nombre']." ".$hijos['primer_apellido']?>
+                                    
+                                  </td>
+                                </tr>
+                              <?php endif ?>                        
+                              <?php endif ?>                        
+                            <?php endforeach ?>
+                            </table>
+                            </div>
+                          </span>
+                          <?php endif; ?>
+                        </td>
+                        <td style="width:7%">
+                          <span class="contenido2">
+                            <?php echo $data['estado'] ?>
+                          </span>
+                        </td>  
+                      </tr>
+                        <?php
+                    }
+                  ?>
                       
-                </tr>
                 <?php
                endif; endforeach;
                 ?>

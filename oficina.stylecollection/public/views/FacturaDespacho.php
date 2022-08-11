@@ -38,6 +38,34 @@
       <div class="row">
 
         <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
+
+        <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
           $estado_campana = $estado_campana2[0]['estado_campana'];
         ?>
@@ -84,71 +112,153 @@
               foreach ($facturas as $data):
                 if(!empty($data['id_factura_despacho'])):  
             ?>
-                <tr>
-                  <td style="width:5%">
-                    <span class="contenido2">
-                      <?php echo $num++; ?>
-                    </span>
-                  </td>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                      <?php echo  $data['primer_nombre']. " " . $data['primer_apellido']; ?>
-                    </span>
-                  </td>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                      <?php echo $lider->formatFecha($data['fecha_emision']) . " -> " . $lider->formatFecha($data['fecha_vencimiento']); ?>
-                    </span>
-                  </td>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                      <?php echo $data['cantidad_aprobado']. " Colecciones"; ?>
-                    </span>
-                  </td>
-  
- 
-                  <td style="width:20%">
-                    <table style="background:;text-align:center;width:100%">
-                      <tr>
-                        <td style="width:50%">
-                            <?php 
-                              $emision = $data['fecha_emision'];
-                              $tasas = $lider->consultarQuery("SELECT * FROM tasa WHERE fecha_tasa = '$emision' and estatus = 1");
-                              if(Count($tasas)>1){
-                            ?>
-                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarbs&id=<?php echo $data['id_factura_despacho'] ?>">
-                                  Generar Factura en Bs.D.
-                                </a>
-                            <?php }else{ ?>
-                                  <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF" disabled>
-                                    Generar Factura en Bs.D.
-                                  </a>
-                            <?php } ?>
+                <?php
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                        ?>
+                                      <tr>
+                                        <td style="width:5%">
+                                          <span class="contenido2">
+                                            <?php echo $num++; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo  $data['primer_nombre']. " " . $data['primer_apellido']; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $lider->formatFecha($data['fecha_emision']) . " -> " . $lider->formatFecha($data['fecha_vencimiento']); ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['cantidad_aprobado']. " Colecciones"; ?>
+                                          </span>
+                                        </td>
+                        
+                       
+                                        <td style="width:20%">
+                                          <table style="background:;text-align:center;width:100%">
+                                            <tr>
+                                              <td style="width:50%">
+                                                  <?php 
+                                                    $emision = $data['fecha_emision'];
+                                                    $tasas = $lider->consultarQuery("SELECT * FROM tasa WHERE fecha_tasa = '$emision' and estatus = 1");
+                                                    if(Count($tasas)>1){
+                                                  ?>
+                                                      <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarbs&id=<?php echo $data['id_factura_despacho'] ?>">
+                                                        Generar Factura en Bs.D.
+                                                      </a>
+                                                  <?php }else{ ?>
+                                                        <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF" disabled>
+                                                          Generar Factura en Bs.D.
+                                                        </a>
+                                                  <?php } ?>
 
-                            <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarusd&id=<?php echo $data['id_factura_despacho'] ?>">
-                                Generar Factura en USD.
-                              </a>
-                            <?php 
-                              $fiscal = $lider->consultarQuery("SELECT * FROM opcion_factura_despacho WHERE opcion_factura_despacho.id_campana = {$id_campana} and estatus = 1");
-                              if(count($fiscal)>1){
+                                                  <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarusd&id=<?php echo $data['id_factura_despacho'] ?>">
+                                                      Generar Factura en USD.
+                                                    </a>
+                                                  <?php 
+                                                    $fiscal = $lider->consultarQuery("SELECT * FROM opcion_factura_despacho WHERE opcion_factura_despacho.id_campana = {$id_campana} and estatus = 1");
+                                                    if(count($fiscal)>1){
 
-                            ?>
-                              <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>">
-                                Generar Factura Fiscal.
-                              </a>
-                            <?php } else { ?>
-                              <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF">
-                                Generar Factura Fiscal.
-                              </a>
-                            <?php } ?>
-                          
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                      
-                      
-                </tr>
+                                                  ?>
+                                                    <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>">
+                                                      Generar Factura Fiscal.
+                                                    </a>
+                                                  <?php } else { ?>
+                                                    <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF">
+                                                      Generar Factura Fiscal.
+                                                    </a>
+                                                  <?php } ?>
+                                                
+                                              </td>
+                                            </tr>
+                                          </table>
+                                        </td>
+                                            
+                                            
+                                      </tr>
+                                        <?php 
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                                ?>
+                              <tr>
+                                <td style="width:5%">
+                                  <span class="contenido2">
+                                    <?php echo $num++; ?>
+                                  </span>
+                                </td>
+                                <td style="width:20%">
+                                  <span class="contenido2">
+                                    <?php echo  $data['primer_nombre']. " " . $data['primer_apellido']; ?>
+                                  </span>
+                                </td>
+                                <td style="width:20%">
+                                  <span class="contenido2">
+                                    <?php echo $lider->formatFecha($data['fecha_emision']) . " -> " . $lider->formatFecha($data['fecha_vencimiento']); ?>
+                                  </span>
+                                </td>
+                                <td style="width:20%">
+                                  <span class="contenido2">
+                                    <?php echo $data['cantidad_aprobado']. " Colecciones"; ?>
+                                  </span>
+                                </td>
+                
+               
+                                <td style="width:20%">
+                                  <table style="background:;text-align:center;width:100%">
+                                    <tr>
+                                      <td style="width:50%">
+                                          <?php 
+                                            $emision = $data['fecha_emision'];
+                                            $tasas = $lider->consultarQuery("SELECT * FROM tasa WHERE fecha_tasa = '$emision' and estatus = 1");
+                                            if(Count($tasas)>1){
+                                          ?>
+                                              <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarbs&id=<?php echo $data['id_factura_despacho'] ?>">
+                                                Generar Factura en Bs.D.
+                                              </a>
+                                          <?php }else{ ?>
+                                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF" disabled>
+                                                  Generar Factura en Bs.D.
+                                                </a>
+                                          <?php } ?>
+
+                                          <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=Generarusd&id=<?php echo $data['id_factura_despacho'] ?>">
+                                              Generar Factura en USD.
+                                            </a>
+                                          <?php 
+                                            $fiscal = $lider->consultarQuery("SELECT * FROM opcion_factura_despacho WHERE opcion_factura_despacho.id_campana = {$id_campana} and estatus = 1");
+                                            if(count($fiscal)>1){
+
+                                          ?>
+                                            <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>">
+                                              Generar Factura Fiscal.
+                                            </a>
+                                          <?php } else { ?>
+                                            <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF">
+                                              Generar Factura Fiscal.
+                                            </a>
+                                          <?php } ?>
+                                        
+                                      </td>
+                                    </tr>
+                                  </table>
+                                </td>
+                                    
+                                    
+                              </tr>
+                                <?php
+                            }
+                          ?>
           <?php
               endif; endforeach;
           ?>

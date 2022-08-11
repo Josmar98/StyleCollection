@@ -76,7 +76,7 @@
 				</h3>	 -->
 
 				<h3 style="margin-top:0;font-size:1.4em;">	
-					<a href="#" target="_blank">
+					<a href="./admin/" target="_blank">
 						<span class="fa fa-home color-style"></span>
 						<b style="color:#565656">Administrar Página</b>
 					</a>

@@ -38,7 +38,33 @@
     <section class="content">
       <div class="row">
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
         <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
@@ -91,52 +117,112 @@
                 foreach ($lideres as $data):
                   if(!empty($data['id_pedido'])):  
                 ?>
-                <tr >
-                  <td style="width:5%">
-                    <span class="contenido2">
-                      <?php echo $num++; ?>
-                    </span>
-                  </td>
-                  <td style="">
-                    <?php if($estado_campana=="1"): ?>
-                        <?php if ($_SESSION['nombre_rol']=="Vendedor"): ?>
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>">
-                            <span class="fa fa-wrench"></span>
-                          </button>
-                        <?php else: ?>
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>&admin=1">
-                            <span class="fa fa-wrench"></span>
-                          </button>
-                        <?php endif; ?>
+                <?php
+                  if($accesoBloqueo=="1"){
+                    if(!empty($accesosEstructuras)){
+                      foreach ($accesosEstructuras as $struct) {
+                        if(!empty($struct['id_cliente'])){
+                          if($struct['id_cliente']==$data['id_cliente']){
+                              ?>
+                            <tr >
+                              <td style="width:5%">
+                                <span class="contenido2">
+                                  <?php echo $num++; ?>
+                                </span>
+                              </td>
+                              <td style="">
+                                <?php if($estado_campana=="1"): ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Vendedor"): ?>
+                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>">
+                                        <span class="fa fa-wrench"></span>
+                                      </button>
+                                    <?php else: ?>
+                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>&admin=1">
+                                        <span class="fa fa-wrench"></span>
+                                      </button>
+                                    <?php endif; ?>
 
-                        <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol'] == "Analista2" || $_SESSION['nombre_rol'] == "Analista Supervisor2"): ?>
-                          <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
-                              <span class="fa fa-trash"></span>
-                          </button> -->
-                        <?php endif; ?>
-                    <?php endif; ?>
-                  </td>
-                  <td style="width:40%">
-                    <span class="contenido2">
-                      <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
-                    </span>
-                  </td>
-                  <td style="width:40%">
-                    <span class="contenido2">
-                      <?php foreach ($retos as $data2): ?>
-                        <?php if (!empty($data2['id_pedido'])): ?>
-                          <?php if ($data['id_pedido'] == $data2['id_pedido']): ?>
-                            <?php if ($data2['cantidad_retos']>0): ?>
-                              <?php echo $data2['cantidad_retos']." ".$data2['nombre_premio']."<br>"; ?>
+                                    <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol'] == "Analista2" || $_SESSION['nombre_rol'] == "Analista Supervisor2"): ?>
+                                      <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
+                                          <span class="fa fa-trash"></span>
+                                      </button> -->
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                              </td>
+                              <td style="width:40%">
+                                <span class="contenido2">
+                                  <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                                </span>
+                              </td>
+                              <td style="width:40%">
+                                <span class="contenido2">
+                                  <?php foreach ($retos as $data2): ?>
+                                    <?php if (!empty($data2['id_pedido'])): ?>
+                                      <?php if ($data['id_pedido'] == $data2['id_pedido']): ?>
+                                        <?php if ($data2['cantidad_retos']>0): ?>
+                                          <?php echo $data2['cantidad_retos']." ".$data2['nombre_premio']."<br>"; ?>
+                                        <?php endif; ?>
+                                      <?php endif; ?>
+                                    <?php endif; ?>
+                                  <?php endforeach; ?>
+                                </span>
+                              </td>
+                            </tr>
+                              <?php 
+                          }
+                        }
+                      }
+                    }
+                  }else if($accesoBloqueo=="0"){
+                      ?>
+                    <tr >
+                      <td style="width:5%">
+                        <span class="contenido2">
+                          <?php echo $num++; ?>
+                        </span>
+                      </td>
+                      <td style="">
+                        <?php if($estado_campana=="1"): ?>
+                            <?php if ($_SESSION['nombre_rol']=="Vendedor"): ?>
+                              <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>">
+                                <span class="fa fa-wrench"></span>
+                              </button>
+                            <?php else: ?>
+                              <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_pedido']?>&admin=1">
+                                <span class="fa fa-wrench"></span>
+                              </button>
                             <?php endif; ?>
-                          <?php endif; ?>
+
+                            <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol'] == "Analista2" || $_SESSION['nombre_rol'] == "Analista Supervisor2"): ?>
+                              <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                              </button> -->
+                            <?php endif; ?>
                         <?php endif; ?>
-                      <?php endforeach; ?>
-                    </span>
-                  </td>
-                      
-                      
-                </tr>
+                      </td>
+                      <td style="width:40%">
+                        <span class="contenido2">
+                          <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                        </span>
+                      </td>
+                      <td style="width:40%">
+                        <span class="contenido2">
+                          <?php foreach ($retos as $data2): ?>
+                            <?php if (!empty($data2['id_pedido'])): ?>
+                              <?php if ($data['id_pedido'] == $data2['id_pedido']): ?>
+                                <?php if ($data2['cantidad_retos']>0): ?>
+                                  <?php echo $data2['cantidad_retos']." ".$data2['nombre_premio']."<br>"; ?>
+                                <?php endif; ?>
+                              <?php endif; ?>
+                            <?php endif; ?>
+                          <?php endforeach; ?>
+                        </span>
+                      </td>
+                    </tr>
+                      <?php 
+                  }
+                ?>
+
                 <?php
                   endif; endforeach;
                 ?>

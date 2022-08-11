@@ -1416,7 +1416,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 
                 <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" ){ ?>
 
-                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2" ){ ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" ){ ?>
                             <?php if($url=="Nombramientos" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?route=Nombramientos&action=Registrar"><i class="fa fa-graduation-cap"></i> Agregar Nombramiento</a></li>
                             <?php }else{ ?>

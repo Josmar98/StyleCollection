@@ -5,6 +5,7 @@
         <div class="text-center">
           <!-- <img src="public/assets/img/logoTop1.png" style="width:90%"> -->
               <h2 class="logoicon">
+                <!-- <a href="/" style="font-family:arial;font-size:1.1em"> -->
                 <a href="<?=ROOTURL?>" style="font-family:arial;font-size:1.1em">
                   <span style="color:#ED2A77"><b>Style</b></span><span style="color:#000"><b>Collection</b></span>
                 </a>
@@ -19,8 +20,15 @@
         <div class="col-xs-12 text-right" style="padding-right:15%;">
           <span class="salto" style=""><br></span>
           <span class="sr-only">Toggle navigation</span>
-          <a href="?route=Home" class="icon-enlace-menu col"><b>Inicio</b></a>
-          <a href="?route=Posts" class="icon-enlace-menu col"><b>Posts</b></a>
+
+          <a href="?route=Home" class="icon-enlace-menu col">
+            <i class="menu-icon fa fa-home" style="font-size:1.5em;"></i> 
+            <b>Inicio</b>
+          </a>
+          <a href="?route=Posts" class="icon-enlace-menu col">
+            <i class="menu-icon fa fa-home" style="font-size:1.5em;"></i> 
+            <b>Posts</b>
+          </a>
           <!-- <a  class="icon-enlace-menu"><b>Blog</b></a> -->
           <!-- <a  class="icon-enlace-menu"><b>Productos</b></a> -->
           <!-- <a  class="icon-enlace-menu"><b>Contactanos</b></a> -->

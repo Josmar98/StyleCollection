@@ -9,6 +9,32 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 	$num_despacho = $_GET['dp'];
 	$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
 	// print_r($_POST);
+
+	$configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+	$accesoBloqueo = "0";
+	$superAnalistaBloqueo="1";
+	$analistaBloqueo="1";
+	foreach ($configuraciones as $config) {
+		if(!empty($config['id_configuracion'])){
+			if($config['clausula']=='Analistabloqueolideres'){
+				$analistaBloqueo = $config['valor'];
+			}
+			if($config['clausula']=='Superanalistabloqueolideres'){
+				$superAnalistaBloqueo = $config['valor'];
+			}
+		}
+	}
+	if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+	if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+	if($accesoBloqueo=="0"){
+		// echo "Acceso Abierto";
+	}
+	if($accesoBloqueo=="1"){
+		// echo "Acceso Restringido";
+		$accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+	}
+
+
 	if(!empty($_POST['val']) && !empty($_POST['formatNumber'])){
 		$num = number_format($_POST['val'],2,',','.');
 		echo $num;
@@ -210,36 +236,53 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			if(count($pagos)){
 				foreach ($pagos as $data) {
 					if(!empty($data['id_pago'])){
-						// if($data['id_banco']==""){
-							if($data['estado']=="Diferido"){
-								$diferido += $data['equivalente_pago'];
-								$reportado += $data['equivalente_pago'];
-							}else if($data['estado']=="Abonado"){
-								$abonado += $data['equivalente_pago'];
-								$reportado += $data['equivalente_pago'];
-							}else{
-								$reportado += $data['equivalente_pago'];
+						$permitido = "0";
+						if($accesoBloqueo=="1"){
+							if(!empty($accesosEstructuras)){
+								foreach ($accesosEstructuras as $struct) {
+									if(!empty($struct['id_cliente'])){
+										if($struct['id_cliente']==$data['id_cliente']){
+											$permitido = "1";
+										}
+									}
+								}
 							}
-						// }
-						// if($data['id_banco']!=""){
-						// 	foreach ($movimientos as $mov) {
-						// 		if(!empty($mov['id_pago'])){
-						// 			if($mov['id_pago']==$data['id_pago']){
-						// 				if($mov['fecha_movimiento']==$data['fecha_pago']){
-						// 	if($data['estado']=="Diferido"){
-						// 		$diferido += $data['equivalente_pago'];
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}else if($data['estado']=="Abonado"){
-						// 		$abonado += $data['equivalente_pago'];
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}else{
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}
-						// 				}
-						// 			}
-						// 		}
-						// 	}
-						// }
+						}else if($accesoBloqueo=="0"){
+							$permitido = "1";
+						}
+
+						if($permitido=="1"):
+							// if($data['id_banco']==""){
+								if($data['estado']=="Diferido"){
+									$diferido += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else if($data['estado']=="Abonado"){
+									$abonado += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else{
+									$reportado += $data['equivalente_pago'];
+								}
+							// }
+							// if($data['id_banco']!=""){
+							// 	foreach ($movimientos as $mov) {
+							// 		if(!empty($mov['id_pago'])){
+							// 			if($mov['id_pago']==$data['id_pago']){
+							// 				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							// 	if($data['estado']=="Diferido"){
+							// 		$diferido += $data['equivalente_pago'];
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}else if($data['estado']=="Abonado"){
+							// 		$abonado += $data['equivalente_pago'];
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}else{
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}
+							// 				}
+							// 			}
+							// 		}
+							// 	}
+							// }
+						endif;
 					}
 				}
 			}
@@ -429,36 +472,53 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			if(count($pagos)){
 				foreach ($pagos as $data) {
 					if(!empty($data['id_pago'])){
-						// if($data['id_banco']==""){
-							if($data['estado']=="Diferido"){
-								$diferido += $data['equivalente_pago'];
-								$reportado += $data['equivalente_pago'];
-							}else if($data['estado']=="Abonado"){
-								$abonado += $data['equivalente_pago'];
-								$reportado += $data['equivalente_pago'];
-							}else{
-								$reportado += $data['equivalente_pago'];
+						$permitido = "0";
+						if($accesoBloqueo=="1"){
+							if(!empty($accesosEstructuras)){
+								foreach ($accesosEstructuras as $struct) {
+									if(!empty($struct['id_cliente'])){
+										if($struct['id_cliente']==$data['id_cliente']){
+											$permitido = "1";
+										}
+									}
+								}
 							}
-						// }
-						// if($data['id_banco']!=""){
-						// 	foreach ($movimientos as $mov) {
-						// 		if(!empty($mov['id_pago'])){
-						// 			if($mov['id_pago']==$data['id_pago']){
-						// 				if($mov['fecha_movimiento']==$data['fecha_pago']){
-						// 	if($data['estado']=="Diferido"){
-						// 		$diferido += $data['equivalente_pago'];
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}else if($data['estado']=="Abonado"){
-						// 		$abonado += $data['equivalente_pago'];
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}else{
-						// 		$reportado += $data['equivalente_pago'];
-						// 	}
-						// 				}
-						// 			}
-						// 		}
-						// 	}
-						// }
+						}else if($accesoBloqueo=="0"){
+							$permitido = "1";
+						}
+
+						if($permitido=="1"):
+							// if($data['id_banco']==""){
+								if($data['estado']=="Diferido"){
+									$diferido += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else if($data['estado']=="Abonado"){
+									$abonado += $data['equivalente_pago'];
+									$reportado += $data['equivalente_pago'];
+								}else{
+									$reportado += $data['equivalente_pago'];
+								}
+							// }
+							// if($data['id_banco']!=""){
+							// 	foreach ($movimientos as $mov) {
+							// 		if(!empty($mov['id_pago'])){
+							// 			if($mov['id_pago']==$data['id_pago']){
+							// 				if($mov['fecha_movimiento']==$data['fecha_pago']){
+							// 	if($data['estado']=="Diferido"){
+							// 		$diferido += $data['equivalente_pago'];
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}else if($data['estado']=="Abonado"){
+							// 		$abonado += $data['equivalente_pago'];
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}else{
+							// 		$reportado += $data['equivalente_pago'];
+							// 	}
+							// 				}
+							// 			}
+							// 		}
+							// 	}
+							// }
+						endif;
 					}
 				}
 			}

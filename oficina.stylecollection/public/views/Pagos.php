@@ -37,6 +37,33 @@
     <section class="content">
       <div class="row">
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
         <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
@@ -357,9 +384,27 @@
                       <option></option>
                       <?php foreach ($lideres as $data): ?>
                         <?php if (!empty($data['id_cliente'])): ?>
-                        <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?>
-                            selected="selected"
-                        <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option>
+                          <?php
+                          $permitido = "0";
+                          if($accesoBloqueo=="1"){
+                            if(!empty($accesosEstructuras)){
+                              foreach ($accesosEstructuras as $struct) {
+                                if(!empty($struct['id_cliente'])){
+                                  if($struct['id_cliente']==$data['id_cliente']){
+                                    $permitido = "1";
+                                  }
+                                }
+                              }
+                            }
+                          }else if($accesoBloqueo=="0"){
+                            $permitido = "1";
+                          }
+
+
+                          if($permitido=="1"):
+                          ?>
+                            <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?> selected="selected" <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option>
+                          <?php endif; ?>
                         <?php endif; ?>
                       <?php endforeach; ?>
                     </select>
@@ -630,6 +675,25 @@
                         $num = 1;
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
+                            $permitido = "0";
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                      $permitido = "1";
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                              $permitido = "1";
+                            }
+
+
+                            if($permitido=="1"):
+
+
                             if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"):
                               
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
@@ -1881,7 +1945,11 @@
                               }
 
 
-                            endif; endif; endforeach;
+                              endif; 
+
+                            endif;
+
+                          endif; endforeach;
                         ?>
                     </tbody>
 
@@ -1941,7 +2009,24 @@
                   $diferidoContado=0;
                   $abonadoContado=0;
                   foreach ($pagos as $data):
-                        if(!empty($data['id_pago'])):
+                    if(!empty($data['id_pago'])):
+                      $permitido = "0";
+                      if($accesoBloqueo=="1"){
+                        if(!empty($accesosEstructuras)){
+                          foreach ($accesosEstructuras as $struct) {
+                            if(!empty($struct['id_cliente'])){
+                              if($struct['id_cliente']==$data['id_cliente']){
+                                $permitido = "1";
+                              }
+                            }
+                          }
+                        }
+                      }else if($accesoBloqueo=="0"){
+                        $permitido = "1";
+                      }
+
+
+                      if($permitido=="1"):
                           if($data['tipo_pago']=="Contado" || $data['tipo_pago']=="contado" || $data['tipo_pago']=="CONTADO"):
 
                               if($data['estado']=="Abonado"){
@@ -1957,7 +2042,8 @@
 
 
                           endif;
-                        endif;
+                      endif;
+                    endif;
                   endforeach;
                 ?>
                 <div class="row text-center" style="padding:10px 20px;">
@@ -2046,6 +2132,23 @@
                         $num = 1;
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
+                              $permitido = "0";
+                              if($accesoBloqueo=="1"){
+                                if(!empty($accesosEstructuras)){
+                                  foreach ($accesosEstructuras as $struct) {
+                                    if(!empty($struct['id_cliente'])){
+                                      if($struct['id_cliente']==$data['id_cliente']){
+                                        $permitido = "1";
+                                      }
+                                    }
+                                  }
+                                }
+                              }else if($accesoBloqueo=="0"){
+                                $permitido = "1";
+                              }
+
+                              if($permitido=="1"):
+
                             if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
 
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
@@ -3295,7 +3398,11 @@
                         <?php
                               }
                             
-                          endif; endif; endforeach;
+                            endif; 
+
+                            endif;
+
+                          endif; endforeach;
                         ?>
                     </tbody>
 
@@ -3354,22 +3461,36 @@
                   $diferidoInicial=0;
                   $abonadoInicial=0;
                   foreach ($pagos as $data):
-                        if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
-
-                              if($data['estado']=="Abonado"){
-                                $reportadoInicial += $data['equivalente_pago'];
-                                $abonadoInicial += $data['equivalente_pago'];
+                    if(!empty($data['id_pago'])):
+                      $permitido = "0";
+                      if($accesoBloqueo=="1"){
+                        if(!empty($accesosEstructuras)){
+                          foreach ($accesosEstructuras as $struct) {
+                            if(!empty($struct['id_cliente'])){
+                              if($struct['id_cliente']==$data['id_cliente']){
+                                $permitido = "1";
                               }
-                              else if($data['estado']=="Diferido"){
-                                $reportadoInicial += $data['equivalente_pago'];
-                                $diferidoInicial += $data['equivalente_pago'];
-                              }else{
-                                $reportadoInicial += $data['equivalente_pago'];
-                              }
-                                  
-                          endif;
+                            }
+                          }
+                        }
+                      }else if($accesoBloqueo=="0"){
+                        $permitido = "1";
+                      }
+                      if($permitido == "1"):
+                        if($data['tipo_pago']=="Inicial" || $data['tipo_pago']=="inicial" || $data['tipo_pago']=="INICIAL"):
+                            if($data['estado']=="Abonado"){
+                              $reportadoInicial += $data['equivalente_pago'];
+                              $abonadoInicial += $data['equivalente_pago'];
+                            }
+                            else if($data['estado']=="Diferido"){
+                              $reportadoInicial += $data['equivalente_pago'];
+                              $diferidoInicial += $data['equivalente_pago'];
+                            }else{
+                              $reportadoInicial += $data['equivalente_pago'];
+                            }
                         endif;
+                      endif;
+                    endif;
                   endforeach;
                 ?>
                 <div class="row text-center" style="padding:10px 20px;">
@@ -3454,8 +3575,28 @@
                         $num = 1;
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
-                            if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
+                            $permitido = "0";
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                      $permitido = "1";
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                              $permitido = "1";
+                            }
 
+
+                            if($permitido=="1"):
+
+
+                            
+
+                            if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
 
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
                                 if($data['estado']=="Diferido"){
@@ -4703,7 +4844,11 @@
                         <?php
                               }
 
-                            endif; endif; endforeach;
+                              endif;
+
+                            endif;
+
+                          endif; endforeach;
                         ?>
                     </tbody>
 
@@ -4775,9 +4920,25 @@
                   $diferidoPrimer=0;
                   $abonadoPrimer=0;
                   foreach ($pagos as $data):
-                        if(!empty($data['id_pago'])):
-                          if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
+                    if(!empty($data['id_pago'])):
+                        $permitido = "0";
+                        if($accesoBloqueo=="1"){
+                          if(!empty($accesosEstructuras)){
+                            foreach ($accesosEstructuras as $struct) {
+                              if(!empty($struct['id_cliente'])){
+                                if($struct['id_cliente']==$data['id_cliente']){
+                                  $permitido = "1";
+                                }
+                              }
+                            }
+                          }
+                        }else if($accesoBloqueo=="0"){
+                          $permitido = "1";
+                        }
 
+                        if($permitido=="1"):
+
+                          if($data['tipo_pago']=="Primer Pago" || $data['tipo_pago']=="primer pago" || $data['tipo_pago']=="PRIMER PAGO"):
                               if($data['estado']=="Abonado"){
                                 $reportadoPrimer += $data['equivalente_pago'];
                                 $abonadoPrimer += $data['equivalente_pago'];
@@ -4791,6 +4952,7 @@
 
                           endif;
                         endif;
+                    endif;
                   endforeach;
                 ?>
                 <div class="row text-center" style="padding:10px 20px;">
@@ -4872,6 +5034,25 @@
                         $num = 1;
                         foreach ($pagos as $data):
                           if(!empty($data['id_pago'])):
+                            $permitido = "0";
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                      $permitido = "1";
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                              $permitido = "1";
+                            }
+
+
+                            if($permitido=="1"):
+
+
                             if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"):
 
                               if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){
@@ -6100,7 +6281,11 @@
                         <?php
                               }
 
-                            endif; endif; endforeach;
+                              endif;
+
+                            endif; 
+
+                          endif; endforeach;
                         ?>
                     </tbody>
 
@@ -6159,7 +6344,24 @@
                   $diferidoSegundo=0;
                   $abonadoSegundo=0;
                   foreach ($pagos as $data):
-                        if(!empty($data['id_pago'])):
+                    if(!empty($data['id_pago'])):
+                      $permitido = "0";
+                        if($accesoBloqueo=="1"){
+                          if(!empty($accesosEstructuras)){
+                            foreach ($accesosEstructuras as $struct) {
+                              if(!empty($struct['id_cliente'])){
+                                if($struct['id_cliente']==$data['id_cliente']){
+                                  $permitido = "1";
+                                }
+                              }
+                            }
+                          }
+                        }else if($accesoBloqueo=="0"){
+                          $permitido = "1";
+                        }
+
+
+                        if($permitido=="1"):
                           if($data['tipo_pago']=="Segundo Pago" || $data['tipo_pago']=="segundo pago" || $data['tipo_pago']=="SEGUNDO PAGO"):
 
                               if($data['estado']=="Abonado"){
@@ -6175,6 +6377,7 @@
 
                           endif;
                         endif;
+                    endif;
                   endforeach;
                 ?>
                 <div class="row text-center" style="padding:10px 20px;">

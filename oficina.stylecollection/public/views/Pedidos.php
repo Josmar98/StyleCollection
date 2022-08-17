@@ -226,38 +226,71 @@
                        
 
                           <br>
-                        <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): if($seleccionAdmin==1): ?>
+                        <?php if($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): if($seleccionAdmin==1): ?>
                           <br>
                           <?php $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$cliente['id_cliente']}"); 
                           $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$cliente['id_cliente']}");
                           ?>
-                          <div class="row">
-                            <div class="col-xs-12 col-sm-6" style="text-align:left;">
-                                <?php if(count($planesCol)>1){ ?>
-                                  <b><u>
-                                    <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Planes</a>
-                                  </u></b>
-                                <?php } ?>
-                                <?php if(count($planesCol)<2){ ?>
-                                  <b><u>
-                                    <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Planes</a>
-                                  </u></b>
-                                <?php } ?>
-                              
-                            </div>
-                            <div class="col-xs-12 col-sm-6" style="text-align:right;">
-                                <?php if(count($premioscol)>1){ ?>
-                                  <b><u>
-                                    <a href="?<?=$menu?>&route=PremioCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Premios</a>
-                                  </u></b>
-                                <?php }else if(count($planesCol)>1){ ?>
-                                  <b><u>
-                                    <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Premios</a>
-                                  </u></b>
-                                <?php } ?>
-                              
-                            </div>
-                          </div>
+                            <?php if($_SESSION['nombre_rol']=="Analista"): ?>
+                              <?php if($limittteee=="1"): ?>
+                                <div class="row">
+                                  <div class="col-xs-12 col-sm-6" style="text-align:left;">
+                                      <?php if(count($planesCol)>1){ ?>
+                                        <b><u>
+                                          <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Planes</a>
+                                        </u></b>
+                                      <?php } ?>
+                                      <?php if(count($planesCol)<2){ ?>
+                                        <b><u>
+                                          <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Planes</a>
+                                        </u></b>
+                                      <?php } ?>
+                                    
+                                  </div>
+                                  <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                                      <?php if(count($premioscol)>1){ ?>
+                                        <b><u>
+                                          <a href="?<?=$menu?>&route=PremioCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Premios</a>
+                                        </u></b>
+                                      <?php }else if(count($planesCol)>1){ ?>
+                                        <b><u>
+                                          <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Premios</a>
+                                        </u></b>
+                                      <?php } ?>
+                                    
+                                  </div>
+                                </div>
+                              <?php endif; ?>
+                            <?php else: ?>
+                              <div class="row">
+                                <div class="col-xs-12 col-sm-6" style="text-align:left;">
+                                    <?php if(count($planesCol)>1){ ?>
+                                      <b><u>
+                                        <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Planes</a>
+                                      </u></b>
+                                    <?php } ?>
+                                    <?php if(count($planesCol)<2){ ?>
+                                      <b><u>
+                                        <a href="?<?=$menu?>&route=PlanCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Planes</a>
+                                      </u></b>
+                                    <?php } ?>
+                                  
+                                </div>
+                                <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                                    <?php if(count($premioscol)>1){ ?>
+                                      <b><u>
+                                        <a href="?<?=$menu?>&route=PremioCol&admin=1&id=<?=$cliente['id_cliente']?>">Ver Premios</a>
+                                      </u></b>
+                                    <?php }else if(count($planesCol)>1){ ?>
+                                      <b><u>
+                                        <a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$cliente['id_cliente']?>" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar Premios</a>
+                                      </u></b>
+                                    <?php } ?>
+                                  
+                                </div>
+                              </div>
+                            <?php endif; ?>
+
                           
                         <?php endif; endif; ?>
                         <?php 
@@ -270,7 +303,7 @@
                                 } 
                               }
                          ?>
-                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                           <br>
                           <div class="row">
                             <div class="col-xs-12 col-sm-6" style="text-align:left;">
@@ -341,7 +374,7 @@
                                       </u></b> 
                                       <br>
                                   <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                                     <?php if ($superanalistabonoContado=="1"): ?>
                                       <b><u>
                                           <a class="asignarDescuentoContado"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
@@ -368,7 +401,7 @@
                                       </u></b> 
                                       <br>
                                   <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                                     <?php if ($superanalistabonoPrimerPago=="1"): ?>
                                       <br>
                                       <b><u>
@@ -395,7 +428,7 @@
                                           <a class="asignarBonosCierrePuntual"><span style="font-size:1.4em">+</span> Descuentos Por Segundo Pago Puntual</a>
                                       </u></b>  
                                   <?php endif; ?>
-                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                  <?php if($_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                                     <?php if ($superanalistabonoSegundoPago=="1"): ?>
                                       <br>
                                       <b><u>
@@ -438,7 +471,7 @@
                                       }
                                       ?>
                                 <?php endif; ?>
-                                <?php if($_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                                <?php if($_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                                   <?php if ($superanalistabonoCierreEstructura=="1"): ?>
                                       <?php 
                                       if(!empty($estructuraLideres)){
@@ -1276,6 +1309,7 @@
                               if(count($excedentes)>1){
                                 $excedent = $excedentes[0];
                                 $cantidad_excedente = $excedent['cantidad_excedente'];
+                                $descripcion_excedente = $excedent['descripcion_excedente'];
                               }
                     // $total_responsabilidad = $total_costo - $total_descuento_distribucion;
                                 $total_responsabilidad = $total_costo - $totalDescuentoVendedor;
@@ -1332,7 +1366,7 @@
                               <br>
                               <?php
                                 if($cantidad_excedente>0){
-                                  echo "<span style='color:#000;'><b>Excedente pagado $".number_format($cantidad_excedente,2,',','.')."</b></span>";
+                                  echo "<span style='color:#000;' class='modalDescripcionExcedente'><b>Excedente pagado $".number_format($cantidad_excedente,2,',','.')."</b></span>";
                                 }
                               ?>
                             </div>
@@ -1369,7 +1403,7 @@
                           <?php endif; ?>
 
                         <?php
-                          if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                          if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Administrativo"){
                             // echo $newrestoDisponible = $newrestoDisponible-0.00;
                             // echo $newrestoDisponible;
                             // echo "<br>";
@@ -2154,7 +2188,7 @@
                       </span>
                     </div>
                       <br>
-                      <h3 class="box-title">Cierre de Excendente </h3>
+                      <h3 class="box-title">Pago de Excendente </h3>
                   </div>
 
            
@@ -2169,54 +2203,86 @@
                           Por precio total de: 
                           <?php 
                             // $restopositivo = ($restaTotalResponsabilidad * (-1));
+                            $restoDisponiblePositivo = number_format($restoDisponible,2,',','.');
+                            // echo $restoDisponiblePositivo;
                           ?>
 
-                          <b>$<?=number_format($newrestoDisponible,2,',','.');?></b>
+                          <b>$<?=$restoDisponiblePositivo;?></b>
                           <!-- <b>$<?=number_format($restopositivo,2,',','.');?></b> -->
                       </div>
                       <input type="hidden" class="id_pedido_excedente" value="<?=$_GET['id']; ?>">
-                      <input type="hidden" class="cantidad_excedente" value="<?=$newrestoDisponible; ?>">
-                      <!-- <input type="hidden" class="cantidad_excedente" value="<?=$restopositivo; ?>"> -->
-                      <!-- <table class="text-center" style="width:90%;">
-                        <thead>
-                          <th>Líder</th>
-                          <th>Excedente</th>
-                          <th>Concepto</th>
-                          <th>Cantidad</th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                              <td style="width:25%"><?=$liderEmisor['primer_nombre']." ".$liderEmisor['primer_apellido']?></td>
-                              <?php if (count($traspasoEmitido)>1):
-                                $traspasoEmitido1 = $traspasoEmitido[0];
-                                if ($traspasoEmitido1['cantidad_traspaso'] != 0) {
-                                  $restoDisponible += $traspasoEmitido1['cantidad_traspaso'];
-                                }
-                              endif; ?>
-                              <td style="width:25%">$<?=number_format($restoDisponible,2,',','.');?></td>
-                              <td style="width:25%">Traspasar</td>
-                              <td style="width:25%">
-                                <div class="input-group">
-                                  <span class="input-group-addon">$</span>
-                                  <input type="number" max="<?=$restoDisponible?>" class="form-control cantidadTraspaso" min="0" <?php if (count($traspasoEmitido)>1): $traspasoEmitido2 = $traspasoEmitido[0]; if ($traspasoEmitido2['cantidad_traspaso']!="0") { ?> value="<?=$traspasoEmitido2['cantidad_traspaso'];?>" <?php }else{ ?> value='0.00' <?php } else: ?> value='0.00' <?php endif; ?> value='0.00' id="cantidadTraspaso" step="0.01" name="cantidadTraspaso">
-                                    
-                                </div>
-                              </td>
-                            </tr>
-
-                          <input type="hidden" value="<?=$restoDisponible?>" class="restoDisponible" name="restoDisponible">
-                          <input type="hidden" value="<?=$liderEmisor['id_cliente']?>" class="id_cliente_receptor" name="id_cliente_receptor">
-                          <input type="hidden" value="<?=$liderEmisor['id_pedido']?>" class="id_pedido_receptor" name="id_pedido_receptor">
-                          <input type="hidden" value="<?=$pedido['id_cliente']?>" class="id_cliente_emisor" name="id_cliente_emisor">
-                          <input type="hidden" value="<?=$pedido['id_pedido']?>" class="id_pedido_emisor" name="id_pedido_emisor">
-
-                        </tbody>
-                      </table> -->
+                      <input type="hidden" class="cantidad_excedente" value="<?=$restoDisponible; ?>">
+                      <div class="col-xs-12">
+                        <div class="form-group">
+                          <textarea class="form-control descripcion_excedente" style="width:95%;min-width:95%;max-width:95%;margin:auto;height:5em;min-height:5em;max-height:5em;" maxlength="355"></textarea>
+                        </div>
+                      </div>
                     </div>
                     <div class="box-footer">
                       <span type="submit" class="btn enviar enviarModalExcedente">Enviar</span>
                       <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
                       <button class="btn-enviar-modalExcedente d-none" disabled="" >enviar</button>
+                    </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </div>  
+  <div class="box-modalDescripcionExcedente" style="display:none;background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050">
+      <div class="content">
+        <div class="row">
+          <div class="col-xs-12 col-md-8 col-md-offset-2">
+            <div class="container-fluid">
+              <div class="box">
+                  <div class="box-header with-border">
+                    <div style="text-align:right;"><span class="btn cerrarModalDescripcionExcedente" style="background:#CCC"><b>X</b></span></div>
+                    <div class="user-block">
+                      <img style="width:50px;height:50px;margin-left:5px;margin-right:5px;" class="img-circle img-bordered-sm modal-img" src="<?=$fotoPerfilCliente?>" alt="user image">
+                      <span class="username">
+                        <h4><?=$cliente['primer_nombre']." ".$cliente['primer_apellido']?></h4>
+                      </span>
+                    </div>
+                      <br>
+                      <h3 class="box-title">Descripcion del pago de Excendente </h3>
+                  </div>
+
+           
+                <div action="" method="POST" class="form">
+                    <div class="row">
+                      <div class="col-xs-12" style="padding:1% 5%;font-size:1.3em;">
+                          Se realizo el pago de excedentes
+                          <?php if($cliente['sexo']=="Femenino"){ ?> a la <?php } ?>
+                          <?php if($cliente['sexo']=="Masculino"){ ?> al <?php } ?>
+                          lider <?=$cliente['primer_nombre']." ".$cliente['primer_apellido']?>
+                          <br>
+                          Por precio total de: 
+                          <?php 
+                            // $restopositivo = ($restaTotalResponsabilidad * (-1));
+                            $excedenteDisponiblePositivo = number_format($cantidad_excedente,2,',','.');
+                            // echo $excedenteDisponiblePositivo;
+                          ?>
+
+                          <b>$<?=$excedenteDisponiblePositivo;?></b>
+                        <div class="form-group">
+                            <small><i>Descripcion: </i></small>
+                          <div class="" style="border:1px solid #DDD;padding:1%;font-size:.9em;">
+                            <b>
+                              <span class="contenido2">
+                                <?=$descripcion_excedente;?>
+                              </span>
+                            </b>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="box-footer">
+                      <!-- <span type="submit" class="btn enviar enviarModalDescripcionExcedente">Enviar</span> -->
+                      <!-- <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>"> -->
+                      <!-- <button class="btn-enviar-modalExcedente d-none" disabled="" >enviar</button> -->
                     </div>
                 </div>
 
@@ -2261,6 +2327,10 @@
 }
 .d-none{
   display:none;
+}
+.modalDescripcionExcedente:hover{
+  /*background:red;*/
+  border-bottom:1px solid #000;
 }
 </style>
 <script>
@@ -2323,6 +2393,15 @@ $(document).ready(function(){
     //   });
     // }
   }
+
+  $(".modalDescripcionExcedente").click(function(){
+    $(".box-modalDescripcionExcedente").fadeIn(500);
+  });
+  $(".cerrarModalDescripcionExcedente").click(function(){
+    $(".box-modalDescripcionExcedente").fadeOut(500);
+  });
+
+
   $(".reclamarGemasPorcentajeBtn").click(function(){
     var cantidadGemas = $("#cantidad_gemas_lider_porcent").val();
     var porcentajeGemas = $("#porcentaje_gemas_lider").val();
@@ -2392,8 +2471,10 @@ $(document).ready(function(){
   $(".enviarModalExcedente").click(function(){
     var id = $(".id_pedido_excedente").val();
     var cantidad = $(".cantidad_excedente").val();
+    var description = $(".descripcion_excedente").val();
     // alert(id);
     // alert(cantidad);  
+
     swal.fire({ 
       title: "¿Desea marcar como excedente ya pagado? <br><br> ¿Desea continuar?",
       text: "Se guardaran estos cambios y el excedente quedará en $0,00",
@@ -2414,6 +2495,7 @@ $(document).ready(function(){
             data: {
               cerrarExcedenteLider: true,
               cantidad_excedente: cantidad,
+              descripcion_excedente: description,
             },
             success: function(respuesta){
               // alert(respuesta);

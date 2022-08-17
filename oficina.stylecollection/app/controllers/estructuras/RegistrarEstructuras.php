@@ -32,10 +32,13 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 			}
 			echo $response;
 		}
-		if(empty($_POST['validarData']) && !empty($_POST['analista']) && empty($_POST['clientes']) && !empty($_POST['lideres'])){
+		if(empty($_POST['validarData']) && !empty($_POST['analista']) && empty($_POST['clientes'])){
 			// print_r($_POST);
 			$analista = $_POST['analista'];
-			$lideres = $_POST['lideres'];
+			if(!empty($_POST['lideres'])){
+				$lideres = $_POST['lideres'];
+			}
+			$lideres = [];
 			$max = count($lideres);
 			$result = 0;
 			foreach ($lideres as $id_cliente) {

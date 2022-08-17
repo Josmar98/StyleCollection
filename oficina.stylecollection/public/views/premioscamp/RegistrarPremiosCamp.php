@@ -192,7 +192,7 @@
                       <label for="productosSegundo">Productos</label>                      
                       <select class="select2" style="width:100%" id="productosSegundo" multiple="multiple" name="productosSegundo[]">
                          <option value=""></option>
-                        <!-- <option value="0">Ninguna</option> -->
+                        <option value="0">Ninguno</option>
                             <?php foreach ($productos as $data): if( !empty($data['id_producto'])): ?>
                           <option value="<?php echo $data['id_producto'] ?>"><?php echo $data['producto'] ?></option>
                             <?php endif; endforeach; ?>
@@ -206,7 +206,7 @@
                       <label for="premiosSegundo">Premios</label>                      
                       <select class="select2" style="width:100%" id="premiosSegundo" multiple="multiple" name="premiosSegundo[]">
                          <option value=""></option>
-                        <!-- <option value="0">Ninguna</option> -->
+                        <option value="0">Ninguno</option>
                             <?php foreach ($premios as $data): if( !empty($data['id_premio'])): ?>
                           <option value="<?php echo $data['id_premio'] ?>"><?php echo $data['nombre_premio'] ?></option>
                             <?php endif; endforeach; ?>

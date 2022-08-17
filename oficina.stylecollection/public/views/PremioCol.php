@@ -70,7 +70,7 @@
                 <?php echo "Premios Seleccionados para los planes de sus Colecciones"; ?>
                 
                 <?php 
-                if(!empty($_GET['admin']) && !empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista Supervisor")){
+                if(!empty($_GET['admin']) && !empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"  || $_SESSION['nombre_rol']=="Administrativo")){
                   echo "<br><br>";
                   echo "<b>Líder ".$pedido['primer_nombre']." ".$pedido['primer_apellido']." (".$pedido['cantidad_aprobado']." Colecciones)</b>";
                 }
@@ -84,6 +84,7 @@
             <div class="box-body">
                     <table style="background:none;text-align:right;width:100%;margin-bottom:30px">
                       <tr>
+                        <?php //echo "Limite: ".$limittteee; ?>
                         <td style="width:50%">
                           <?php if($estado_campana=="1"){ ?>
                       <?php 
@@ -93,24 +94,49 @@
                           </button>
                       <?php }} 
                           }
-                        if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
-                            <div class="row">
-                                <div class="col-xs-12 col-sm-6" style="text-align:left;">
-                                    <u>
-                                      <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$_GET['id']?>" class="">Ver planes</a>
-                                    </u>
-                                  
-                                </div>
-                                <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                        if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"|| $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"  || $_SESSION['nombre_rol']=="Administrativo")){ ?>
 
-                                  <?php if($estado_campana=="1"){ ?>
-                                  
-                          <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
-                            Editar<span class="fa fa-wrench"></span>
-                          </button>
-                                  <?php } ?>
-                                </div>
-                            </div>
+                            <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                              <?php if ($limittteee=="1"): ?>
+                                <div class="row">
+                                    <div class="col-xs-12 col-sm-6" style="text-align:left;">
+                                        <u>
+                                          <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$_GET['id']?>" class="">Ver planes</a>
+                                        </u>
+                                      
+                                    </div>
+                                    <div class="col-xs-12 col-sm-6" style="text-align:right;">
+
+                                      <?php if($estado_campana=="1"){ ?>
+                                      
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
+                                          Editar<span class="fa fa-wrench"></span>
+                                        </button>
+                                      <?php } ?>
+                                    </div>
+                                </div>      
+                              <?php endif; ?>  
+                            <?php else: ?>
+                              <div class="row">
+                                  <div class="col-xs-12 col-sm-6" style="text-align:left;">
+                                      <u>
+                                        <a href="?<?=$menu?>&route=PlanCol&admin=1&id=<?=$_GET['id']?>" class="">Ver planes</a>
+                                      </u>
+                                    
+                                  </div>
+                                  <div class="col-xs-12 col-sm-6" style="text-align:right;">
+
+                                    <?php if($estado_campana=="1"){ ?>
+                                    
+                                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
+                                        Editar<span class="fa fa-wrench"></span>
+                                      </button>
+                                    <?php } ?>
+                                  </div>
+                              </div>
+
+                            <?php endif; ?>
+
                       <?php  
                         }
                       ?>

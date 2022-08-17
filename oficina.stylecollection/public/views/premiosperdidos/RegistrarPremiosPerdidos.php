@@ -73,7 +73,7 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Agregar <?php echo "Premios Perdidos"; ?></h3>
-              <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+              <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                     <?php if (empty($_GET['admin'])): ?>
                       
                       <div style="width:100%;margin:0;padding:0;text-align:right;">

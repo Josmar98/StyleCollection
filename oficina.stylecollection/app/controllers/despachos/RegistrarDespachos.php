@@ -72,6 +72,7 @@ if($amDespachosR == 1){
     $primer_pago = $_POST['primer_pago'];
     $segundo_pago = $_POST['segundo_pago'];
     $limite_pedido = $_POST['limite_pedido'];
+    $apertura_seleccion_plan = $_POST['apertura_seleccion_plan'];
     $limite_seleccion_plan = $_POST['limite_seleccion_plan'];
     
     $precio_coleccion = $_POST['precio_coleccion'];
@@ -113,7 +114,7 @@ if($amDespachosR == 1){
 
     /*-----------------------------------------------------------*/
 
-    $query = "INSERT INTO despachos (id_despacho, id_campana, numero_despacho, fecha_inicial, fecha_primera, fecha_segunda, limite_pedido, limite_seleccion_plan, precio_coleccion, primer_precio_coleccion, segundo_precio_coleccion, inicial_precio_coleccion, fecha_inicial_senior, fecha_primera_senior, fecha_segunda_senior, contado_precio_coleccion, estatus) VALUES (DEFAULT, $id_campana, $numero_despacho, '$fecha_inicial', '$primer_pago', '$segundo_pago', '$limite_pedido', '$limite_seleccion_plan', '$precio_coleccion', '$primer_precio', '$segundo_precio', '$inicial_precio', '$fecha_inicial_senior', '$primer_pago_senior', '$segundo_pago_senior', '$precio_contado', 1)";
+    $query = "INSERT INTO despachos (id_despacho, id_campana, numero_despacho, fecha_inicial, fecha_primera, fecha_segunda, limite_pedido, apertura_seleccion_plan, limite_seleccion_plan, precio_coleccion, primer_precio_coleccion, segundo_precio_coleccion, inicial_precio_coleccion, fecha_inicial_senior, fecha_primera_senior, fecha_segunda_senior, contado_precio_coleccion, estatus) VALUES (DEFAULT, $id_campana, $numero_despacho, '$fecha_inicial', '$primer_pago', '$segundo_pago', '$limite_pedido', '$apertura_seleccion_plan', '$limite_seleccion_plan', '$precio_coleccion', '$primer_precio', '$segundo_precio', '$inicial_precio', '$fecha_inicial_senior', '$primer_pago_senior', '$segundo_pago_senior', '$precio_contado', 1)";
 
     $exec = $lider->registrar($query, "despachos", "id_despacho");
     // print_r($exec);

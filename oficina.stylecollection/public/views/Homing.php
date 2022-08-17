@@ -102,7 +102,6 @@
       <?php }} ?>
 
       <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-        <?php if(date('Y-m-d') > $despachos[0]['fecha_segunda_senior']){ ?>
         <div class="col-xs-12 col-md-12">
           <div class="box">
             <div style="width:100%;text-align:right;position:absolute;z-index:1">
@@ -124,7 +123,6 @@
             </div>
           </div>
         </div>
-        <?php } ?>
       <?php else: ?>
         <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");

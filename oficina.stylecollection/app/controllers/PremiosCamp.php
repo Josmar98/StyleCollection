@@ -64,13 +64,13 @@ if($amPremioscampC == 1){
 	if(empty($_POST)){
 
 		//$despachos = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
-		$planes=$lider->consultarQuery("SELECT * FROM planes, planes_campana, campanas WHERE planes.id_plan = planes_campana.id_plan and campanas.id_campana = planes_campana.id_campana and campanas.estatus = 1 and planes.estatus = 1 and campanas.id_campana = $id_campana");
+		$planes=$lider->consultarQuery("SELECT * FROM planes, planes_campana, campanas WHERE planes.id_plan = planes_campana.id_plan and campanas.id_campana = planes_campana.id_campana and campanas.estatus = 1 and planes.estatus = 1 and campanas.id_campana = $id_campana and planes_campana.estatus = 1");
 
-		$tipos_planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes_campana.id_campana = $id_campana");
+		$tipos_planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1");
 
 		$tipos_premios = $lider->consultarQuery("SELECT DISTINCT nombre_plan, tipo_premio, tipo_premio_producto FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana");
 		
-		$tpremios = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana");
+		$tpremios = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1");
 
 		$productos = $lider->consultar("productos");
 		$premios = $lider->consultar("premios");

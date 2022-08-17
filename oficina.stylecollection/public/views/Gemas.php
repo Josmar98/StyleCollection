@@ -152,6 +152,10 @@
               }
              ?>
             <div class="box-body table-responsive">
+              <?php
+                // echo "superanalistaeditargemas: ".$superanalistaeditargemas."<br>";
+                // echo "accesoBloqueo: ".$accesoBloqueo."<br>";
+              ?>
               <table id="datatable" class="table table-bordered table-striped" style="text-align:center;width:100%;">
                 <thead>
                 <tr>
@@ -188,21 +192,33 @@
                                   <?php if($estado_campana=="1"){ ?>
 
                                     <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
-                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") ||
+                                              ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Administrativo" && $superanalistaeditargemas=="1") ){ ?>
                                         <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
                                           <span class="fa fa-wrench"></span>
                                         </button>
                                       <?php } ?>
                                     <?php endif ?>
 
-                                    <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
+                                    <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrativo" && $superanalistaborrargemas=="1") ){ ?>
                                       <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
                                         <span class="fa fa-trash"></span>
                                       </button>
                                     <?php } ?>
 
                                     <?php if ($data['estado']=="Disponible"): ?>
-                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrativo" && $superanalistabloqdesbloqgemas=="1") ){ ?>
                                         <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
                                           <span class="fa fa-lock"></span>
                                         </button>
@@ -211,7 +227,7 @@
 
 
                                     <?php if ($data['estado']=="Bloqueado"): ?>
-                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrativo" && $superanalistabloqdesbloqgemas=="1")){ ?>
                                         <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
                                           <span class="fa fa-unlock"></span>
                                         </button>
@@ -291,35 +307,47 @@
                           <?php if($estado_campana=="1"){ ?>
 
                             <?php if ($data['nombreconfiggema']!="Por Colecciones De Factura Directa"): ?>
-                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1")){ ?>
-                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
-                                  <span class="fa fa-wrench"></span>
-                                </button>
-                              <?php } ?>
-                            <?php endif ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $supereditargemas=="1") ||
+                                              ($_SESSION['nombre_rol']=="Administrador" && $admineditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Analista" && $analistaeditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaeditargemas=="1") || 
+                                              ($_SESSION['nombre_rol']=="Administrativo" && $superanalistaeditargemas=="1") ){ ?>
+                                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_gema'] ?>">
+                                          <span class="fa fa-wrench"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif ?>
 
-                            <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1")){ ?>
-                              <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
-                                <span class="fa fa-trash"></span>
-                              </button>
-                            <?php } ?>
+                                    <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrador" && $adminborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista" && $analistaborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistaborrargemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrativo" && $superanalistaborrargemas=="1") ){ ?>
+                                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&permission=1">
+                                        <span class="fa fa-trash"></span>
+                                      </button>
+                                    <?php } ?>
 
-                            <?php if ($data['estado']=="Disponible"): ?>
-                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
-                                <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
-                                  <span class="fa fa-lock"></span>
-                                </button>
-                              <?php } ?>
-                            <?php endif; ?>
+                                    <?php if ($data['estado']=="Disponible"): ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1") || 
+                                      ($_SESSION['nombre_rol']=="Administrativo" && $superanalistabloqdesbloqgemas=="1") ){ ?>
+                                        <button class="btn bloquearGemaBtn" style="border:0;background:none;color:#c904a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&bloqueo=1">
+                                          <span class="fa fa-lock"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif; ?>
 
 
-                            <?php if ($data['estado']=="Bloqueado"): ?>
-                              <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1")){ ?>
-                                <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
-                                  <span class="fa fa-unlock"></span>
-                                </button>
-                              <?php } ?>
-                            <?php endif; ?>
+                                    <?php if ($data['estado']=="Bloqueado"): ?>
+                                      <?php if(($_SESSION['nombre_rol']=="Superusuario" && $superbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrador" && $adminbloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista" && $analistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Analista Supervisor" && $superanalistabloqdesbloqgemas=="1") || ($_SESSION['nombre_rol']=="Administrativo" && $superanalistabloqdesbloqgemas=="1")){ ?>
+                                        <button class="btn desbloquearGemaBtn" style="border:0;background:none;color:#04c9a7" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_gema'] ?>&desbloqueo=1">
+                                          <span class="fa fa-unlock"></span>
+                                        </button>
+                                      <?php } ?>
+                                    <?php endif; ?>
 
                           <?php } ?>
                         </td>

@@ -60,6 +60,7 @@ if($amDespachosE == 1){
       $primer_pago = $_POST['primer_pago'];
       $segundo_pago = $_POST['segundo_pago'];
       $limite_pedido = $_POST['limite_pedido'];
+      $apertura_seleccion_plan = $_POST['apertura_seleccion_plan'];
       $limite_seleccion_plan = $_POST['limite_seleccion_plan'];
       
       $precio_coleccion = $_POST['precio_coleccion'];
@@ -80,7 +81,7 @@ if($amDespachosE == 1){
       $precios = $_POST['precios'];
       /*-----------------------------------------------------------*/
 
-      $query = "UPDATE despachos SET numero_despacho=$numero_despacho, fecha_inicial='$fecha_inicial', fecha_primera='$primer_pago', fecha_segunda='$segundo_pago', limite_pedido = '$limite_pedido', limite_seleccion_plan = '$limite_seleccion_plan',  precio_coleccion='$precio_coleccion',  primer_precio_coleccion='$primer_precio', segundo_precio_coleccion='$segundo_precio', inicial_precio_coleccion='$inicial_precio', fecha_inicial_senior = '{$fecha_inicial_senior}', fecha_primera_senior='{$primer_pago_senior}', fecha_segunda_senior='{$segundo_pago_senior}', contado_precio_coleccion='{$precio_contado}', estatus = 1 WHERE id_despacho = $id";
+      $query = "UPDATE despachos SET numero_despacho=$numero_despacho, fecha_inicial='$fecha_inicial', fecha_primera='$primer_pago', fecha_segunda='$segundo_pago', limite_pedido = '$limite_pedido', apertura_seleccion_plan = '$apertura_seleccion_plan',  limite_seleccion_plan = '$limite_seleccion_plan',  precio_coleccion='$precio_coleccion',  primer_precio_coleccion='$primer_precio', segundo_precio_coleccion='$segundo_precio', inicial_precio_coleccion='$inicial_precio', fecha_inicial_senior = '{$fecha_inicial_senior}', fecha_primera_senior='{$primer_pago_senior}', fecha_segunda_senior='{$segundo_pago_senior}', contado_precio_coleccion='{$precio_contado}', estatus = 1 WHERE id_despacho = $id";
 
       $exec = $lider->modificar($query);
       if($exec['ejecucion'] == true){

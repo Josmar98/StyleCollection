@@ -46,7 +46,7 @@ if(!empty($_POST)){
 		}
 	}
 
-	$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana}");
+	$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and planes_campana.estatus = 1");
 	if(!empty($action)){
 		if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 			require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -63,7 +63,7 @@ if(!empty($_POST)){
 }
 if(empty($_POST)){
 
-	$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana}");
+	$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and planes_campana.estatus = 1");
 	if(!empty($action)){
 		if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 			require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

@@ -85,6 +85,13 @@
                         <input type="date" class="form-control" id="limite_pedido" name="limite_pedido" value="<?php echo $despacho['limite_pedido'] ?>">
                        <span id="error_limite_pedido" class="errors"></span>
                     </div>
+
+                    <div class="form-group col-xs-12 col-sm-4">
+                       <label for="apertura_seleccion_plan">Fecha apertura para Seleccion de Plan</label>
+                       <input type="date" class="form-control" id="apertura_seleccion_plan" name="apertura_seleccion_plan" value="<?php echo $despacho['apertura_seleccion_plan'] ?>">
+                       <span id="error_apertura_seleccion_plan" class="errors"></span>
+                    </div>
+
                     <div class="form-group col-xs-12 col-sm-4">
                        <label for="limite_seleccion_plan">Fecha limite para Seleccion de Plan</label>
                        <input type="date" class="form-control" id="limite_seleccion_plan" name="limite_seleccion_plan" value="<?php echo $despacho['limite_seleccion_plan'] ?>">
@@ -423,7 +430,22 @@ function validar(){
   }
   /*===================================================================*/
 
-    /*===================================================================*/
+
+  /*===================================================================*/
+  var apertura_seleccion_plan = $("#apertura_seleccion_plan").val();
+  var rapertura_seleccion_plan = false;
+  if(apertura_seleccion_plan.length != 0){
+    // $("#error_inicial").html("El nombre del producto no debe contener numeros o caracteres especiales");
+    $("#error_apertura_seleccion_plan").html("");
+    rapertura_seleccion_plan = true;
+  }else{
+    rapertura_seleccion_plan = false;
+    $("#error_apertura_seleccion_plan").html("Debe seleccionar una fecha de apertura para seleccionar planes y premios");      
+  }
+  /*===================================================================*/
+
+
+  /*===================================================================*/
   var limite_seleccion_plan = $("#limite_seleccion_plan").val();
   var rlimite_seleccion_plan = false;
   if(limite_seleccion_plan.length != 0){
@@ -503,7 +525,7 @@ function validar(){
 
   /*===================================================================*/
   var result = false;
-  if(rinicial==true && rinicial_senior==true && rprimer_pago==true && rprimer_pago_senior==true && rsegundo_pago==true && rsegundo_pago_senior==true){
+  if(rinicial==true && rinicial_senior==true && rprimer_pago==true && rprimer_pago_senior==true && rsegundo_pago==true && rsegundo_pago_senior==true && rapertura_seleccion_plan==true && rlimite_seleccion_plan==true){
     result = true;
   }else{
     result = false;

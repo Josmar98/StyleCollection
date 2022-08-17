@@ -174,7 +174,6 @@ if($permitir=="1"){
 
 					$despachos = $lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id_despacho");
 					$despacho = $despachos[0];
-
 					if(strlen($pedido['fecha_aprobado'])>0){
 						// $coleccionesPlan = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_pedido = {$id}");
 						// print_r($coleccionesPlan);
@@ -192,7 +191,20 @@ if($permitir=="1"){
 				        }
 
 						// $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.id_lc = {$cliente['id_lc']}");
-						$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad");
+						// $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad");
+						$maxima = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana ORDER BY liderazgos_campana.minima_cantidad DESC;");
+						if(count($maxima)>1){
+							$maxmax = $maxima[0];
+							if($maxmax['minima_cantidad'] <= $total){
+								$id_liderazgoTemp = $maxmax['id_liderazgo'];
+								$minima_cantidadTemp = $maxmax['minima_cantidad'];
+								$maxima_cantidadTemp = $maxmax['minima_cantidad']*10;
+								$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos.id_liderazgo = {$id_liderazgoTemp} and $total > minima_cantidad");
+							}else{
+
+								$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad");
+							}
+						}
 
 						$clienteHijas = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = $id_despacho and clientes.estatus = 1 and clientes.id_lider = $id_cliente");
 
@@ -1424,6 +1436,7 @@ if($permitir=="1"){
 	if(!empty($_POST['cerrarExcedenteLider']) && !empty($_POST['cantidad_excedente']) ){
 		$id_pedido = $_GET['id'];
 		$cantidad = $_POST['cantidad_excedente'];
+		$descripcion = ucwords(mb_strtolower($_POST['descripcion_excedente']));
 		// echo "Pedido: ".$id_pedido." - Cantidad: ".$cantidad;
 		// $porcentaje = number_format($_GET['porcentaje'],2);
 		$buscar = $lider->consultarQuery("SELECT * FROM excedentes WHERE id_pedido = {$id_pedido}");
@@ -1431,7 +1444,7 @@ if($permitir=="1"){
 		if(count($buscar)>1){
 			$response = "1";
 		}else{
-			$query = "INSERT INTO excedentes (id_excedente, id_pedido, cantidad_excedente, estatus) VALUES (DEFAULT, {$id_pedido}, '{$cantidad}', 1)";
+			$query = "INSERT INTO excedentes (id_excedente, id_pedido, cantidad_excedente, descripcion_excedente, estatus) VALUES (DEFAULT, {$id_pedido}, '{$cantidad}', '{$descripcion}', 1)";
 			$res1 = $lider->registrar($query,"excedentes", "id_excedente");
 			if($res1['ejecucion']==true){
 				$response = "1";
@@ -1509,7 +1522,19 @@ if($permitir=="1"){
 					        }
 
 							// $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.id_lc = {$cliente['id_lc']}");
-							$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad");
+							$maxima = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana ORDER BY liderazgos_campana.minima_cantidad DESC;");
+							if(count($maxima)>1){
+								$maxmax = $maxima[0];
+								if($maxmax['minima_cantidad'] <= $total){
+									$id_liderazgoTemp = $maxmax['id_liderazgo'];
+									$minima_cantidadTemp = $maxmax['minima_cantidad'];
+									$maxima_cantidadTemp = $maxmax['minima_cantidad']*10;
+									$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos.id_liderazgo = {$id_liderazgoTemp} and $total > minima_cantidad");
+								}else{
+
+									$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad");
+								}
+							}
 
 							$clienteHijas = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = $id_despacho and clientes.estatus = 1 and clientes.id_lider = $id_cliente");
 							// print_r($clientesPedidos);
@@ -1647,6 +1672,7 @@ if($permitir=="1"){
 						$pagosGemas = $lider->consultarQuery("SELECT * FROM pagos WHERE id_pedido = {$id} and estado = 'Abonado' and fecha_pago <= '{$despacho['fecha_segunda_senior']}' ORDER BY fecha_pago DESC");
 						$num = 0;
 						$abonado_lider_gemas = 0;
+						$fecha_pago_cierre_lider = "";
 						if(count($pagosGemas)>1){
 							foreach ($pagosGemas as $key) {
 								if(!empty($key['fecha_pago'])){

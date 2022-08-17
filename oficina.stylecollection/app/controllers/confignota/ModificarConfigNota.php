@@ -27,7 +27,7 @@ if(!empty($_POST)){
 		}else{
 			$response = "2";
 		}
-	$planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_config_nota = $id");
+	$planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_config_nota = $id and planes_campana.estatus = 1");
 	if(!empty($action)){
 		if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 			require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -44,7 +44,7 @@ if(!empty($_POST)){
 }
 if(empty($_POST)){
 
-	$planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_config_nota = $id");
+	$planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana} and confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_config_nota = $id and planes_campana.estatus = 1");
 	if(!empty($action)){
 		if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 			require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

@@ -137,7 +137,14 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-                          <?php if(date('Y-m-d') <= $desp['limite_seleccion_plan']){ $limittteee = "1"; }else{$limittteee = "0";} ?>
+                          <?php if(date('Y-m-d') >= $desp['apertura_seleccion_plan'] && date('Y-m-d') <= $desp['limite_seleccion_plan']){ $limittteee = "1"; }else{$limittteee = "0";} ?>
+                <?php 
+                  // echo "Apertura: ".$desp['apertura_seleccion_plan'];
+                  // echo "<br>";
+                  // echo "Limite: ".$desp['limite_seleccion_plan'];
+                  // echo "<br>";
+                  // echo "Limite: ".$limittteee;
+                 ?>
                           <?php //if(date('Y-m-d') <= $desp['limite_seleccion_plan']): //IF PARA QUE SEA MENOR AL TIEMPO LIMITE ?>
                           <?php //endif; ?>
                             <?php if($url=="PlanCol" && !empty($action) && $action == "Registrar"){ ?>
@@ -177,7 +184,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 <!-- ======================================================================================================================= -->
               <!--  PREMIOS PERDIDOS   -->
 <!-- ======================================================================================================================= -->
-    <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+    <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
 
 
                            <?php if($url=="PremiosPerdidos" || $url=="PremioCol"){ ?>
@@ -218,7 +225,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
               <!--  PREMIOS PERDIDOS   -->
 <!-- ======================================================================================================================= -->
   <?php 
-    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){
+    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){
    ?>
     
                            <?php if($url=="Retos" || $url=="MisRetos"){ ?>
@@ -326,7 +333,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
   // echo $optHabilitarPagos;
 
 ?>
-    <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador" || $_SESSION['nombre_rol']=="Vendedor"): ?>
+    <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Conciliador" || $_SESSION['nombre_rol']=="Vendedor"): ?>
       
                             <?php if($url=="Pagos" || $url=="PagosA" || $url=="Pagoss" || $url=="PagossA" || $url=="ReportePagos" || $url=="PagosBancarios" || $url=="PagosBolivares" || $url=="PagosDivisas" || $url=="PagosBorrados" || $url=="MisPagos" || $url=="MisPagosBancarios" || $url=="MisPagosBolivares" || $url=="MisPagosDivisas"){ ?>
         <li class="active treeview">
@@ -349,7 +356,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                               <?php } ?>
             <?php } ?>
             
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                               <?php if($url=="Pagos" && !empty($action) && $action == "Registrar"){ ?>
               <li class="active"><a href="?<?php echo $menu ?>&route=Pagos&action=Registrar"><i class="fa fa-money"></i> Registrar Pagos</a></li>
                               <?php }else{ ?>
@@ -403,7 +410,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                             <?php } ?>
                   <?php endif; ?>
 
-                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"): ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Conciliador"): ?>
                             <?php if($url=="ReportePagos" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ReportePagos"><i class="fa fa-money"></i>Reporte de Pagos</a></li>
                             <?php }else{ ?>
@@ -441,7 +448,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 <!-- ======================================================================================================================= -->
         
 
-        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>
 
                             <?php if($url=="Gemas" || $url=="GemasBorradas"){ ?>
@@ -458,7 +465,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
           <ul class="treeview-menu">
 
 
-                      <?php if($_SESSION['nombre_rol']=="Superusuario"  || $_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario"  || $_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="Gemas" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=Gemas&action=Registrar"><i class="fa fa-diamond"></i> Agregar Gema</a></li>
                             <?php }else{ ?>
@@ -531,7 +538,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="Nota" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=Nota&action=Registrar"><i class="fa fa-tag"></i> Realizar Nota de entrega</a></li>
                             <?php }else{ ?>
@@ -600,7 +607,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="FacturaDespacho" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=FacturaDespacho&action=Registrar"><i class="fa fa-tag"></i> Realizar Factura</a></li>
                             <?php }else{ ?>

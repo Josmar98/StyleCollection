@@ -34,7 +34,7 @@
             <?php if(empty($_GET['id'])){ ?>
               <div style="width:100%;text-align:center;"><a href="?<?php echo $menu3; ?>route=<?php echo $url ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver Planes de Coleccion</a></div>
             <?php } ?>
-            <?php if(!empty($_GET['id']) && $_GET['id']!=$_SESSION['id_cliente'] && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
+            <?php if(!empty($_GET['id']) && $_GET['id']!=$_SESSION['id_cliente'] && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"  || $_SESSION['nombre_rol']=="Administrativo")){ ?>
               <div style="width:100%;text-align:center;"><a href="?<?php echo $menu3; ?>route=<?php echo $url ?>&admin=1&id=<?=$_GET['id']?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver Planes de Coleccion</a></div>
             <?php } ?>
     <!-- Main content -->

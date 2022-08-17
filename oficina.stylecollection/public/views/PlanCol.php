@@ -76,7 +76,7 @@
               <h3 class="box-title">
                 <?php echo "Planes Seleccionados para sus Colecciones"; ?>
                 <?php 
-                if(!empty($_GET['admin']) && !empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Analista Supervisor")){
+                if(!empty($_GET['admin']) && !empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo")){
                   echo "<br><br>";
                   echo "<b>Líder ".$pedido['primer_nombre']." ".$pedido['primer_apellido']." (".$pedido['cantidad_aprobado']." Colecciones)</b>";
                 }
@@ -89,6 +89,7 @@
             <!-- <form action="" method="post" role="form" class="form_register"> -->
             <div class="box-body">
                     <table style="background:none;text-align:right;width:100%;margin-bottom:30px">
+                      <?php //echo "Limite: ".$limittteee; ?>
                       <?php  if(Count($prems)>1 || Count($cols)<2 || $limittteee=="0"){}else{ 
                               if(empty($_GET['id']) && empty($_GET['admin'])){
 
@@ -97,7 +98,14 @@
                                   <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar" class="btn enviar" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar premios</a></th>
                                 </tr>
                       <?php }}
-                            if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
+                            if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo")){ ?>
+
+
+                              <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                <?php if ($limittteee=="1"): ?>
+
+
+
                               <?php $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$_GET['id']}"); 
                               if(Count($premioscol)<2){ ?>
                                 <tr>
@@ -112,7 +120,34 @@
                                   <!-- <th colspan="4" style="font-size:1em;"> -->
                                   <!-- </th> -->
                                 </tr>
-                      <?php   }
+                      <?php   } ?> 
+
+
+
+                                <?php endif ?>
+                              <?php else: ?>
+
+
+
+                                  <?php $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$_GET['id']}"); 
+                                  if(Count($premioscol)<2){ ?>
+                                    <tr>
+                                      <th colspan="4" style="font-size:1em;"><a href="?<?=$menu?>&route=PremioCol&action=Registrar&admin=1&id=<?=$_GET['id']?>" class="btn enviar" <?php if($estado_campana=="0"){ echo "disabled"; } ?> >Seleccionar premios</a></th>
+                                    </tr>
+                          <?php   }
+                                  if(Count($premioscol)>1){ ?>
+                                    <tr>
+                                        <u>
+                                          <a href="?<?=$menu?>&route=PremioCol&admin=1&id=<?=$_GET['id']?>" class="">Ver premios</a>
+                                        </u>
+                                      <!-- <th colspan="4" style="font-size:1em;"> -->
+                                      <!-- </th> -->
+                                    </tr>
+                          <?php   }
+
+
+
+                              endif;
                             }
                       ?>
                       <tr>
@@ -125,10 +160,25 @@
                           </button>
 
                           <?php }} 
-                          if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor")){ ?>
-                            <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
-                            Editar<span class="fa fa-wrench"></span>
-                          </button>
+                          if(!empty($_GET['id']) && ($_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Administrador"  || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo")){ ?>
+
+                              <?php if ($_SESSION['nombre_rol']=="Analista"): ?>
+                                <?php if ($limittteee=="1"): ?>
+                            
+                                  <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
+                                    Editar<span class="fa fa-wrench"></span>
+                                  </button>
+
+                                <?php endif; ?>
+                              <?php else: ?>
+
+                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&admin=1&id=<?=$_GET['id']?>">
+                                  Editar<span class="fa fa-wrench"></span>
+                                </button>
+
+                              <?php endif; ?>
+
+
                           <?php  }
                           ?>
                           

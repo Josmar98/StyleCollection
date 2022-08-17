@@ -66,6 +66,8 @@
               $configs = $lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
               $diasAdicionales = 0;
               $pagoAdmin = 0;
+              $pagoAdminAnalista = 0;
+              $pagoAdminSuperanalista = 0;
               foreach ($configs as $cf) {
                 if(!empty($cf['id_configuracion'])){
                   if($cf['clausula']=="Diasaddpagounotres"){
@@ -80,6 +82,12 @@
                   }
                   if($cf['clausula']=="Pagosadmin"){
                       $pagoAdmin=$cf['valor'];
+                  }
+                  if($cf['clausula']=="Pagosadminanalista"){
+                      $pagoAdminAnalista=$cf['valor'];
+                  }
+                  if($cf['clausula']=="Pagosadminsuperanalista"){
+                      $pagoAdminSuperanalista=$cf['valor'];
                   }
                 }
               }
@@ -343,7 +351,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -456,7 +482,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -589,7 +633,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -703,7 +765,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -839,7 +919,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -951,7 +1049,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Contado" || $pago['tipo_pago']=="contado" || $pago['tipo_pago']=="CONTADO"){ ?> selected <?php } ?> >Contado</option>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
@@ -1064,7 +1180,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -1178,7 +1312,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -1309,7 +1461,25 @@
                            <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
                                           <option <?php if($pago['tipo_pago']=="Segundo Pago" || $pago['tipo_pago']=="segundo pago" || $pago['tipo_pago']=="SEGUNDO PAGO"){ ?> selected <?php } ?>>Segundo Pago</option>
@@ -1404,7 +1574,25 @@
                            <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Contado" || $pago['tipo_pago']=="contado" || $pago['tipo_pago']=="CONTADO"){ ?> selected <?php } ?> >Contado</option>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>
@@ -1511,7 +1699,25 @@
                              <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                                 <option></option>
                                 <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
-                                      <?php if ($pagoAdmin=="1"): ?>
+                                    <?php
+                                    $pagoAbierto = "0";
+                                    if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
+                                      if($pagoAdmin=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista Supervisor"){
+                                      if($pagoAdminSuperanalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                    if($_SESSION['nombre_rol']=="Analista"){
+                                      if($pagoAdminAnalista=="1"){
+                                        $pagoAbierto = "1";
+                                      }
+                                    }
+                                  ?>
+                                      <?php if ($pagoAbierto=="1"): ?>
                                           <option <?php if($pago['tipo_pago']=="Contado" || $pago['tipo_pago']=="contado" || $pago['tipo_pago']=="CONTADO"){ ?> selected <?php } ?> >Contado</option>
                                           <option <?php if($pago['tipo_pago']=="Inicial" || $pago['tipo_pago']=="inicial" || $pago['tipo_pago']=="INICIAL"){ ?> selected <?php } ?>>Inicial</option>
                                           <option <?php if($pago['tipo_pago']=="Primer Pago" || $pago['tipo_pago']=="primer pago" || $pago['tipo_pago']=="PRIMER PAGO"){ ?> selected <?php } ?>>Primer Pago</option>

@@ -130,7 +130,7 @@
             <div class="box-header">
               <h3 class="box-title"><?php echo "Estado de cuentas - Campaña ".$numero_campana."/".$anio_campana; ?></h3>
                   <?php if($estado_campana=="1"): ?>
-                        <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                        <?php  if($_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
                             <br>
                             <a class="btn" style="float:right;margin-right:20px;margin-top:10px;color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Pedidos&action=Registrar&admin=1"><b>Realizar solicitud de Pedido de Lider</b></a>
                             <br><br>
@@ -326,7 +326,7 @@
           </div>
 
 
-          <?php if($_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+          <?php if($_SESSION['nombre_rol'] == "Administrativo" || $_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
 
           <div class="box">
             <div class="box-header">
@@ -450,7 +450,7 @@
                             <tr>
                               <td style="width:20%">
                                 <span class="contenido2">
-                                  <?php if($_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol'] == "Analista Supervisor"){ ?>
+                                  <?php if($_SESSION['nombre_rol'] == "Administrativo" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol'] == "Analista Supervisor"){ ?>
                                       
                                       <?php if ($data['cantidad_aprobado']==0): ?>
                                           <b style="color:#898989">* Ver Pedido</b>

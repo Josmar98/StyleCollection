@@ -443,6 +443,13 @@ if($estado_campana=="1"){
 					if(count($tasaHoy)>1){
 						$tasaMontar = $tasaHoy[0]['monto_tasa'];
 					}
+					$fechaHoyReal = date('Y-m-d');
+					$tasaHoyReal = $lider->consultarQuery("SELECT * FROM tasa WHERE fecha_tasa='{$fechaHoyReal}'");
+					$tasaMontarReal = "";
+					if(count($tasaHoyReal)>1){
+						$tasaMontarReal = $tasaHoyReal[0]['monto_tasa'];
+					}
+					
 				}
 				
 				if(!empty($action)){

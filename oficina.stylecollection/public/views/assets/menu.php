@@ -1187,7 +1187,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           </a>
           <ul class="treeview-menu">
 
-            <?php if (Count($desp)<2): ?>
+            <?php //if (Count($desp)<2): ?>
                     <?php if($amDespachosR==1): ?>
                             <?php if($url=="Despachos" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=Despachos&action=Registrar"><i class="fa fa-tag"></i> Registrar Pedidos</a></li>
@@ -1195,7 +1195,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
             <li class=""><a href="?<?php echo $menu ?>&route=Despachos&action=Registrar"><i class="fa fa-tag"></i> Registrar Pedidos</a></li>
                             <?php } ?>
                     <?php endif; ?>
-            <?php endif ?>
+            <?php //endif; ?>
 
 
 

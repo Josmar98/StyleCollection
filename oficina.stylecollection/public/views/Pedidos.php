@@ -1421,11 +1421,11 @@
                           <?php
                             $restaTotalGemas = $total_responsabilidad - $abonado_lider_gemas;
                             // echo $abonado_lider_gemas;
-                            $restaTotalGemas = 0;
+                            // $restaTotalGemas = 0;
                             // echo $restaTotalGemas;
                             // echo $restaTotalResponsabilidad;
 
-                            $restaTotalResponsabilidad = 0;
+                            // $restaTotalResponsabilidad = 0;
 
                             // echo "Cantidad de pagos: ".(count($pagosGemas)-1)."<br>";
                             // echo "Pedido: ".$id."<br>";
@@ -1447,7 +1447,7 @@
 
                             // echo "Resta actual: ".number_format($restaTotalResponsabilidad,1,',','.')."<br>";
                             // echo "Resta Gemas: ".number_format($restaTotalGemas,1,',','.')."<br>";
-                            $reclamargemasporcentaje = 0;
+                            // $reclamargemasporcentaje = 0;
 
                             if (count($gemasReclamar)>1): 
                               $gemaReclamar = $gemasReclamar[0];
@@ -1456,6 +1456,7 @@
                               }else{
                                 $porcentajeAbonadoPuntual = 100;
                               }
+                              // echo "<br><h1>".$reclamargemasporcentaje."<br>".number_format($restaTotalResponsabilidad,1,',','.')."</h1><br>";
                               $gemasAReclamarPorcentaje = ($gemaReclamar['cantidad_gemas']/100)*$porcentajeAbonadoPuntual;
                               if ($reclamargemasporcentaje=="0") {
                                 if( ($fecha_pago_cierre_lider <= $despacho['fecha_segunda_senior']) && (number_format($restaTotalGemas,1,',','.') <= 0) ){ ?>
@@ -1467,7 +1468,7 @@
                                             <input type="hidden" id="cantidad_gemas_lider" value="<?=number_format($gemasAReclamar,2,',','.')?>">
                                             <button class="btn enviar2 reclamarGemasBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamar=1&gema=<?=$gemaReclamar['id_gema']?>">
                                               <span class="fa fa-diamond"></span>
-                                              Reclamar Gemas 
+                                              Reclamar Gemas Totat
                                               <span class="fa fa-diamond"></span>
                                             </button>
                                           </div>
@@ -1483,7 +1484,7 @@
                                             <input type="hidden" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
                                             <button class="btn col-xs-12" style="background:#999;color:#fff">
                                               <span class="fa fa-diamond"></span>
-                                              Reclamar Gemas 
+                                              Reclamar Gemas Porcent
                                               <span class="fa fa-diamond"></span>
                                             </button>
                                           </div>
@@ -1496,6 +1497,7 @@
                               }
 
                               if ($reclamargemasporcentaje=="1") {
+
                                 if( number_format($restaTotalResponsabilidad,1,',','.') <= 0 ){ ?>
                                   <?php if ($_SESSION['id_cliente'] == $pedido['id_cliente']): ?>
                                     <br>

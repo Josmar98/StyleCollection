@@ -77,8 +77,7 @@ if($amClientesC == 1){
 			$id_despacho = $_POST['selectedPedido'];
 			// $despachos = $lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id_despacho");
 			// $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_despacho = $id_despacho");
-			$pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho and despachos.id_despacho = pedidos.id_despacho");
-
+			$pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE campanas.id_campana = despachos.id_campana and despachos.id_despacho = pedidos.id_despacho and pedidos.id_despacho = {$id_despacho}");
 		}
 
 		if(count($cliente)>1){

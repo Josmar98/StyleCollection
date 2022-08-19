@@ -62,7 +62,7 @@
 
                       <?php foreach ($campanas as $data): if(!empty($data['id_campana'])): ?>
                         <option value="?campaing=<?=$data['id_campana']?>&n=<?=$data['numero_campana']?>&y=<?=$data['anio_campana']?>&dpid=<?=$data['id_despacho']?>&dp=<?=$data['numero_despacho']?>&route=Pagoss">
-                            Campaña <?=$data['numero_campana']."/".$data['anio_campana']."-".$data['nombre_campana']?>
+                            Pedido <?php if($data['numero_despacho']!="1"){ echo $data['numero_despacho']; } ?> de Campaña <?=$data['numero_campana']."/".$data['anio_campana']."-".$data['nombre_campana']?>
                             
                         </option>
                       <?php endif; endforeach; ?>

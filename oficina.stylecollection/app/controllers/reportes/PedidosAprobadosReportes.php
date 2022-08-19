@@ -16,7 +16,7 @@ if($amReportesC == 1){
     if(!empty($_GET['P'])){
       $id_despacho = $_GET['P'];
       $clientess = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus=1");
-      $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho and despachos.id_despacho = pedidos.id_despacho");
+      $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_campana and despachos.id_despacho = pedidos.id_despacho");
     }
       if(!empty($action)){
         if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

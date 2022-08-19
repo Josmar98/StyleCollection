@@ -70,7 +70,13 @@
                                       <option 
                                             value="<?=$key['id_despacho']?>" 
                                             <?php if(!empty($id_despacho)){if($key['id_despacho']==$id_despacho){echo "selected='1'";}} ?>    >
-                                        <?php echo "Campaña ".$key['numero_campana']."/".$key['anio_campana']."-".$key['nombre_campana']; ?>
+                                        <?php 
+                                          echo "Pedido ";
+                                          if($key['numero_despacho']!="1"){
+                                            echo $key['numero_despacho'];
+                                          }
+                                          echo " de Campaña ".$key['numero_campana']."/".$key['anio_campana']."-".$key['nombre_campana'];
+                                        ?>
                                       
                                       </option>
                                       <?php 

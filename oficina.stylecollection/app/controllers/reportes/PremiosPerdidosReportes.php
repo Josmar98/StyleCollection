@@ -14,7 +14,7 @@ if(!empty($access['id_acceso'])){
 if($amReportesC == 1){
     if(!empty($_GET['P'])){
       $id_despacho = $_GET['P'];
-      $campanas = $lider->consultarQuery("SELECT * FROM despachos, campanas WHERE despachos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho");
+      $campanas = $lider->consultarQuery("SELECT * FROM despachos, campanas WHERE despachos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_campana");
       $campana = $campanas[0];
       $id_campana = $campana['id_campana'];
       // print_r($campanas);

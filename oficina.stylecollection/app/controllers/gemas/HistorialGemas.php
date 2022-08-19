@@ -16,9 +16,11 @@ if(empty($_POST)){
 
 	$historial2 = $lider->consultarQuery("SELECT * FROM configgemas, gemas, pedidos, despachos, campanas WHERE pedidos.id_despacho = despachos.id_despacho and campanas.id_campana = despachos.id_campana and  pedidos.id_pedido = gemas.id_pedido and configgemas.id_configgema = gemas.id_configgema and gemas.estatus = 1 and configgemas.nombreconfiggema = 'Por Colecciones De Factura Directa' and gemas.id_cliente = {$id_perso} and gemas.estado = 'Disponible'");
 
-	$historial3 = $lider->consultarQuery("SELECT * FROM configgemas, gemas, campanas WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and gemas.estatus = 1 and configgemas.nombreconfiggema != 'Por Colecciones De Factura Directa' and gemas.id_cliente = {$id_perso} and gemas.estado = 'Disponible'");
+	$historial3 = $lider->consultarQuery("SELECT * FROM configgemas, gemas, campanas, despachos, pedidos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = gemas.id_pedido and campanas.id_campana and despachos.id_campana and campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and gemas.estatus = 1 and configgemas.nombreconfiggema != 'Por Colecciones De Factura Directa' and gemas.id_cliente = {$id_perso} and gemas.estado = 'Disponible'");
 
 	$historial4 = $lider->consultarQuery("SELECT * FROM nombramientos, liderazgos, campanas WHERE campanas.id_campana = nombramientos.id_campana and nombramientos.id_liderazgo = liderazgos.id_liderazgo and nombramientos.estatus = 1 and nombramientos.id_cliente = {$id_perso}");
+
+
 	$historialx = [];
 	$num = 0;
 	foreach ($historial1 as $data) {
@@ -61,13 +63,15 @@ if(empty($_POST)){
 			$historialAux[$nume]['fecha'] = $fechaMostrar;
 			$historialAux[$nume]['num'] = $nume;
 			$historialAux[$nume]['hora'] = $horaMostrar;
-		}else if(!empty($data['fecha_aprobado'])){
+		// }else if(!empty($data['fecha_aprobado'])){
+		}else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] == 'Por Colecciones De Factura Directa'){
 			$fechaMostrar = $lider->formatFechaInver($data['fecha_aprobado']);
 			$horaMostrar = $data['hora_aprobado'];
 			$historialAux[$nume]['fecha'] = $fechaMostrar;
 			$historialAux[$nume]['num'] = $nume;
 			$historialAux[$nume]['hora'] = $horaMostrar;
-		}else if(!empty($data['fecha_gemas'])){
+		// }else if(!empty($data['fecha_gemas'])){
+		}else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] != 'Por Colecciones De Factura Directa'){
 			$fechaMostrar = $data['fecha_gemas'];
 			$horaMostrar = $data['hora_gemas'];
 			$historialAux[$nume]['fecha'] = $fechaMostrar;

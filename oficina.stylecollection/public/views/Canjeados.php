@@ -82,8 +82,8 @@
                                 <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
                                 foreach ($campanas as $camp) {
                                   if(!empty($camp['id_campana'])){
-                                    if($data2['id_campana'] == $camp['id_campana']){
-                                      echo "(Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
+                                    if(($data2['id_campana'] == $camp['id_campana']) && $data2['id_despacho'] == $camp['id_despacho']){
+                                      echo "(Ped ".$camp['numero_despacho']." Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
                                     }
                                   }
                                 }

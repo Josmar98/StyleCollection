@@ -71,12 +71,14 @@ if($_SESSION['nombre_rol']!="Vendedor" && $_SESSION['nombre_rol']!="Conciliador"
   //   } 
   //   // print_r($exec);
   // }
-  if(!empty($_POST['id_campana']) && !empty($_POST['id_canjeo'])){
+  if(!empty($_POST['id_despacho']) && !empty($_POST['id_canjeo'])){
     // print_r($_POST);
-    $id_campana = $_POST['id_campana'];
+    $id_despacho = $_POST['id_despacho'];
     $id_canjeo = $_POST['id_canjeo'];
+    $despachos = $lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = {$id_despacho} and estatus = 1");
+    $id_campana = $despachos[0]['id_campana'];
 
-    $exec = $lider->modificar("UPDATE canjeos SET id_campana = {$id_campana}, estado_canjeo = 'Asignado' WHERE id_canjeo = {$id_canjeo}");
+    $exec = $lider->modificar("UPDATE canjeos SET id_campana = {$id_campana}, id_despacho = {$id_despacho}, estado_canjeo = 'Asignado' WHERE id_canjeo = {$id_canjeo}");
     if($exec['ejecucion']==true){
       $response = "1";
     }else{

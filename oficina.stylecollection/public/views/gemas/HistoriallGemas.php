@@ -80,10 +80,10 @@
                       <select class="form-control select2" id="camp" name="camp" style="width:100%;">
                         <option value=""></option>
                         <?php foreach ($campanas as $data): ?>
-                          <?php if (!empty($data['id_campana'])): ?>
+                          <?php if (!empty($data['id_despacho'])): ?>
 
-                        <option <?php if(!empty($_GET['camp'])){ if($_GET['camp']==$data['id_campana']){ echo "selected"; } } ?> value="<?=$data['id_campana']?>">
-                          Campaña <?=$data['numero_campana']."/".$data['anio_campana']." - ".$data['nombre_campana']?>
+                        <option <?php if(!empty($_GET['camp'])){ if($_GET['camp']==$data['id_despacho']){ echo "selected"; } } ?> value="<?=$data['id_despacho']?>">
+                          Pedido <?php if($data['numero_despacho']!="1"){ echo $data['numero_despacho']; } ?> Campaña <?=$data['numero_campana']."/".$data['anio_campana']." - ".$data['nombre_campana']?>
                         </option>
 
                           <?php endif; ?>
@@ -114,14 +114,22 @@
                       $razon = '-';
                       $concepto = "por Canjeo de premio";
                       $fechaMostrar = $data['fecha_canjeo'];
-                    }else if(!empty($data['fecha_aprobado'])){
+                    // }else if(!empty($data['fecha_aprobado'])){
+                    }else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] == 'Por Colecciones De Factura Directa'){
+
                       $razon = '+';
-                      $concepto = "por Factura Directa <br><small>Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+                      $concepto = "por Factura Directa <br><small>Pedido ";
+                      if($data['numero_despacho']!="1"){ $concepto .=  $data['numero_despacho']; }
+                      $concepto .= " de Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
                       $fechaMostrar = $lider->formatFechaInver($data['fecha_aprobado']);
-                    }else if(!empty($data['fecha_gemas'])){
+                    // }else if(!empty($data['fecha_gemas'])){
+                    }else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] != 'Por Colecciones De Factura Directa'){
                       $razon = '+';
                       // $concepto = "por Gemas";
-                      $concepto = $data['nombreconfiggema']." <br><small>Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+                      $concepto = $data['nombreconfiggema']." <br><small>Pedido ";
+                      if($data['numero_despacho']!="1"){ $concepto .=  $data['numero_despacho']; }
+                      $concepto .= " de Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+
                       $fechaMostrar = $data['fecha_gemas'];
                     }else if(!empty($data['fecha_nombramiento'])){
                       $razon = '+';

@@ -74,14 +74,22 @@
                       $razon = '-';
                       $concepto = "por Canjeo de premio";
                       $fechaMostrar = $data['fecha_canjeo'];
-                    }else if(!empty($data['fecha_aprobado'])){
+                    // }else if(!empty($data['fecha_aprobado'])){
+                    }else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] == 'Por Colecciones De Factura Directa'){
+
                       $razon = '+';
-                      $concepto = "por Factura Directa <br><small>Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+                      $concepto = "por Factura Directa <br><small>Pedido ";
+                      if($data['numero_despacho']!="1"){ $concepto .=  $data['numero_despacho']; }
+                      $concepto .= " de Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
                       $fechaMostrar = $lider->formatFechaInver($data['fecha_aprobado']);
-                    }else if(!empty($data['fecha_gemas'])){
+                    // }else if(!empty($data['fecha_gemas'])){
+                    }else if(!empty($data['nombreconfiggema']) && $data['nombreconfiggema'] != 'Por Colecciones De Factura Directa'){
                       $razon = '+';
                       // $concepto = "por Gemas";
-                      $concepto = $data['nombreconfiggema']." <br><small>Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+                      $concepto = $data['nombreconfiggema']." <br><small>Pedido ";
+                      if($data['numero_despacho']!="1"){ $concepto .=  $data['numero_despacho']; }
+                      $concepto .= " de Campaña ".$data['numero_campana']."/".$data['anio_campana']."</small>";
+
                       $fechaMostrar = $data['fecha_gemas'];
                     }else if(!empty($data['fecha_nombramiento'])){
                       $razon = '+';

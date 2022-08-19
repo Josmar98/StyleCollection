@@ -54,7 +54,7 @@ if(empty($_POST)){
 
 	$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
 
-	$notas = $lider->consultarQuery("SELECT * FROM clientes, notasentrega WHERE clientes.id_cliente = notasentrega.id_cliente and clientes.estatus=1 and notasentrega.estatus=1 and notasentrega.id_campana = {$id_campana}");
+	$notas = $lider->consultarQuery("SELECT * FROM clientes, notasentrega, pedidos WHERE notasentrega.id_pedido = pedidos.id_pedido and clientes.id_cliente = notasentrega.id_cliente and clientes.estatus=1 and notasentrega.estatus=1 and notasentrega.id_campana = {$id_campana} and pedidos.id_despacho = {$id_despacho}");
 	if($notas['ejecucion']==true){
 
 		if(!empty($action)){

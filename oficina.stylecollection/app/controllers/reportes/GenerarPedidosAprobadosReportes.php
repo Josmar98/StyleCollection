@@ -26,7 +26,7 @@ if($amReportesC == 1){
 
 			  $id_despacho = $_GET['id'];
 			  $clientess = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus=1");
-			  $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho and despachos.id_despacho = pedidos.id_despacho");
+			  $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_campana and despachos.id_despacho = pedidos.id_despacho");
 			  $nombreCampana = $pedidosClientes[0]['nombre_campana'];
 			  $numeroCampana = $pedidosClientes[0]['numero_campana'];
 			  $anioCampana = $pedidosClientes[0]['anio_campana'];

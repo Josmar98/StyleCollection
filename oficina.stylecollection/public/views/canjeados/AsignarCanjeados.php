@@ -96,9 +96,9 @@
                         <?php }else{ ?>
                         <label for="campana">Seleccionar Campaña</label>
                         <?php } ?>
-                        <select name="id_campana" id="campana" class="form-control select2" style="width:100%;">
-                          <?php foreach ($campanas as $camp){ if(!empty($camp['id_campana'])){ ?>
-                        <option value="<?=$camp['id_campana']?>" <?php if($camp['id_campana']==$data['id_campana']){ echo "selected"; } ?> >Campaña <?=$camp['numero_campana']."/".$camp['anio_campana']." - ".$camp['nombre_campana']?></option>
+                        <select name="id_despacho" id="campana" class="form-control select2" style="width:100%;">
+                          <?php foreach ($campanas as $camp){ if(!empty($camp['id_despacho'])){ ?>
+                        <option value="<?=$camp['id_despacho']?>" <?php if($camp['id_despacho']==$data['id_despacho']){ echo "selected"; } ?> >Pedido <?php if($camp['numero_despacho']!="1"){ echo $camp['numero_despacho']; } ?> de Campaña <?=$camp['numero_campana']."/".$camp['anio_campana']." - ".$camp['nombre_campana']?></option>
                           <?php } } ?> 
                         </select>
                         <input type="hidden" name="id_canjeo" value="<?=$data['id_canjeo']?>">

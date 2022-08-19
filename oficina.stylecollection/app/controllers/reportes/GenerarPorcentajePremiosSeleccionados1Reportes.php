@@ -24,7 +24,7 @@ if(!empty($access['id_acceso'])){
 if($amReportesC == 1){
 
 				  $id_despacho = $_GET['id'];
-				  $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_despacho and despachos.id_despacho = pedidos.id_despacho");
+				  $pedidosClientes = $lider->consultarQuery("SELECT * FROM pedidos, despachos, campanas WHERE pedidos.id_despacho = $id_despacho and campanas.id_campana = despachos.id_campana and despachos.id_despacho = pedidos.id_despacho");
 
 				  $premioscol = $lider->consultarQuery("SELECT * FROM pedidos, tipos_colecciones, premio_coleccion, tipos_premios_planes_campana, premios, planes_campana, planes WHERE pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho}");
 

@@ -72,7 +72,6 @@ if($estado_campana=="1"){
 		// $pedidos = $lider->consultarQuery($query);
 		// $numero_factura = Count($pedidos);
 
-
 		$i=0;
 		$responses = [];
 		foreach ($id_reto_campana as $id_reto_campana) {
@@ -141,7 +140,6 @@ if($estado_campana=="1"){
 		$pedido = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = {$id}");
 		if(Count($pedido)>1){
 			$retos = $lider->consultarQuery("SELECT * FROM retos_campana, premios WHERE retos_campana.id_premio = premios.id_premio and retos_campana.estatus = 1 and retos_campana.id_campana = {$id_campana} ORDER BY retos_campana.cantidad_coleccion ASC");
-			// print_r($retos);
 			$pedido = $pedido[0];
 		}
 		$liderRetos = $lider->consultarQuery("SELECT * FROM clientes, retos, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and retos.id_cliente = clientes.id_cliente and retos.id_pedido = pedidos.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1");

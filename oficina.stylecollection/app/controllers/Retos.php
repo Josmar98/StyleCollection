@@ -120,8 +120,8 @@ if(empty($_POST)){
 		$id = $_SESSION['id_cliente'];
 	}
 	// $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id}");
-	$lideres = $lider->consultarQuery("SELECT DISTINCT clientes.id_cliente, primer_nombre, primer_apellido, cedula, pedidos.id_pedido FROM clientes, retos, pedidos WHERE pedidos.id_pedido = retos.id_pedido and clientes.id_cliente = retos.id_cliente and retos.id_campana = $id_campana");
-	$retos = $lider->consultarQuery("SELECT * FROM retos, retos_campana, premios WHERE retos.id_reto_campana = retos_campana.id_reto_campana and retos_campana.id_premio = premios.id_premio and retos_campana.id_campana = $id_campana and retos_campana.estatus = 1 ORDER BY retos_campana.cantidad_coleccion ASC");
+	$lideres = $lider->consultarQuery("SELECT DISTINCT clientes.id_cliente, primer_nombre, primer_apellido, cedula, pedidos.id_pedido FROM clientes, retos, pedidos WHERE pedidos.id_pedido = retos.id_pedido and clientes.id_cliente = retos.id_cliente and retos.id_campana = {$id_campana} and pedidos.id_despacho = {$id_despacho}");
+	$retos = $lider->consultarQuery("SELECT * FROM retos, retos_campana, premios WHERE retos.id_reto_campana = retos_campana.id_reto_campana and retos_campana.id_premio = premios.id_premio and retos_campana.id_campana = {$id_campana} and retos_campana.estatus = 1 ORDER BY retos_campana.cantidad_coleccion ASC");
 	// print_r($planesCol);
 	// if(Count($lideres)>1){
 		// $planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, campanas WHERE planes.id_plan = planes_campana.id_plan and campanas.id_campana = planes_campana.id_campana and planes_campana.estatus = 1");

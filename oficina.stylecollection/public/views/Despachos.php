@@ -74,8 +74,11 @@
                     <span class="contenido2">
                       <a href="?<?php echo $menu ?>&dpid=<?php echo $data['id_despacho'] ?>&dp=<?php echo $data['numero_despacho'] ?>&route=Homing2">
                       <?php 
-                        // echo "Pedido ".$data['numero_despacho']; 
-                        echo "Pedido - Campaña ".$numero_campana."/".$anio_campana;
+                          echo "Pedido ";
+                          if($data['numero_despacho']!="1"){
+                            echo $data['numero_despacho'];
+                          }
+                          echo " - Campaña ".$numero_campana."/".$anio_campana;
                       ?>
                       </a>
                     </span>

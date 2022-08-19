@@ -28,7 +28,8 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 
 	if(empty($_POST)){
 		
-		$gemas = $lider->consultarQuery("SELECT * FROM configgemas, clientes, campanas, gemas WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and clientes.id_cliente = gemas.id_cliente and gemas.id_campana = {$id_campana} and gemas.estatus = 0");
+		// $gemas = $lider->consultarQuery("SELECT * FROM configgemas, clientes, campanas, gemas WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and clientes.id_cliente = gemas.id_cliente and gemas.id_campana = {$id_campana} and gemas.estatus = 0");
+		$gemas = $lider->consultarQuery("SELECT * FROM configgemas, clientes, campanas, gemas, pedidos WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and clientes.id_cliente = gemas.id_cliente and gemas.id_campana = {$id_campana} and gemas.id_pedido = pedidos.id_pedido and gemas.estatus = 0 and pedidos.id_despacho = {$id_despacho}");
 
 		$lideresHijos = $lider->consultarQuery("SELECT * FROM clientes, gemas_clientes, gemas WHERE clientes.id_cliente = gemas_clientes.id_cliente and gemas_clientes.id_gema = gemas.id_gema and gemas.id_campana = {$id_campana} ");
 		if($gemas['ejecucion']==1){

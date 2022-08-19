@@ -16,7 +16,7 @@ if($estado_campana=="1"){
 		if(!empty($_POST['clientes']) && !empty($_POST['cantidad_correspondiente']) && !empty($_POST['cantidad_gemas'])){
 			// print_r($_POST);
 			$id_cliente = $_POST['lider'];
-			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_cliente = {$id_cliente}");
+			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_despacho = {$id_despacho} and id_cliente = {$id_cliente}");
 			$pedido = $pedidos[0];
 			$id_pedido = $pedido['id_pedido'];
 

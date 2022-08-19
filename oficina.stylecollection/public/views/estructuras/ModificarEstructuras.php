@@ -107,6 +107,7 @@
                       </tr>
                     </thead>
                     <tbody>
+                      <?php $num = 1; ?>
                   <?php foreach ($clientes as $data): ?>
                     <?php if (!empty($data['id_cliente'])): ?>
                         <?php $opcion = "0"; ?>
@@ -126,7 +127,7 @@
                         <td style="text-align:left;padding:0;">
                           <label style="display:block;padding:5px;;" for="<?=$data['id_cliente']; ?>" class="labellider">
                             <span class="labellider">
-                            <?=number_format($data['cedula'],0,'','.')." | ".$data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']; ?>
+                            <?=$num."). ".number_format($data['cedula'],0,'','.')." | ".$data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']; ?>
                             </span>
                           </label>
                         </td>
@@ -149,6 +150,7 @@
                         
                         </td>
                       </tr>
+                      <?php $num++; ?>
                     <?php endif ?>
                   <?php endforeach ?>
                     </tbody>

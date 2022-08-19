@@ -33,7 +33,33 @@
     <section class="content">
       <div class="row">
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
 
 
@@ -117,6 +143,23 @@
             <div class="box-body"> 
               <div class="row">
                 <div class="col-xs-12">
+                    
+                    <div class="row">
+                      <div class="col-xs-10 col-xs-offset-1">
+                        <h4 style="font-size:1.7em;margin:0;padding:0;">
+                          <b>
+                          Pedido 
+                          <?php if($despachos[0]['numero_despacho']!="1"): echo $despachos[0]['numero_despacho']; endif; ?>
+                           de Campana 
+                            <?=$despachos[0]['numero_campana']."/".$despachos[0]['anio_campana']; ?>
+                          -
+                            <?=$despachos[0]['nombre_campana']; ?>
+                          </b>
+                        </h3>
+                      </div>
+                    </div>
+                    <br>
+
                     <div class="row">
                       <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-6">
                           <div class="input-group">
@@ -146,6 +189,27 @@
                         <?php foreach ($pedidosClientes as $data): if(!empty($data['id_pedido'])):?>
                           <?php foreach ($clientess as $data2): if(!empty($data2['id_cliente'])): ?>
                             <?php if($data['id_cliente'] == $data2['id_cliente']): ?>
+                             
+                              <?php
+                                $permitido = "0";
+                                if($accesoBloqueo=="1"){
+                                  if(!empty($accesosEstructuras)){
+                                    foreach ($accesosEstructuras as $struct) {
+                                      if(!empty($struct['id_cliente'])){
+                                        if($struct['id_cliente']==$data['id_cliente']){
+                                          $permitido = "1";
+                                        }
+                                      }
+                                    }
+                                  }
+                                }else if($accesoBloqueo=="0"){
+                                  $permitido = "1";
+                                }
+
+
+                                if($permitido=="1"):
+                              ?>
+
                           <tr class="elementTR">
                             <td><?=$num;?></td>
                             <td>
@@ -166,6 +230,9 @@
                                 ?>
                             </td>
                           </tr>
+                        
+                              <?php endif; ?>
+
                             <?php $num++; ?>
                             <?php endif; ?>
                           <?php endif; endforeach; ?>

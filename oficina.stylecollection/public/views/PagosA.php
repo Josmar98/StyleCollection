@@ -6987,6 +6987,13 @@
                         <span style="font-size:1.3em" class="ficha_detalle_equivalente"></span>
                       </div>
                     </div>
+
+                    <div class="row boxMarca" style="border-top:1px solid #EEE;display:none;">
+                      <div class="col-xs-12" style="text-align:right;margin-top:0;padding-top:0;"> 
+                        <small><i><span style="font-size:1.3em" class="ficha_detalle_marca"></span></i></small>
+                      </div>
+                    </div>
+                    
                   </div>
                   <br>
                     <!-- <div class="row">
@@ -8221,7 +8228,10 @@ $(document).ready(function(){
           // $(".name_observacion").html(data['leyenda']);
         }
 
-
+        if(data['marca']!=null){
+          $(".boxMarca").show();
+          $(".ficha_detalle_marca").html("Cargado por: "+data['marca']);
+        }
 
         var year = data['fecha_pago'].substr(0, 4);
         var mes = data['fecha_pago'].substr(5, 2);

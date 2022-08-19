@@ -34,10 +34,10 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 		}
 		if(empty($_POST['validarData']) && !empty($_POST['analista']) && empty($_POST['clientes'])){
 			$analista = $_POST['analista'];
+			$lideres = [];
 			if(!empty($_POST['lideres'])){
 				$lideres = $_POST['lideres'];
 			}
-			$lideres = [];
 			$max = count($lideres);
 			$result = 0;
 			$exec = $lider->eliminar("DELETE from estructuras WHERE analista = $id");
@@ -62,7 +62,9 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 
 
 			$analistas = $lider->consultarQuery("SELECT * FROM clientes, usuarios, roles WHERE usuarios.id_cliente = clientes.id_cliente and usuarios.id_rol = roles.id_rol and (roles.nombre_rol = 'Analista' or roles.nombre_rol = 'Analista Supervisor') and usuarios.estatus = 1 and usuarios.id_usuario = {$id}");
-			$clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus = 1");
+			// $clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus = 1");
+			$clientes = $lider->consultarQuery("SELECT * FROM clientes, usuarios WHERE clientes.id_cliente = usuarios.id_cliente and usuarios.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
+
 
 			$estructurasAnalistas = $lider->consultarQuery("SELECT DISTINCT analista FROM estructuras WHERE estatus = 1 and analista = {$id}");
 			$estructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE estatus = 1");
@@ -85,7 +87,9 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 	}
 	if(empty($_POST)){
 		$analistas = $lider->consultarQuery("SELECT * FROM clientes, usuarios, roles WHERE usuarios.id_cliente = clientes.id_cliente and usuarios.id_rol = roles.id_rol and (roles.nombre_rol = 'Analista' or roles.nombre_rol = 'Analista Supervisor') and usuarios.estatus = 1 and usuarios.id_usuario = {$id}");
-		$clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus = 1");
+		// $clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus = 1");
+		$clientes = $lider->consultarQuery("SELECT * FROM clientes, usuarios WHERE clientes.id_cliente = usuarios.id_cliente and usuarios.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
+
 
 		$estructurasAnalistas = $lider->consultarQuery("SELECT DISTINCT analista FROM estructuras WHERE estatus = 1 and analista = {$id}");
 		$estructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE estatus = 1");

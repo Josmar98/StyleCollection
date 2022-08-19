@@ -22,6 +22,8 @@ if($amReportesC == 1){
 
       $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = {$id_campana}");
       // $premios = $lider->consultarQuery("SELECT DISTINCT premios.id_premio, premios.nombre_premio FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, campanas, despachos WHERE despachos.id_despacho = {$id_despacho} and premios.estatus = 1 and despachos.id_campana = campanas.id_campana and campanas.id_campana = planes_campana.id_campana and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and tipos_premios_planes_campana.id_premio = premios.id_premio");
+      
+      $despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho}");
     
     }
     if(!empty($action)){

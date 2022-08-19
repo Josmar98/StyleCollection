@@ -85,6 +85,33 @@ if($amReportesC == 1){
 	$urlCss2 = $var . '/public/assets/css/';
 	$urlImg = $var . '/public/assets/img/';
 
+
+	$configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+		$accesoBloqueo = "0";
+		$superAnalistaBloqueo="1";
+		$analistaBloqueo="1";
+		foreach ($configuraciones as $config) {
+			if(!empty($config['id_configuracion'])){
+				if($config['clausula']=='Analistabloqueolideres'){
+					$analistaBloqueo = $config['valor'];
+				}
+				if($config['clausula']=='Superanalistabloqueolideres'){
+					$superAnalistaBloqueo = $config['valor'];
+				}
+			}
+		}
+		if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+		if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+		if($accesoBloqueo=="0"){
+			// echo "Acceso Abierto";
+		}
+		if($accesoBloqueo=="1"){
+			// echo "Acceso Restringido";
+			$accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+		}
+
+
+
 	ini_set('date.timezone', 'america/caracas');			//se establece la zona horaria
 	date_default_timezone_set('america/caracas');
 
@@ -169,6 +196,24 @@ if($amReportesC == 1){
                 
 							$num = 1;
 							foreach ($clientess as $data): if(!empty($data['id_pedido'])):
+								$permitido = "0";
+								if($accesoBloqueo=="1"){
+									if(!empty($accesosEstructuras)){
+										foreach ($accesosEstructuras as $struct) {
+											if(!empty($struct['id_cliente'])){
+												if($struct['id_cliente']==$data['id_cliente']){
+													$permitido = "1";
+												}
+											}
+										}
+									}
+								}else if($accesoBloqueo=="0"){
+									$permitido = "1";
+								}
+
+								if($permitido=="1"):
+
+
 						$info .= "<tr class='text-center'>
 								<td style='width:8%;'>".$data['posicion']."</td>
 								<td style='width:22%;'>
@@ -340,7 +385,7 @@ if($amReportesC == 1){
 	                                      endif;
 	                                  endif;
 	                              endif; endforeach;
-	                       $info .= "	<tr>
+	                       				$info .= "	<tr>
 		                                    <td style='text-align:left;'>
 		                                        ".$data['cantidad_aprobado']." Colecciones<br>
 		                                    </td>
@@ -466,6 +511,9 @@ if($amReportesC == 1){
 	                       			</table></td>
 
 							</tr>";
+
+
+								endif;
 								$num++;
 						endif; endforeach;
 

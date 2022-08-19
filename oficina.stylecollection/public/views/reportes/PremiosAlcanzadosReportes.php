@@ -33,7 +33,33 @@
     <section class="content">
       <div class="row">
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
 
 
@@ -118,6 +144,25 @@
             <div class="box-body"> 
               <div class="row">
                 <div class="col-xs-12">
+
+
+                    <div class="row">
+                      <div class="col-xs-10 col-xs-offset-1">
+                        <h4 style="font-size:1.7em;margin:0;padding:0;">
+                          <b>
+                          Pedido 
+                          <?php if($despachos[0]['numero_despacho']!="1"): echo $despachos[0]['numero_despacho']; endif; ?>
+                           de Campana 
+                            <?=$despachos[0]['numero_campana']."/".$despachos[0]['anio_campana']; ?>
+                          -
+                            <?=$despachos[0]['nombre_campana']; ?>
+                          </b>
+                        </h3>
+                      </div>
+                    </div>
+                    <br>
+
+                    
                     <div class="row">
                       <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-6">
                           <div class="input-group">
@@ -190,7 +235,25 @@
 
                         <?php $num = 1; ?>
                         <?php foreach ($pedidos as $data): if(!empty($data['id_pedido'])):?>
+                          <?php
+                            $permitido = "0";
+                            if($accesoBloqueo=="1"){
+                              if(!empty($accesosEstructuras)){
+                                foreach ($accesosEstructuras as $struct) {
+                                  if(!empty($struct['id_cliente'])){
+                                    if($struct['id_cliente']==$data['id_cliente']){
+                                      $permitido = "1";
+                                    }
+                                  }
+                                }
+                              }
+                            }else if($accesoBloqueo=="0"){
+                              $permitido = "1";
+                            }
 
+
+                            if($permitido=="1"):
+                            ?>
                           <tr class="elementTR">
                             <td style="width:10%;"><?=$num?></td>
                             <td style="width:20%">
@@ -265,137 +328,137 @@
                                     </table>
                                   </td>
                                 </tr>
-                            <?php foreach ($planesCol as $data2): if(!empty($data2['id_cliente'])): ?>
-                                <?php if ($data['id_pedido'] == $data2['id_pedido']): ?>
-                                    <?php if ($data2['cantidad_coleccion_plan']>0): ?>
-                                        <tr >
-                                            <td style="text-align:left;width:25%">
+                              <?php foreach ($planesCol as $data2): if(!empty($data2['id_cliente'])): ?>
+                                  <?php if ($data['id_pedido'] == $data2['id_pedido']): ?>
+                                      <?php if ($data2['cantidad_coleccion_plan']>0): ?>
+                                          <tr >
+                                              <td style="text-align:left;width:25%">
+                                                <?php 
+                                                  $colss = ($data2['cantidad_coleccion']*$data2['cantidad_coleccion_plan']);
+                                                  $acumColecciones += $colss;
+                                                  echo $colss." Colecciones ";
+                                                ?>
+                                              </td>
+                                              <td style="text-align:left;width:25%">
                                               <?php 
-                                                $colss = ($data2['cantidad_coleccion']*$data2['cantidad_coleccion_plan']);
-                                                $acumColecciones += $colss;
-                                                echo $colss." Colecciones ";
+                                                echo $data2['cantidad_coleccion_plan']." Plan ".$data2['nombre_plan']."<br>"; 
+                                                $acumPlanes[$data2['nombre_plan']] += $data2['cantidad_coleccion_plan'];
                                               ?>
-                                            </td>
-                                            <td style="text-align:left;width:25%">
-                                            <?php 
-                                              echo $data2['cantidad_coleccion_plan']." Plan ".$data2['nombre_plan']."<br>"; 
-                                              $acumPlanes[$data2['nombre_plan']] += $data2['cantidad_coleccion_plan'];
-                                            ?>
 
 
-                                            </td>
+                                              </td>
 
-                                            <td style="width:50%;">
-                                                <table class='' style='width:100%;background:none'> 
-                                                    <tr>
-                                                      <td style="text-align:left;">
-                                                      <?php 
-                                                        foreach ($premios_perdidos as $dataperdidos) {
-                                                          if(!empty($dataperdidos['id_premio_perdido'])){
-                                                            if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-                                                              // $perdidos = $dataperdidos['cantidad_premios_perdidos'];
-                                                              $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                                              for ($i=0; $i < count($acumPremios); $i++) { 
-                                                                if($acumPremios[$i]['plan'] == $data2['nombre_plan']){
-                                                                  $acumPremios[$i]['cantidad'] += $nuevoResult;
+                                              <td style="width:50%;">
+                                                  <table class='' style='width:100%;background:none'> 
+                                                      <tr>
+                                                        <td style="text-align:left;">
+                                                        <?php 
+                                                          foreach ($premios_perdidos as $dataperdidos) {
+                                                            if(!empty($dataperdidos['id_premio_perdido'])){
+                                                              if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+                                                                // $perdidos = $dataperdidos['cantidad_premios_perdidos'];
+                                                                $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                                for ($i=0; $i < count($acumPremios); $i++) { 
+                                                                  if($acumPremios[$i]['plan'] == $data2['nombre_plan']){
+                                                                    $acumPremios[$i]['cantidad'] += $nuevoResult;
+                                                                  }
                                                                 }
-                                                              }
-                                                              foreach ($premios_planes as $planstandard):
-                                                                if ($planstandard['id_plan_campana']):
-                                                                    if ($data2['nombre_plan'] == $planstandard['nombre_plan']):
-                                                                      if ($planstandard['tipo_premio']=="Primer"): ?>
-                                                                          <table style="width:100%;">
-                                                                              <tr>
-                                                                                <td style="text-align:left;">
-                                                                                  <?php echo $nuevoResult." ".$planstandard['producto']; ?>
-                                                                                </td>
-                                                                                <td style="text-align:right;">
-                                                                                  <?php 
-                                                                                    $porcentSelected = $data2['cantidad_coleccion_plan'];
-                                                                                    $porcentAlcanzado = $nuevoResult;
-                                                                                    $porcentResul = ($porcentAlcanzado/$porcentSelected)*100;
+                                                                foreach ($premios_planes as $planstandard):
+                                                                  if ($planstandard['id_plan_campana']):
+                                                                      if ($data2['nombre_plan'] == $planstandard['nombre_plan']):
+                                                                        if ($planstandard['tipo_premio']=="Primer"): ?>
+                                                                            <table style="width:100%;">
+                                                                                <tr>
+                                                                                  <td style="text-align:left;">
+                                                                                    <?php echo $nuevoResult." ".$planstandard['producto']; ?>
+                                                                                  </td>
+                                                                                  <td style="text-align:right;">
+                                                                                    <?php 
+                                                                                      $porcentSelected = $data2['cantidad_coleccion_plan'];
+                                                                                      $porcentAlcanzado = $nuevoResult;
+                                                                                      $porcentResul = ($porcentAlcanzado/$porcentSelected)*100;
 
-                                                                                    echo "<b>".number_format($porcentResul,2,',','.')."%</b>";
-                                                                                  ?>
-                                                                                </td>
-                                                                              </tr>
-                                                                            </table>
-                                                                        <?php 
+                                                                                      echo "<b>".number_format($porcentResul,2,',','.')."%</b>";
+                                                                                    ?>
+                                                                                  </td>
+                                                                                </tr>
+                                                                              </table>
+                                                                          <?php 
+                                                                        endif;
                                                                       endif;
-                                                                    endif;
-                                                                endif;
-                                                              endforeach;
-                                                              // echo $nuevoResult." Premios de ".$dataperdidos['valor'];
-                                                              // echo "<br>";
+                                                                  endif;
+                                                                endforeach;
+                                                                // echo $nuevoResult." Premios de ".$dataperdidos['valor'];
+                                                                // echo "<br>";
+                                                              }
                                                             }
                                                           }
-                                                        }
-                                                      ?>
+                                                        ?>
 
-                                                      </td>
-                                                    </tr>
-                                                    <?php foreach ($premioscol as $data3): if(!empty($data3['id_premio'])): ?>  
-                                                      <?php if ($data3['id_plan']==$data2['id_plan']): ?>
-                                                        <?php if ($data['id_pedido']==$data3['id_pedido']): ?>
-                                                          <?php if($data3['cantidad_premios_plan']>0): ?>
-                                                        <tr>
-                                                          <td style="text-align:left;">
-                                                            
-                                                          <?php 
-                                                            foreach ($premios_perdidos as $dataperdidos) {
-                                                                if(!empty($dataperdidos['id_premio_perdido'])){
-                                                                  if(($dataperdidos['id_tipo_coleccion'] == $data3['id_tipo_coleccion']) && ($dataperdidos['id_tppc'] == $data3['id_tppc'])){
-                                                                    // $perdidos = $dataperdidos['cantidad_premios_perdidos'];
-                                                                    $nuevoResult = $data3['cantidad_premios_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                                                    for ($i=0; $i < count($acumPremios); $i++) { 
-                                                                      if($acumPremios[$i]['plan'] == $data2['nombre_plan']){
-                                                                        for ($j=0; $j < count($acumPremios[$i]['premio']); $j++) { 
-                                                                          if($acumPremios[$i]['premio'][$j]['nombre']==$data3['nombre_premio']){
+                                                        </td>
+                                                      </tr>
+                                                      <?php foreach ($premioscol as $data3): if(!empty($data3['id_premio'])): ?>  
+                                                        <?php if ($data3['id_plan']==$data2['id_plan']): ?>
+                                                          <?php if ($data['id_pedido']==$data3['id_pedido']): ?>
+                                                            <?php if($data3['cantidad_premios_plan']>0): ?>
+                                                          <tr>
+                                                            <td style="text-align:left;">
+                                                              
+                                                            <?php 
+                                                              foreach ($premios_perdidos as $dataperdidos) {
+                                                                  if(!empty($dataperdidos['id_premio_perdido'])){
+                                                                    if(($dataperdidos['id_tipo_coleccion'] == $data3['id_tipo_coleccion']) && ($dataperdidos['id_tppc'] == $data3['id_tppc'])){
+                                                                      // $perdidos = $dataperdidos['cantidad_premios_perdidos'];
+                                                                      $nuevoResult = $data3['cantidad_premios_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                                      for ($i=0; $i < count($acumPremios); $i++) { 
+                                                                        if($acumPremios[$i]['plan'] == $data2['nombre_plan']){
+                                                                          for ($j=0; $j < count($acumPremios[$i]['premio']); $j++) { 
+                                                                            if($acumPremios[$i]['premio'][$j]['nombre']==$data3['nombre_premio']){
 
-                                                                            $acumPremios[$i]['premio'][$j]['cantidad'] += $nuevoResult;
+                                                                              $acumPremios[$i]['premio'][$j]['cantidad'] += $nuevoResult;
+                                                                            }
                                                                           }
                                                                         }
                                                                       }
-                                                                    }
-                                                                    ?>
-                                                                    <table style="width:100%;">
-                                                                        <tr>
-                                                                          <td style="text-align:left;">
-                                                                            <?php echo $nuevoResult." ".$data3['nombre_premio']; ?>
-                                                                          </td>
-                                                                          <td style="text-align:right;">
-                                                                            <?php
-                                                                              $porcentSelected = $data3['cantidad_premios_plan'];
-                                                                              $porcentAlcanzado = $nuevoResult;
-                                                                              $porcentResul = ($porcentAlcanzado/$porcentSelected)*100;
+                                                                      ?>
+                                                                      <table style="width:100%;">
+                                                                          <tr>
+                                                                            <td style="text-align:left;">
+                                                                              <?php echo $nuevoResult." ".$data3['nombre_premio']; ?>
+                                                                            </td>
+                                                                            <td style="text-align:right;">
+                                                                              <?php
+                                                                                $porcentSelected = $data3['cantidad_premios_plan'];
+                                                                                $porcentAlcanzado = $nuevoResult;
+                                                                                $porcentResul = ($porcentAlcanzado/$porcentSelected)*100;
 
-                                                                              echo "<b>".number_format($porcentResul,2,',','.')."%</b>";
-                                                                            ?>
-                                                                          </td>
-                                                                        </tr>
-                                                                      </table>
-                                                                    <?php
-                                                                    // echo $nuevoResult." ".$data3['nombre_premio'];
-                                                                    // echo "<br>";
+                                                                                echo "<b>".number_format($porcentResul,2,',','.')."%</b>";
+                                                                              ?>
+                                                                            </td>
+                                                                          </tr>
+                                                                        </table>
+                                                                      <?php
+                                                                      // echo $nuevoResult." ".$data3['nombre_premio'];
+                                                                      // echo "<br>";
+                                                                    }
                                                                   }
                                                                 }
-                                                              }
-                                                           ?>
-                                                          </td>
-                                                        </tr>
+                                                             ?>
+                                                            </td>
+                                                          </tr>
+                                                            <?php endif ?>
                                                           <?php endif ?>
                                                         <?php endif ?>
-                                                      <?php endif ?>
-                                                    <?php endif; endforeach; ?>
+                                                      <?php endif; endforeach; ?>
 
-                                                    
-                                                </table>
-                                                <!-- <br> -->
-                                            </td>
-                                        </tr>
-                                    <?php endif ?>
-                                <?php endif ?>
-                            <?php endif; endforeach; ?>
+                                                      
+                                                  </table>
+                                                  <!-- <br> -->
+                                              </td>
+                                          </tr>
+                                      <?php endif ?>
+                                  <?php endif ?>
+                              <?php endif; endforeach; ?>
                                 <tr>
                                   <td style="text-align:left;">
                                       <?php echo $data['cantidad_aprobado']." Colecciones<br>"; ?>
@@ -489,6 +552,9 @@
                                   }
                                 }
                                 if ($liddd == "1"): ?>
+
+
+
                                   <tr>
                                     <td></td>
                                     <td style="text-align:left;">Premios Canjeados</td>
@@ -525,12 +591,14 @@
                                   </tr>
                                 <?php endif; ?>
                               </table>
-                          </td>
-                        </tr>
+                            </td>
+                          </tr>
+                            <?php endif; ?>
                           <?php $num++; ?>
                         <?php endif; endforeach; ?>
 
 
+                                                
 
                         <tr style="background:#CCc">
                           <td></td>
@@ -696,22 +764,22 @@
                                   </td>
                                 </tr>
                                 <tr>
-                                  <td colspan="2" style="text-align:left;">
-                                    <table>
-                                      <tr>
-                                        <td style="text-align:left;width:50%;">
+                                  <!-- <td colspan="2" style="text-align:left;background:green"> -->
+                                    <!-- <table class=""> -->
+                                      <!-- <tr> -->
+                                        <td style="text-align:left;">
                                           Retos Solicitados
                                         </td>
-                                        <td style="text-align:left;width:50%;">
+                                        <td style="text-align:left;">
                                           <?php foreach ($acumRetos as $key): ?>
                                             <?php if ($key['cantidad']>0): ?>
                                             <?php echo $key['cantidad']." ".$key['nombre']."<br>"; ?>
                                             <?php endif; ?>
                                           <?php endforeach; ?>
                                         </td>
-                                      </tr>
-                                    </table>
-                                  </td>
+                                      <!-- </tr> -->
+                                    <!-- </table> -->
+                                  <!-- </td> -->
                                 </tr>
                                 <tr>
                                   <td style="text-align:left;">Premios Canjeados</td>
@@ -728,11 +796,31 @@
                                     }
                                     foreach ($canjeos as $canje){
                                       if (!empty($canje['id_cliente'])){
-                                        for ($i=0; $i < count($arrayt2); $i++) { 
-                                          if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
-                                            $arrayt2[$i]['cantidad']++;
+
+                                        $permitido2 = "0";
+                                        if($accesoBloqueo=="1"){
+                                          if(!empty($accesosEstructuras)){
+                                            foreach ($accesosEstructuras as $struct) {
+                                              if(!empty($struct['id_cliente'])){
+                                                if($struct['id_cliente']==$canje['id_cliente']){
+                                                  $permitido2 = "1";
+                                                }
+                                              }
+                                            }
                                           }
+                                        }else if($accesoBloqueo=="0"){
+                                          $permitido2 = "1";
                                         }
+                                        if($permitido2=="1"):
+
+                                          for ($i=0; $i < count($arrayt2); $i++) { 
+                                            if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
+                                              $arrayt2[$i]['cantidad']++;
+                                            }
+                                          }
+
+                                        endif;
+
                                       }
                                     }
                                     foreach ($arrayt2 as $arr) {

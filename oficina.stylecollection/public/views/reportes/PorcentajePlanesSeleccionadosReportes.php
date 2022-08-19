@@ -117,6 +117,23 @@
             <div class="box-body"> 
               <div class="row">
                 <div class="col-xs-12">
+                    
+                    <div class="row">
+                      <div class="col-xs-10 col-xs-offset-1">
+                        <h4 style="font-size:1.7em;margin:0;padding:0;">
+                          <b>
+                          Pedido 
+                          <?php if($despachos[0]['numero_despacho']!="1"): echo $despachos[0]['numero_despacho']; endif; ?>
+                           de Campana 
+                            <?=$despachos[0]['numero_campana']."/".$despachos[0]['anio_campana']; ?>
+                          -
+                            <?=$despachos[0]['nombre_campana']; ?>
+                          </b>
+                        </h3>
+                      </div>
+                    </div>
+                    <br>
+
                     <div class="row">
                       <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-6">
                           <div class="input-group">

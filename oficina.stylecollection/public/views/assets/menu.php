@@ -938,7 +938,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
               <!--  EXISTENCIAS   -->
 <!-- ======================================================================================================================= -->
 
-        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor2"): ?>
+        <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2"): ?>
 
                             <?php if($url=="ConfigNota"){ ?>
         <li class="active treeview">
@@ -953,11 +953,14 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           </a>
 
           <ul class="treeview-menu">
+              <?php if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor2"): ?>
+                
                             <?php if($url=="ConfigNota" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ConfigNota&action=Registrar"><i class="fa fa-tag"></i> Registrar Config. de Nota</a></li>
                             <?php }else{ ?>
             <li class=""><a href="?<?php echo $menu ?>&route=ConfigNota&action=Registrar"><i class="fa fa-tag"></i> Registrar Config. de Nota</a></li>
                             <?php } ?>
+              <?php endif; ?>
 
                             <?php if($url=="ConfigNota" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ConfigNota"><i class="fa fa-tag"></i> Ver Config. de Nota</a></li>
@@ -1187,7 +1190,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
           </a>
           <ul class="treeview-menu">
 
-            <?php //if (Count($desp)<2): ?>
+            <?php if (Count($desp)<2): ?>
                     <?php if($amDespachosR==1): ?>
                             <?php if($url=="Despachos" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=Despachos&action=Registrar"><i class="fa fa-tag"></i> Registrar Pedidos</a></li>
@@ -1195,7 +1198,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
             <li class=""><a href="?<?php echo $menu ?>&route=Despachos&action=Registrar"><i class="fa fa-tag"></i> Registrar Pedidos</a></li>
                             <?php } ?>
                     <?php endif; ?>
-            <?php //endif; ?>
+            <?php endif; ?>
 
 
 

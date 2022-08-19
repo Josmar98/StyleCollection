@@ -34,7 +34,33 @@
       <div class="row">
 
 
+        <?php
+          $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+          $accesoBloqueo = "0";
+          $superAnalistaBloqueo="1";
+          $analistaBloqueo="1";
+          foreach ($configuraciones as $config) {
+            if(!empty($config['id_configuracion'])){
+              if($config['clausula']=='Analistabloqueolideres'){
+                $analistaBloqueo = $config['valor'];
+              }
+              if($config['clausula']=='Superanalistabloqueolideres'){
+                $superAnalistaBloqueo = $config['valor'];
+              }
+            }
+          }
+          if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+          if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
+          if($accesoBloqueo=="0"){
+            // echo "Acceso Abierto";
+          }
+          if($accesoBloqueo=="1"){
+            // echo "Acceso Restringido";
+            $accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+          }
+
+        ?>
 
 
 
@@ -118,6 +144,24 @@
             <div class="box-body"> 
               <div class="row">
                 <div class="col-xs-12">
+
+                    <div class="row">
+                      <div class="col-xs-10 col-xs-offset-1">
+                        <h4 style="font-size:1.7em;margin:0;padding:0;">
+                          <b>
+                          Pedido 
+                          <?php if($despachos[0]['numero_despacho']!="1"): echo $despachos[0]['numero_despacho']; endif; ?>
+                           de Campana 
+                            <?=$despachos[0]['numero_campana']."/".$despachos[0]['anio_campana']; ?>
+                          -
+                            <?=$despachos[0]['nombre_campana']; ?>
+                          </b>
+                        </h3>
+                      </div>
+                    </div>
+                    <br>
+
+                    
                     <div class="row">
                       <div class="col-xs-offset-1 col-xs-10 col-sm-offset-0 col-sm-6">
                           <div class="input-group">

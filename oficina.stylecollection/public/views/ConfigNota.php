@@ -66,12 +66,15 @@
                     </span>
                   </td>
                   <td style="width:10%">
+                      
+                    <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo"): ?>
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_config_nota'] ?>">
                             <span class="fa fa-wrench"></span>
                           </button>
                           <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu?>&route=<?php echo $url; ?>&id=<?php echo $data['id_config_nota'] ?>&permission=1">
                             <span class="fa fa-trash"></span>
                           </button>
+                    <?php endif; ?>
                   </td>
                   <td style="width:20%">
                     <span class="contenido2">

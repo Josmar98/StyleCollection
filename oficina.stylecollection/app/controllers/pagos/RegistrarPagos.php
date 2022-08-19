@@ -14,7 +14,7 @@
 		$estado_campana = "1";
 	}
 if($estado_campana=="1"){
-	
+		$marcaPago = $_SESSION['cuenta']['cedula']." ".$_SESSION['cuenta']['primer_nombre']." ".$_SESSION['cuenta']['primer_apellido'];
 		if(!empty($_POST['validarData'])){
 			$id_liderazgo = $_POST['id_liderazgo'];
 			$query = "SELECT * FROM liderazgos_campana WHERE id_liderazgo = $id_liderazgo and id_campana = $id_campana and estatus = 1";
@@ -281,7 +281,7 @@ if($estado_campana=="1"){
 					// echo "Todo OK<br><br>";
 					if($id_banco==""){
 						// echo "Si depende de un banco sera Automatico";
-						$query = "INSERT INTO pagos (id_pago, id_pedido, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 1)";
+						$query = "INSERT INTO pagos (id_pago, id_pedido, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, marca, estatus) VALUES ('{$pagoID}', $id_pedido, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', '{$marca}', 1)";
 
 					}else{
 						if($referencia!=""){
@@ -290,7 +290,7 @@ if($estado_campana=="1"){
 							// if($banco['nombre_banco']=="Venezuela"){
 							// 	$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$referencia', '$monto', '$tasa', '$eqv', 1)";
 							// }else{
-								$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estado, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$referencia', '$monto', '$tasa', '$eqv', 'Abonado', 1)";
+								$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estado, marca, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$referencia', '$monto', '$tasa', '$eqv', 'Abonado', '{$marca}', 1)";
 								// if(!empty($execution['movimiento']) && $execution['movimiento']==true){
 								// 	$id_movimiento = $buscar[0]['id_movimiento'];
 								// 	// echo "Movimiento ID: ".$id_movimiento;
@@ -303,7 +303,7 @@ if($estado_campana=="1"){
 							// if($banco['nombre_banco']=="Venezuela"){
 							// 	$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 1)";
 							// }else{
-								$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estado, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 'Abonado', 1)";
+								$query = "INSERT INTO pagos (id_pago, id_pedido, id_banco, fecha_pago, fecha_registro, forma_pago, tipo_pago, referencia_pago, monto_pago, tasa_pago, equivalente_pago, estado, marca, estatus) VALUES ('{$pagoID}', $id_pedido, $id_banco, '$fechaPago', '".date('Y-m-d')."', '$forma_pago', '$tipoPago', '$serial', '$monto', '$tasa', '$eqv', 'Abonado', '{$marca}', 1)";
 								// if(!empty($execution['movimiento']) && $execution['movimiento']==true){
 								// 	$id_movimiento = $buscar[0]['id_movimiento'];
 								// 	// echo "Movimiento ID: ".$id_movimiento;

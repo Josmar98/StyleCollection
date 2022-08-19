@@ -58,6 +58,32 @@ if($amReportesC == 1){
 	$numeroCampana = $campana['numero_campana'];
 	$anioCampana = $campana['anio_campana'];
 
+
+	$configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+		$accesoBloqueo = "0";
+		$superAnalistaBloqueo="1";
+		$analistaBloqueo="1";
+		foreach ($configuraciones as $config) {
+			if(!empty($config['id_configuracion'])){
+				if($config['clausula']=='Analistabloqueolideres'){
+					$analistaBloqueo = $config['valor'];
+				}
+				if($config['clausula']=='Superanalistabloqueolideres'){
+					$superAnalistaBloqueo = $config['valor'];
+				}
+			}
+		}
+		if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
+		if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
+		if($accesoBloqueo=="0"){
+			// echo "Acceso Abierto";
+		}
+		if($accesoBloqueo=="1"){
+			// echo "Acceso Restringido";
+			$accesosEstructuras = $lider->consultarQuery("SELECT * FROM estructuras WHERE analista = {$_SESSION['id_usuario']}");
+		}
+
+
 	$var = dirname(__DIR__, 3);
 	$urlCss1 = $var . '/public/vendor/bower_components/bootstrap/dist/css/';
 	$urlCss2 = $var . '/public/assets/css/';
@@ -147,6 +173,25 @@ if($amReportesC == 1){
                 
 							$num = 1;
 							foreach ($pedidos as $data): if(!empty($data['id_pedido'])):
+								$permitido = "0";
+								if($accesoBloqueo=="1"){
+									if(!empty($accesosEstructuras)){
+										foreach ($accesosEstructuras as $struct) {
+											if(!empty($struct['id_cliente'])){
+												if($struct['id_cliente']==$data['id_cliente']){
+													$permitido = "1";
+												}
+											}
+										}
+									}
+								}else if($accesoBloqueo=="0"){
+									$permitido = "1";
+								}
+
+								if($permitido=="1"):
+
+
+
 						$info .= "<tr class='text-center'>
 								<td style='width:8%;'>".$num."</td>
 								<td style='width:22%;'>
@@ -318,7 +363,7 @@ if($amReportesC == 1){
 	                                      endif;
 	                                  endif;
 	                              endif; endforeach;
-	                       $info .= "	<tr>
+	                       			$info .= "	<tr>
 		                                    <td style='text-align:left;'>
 		                                        ".$data['cantidad_aprobado']." Colecciones<br>
 		                                    </td>
@@ -438,6 +483,9 @@ if($amReportesC == 1){
 	                       			</table>
 	                       		</td>
 							</tr>";
+
+								endif;
+
 								$num++;
 						endif; endforeach;
 
@@ -620,11 +668,32 @@ if($amReportesC == 1){
 			                              		}
 			                              		foreach ($canjeos as $canje){
 			                              			if (!empty($canje['id_cliente'])){
-			                              				for ($i=0; $i < count($arrayt2); $i++) { 
-			                              					if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
-			                              						$arrayt2[$i]['cantidad']++;
-			                              					}
-			                              				}
+
+			                              				$permitido2 = "0";
+														if($accesoBloqueo=="1"){
+															if(!empty($accesosEstructuras)){
+																foreach ($accesosEstructuras as $struct) {
+																	if(!empty($struct['id_cliente'])){
+																		if($struct['id_cliente']==$canje['id_cliente']){
+																			$permitido2 = "1";
+																		}
+																	}
+																}
+															}
+														}else if($accesoBloqueo=="0"){
+															$permitido2 = "1";
+														}
+
+														if($permitido2=="1"):
+
+				                              				for ($i=0; $i < count($arrayt2); $i++) { 
+				                              					if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
+				                              						$arrayt2[$i]['cantidad']++;
+				                              					}
+				                              				}
+
+			                              				endif;
+
 			                              			}
 			                              		}
 			                              		foreach ($arrayt2 as $arr) {

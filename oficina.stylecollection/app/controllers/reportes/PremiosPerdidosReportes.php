@@ -18,6 +18,8 @@ if($amReportesC == 1){
       $campana = $campanas[0];
       $id_campana = $campana['id_campana'];
       // print_r($campanas);
+      
+      $despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho}");
 
       if(!empty($_GET['admin']) && !empty($_GET['lider']) && ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista")){
         $id = $_GET['lider'];

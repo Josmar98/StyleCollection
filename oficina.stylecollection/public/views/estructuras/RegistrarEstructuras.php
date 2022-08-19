@@ -107,6 +107,7 @@
                       </tr>
                     </thead>
                     <tbody>
+                      <?php $num = 1; ?>
                   <?php foreach ($clientes as $data): ?>
                     <?php if (!empty($data['id_cliente'])): ?>
                         <?php $opcion = "0"; ?>
@@ -123,7 +124,7 @@
                             disabled="disabled"
                           <?php endif ?>>
                             <span class="labellider">
-                            <?=number_format($data['cedula'],0,'','.')." | ".$data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']; ?>
+                            <?=$num."). ".number_format($data['cedula'],0,'','.')." | ".$data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']; ?>
                             </span>
                           </label>
                         </td>
@@ -141,6 +142,8 @@
                         
                         </td>
                       </tr>
+                      
+                      <?php $num++; ?>
                     <?php endif ?>
                   <?php endforeach ?>
                     </tbody>

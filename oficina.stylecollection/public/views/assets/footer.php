@@ -8,7 +8,7 @@
 		$globito .= "C".$_GET['n']."/".$newY;
 		
 ?>
-	<span class="btn enviar2" style="position:fixed;bottom:2vh;right:0;z-index:1000000;width:130px;">
+	<span class="btn enviar2" style="position:fixed;bottom:1vh;right:0;z-index:1000000;width:130px;">
 		<?=$globito?>
 	</span>
 			

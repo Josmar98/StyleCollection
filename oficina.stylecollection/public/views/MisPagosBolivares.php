@@ -71,7 +71,7 @@
           <div class="box">
             <?php if($estado_campana=="1"){ ?>
               <?php if ($optHabilitarPagos=="1" && $registropagosboton=="1"): ?>
-                <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:2%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
+                <a href="?<?=$menu?>&route=Pagos&action=Registrar" style="position:fixed;bottom:7%;right:2%;z-index:300;" class="btn enviar2"><span class="fa fa-arrow-up"></span> <span class="hidden-xs hidden-sm"><u>Registrar Pagos</u></span></a>
               <?php endif; ?>
             <?php } ?>
             <div class="box-header">

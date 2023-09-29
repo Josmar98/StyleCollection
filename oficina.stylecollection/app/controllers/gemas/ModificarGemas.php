@@ -1,0 +1,163 @@
+<?php 
+
+
+		  $id_campana = $_GET['campaing'];
+		  $numero_campana = $_GET['n'];
+		  $anio_campana = $_GET['y'];
+			$id_despacho = $_GET['dpid'];
+			$num_despacho = $_GET['dp'];
+			$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
+		$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+    $estado_campana = $estado_campana2[0]['estado_campana'];
+    if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
+		$estado_campana = "1";
+	}
+if($estado_campana=="1"){
+
+		if(!empty($_POST['clientes']) && !empty($_POST['cantidad_correspondiente']) && !empty($_POST['cantidad_gemas'])){
+			// print_r($_POST);
+			$id_cliente = $_POST['lider'];
+			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_despacho = {$id_despacho} and id_cliente = {$id_cliente}");
+			$pedido = $pedidos[0];
+			$id_pedido = $pedido['id_pedido'];
+
+			$id_configgema = $_POST['tipo'];
+			$clientesHijos = $_POST['clientes'];
+			$cantidad_unidades = count($clientesHijos);
+			$cantidad_correspondiente = $_POST['cantidad_correspondiente'];
+			$gemas = $_POST['cantidad_gemas'];
+			$estado = ucwords(mb_strtolower("Disponible"));
+			// echo "<br>-******-<br>";
+			// echo "1"."<br>";
+			// echo $id_campana."<br>";
+			// echo $id_pedido."<br>";
+			// echo $id_cliente."<br>";
+			// echo $id_configgema."<br>";
+			// echo $cantidad_unidades."<br>";
+			// echo $cantidad_correspondiente."<br>";
+			// echo $gemas."<br>";
+			// echo "Disponible"."<br>";
+			// echo "1"."<br>";
+
+			$buscar = $lider->consultarQuery("SELECT * FROM gemas WHERE id_campana = {$id_campana} and id_cliente = {$id_cliente} and id_pedido = {$id_pedido} and id_configgema = {$id_configgema}");
+			if(count($buscar)>1){
+				$query = "UPDATE gemas SET id_campana={$id_campana}, id_pedido={$id_pedido}, id_cliente={$id_cliente}, id_configgema={$id_configgema}, cantidad_unidades='{$cantidad_unidades}', cantidad_configuracion='{$cantidad_correspondiente}', cantidad_gemas='{$gemas}', activas='{$gemas}', inactivas='0', estado='{$estado}', estatus=1 WHERE id_gema = {$id}";
+				$exec = $lider->modificar($query);
+				if($exec['ejecucion']==true){
+					$query3 = "DELETE FROM gemas_clientes WHERE id_gema = {$id}";
+					$delete = $lider->eliminar($query3);
+					if($delete['ejecucion']==true){
+						foreach ($clientesHijos as $hijos) {
+							$query2 = "INSERT INTO gemas_clientes (id_gema_cliente, id_gema, id_cliente, estatus) VALUES (DEFAULT, {$id}, {$hijos}, 1)";
+							$exec2 = $lider->registrar($query2, "gemas_clientes", "id_gema_cliente");
+						}
+						if($exec2['ejecucion']==true){
+							$response = "1";
+							if(!empty($modulo) && !empty($accion)){
+								$fecha = date('Y-m-d');
+								$hora = date('H:i:a');
+								$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Gemas', 'Editar', '{$fecha}', '{$hora}')";
+								$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+							}
+						}else{
+							$response = "2";	
+						}
+					}else{
+						$response = "2";
+					}
+				}else{
+					$response = "2";
+				}
+			}else{
+				$response = "9";
+			}
+
+
+			$gemas = $lider->consultarQuery("SELECT * FROM configgemas, clientes, campanas, gemas, pedidos WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and clientes.id_cliente = gemas.id_cliente and gemas.id_campana = {$id_campana} and gemas.id_pedido = pedidos.id_pedido and gemas.estatus = 1 and pedidos.id_despacho = {$id_despacho}");
+			
+			// $lideresHijos = $lider->consultarQuery("SELECT * FROM clientes, gemas_clientes, gemas WHERE clientes.id_cliente = gemas_clientes.id_cliente and gemas_clientes.estatus = 1 and gemas_clientes.id_gema = gemas.id_gema and gemas.id_campana = {$id_campana} ");
+			$lideresHijos = $lider->consultarQuery("SELECT * FROM gemas_clientes WHERE estatus = 1");
+			if(Count($gemas)>1){
+				$gema = $gemas[0];
+				$id_cliente = $gema['id_cliente'];
+				$id_configgema = $gema['id_configgema'];
+
+
+				$configuracion = $lider->consultarQuery("SELECT * FROM configgemas WHERE id_configgema = {$id_configgema}");
+				$configuracion = $configuracion[0];
+				
+				$nuevosClientes = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_lider = $id_cliente");
+
+				if(!empty($action)){
+					if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
+						require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
+					}else{
+					    require_once 'public/views/error404.php';
+					}
+				}else{
+					if (is_file('public/views/'.$url.'.php')) {
+						require_once 'public/views/'.$url.'.php';
+					}else{
+					    require_once 'public/views/error404.php';
+					}
+				}	
+			}else{
+				require_once 'public/views/error404.php';				
+			}
+		}
+
+		if(empty($_POST)){
+
+			$gemas = $lider->consultarQuery("SELECT * FROM configgemas, clientes, campanas, gemas, pedidos WHERE campanas.id_campana = gemas.id_campana and configgemas.id_configgema = gemas.id_configgema and clientes.id_cliente = gemas.id_cliente and gemas.id_campana = {$id_campana} and gemas.id_pedido = pedidos.id_pedido and gemas.estatus = 1 and pedidos.id_despacho = {$id_despacho}");
+
+			// $lideresHijos = $lider->consultarQuery("SELECT * FROM clientes, gemas_clientes, gemas WHERE clientes.id_cliente = gemas_clientes.id_cliente and gemas_clientes.estatus = 1 and gemas_clientes.id_gema = gemas.id_gema and gemas.id_campana = {$id_campana} ");
+			$lideresHijos = $lider->consultarQuery("SELECT * FROM gemas_clientes WHERE estatus = 1");
+
+			if(Count($gemas)>1){
+				$gema = $gemas[0];
+				$id_cliente = $gema['id_cliente'];
+				$id_configgema = $gema['id_configgema'];
+
+
+				$configuracion = $lider->consultarQuery("SELECT * FROM configgemas WHERE id_configgema = {$id_configgema}");
+				$configuracion = $configuracion[0];
+				
+				$nuevosClientes = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_lider = $id_cliente");
+
+				if(!empty($action)){
+					if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
+						require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
+					}else{
+					    require_once 'public/views/error404.php';
+					}
+				}else{
+					if (is_file('public/views/'.$url.'.php')) {
+						require_once 'public/views/'.$url.'.php';
+					}else{
+					    require_once 'public/views/error404.php';
+					}
+				}	
+			}else{
+				require_once 'public/views/error404.php';				
+			}
+			
+
+
+		}
+function consultarEstructura($id_c, $lider){
+	$id_despacho = $_SESSION['id_despacho'];
+	$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_lider = $id_c");
+	
+	if(Count($lideres)>1){
+		foreach ($lideres as $lid) {
+			if(!empty($lid['id_cliente'])){
+			$_SESSION['ids_general_estructura'][] = $lid;
+			consultarEstructura($lid['id_cliente'], $lider);
+			}
+		}
+	}
+}
+}else{
+   require_once 'public/views/error404.php';
+}
+?>

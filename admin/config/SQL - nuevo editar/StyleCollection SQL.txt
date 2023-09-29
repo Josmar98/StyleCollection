@@ -1,0 +1,339 @@
+CREATE TABLE IF NOT EXISTS campanas(
+	id_campana SERIAL NOT NULL, 
+	nombre_campana VARCHAR(100),
+	anio_campana VARCHAR(10),
+	numero_campana INTEGER,
+	visibilidad INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_campana)
+);
+
+
+CREATE TABLE IF NOT EXISTS fragancias(
+	id_fragancia SERIAL NOT NULL,
+	fragancia VARCHAR(50),
+	estatus INTEGER,
+	PRIMARY KEY(id_fragancia)
+);
+
+CREATE TABLE IF NOT EXISTS productos(
+	id_producto SERIAL NOT NULL,
+	producto VARCHAR(150),
+	descripcion VARCHAR(255),
+	cantidad VARCHAR(20),
+	estatus INTEGER,
+	PRIMARY KEY(id_producto)
+);
+
+CREATE TABLE IF NOT EXISTS productos_fragancias(
+	id_productos_fragancias SERIAL NOT NULL,
+	id_producto INTEGER,
+	id_fragancia INTEGER,
+	PRIMARY KEY(id_productos_fragancias)
+);
+
+
+CREATE TABLE IF NOT EXISTS liderazgos(
+	id_liderazgo SERIAL NOT NULL,
+	nombre_liderazgo VARCHAR(50), 
+	color_liderazgo VARCHAR(20),
+	estatus INTEGER,
+	PRIMARY KEY(id_liderazgo)	
+);
+
+CREATE TABLE IF NOT EXISTS liderazgos_campana(
+	id_lc SERIAL NOT NULL,
+	id_liderazgo INTEGER,
+	id_campana INTEGER,
+	minima_cantidad INTEGER,
+	maxima_cantidad INTEGER,
+	descuento_coleccion FLOAT,
+	total_descuento FLOAT,
+	estatus INTEGER,
+	PRIMARY KEY(id_lc)
+);
+
+
+
+
+CREATE TABLE IF NOT EXISTS clientes(
+	id_cliente SERIAL NOT NULL,
+	id_lc INTEGER,
+	primer_nombre VARCHAR(50),
+	segundo_nombre VARCHAR(50),
+	primer_apellido VARCHAR(50),
+	segundo_apellido VARCHAR(50),
+	cod_cedula VARCHAR(5),
+	cedula VARCHAR(20),
+	sexo VARCHAR(25),
+	fecha_nacimiento date,
+	telefono VARCHAR(25),
+	correo VARCHAR(100),
+	cod_rif VARCHAR(5),
+	rif VARCHAR(25),
+	direccion VARCHAR(255),
+	id_lider INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_cliente)
+);
+
+
+CREATE TABLE IF NOT EXISTS despachos(
+	id_despacho SERIAL NOT NULL,
+	id_campana INTEGER,
+	numero_despacho INTEGER,
+	fecha_inicial date,
+	fecha_primera date,
+	fecha_segunda date,
+	limite_pedido date,
+	limite_seleccion_plan date,
+	precio_coleccion VARCHAR(10),
+	primer_precio_coleccion VARCHAR(10),
+	segundo_precio_coleccion VARCHAR(10),
+	estatus INTEGER,
+	PRIMARY KEY(id_despacho)
+);
+
+
+CREATE TABLE IF NOT EXISTS colecciones(
+	id_coleccion SERIAL NOT NULL,
+	id_despacho INTEGER,
+	id_producto INTEGER,
+	cantidad_productos INTEGER,
+	precio_producto FLOAT,
+	estatus INTEGER,
+	PRIMARY KEY(id_coleccion)
+);
+
+
+CREATE TABLE IF NOT EXISTS planes(
+	id_plan SERIAL NOT NULL,
+	nombre_plan VARCHAR(25), 
+	cantidad_coleccion INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_plan)
+);
+
+CREATE TABLE IF NOT EXISTS planes_campana(
+	id_plan_campana SERIAL NOT NULL,
+	id_campana INTEGER,
+	id_plan INTEGER,
+	descuento_directo VARCHAR(5),
+	primer_descuento VARCHAR(5),
+	segundo_descuento VARCHAR(5),
+	estatus INTEGER,
+	PRIMARY KEY(id_plan_campana)
+);
+
+
+CREATE TABLE IF NOT EXISTS premios(
+	id_premio SERIAL NOT NULL,
+	nombre_premio VARCHAR(150),
+	precio_premio VARCHAR(20),
+	descripcion_premio VARCHAR(255),
+	estatus INTEGER,
+	PRIMARY KEY(id_premio)
+);
+
+
+CREATE TABLE IF NOT EXISTS premios_planes_campana(
+	id_ppc SERIAL NOT NULL,
+	id_plan_campana INTEGER,
+	tipo_premio VARCHAR(50),
+	PRIMARY KEY(id_ppc)
+);
+
+CREATE TABLE IF NOT EXISTS tipos_premios_planes_campana(
+	id_tppc SERIAL NOT NULL,
+	id_ppc INTEGER,
+	id_premio INTEGER,
+	tipo_premio_producto VARCHAR(50),
+	PRIMARY KEY(id_tppc)
+);
+
+
+CREATE TABLE IF NOT EXISTS permisos(
+	id_permiso SERIAL NOT NULL,
+	nombre_permiso VARCHAR(50),
+	estatus INTEGER,
+	PRIMARY KEY(id_permiso)
+);
+
+
+CREATE TABLE IF NOT EXISTS modulos(
+	id_modulo SERIAL NOT NULL,
+	nombre_modulo VARCHAR(50),
+	estatus INTEGER,
+	PRIMARY KEY(id_modulo)
+);
+
+CREATE TABLE IF NOT EXISTS roles(
+	id_rol SERIAL NOT NULL,
+	nombre_rol VARCHAR(50),
+	estatus INTEGER,
+	PRIMARY KEY(id_rol)
+);
+
+CREATE TABLE IF NOT EXISTS accesos(
+	id_acceso SERIAL NOT NULL,
+	id_rol INTEGER,
+	id_permiso INTEGER,
+	id_modulo INTEGER,
+	PRIMARY KEY(id_acceso)
+);
+
+CREATE TABLE IF NOT EXISTS usuarios(
+	id_usuario SERIAL NOT NULL,
+	id_rol INTEGER,
+	id_cliente INTEGER,
+	nombre_usuario VARCHAR(100),
+	password VARCHAR(150),
+	fotoPerfil VARCHAR(150),
+	descripFotoPerfil VARCHAR(255),
+	fotoPortada VARCHAR(150),
+	descripFotoPortada VARCHAR(255),
+	estatus INTEGER,
+	PRIMARY KEY(id_usuario)
+);
+
+
+CREATE TABLE IF NOT EXISTS bancos(
+	id_banco SERIAL NOT NULL,
+	nombre_banco VARCHAR(50),
+	codigo_banco VARCHAR(6),
+	tipo_cuenta VARCHAR(15),
+	numero_cuenta VARCHAR(30),
+	nombre_propietario VARCHAR(100),
+	cedula_cuenta VARCHAR(15),
+	telefono_cuenta VARCHAR(20),
+	estatus INTEGER,
+	PRIMARY KEY(id_banco)
+);
+
+CREATE TABLE IF NOT EXISTS movimientos(
+	id_movimiento SERIAL NOT NULL,
+	id_banco INTEGER,
+	num_movimiento VARCHAR(50),
+	fecha_movimiento date,
+	monto VARCHAR(30),
+	estatus INTEGER,
+	PRIMARY KEY(id_movimiento)
+);
+
+CREATE TABLE IF NOT EXISTS tasa(
+	id_tasa SERIAL NOT NULL,
+	monto_tasa FLOAT,
+	fecha_tasa date,
+	estatus INTEGER,
+	PRIMARY KEY(id_tasa)
+);
+
+
+CREATE TABLE IF NOT EXISTS pedidos(
+	id_pedido SERIAL NOT NULL,
+	id_cliente INTEGER,
+	id_despacho INTEGER,
+	cantidad_pedido INTEGER,
+	fecha_pedido VARCHAR(15),
+	hora_pedido VARCHAR(15),
+	cantidad_aprobado INTEGER,
+	fecha_aprobado VARCHAR(15),
+	hora_aprobado VARCHAR(15),
+	cantidad_total INTEGER,
+	visto_admin INTEGER,
+	visto_cliente INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_pedido)
+);
+
+
+CREATE TABLE IF NOT EXISTS factura_despacho(
+	id_factura_despacho SERIAL NOT NULL,
+	id_pedido INTEGER,
+	numero_factura INTEGER,
+	tipo_factura VARCHAR(10),
+	fecha_emision VARCHAR(10),
+	fecha_vencimiento VARCHAR(10),
+	estatus INTEGER,
+	PRIMARY KEY(id_factura_despacho)
+);
+
+CREATE TABLE IF NOT EXISTS tipos_colecciones(
+	id_tipo_coleccion SERIAL NOT NULL,
+	id_plan_campana INTEGER,
+	id_pedido INTEGER,
+	cantidad_coleccion_plan INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_tipo_coleccion)
+);
+
+CREATE TABLE IF NOT EXISTS premio_coleccion(
+	id_premio_coleccion SERIAL NOT NULL,
+	id_tipo_coleccion INTEGER,
+	id_tppc INTEGER,
+	cantidad_premios_plan INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_premio_coleccion)
+);
+
+
+CREATE TABLE IF NOT EXISTS existencias(
+	id_existencia SERIAL NOT NULL,
+	id_premio INTEGER,
+	id_campana INTEGER,
+	cantidad_existencia INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY(id_existencia)
+);
+
+
+CREATE TABLE IF NOT EXISTS desperfectos(
+	id_desperfecto SERIAL NOT NULL,
+	id_campana INTEGER,
+	fecha_inicio_desperfecto VARCHAR(15),
+	fecha_fin_desperfecto VARCHAR(15),
+	estatus INTEGER,
+	PRIMARY KEY(id_desperfecto)
+);
+
+CREATE TABLE IF NOT EXISTS notificar_desperfectos(
+	id_notificar_desperfecto SERIAL NOT NULL,
+	id_desperfecto INTEGER,
+	id_pedido INTEGER,
+	id_producto INTEGER,
+	cantidad_desperfectos INTEGER,
+	estatus INTEGER,
+	PRIMARY KEY (id_notificar_desperfecto)
+);
+
+
+
+###=============================================================================================================
+###==========  HASTA AQUI VA DE FUNCIONALIDAD  =============================================
+###=============================================================================================================
+
+# Tipo_pago = Transferencia / pago movil / Divisas
+# numero_referencia = Numero de Movimiento / Referencia / Serial de Divisa
+# Monto = en Bolivares
+# Divisas= En Dolares
+
+CREATE TABLE IF NOT EXISTS pagos(
+	id_pago SERIAL NOT NULL,
+	id_tasa INTEGER,
+	id_banco INTEGER,
+	fecha_pago VARCHAR(10),
+	hora_pago VARCHAR(10),
+	tipo_pago VARCHAR(50),
+	cedula_pago VARCHAR(20),
+	telefono_pago VARCHAR(25),
+	numero_referencia VARCHAR(50),
+	monto VARCHAR(50),
+	equivalente VARCHAR(50),
+	estatus INTEGER,
+	PRIMARY KEY(id_pago)
+);
+
+
+
+
+

@@ -1,0 +1,83 @@
+*{
+	font-family: 'Arial', sans-serif !important;
+	font-size: 1.01em;
+}
+.serif{
+	font-family: 'Arial', serif !important;
+}
+.hr-box{
+	padding:0;margin:3px;
+}
+.numeroFactura{
+	position:absolute;
+	right:30%;
+	}
+.fecha{
+	float:right;
+}
+.descripcion{
+	font-size:1.5em;
+	text-align: center;
+}
+.tabled{
+	width:100%;
+	margin-top:1%;
+}
+.content-table{
+}
+.titulo-table{
+}
+.celtitle2{
+	text-align:left !important;
+	/*width:20%;*/
+}
+.celtitle2R{
+	text-align:right; !important;
+	/*width:20%;*/
+}
+.celcontent{
+	text-align:left !important;
+	/*width:25%;*/
+}
+.celcontentR{
+	text-align:right !important;
+	/*width:25%;*/
+}
+.table1 tr, .table1 td, .table2 tr, .table2 td{
+	padding:0;
+	margin:0;
+}
+.marginleft{
+	margin-left:100px;
+}
+.numFact{
+	font-size:1.5em;
+}
+.table1{
+	width:100%;
+}
+.table1 .celtitle2{
+	text-align:left !important;
+	width:25%;
+}
+.table1 .celcontent{
+	text-align:left !important;
+	width:25%;
+}
+.celtitleR{
+	text-align:right;
+}
+.celtitleL{
+	text-align:left;
+
+}
+.dates{
+	text-align:left;
+}
+.box-content-final{
+	display:inline-block;
+	position:absolute;
+	right:2%;
+	top:30em;
+	width:35%; 
+}

@@ -1,0 +1,283 @@
+CREATE TABLE calendario(
+	id_calendario SERIAL NOT NULL,
+	fecha_calendario VARCHAR(15),
+	diaSemana VARCHAR(15),
+	year_calendario VARCHAR(10),
+	mes_calendario VARCHAR(5),
+	dia_calendario VARCHAR(5),
+	PRIMARY KEY(id_calendario)
+);
+
+CREATE TABLE festividades(
+	id_festividad SERIAL NOT NULL,
+	fecha_festividad VARCHAR(15),
+	year_festividad VARCHAR(10),
+	tipo_festividad VARCHAR(20),
+	nombre_festividad VARCHAR(128),
+	estatus INT,
+	PRIMARY KEY(id_festividad)
+);
+
+CREATE TABLE pagos (
+	id_pago SERIAL NOT NULL,
+	id_pedido int null,
+    id_banco int null,
+    fecha_pago VARCHAR(15),
+    fecha_registro VARCHAR(15),
+    forma_pago VARCHAR(50),
+    tipo_pago VARCHAR(25),
+    referencia_pago VARCHAR(50) null,
+    monto_pago VARCHAR(30) null,
+    tasa_pago VARCHAR(50) null,
+    equivalente_pago VARCHAR(30) null,
+    firma VARCHAR(30) null,
+    leyenda VARCHAR(512) null,
+    observacion VARCHAR(512) null,
+    estado VARCHAR(30) null,
+    estatus int,
+    PRIMARY KEY(id_pago)
+);
+
+///////
+
+///////
+///////
+///////
+///////
+///////
+
+
+CREATE TABLE bonospagos(
+	id_bonoPago SERIAL NOT NULL,
+	id_pedido int null,
+	id_plan_campana int null,
+	tipo_bono VARCHAR(30) null,
+	descuentos_bono VARCHAR(50),
+	colecciones_bono VARCHAR(30),
+	totales_bono VARCHAR(50),
+	estatus int,
+	PRIMARY KEY(id_bonoPago)
+);
+
+CREATE TABLE bonoscierres(
+	id_bonocierre SERIAL NOT NULL,
+	id_pedido int null,
+	id_cliente int null,
+	id_liderazgo int null,
+	descuentos_bono_cierre VARCHAR(30),
+	colecciones_bono_cierre VARCHAR(50),
+	totales_bono_cierre VARCHAR(50),
+	estatus int,
+	PRIMARY KEY(id_bonoCierre)
+);
+
+CREATE TABLE confignombramientos(
+	id_confignombramientos SERIAL NOT NULL,
+    id_liderazgo int,
+    cantidad_correspondiente VARCHAR(20),
+    estatus int,
+    PRIMARY KEY(id_confignombramientos)
+);
+
+
+CREATE TABLE configgemas(
+	id_configgema SERIAL NOT NULL,
+    nombreconfiggema VARCHAR(100),
+    cantidad_correspondiente VARCHAR(20),
+    condicion VARCHAR(20),
+    estatus int,
+    PRIMARY KEY(id_configgema)
+);
+
+CREATE TABLE nombramientos(
+	id_nombramiento SERIAL NOT NULL,
+	id_campana int,
+	id_cliente int,
+    id_confignombramientos int,
+    id_liderazgo int,
+    cantidad_gemas VARCHAR(20),
+    estatus int,
+	PRIMARY KEY(id_nombramiento)
+);
+
+
+CREATE TABLE gemas(
+	id_gema SERIAL NOT NULL,
+    id_campana int,
+    id_pedido int,
+    id_cliente int,
+    id_configgema int,
+    fecha_gemas VARCHAR(15),
+    hora_gemas VARCHAR(15),
+    cantidad_unidades VARCHAR(20),
+    cantidad_configuracion VARCHAR(20),
+    cantidad_gemas VARCHAR(20),
+    activas VARCHAR(20),
+    inactivas VARCHAR(20),
+    estado VARCHAR(20),
+    estatus int,
+	PRIMARY KEY(id_gema)
+);
+
+CREATE TABLE gemas_clientes(
+	id_gema_cliente SERIAL NOT NULL,
+	id_gema int,
+	id_cliente int,
+	estatus int,
+	PRIMARY KEY(id_gema_cliente)
+);
+
+
+
+
+CREATE TABLE catalogos(
+	id_catalogo SERIAL NOT NULL,
+	nombre_catalogo VARCHAR(100),
+	codigo_catalogo VARCHAR(100),
+	marca_catalogo VARCHAR(100),
+	color_catalogo VARCHAR(100),
+	voltaje_catalogo VARCHAR(100),
+	caracteristicas_catalogo VARCHAR(100),
+	puestos_catalogo VARCHAR(100),
+	otros_catalogo VARCHAR(100),
+	cantidad_gemas VARCHAR(25),
+	imagen_catalogo VARCHAR(150),
+	estatus INT,
+	PRIMARY KEY (id_catalogo)
+);
+
+CREATE TABLE canjeos(
+	id_canjeo SERIAL NOT NULL,
+	id_catalogo int,
+	id_cliente int,
+	fecha_canjeo VARCHAR(15),
+	hora_canjeo VARCHAR(15),
+	estatus int,
+	PRIMARY KEY(id_canjeo)
+);
+
+
+CREATE TABLE traspasos(
+	id_traspaso SERIAL NOT NULL,
+	id_pedido_emisor INT,
+	id_pedido_receptor INT,
+	cantidad_traspaso VARCHAR(20),
+	estatus INT,
+	PRIMARY KEY(id_traspaso)
+);
+
+# CREATE TABLE traspasos(
+#	id_traspaso SERIAL NOT NULL,
+#	id_cliente_emisor INT,
+#	id_pedido_emisor INT,
+#	id_cliente_receptor INT,
+#	id_pedido_receptor INT,
+#	cantidad_traspaso VARCHAR(20),
+#	estatus INT,
+#	PRIMARY KEY(id_traspaso)
+#);
+
+
+
+
+
+CREATE TABLE premios_perdidos(
+	id_premio_perdido SERIAL NOT NULL,
+	id_pedido INT,
+	id_cliente INT,
+	codigo VARCHAR(15),
+	valor VARCHAR(30),
+	id_tipo_coleccion INT,
+	id_tppc INT,
+	cantidad_premios_plan INT,
+	cantidad_premios_perdidos INT,
+	estatus INT,
+	PRIMARY KEY(id_premio_perdido)
+);
+
+
+
+
+CREATE TABLE retos_campana(
+	id_reto_campana SERIAL NOT NULL,
+	id_premio INT,
+	id_campana INT,
+	cantidad_coleccion INT,
+	estatus INT,
+	PRIMARY KEY(id_reto_campana)
+);
+
+
+///////
+///////
+///////
+///////
+///////
+///////
+///////
+///////
+
+CREATE TABLE retos(
+	id_reto SERIAL NOT NULL,
+	id_reto_campana INT,
+	id_pedido INT,
+	id_cliente INT,
+	id_campana INT,
+	cantidad_retos INT,
+	estatus INT,
+	PRIMARY KEY(id_reto)
+);
+
+
+CREATE TABLE rutas(
+	id_ruta SERIAL NOT NULL,
+	nombre_ruta VARCHAR(50),
+	estatus INT,
+	PRIMARY KEY(id_ruta)
+);
+
+
+CREATE TABLE confignotaentrega(
+	id_config_nota SERIAL NOT NULL,
+	id_campana INT,
+	id_plan INT,
+	opcion INt,
+	estatus INT,
+	PRIMARY KEY(id_config_nota)
+);
+
+
+
+
+CREATE TABLE notasentrega(
+	id_nota_entrega SERIAL NOT NULL,
+	id_cliente INT,
+	id_campana INT,
+	direccion_emision VARCHAR(255),
+	lugar_emision VARCHAR(100),
+	fecha_emision VARCHAR(15),
+	numero_nota_entrega INT,
+	estatus INT,
+	PRIMARY KEY(id_nota_entrega)
+);
+
+CREATE TABLE opcionesentrega(
+	id_opcion_entrega SERIAL NOT NULL,
+	id_nota_entrega INT,
+	cod VARCHAR(15),
+	val VARCHAR(5),
+	estatus INT,
+	primary KEY(id_opcion_entrega)
+);
+
+
+
+
+CREATE TABLE rutaslideres(
+	id_ruta_lider SERIAL NOT NULL,
+	id_ruta INT,
+	id_cliente INT,
+	posicion INT,
+	estatus INT,
+	PRIMARY KEY(id_ruta_lider)
+);

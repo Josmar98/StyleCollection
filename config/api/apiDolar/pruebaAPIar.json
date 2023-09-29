@@ -1,0 +1,938 @@
+{
+  "calls": 1,
+  "success": true,
+  "n": 44,
+  "date": 1671047220,
+  "date-format": "14-12-2022 07:47 pm",
+  "date-utc": "UTC-3",
+  "currency": "USD",
+  "country": "Argentina",
+  "country-code": "AR",
+  "country-currency": "ARS",
+  "data": [
+    {
+      "id": "promedio",
+      "name": "Dólar EM",
+      "type": "cotizacion",
+      "origin": "https://exchangemonitor.net/estadisticas/ar/promedio",
+      "icon": "https://exchangemonitor.net/img/ve/exchangemonitor.webp",
+      "data": {
+        "date": 1671057952,
+        "rate": 324.97,
+        "last": 324.64,
+        "change": 0.33,
+        "percent": 0.1017
+      },
+      "format": {
+        "date": "14-12-2022 06:45 pm",
+        "rate": "$324,97",
+        "last": "$324,64",
+        "change": "$0,33",
+        "percent": "0,10%"
+      }
+    },
+    {
+      "id": "dolar-blue",
+      "name": "Dólar Blue",
+      "type": "cotizacion",
+      "origin": "https://www.valordolarblue.com.ar/",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-blue.webp",
+      "data": {
+        "date": 1671037211,
+        "rate": 320,
+        "last": 320,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 01:00 pm",
+        "rate": "$320,00",
+        "last": "$320,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-oficial",
+      "name": "Dólar Oficial",
+      "type": "cotizacion",
+      "origin": "https://www.bna.com.ar/Personas",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-oficial.webp",
+      "data": {
+        "date": 1670947203,
+        "rate": 178.5,
+        "last": 178.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 12:00 pm",
+        "rate": "$178,50",
+        "last": "$178,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-mayorista",
+      "name": "Dólar Mayorista",
+      "type": "cotizacion",
+      "origin": "https://www.bna.com.ar/Personas",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-mayorista.webp",
+      "data": {
+        "date": 1671042602,
+        "rate": 172.05,
+        "last": 171.81,
+        "change": 0.24,
+        "percent": 0.1397
+      },
+      "format": {
+        "date": "14-12-2022 02:30 pm",
+        "rate": "$172,05",
+        "last": "$171,81",
+        "change": "$0,24",
+        "percent": "0,14%"
+      }
+    },
+    {
+      "id": "dolar-solidario",
+      "name": "Dólar Solidario",
+      "type": "cotizacion",
+      "origin": "",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-solidario.webp",
+      "data": {
+        "date": 1670947203,
+        "rate": 294.53,
+        "last": 294.53,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 12:00 pm",
+        "rate": "$294,53",
+        "last": "$294,53",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-tarjeta",
+      "name": "Dólar Tarjeta",
+      "type": "cotizacion",
+      "origin": "",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-tarjeta.webp",
+      "data": {
+        "date": 1670947203,
+        "rate": 312.38,
+        "last": 312.38,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 12:00 pm",
+        "rate": "$312,38",
+        "last": "$312,38",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-bolsa-mep",
+      "name": "Dólar Bolsa MEP",
+      "type": "cotizacion",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/AL30/BONO-REP.-ARGENTINA-USD-STEP-UP-2030/",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-bolsa-mep.webp",
+      "data": {
+        "date": 1671053114,
+        "rate": 325.19,
+        "last": 325.19,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:25 pm",
+        "rate": "$325,19",
+        "last": "$325,19",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-contado-con-liquidacion-ccl",
+      "name": "Dólar Contado con Liquidación CCL",
+      "type": "cotizacion",
+      "origin": "https://www.invertironline.com/mercado/cotizaciones/argentina",
+      "icon": "https://exchangemonitor.net/img/ar/cotizacion/dolar-contado-con-liquidacion-ccl.webp",
+      "data": {
+        "date": 1671055208,
+        "rate": 334.35,
+        "last": 334.35,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 06:00 pm",
+        "rate": "$334,35",
+        "last": "$334,35",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-bbva-banco-frances-bbar",
+      "name": "CCL BBVA Banco Frances (BBAR)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/BBAR/BBVA/",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/bbar.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 336.71,
+        "last": 336.71,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$336,71",
+        "last": "$336,71",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-banco-macro-bma",
+      "name": "CCL Banco Macro (BMA)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/BMA/BANCO-MACRO",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/bma.webp",
+      "data": {
+        "date": 1671055208,
+        "rate": 327.57,
+        "last": 327.57,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 06:00 pm",
+        "rate": "$327,57",
+        "last": "$327,57",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-central-puerto-cepu",
+      "name": "CCL Central Puerto (CEPU)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/CEPU/CENTRAL-PUERTO-SA/",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/cepu.webp",
+      "data": {
+        "date": 1671055208,
+        "rate": 337.32,
+        "last": 337.32,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 06:00 pm",
+        "rate": "$337,32",
+        "last": "$337,32",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-cresud-cresy",
+      "name": "CCL Cresud (CRESY)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/CRES/CRESUD",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/cresy.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 332,
+        "last": 332,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$332,00",
+        "last": "$332,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-edenor-edn",
+      "name": "CCL Edenor (EDN)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/CRES/CRESUD",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/edn.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 334.86,
+        "last": 334.86,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$334,86",
+        "last": "$334,86",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-grupo-financiero-galicia-ggal",
+      "name": "CCL Grupo Financiero Galicia (GGAL)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/GGAL/GRUPO-FINANCIERO-GALICIA-S.A",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/ggal.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 331.15,
+        "last": 331.15,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$331,15",
+        "last": "$331,15",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-pampa-energia-pam",
+      "name": "CCL Pampa Energia (PAM)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/PAMP/PAMPA-ENERGIA/",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/pam.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 332.6,
+        "last": 332.6,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$332,60",
+        "last": "$332,60",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-grupo-supervielle-supv",
+      "name": "CCL Grupo Supervielle (SUPV)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/SUPV/GRUPO-SUPERVIELLE-S.A.",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/supv.webp",
+      "data": {
+        "date": 1671053408,
+        "rate": 344.49,
+        "last": 344.49,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:30 pm",
+        "rate": "$344,49",
+        "last": "$344,49",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-telecom-argentina-teo",
+      "name": "CCL Telecom Argentina (TEO)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/TECO2/TELECOM-ARGENTINA",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/teo.webp",
+      "data": {
+        "date": 1671054608,
+        "rate": 332.8,
+        "last": 332.8,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:50 pm",
+        "rate": "$332,80",
+        "last": "$332,80",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-transportadora-gas-del-sur-tgs",
+      "name": "CCL Transportadora Gas del Sur (TGS)",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/TGSU2/TRANSPORTADORA-GAS-DEL-SUR/",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/tgs.webp",
+      "data": {
+        "date": 1671055208,
+        "rate": 333.87,
+        "last": 333.87,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 06:00 pm",
+        "rate": "$333,87",
+        "last": "$333,87",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolar-ccl-ypf-ypf",
+      "name": "CCL YPF",
+      "type": "dolar-ccl",
+      "origin": "https://www.invertironline.com/titulo/cotizacion/BCBA/YPFD/YPF/",
+      "icon": "https://exchangemonitor.net/img/ar/ccl/ypf.webp",
+      "data": {
+        "date": 1671055208,
+        "rate": 334.52,
+        "last": 334.52,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 06:00 pm",
+        "rate": "$334,52",
+        "last": "$334,52",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-de-la-nacion",
+      "name": "Banco de la Nación",
+      "type": "banco",
+      "origin": "https://www.bna.com.ar/Personas",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/bna.webp",
+      "data": {
+        "date": 1670950850,
+        "rate": 178.5,
+        "last": 178.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 01:00 pm",
+        "rate": "$178,50",
+        "last": "$178,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-de-galicia-y-buenos-aires",
+      "name": "Banco Galicia",
+      "type": "banco",
+      "origin": "https://www.bancogalicia.com/banca/online/web/Eminent",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-galicia.webp",
+      "data": {
+        "date": 1670943642,
+        "rate": 179.5,
+        "last": 179.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 11:00 am",
+        "rate": "$179,50",
+        "last": "$179,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "industrial-and-commercial-bank-of-china",
+      "name": "ICBC Argentina",
+      "type": "banco",
+      "origin": "https://www.icbc.com.ar/personas",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/icbc.webp",
+      "data": {
+        "date": 1670860839,
+        "rate": 178.5,
+        "last": 178.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "12-12-2022 12:00 pm",
+        "rate": "$178,50",
+        "last": "$178,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-bbva",
+      "name": "BBVA",
+      "type": "banco",
+      "origin": "https://www.bbva.com.ar/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-bbva.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 180,
+        "last": 180,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$180,00",
+        "last": "$180,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-supervielle",
+      "name": "Supervielle",
+      "type": "banco",
+      "origin": "https://www.supervielle.com.ar/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-supervielle.webp",
+      "data": {
+        "date": 1670860839,
+        "rate": 179,
+        "last": 179,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "12-12-2022 12:00 pm",
+        "rate": "$179,00",
+        "last": "$179,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-de-la-ciudad-de-buenos-aires",
+      "name": "Banco Ciudad",
+      "type": "banco",
+      "origin": "https://www.bancociudad.com.ar/institucional/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-ciudad.webp",
+      "data": {
+        "date": 1670950850,
+        "rate": 178.5,
+        "last": 178.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 01:00 pm",
+        "rate": "$178,50",
+        "last": "$178,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-patagonia",
+      "name": "Banco Patagonia",
+      "type": "banco",
+      "origin": "https://www.bancopatagonia.com.ar/personas/index.php",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-patagonia.webp",
+      "data": {
+        "date": 1670943642,
+        "rate": 179.25,
+        "last": 179.25,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 11:00 am",
+        "rate": "$179,25",
+        "last": "$179,25",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-santander",
+      "name": "Banco Santander",
+      "type": "banco",
+      "origin": "https://www.santander.com.ar/banco/online/personas",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-santander.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 179.5,
+        "last": 179.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$179,50",
+        "last": "$179,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "brubank",
+      "name": "Brubank",
+      "type": "banco",
+      "origin": "https://www.brubank.com/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/brubank.webp",
+      "data": {
+        "date": 1670860839,
+        "rate": 179.5,
+        "last": 179.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "12-12-2022 12:00 pm",
+        "rate": "$179,50",
+        "last": "$179,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "hsbc-bank",
+      "name": "HSBC Bank Argentina",
+      "type": "banco",
+      "origin": "https://www.hsbc.com.ar/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/hsbc-bank.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 179,
+        "last": 179,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$179,00",
+        "last": "$179,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-credicoop-cooperativo-limitado",
+      "name": "Banco Credicoop",
+      "type": "banco",
+      "origin": "https://www.bancocredicoop.coop/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-credicoop.webp",
+      "data": {
+        "date": 1670950850,
+        "rate": 178.49,
+        "last": 178.49,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "13-12-2022 01:00 pm",
+        "rate": "$178,49",
+        "last": "$178,49",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-itau",
+      "name": "Banco Itaú",
+      "type": "banco",
+      "origin": "https://www.itau.com.ar/Paginas/default.aspx",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-itau.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 179.2,
+        "last": 179.2,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$179,20",
+        "last": "$179,20",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-macro",
+      "name": "Banco Macro",
+      "type": "banco",
+      "origin": "https://www.macro.com.ar/home-page",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-macro.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 179.5,
+        "last": 179.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$179,50",
+        "last": "$179,50",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-piano",
+      "name": "Banco Piano",
+      "type": "banco",
+      "origin": "https://www.bancopiano.com.ar/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/banco-piano.webp",
+      "data": {
+        "date": 1671031841,
+        "rate": 182.7,
+        "last": 182.7,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 11:30 am",
+        "rate": "$182,70",
+        "last": "$182,70",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "cambios-online-sa",
+      "name": "Cambios Online SA",
+      "type": "banco",
+      "origin": "https://www.cambioar.com/",
+      "icon": "https://exchangemonitor.net/img/ar/bancos/cambios-online-sa.webp",
+      "data": {
+        "date": 1670860839,
+        "rate": 175,
+        "last": 175,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "12-12-2022 12:00 pm",
+        "rate": "$175,00",
+        "last": "$175,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "binance",
+      "name": "Binance",
+      "type": "pagina",
+      "origin": "https://www.binance.com/es",
+      "icon": "https://exchangemonitor.net/img/ve/general/binance.webp",
+      "data": {
+        "date": 1671057623,
+        "rate": 317.99,
+        "last": 318.04,
+        "change": -0.05,
+        "percent": -0.015721
+      },
+      "format": {
+        "date": "14-12-2022 06:40 pm",
+        "rate": "$317,99",
+        "last": "$318,04",
+        "change": "$-0,05",
+        "percent": "-0,02%"
+      }
+    },
+    {
+      "id": "localbitcoins",
+      "name": "LocalBitcoins",
+      "type": "pagina",
+      "origin": "https://localbitcoins.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/general/localbitcoins.webp",
+      "data": {
+        "date": 1671057327,
+        "rate": 344.4,
+        "last": 345.25,
+        "change": -0.85,
+        "percent": -0.2462
+      },
+      "format": {
+        "date": "14-12-2022 06:35 pm",
+        "rate": "$344,40",
+        "last": "$345,25",
+        "change": "$-0,85",
+        "percent": "-0,25%"
+      }
+    },
+    {
+      "id": "paxful",
+      "name": "Paxful",
+      "type": "pagina",
+      "origin": "https://paxful.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/general/paxful.webp",
+      "data": {
+        "date": 1671046530,
+        "rate": 351.42,
+        "last": 328.81,
+        "change": 22.61,
+        "percent": 6.8763
+      },
+      "format": {
+        "date": "14-12-2022 03:35 pm",
+        "rate": "$351,42",
+        "last": "$328,81",
+        "change": "$22,61",
+        "percent": "6,88%"
+      }
+    },
+    {
+      "id": "airtm",
+      "name": "AirTM",
+      "type": "pagina",
+      "origin": "https://rates.airtm.com/",
+      "icon": "https://exchangemonitor.net/img/ve/general/airtm.webp",
+      "data": {
+        "date": 1670596217,
+        "rate": 330.04,
+        "last": 330.04,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "09-12-2022 10:30 am",
+        "rate": "$330,04",
+        "last": "$330,04",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "yadio",
+      "name": "Yadio",
+      "type": "pagina",
+      "origin": "https://yadio.io/",
+      "icon": "https://exchangemonitor.net/img/ve/general/yadio.webp",
+      "data": {
+        "date": 1671057932,
+        "rate": 319.52,
+        "last": 319.12,
+        "change": 0.4,
+        "percent": 0.1253
+      },
+      "format": {
+        "date": "14-12-2022 06:45 pm",
+        "rate": "$319,52",
+        "last": "$319,12",
+        "change": "$0,40",
+        "percent": "0,13%"
+      }
+    },
+    {
+      "id": "monedero-paypal",
+      "name": "PayPal",
+      "type": "e-wallet",
+      "origin": "https://www.paypal.com/ve/home",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/paypal.webp",
+      "data": {
+        "date": 1671055856,
+        "rate": 286,
+        "last": 285,
+        "change": 1,
+        "percent": 0.3509
+      },
+      "format": {
+        "date": "14-12-2022 06:10 pm",
+        "rate": "$286,00",
+        "last": "$285,00",
+        "change": "$1,00",
+        "percent": "0,35%"
+      }
+    },
+    {
+      "id": "monedero-uphold",
+      "name": "Uphold",
+      "type": "e-wallet",
+      "origin": "https://uphold.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/uphold.webp",
+      "data": {
+        "date": 1671054357,
+        "rate": 301,
+        "last": 301,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:45 pm",
+        "rate": "$301,00",
+        "last": "$301,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "monedero-zinli",
+      "name": "Zinli",
+      "type": "e-wallet",
+      "origin": "https://www.zinli.com/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/zinli.webp",
+      "data": {
+        "date": 1671052856,
+        "rate": 296,
+        "last": 296,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:20 pm",
+        "rate": "$296,00",
+        "last": "$296,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "monedero-skrill",
+      "name": "Skrill",
+      "type": "e-wallet",
+      "origin": "https://www.skrill.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/skrill.webp",
+      "data": {
+        "date": 1671052856,
+        "rate": 296,
+        "last": 296,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:20 pm",
+        "rate": "$296,00",
+        "last": "$296,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "monedero-amazon",
+      "name": "Amazon Gift Card",
+      "type": "e-wallet",
+      "origin": "https://www.amazon.es/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/amazon.webp",
+      "data": {
+        "date": 1671052856,
+        "rate": 280,
+        "last": 280,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 05:20 pm",
+        "rate": "$280,00",
+        "last": "$280,00",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    }
+  ]
+}

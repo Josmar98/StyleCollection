@@ -1,0 +1,875 @@
+{
+  "calls": 57,
+  "success": true,
+  "n": 41,
+  "date": 1671060961,
+  "date-format": "14-12-2022 11:36 pm",
+  "date-utc": "UTC-4",
+  "currency": "USD",
+  "country": "Venezuela",
+  "country-code": "VE",
+  "country-currency": "VES",
+  "data": [
+    {
+      "id": "promedio",
+      "name": "Dólar EM",
+      "type": "principal",
+      "origin": "https://exchangemonitor.net/dolar-promedio-venezuela",
+      "icon": "https://exchangemonitor.net/img/ve/exchangemonitor.webp",
+      "data": {
+        "date": 1671073857,
+        "rate": 17.56,
+        "last": 17.46,
+        "change": 0.1,
+        "percent": 0.5727
+      },
+      "format": {
+        "date": "14-12-2022 11:10 pm",
+        "rate": "Bs. 17,56",
+        "last": "Bs. 17,46",
+        "change": "Bs. 0,10",
+        "percent": "0,57%"
+      }
+    },
+    {
+      "id": "monitor-dolar",
+      "name": "Monitor Dolar Venezuela",
+      "type": "principal",
+      "origin": "https://exchangemonitor.net/monitor-dolar-venezuela",
+      "icon": "https://exchangemonitor.net/img/ve/monitor-dolar.webp",
+      "data": {
+        "date": 1671074156,
+        "rate": 17.71,
+        "last": 17.68,
+        "change": 0.03,
+        "percent": 0.1697
+      },
+      "format": {
+        "date": "14-12-2022 11:15 pm",
+        "rate": "Bs. 17,71",
+        "last": "Bs. 17,68",
+        "change": "Bs. 0,03",
+        "percent": "0,17%"
+      }
+    },
+    {
+      "id": "enparalelovzla",
+      "name": "EnParaleloVzla",
+      "type": "principal",
+      "origin": "https://www.instagram.com/enparalelovzla/",
+      "icon": "https://exchangemonitor.net/img/ve/monitor-dolar.webp",
+      "data": {
+        "date": 1671038103,
+        "rate": 17.41,
+        "last": 17.41,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 01:15 pm",
+        "rate": "Bs. 17,41",
+        "last": "Bs. 17,41",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "monitor-dolar-vzla",
+      "name": "Monitor Dolar Vzla",
+      "type": "principal",
+      "origin": "https://monitordolarvzla.com/",
+      "icon": "https://exchangemonitor.net/img/ve/monitor-dolar-vzla.webp",
+      "data": {
+        "date": 1671039051,
+        "rate": 17.36,
+        "last": 17.36,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 01:30 pm",
+        "rate": "Bs. 17,36",
+        "last": "Bs. 17,36",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "petro",
+      "name": "Petro",
+      "type": "nacional",
+      "origin": "https://www.petro.gob.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/nacional/petro.webp",
+      "data": {
+        "date": 1671073361,
+        "rate": 913.99,
+        "last": 885.37,
+        "change": 28.62,
+        "percent": 3.2325
+      },
+      "format": {
+        "date": "14-12-2022 11:02 pm",
+        "rate": "Bs. 913,99",
+        "last": "Bs. 885,37",
+        "change": "Bs. 28,62",
+        "percent": "3,23%"
+      }
+    },
+    {
+      "id": "bcv",
+      "name": "BCV",
+      "type": "nacional",
+      "origin": "http://www.bcv.org.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/nacional/bcv.webp",
+      "data": {
+        "date": 1671024851,
+        "rate": 14.76,
+        "last": 14.13,
+        "change": 0.6395,
+        "percent": 4.5274
+      },
+      "format": {
+        "date": "14-12-2022 09:34 am",
+        "rate": "Bs. 14,76",
+        "last": "Bs. 14,13",
+        "change": "Bs. 0,64",
+        "percent": "4,53%"
+      }
+    },
+    {
+      "id": "binance",
+      "name": "Binance",
+      "type": "pagina",
+      "origin": "https://www.binance.com/es",
+      "icon": "https://exchangemonitor.net/img/ve/general/binance.webp",
+      "data": {
+        "date": 1671074115,
+        "rate": 17.82,
+        "last": 17.72,
+        "change": 0.1,
+        "percent": 0.5643
+      },
+      "format": {
+        "date": "14-12-2022 11:15 pm",
+        "rate": "Bs. 17,82",
+        "last": "Bs. 17,72",
+        "change": "Bs. 0,10",
+        "percent": "0,56%"
+      }
+    },
+    {
+      "id": "localbitcoins",
+      "name": "LocalBitcoins",
+      "type": "pagina",
+      "origin": "https://localbitcoins.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/general/localbitcoins.webp",
+      "data": {
+        "date": 1671073236,
+        "rate": 18.83,
+        "last": 18.41,
+        "change": 0.42,
+        "percent": 2.2814
+      },
+      "format": {
+        "date": "14-12-2022 11:00 pm",
+        "rate": "Bs. 18,83",
+        "last": "Bs. 18,41",
+        "change": "Bs. 0,42",
+        "percent": "2,28%"
+      }
+    },
+    {
+      "id": "airtm",
+      "name": "AirTM",
+      "type": "pagina",
+      "origin": "https://rates.airtm.com/",
+      "icon": "https://exchangemonitor.net/img/ve/general/airtm.webp",
+      "data": {
+        "date": 1670596206,
+        "rate": 18.17,
+        "last": 15.98,
+        "change": 2.19,
+        "percent": 13.7
+      },
+      "format": {
+        "date": "09-12-2022 10:30 am",
+        "rate": "Bs. 18,17",
+        "last": "Bs. 15,98",
+        "change": "Bs. 2,19",
+        "percent": "13,70%"
+      }
+    },
+    {
+      "id": "reserve",
+      "name": "Reserve",
+      "type": "pagina",
+      "origin": "https://reserve.org/",
+      "icon": "https://exchangemonitor.net/img/ve/general/reserve.webp",
+      "data": {
+        "date": 1671039053,
+        "rate": 17.92,
+        "last": 17.92,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 01:30 pm",
+        "rate": "Bs. 17,92",
+        "last": "Bs. 17,92",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "yadio",
+      "name": "Yadio",
+      "type": "pagina",
+      "origin": "https://yadio.io/",
+      "icon": "https://exchangemonitor.net/img/ve/general/yadio.webp",
+      "data": {
+        "date": 1671074747,
+        "rate": 17.63,
+        "last": 17.38,
+        "change": 0.25,
+        "percent": 1.4384
+      },
+      "format": {
+        "date": "14-12-2022 11:25 pm",
+        "rate": "Bs. 17,63",
+        "last": "Bs. 17,38",
+        "change": "Bs. 0,25",
+        "percent": "1,44%"
+      }
+    },
+    {
+      "id": "dolartoday",
+      "name": "DolarToday",
+      "type": "pagina",
+      "origin": "https://dolartoday.com/",
+      "icon": "https://exchangemonitor.net/img/ve/general/dolartoday.webp",
+      "data": {
+        "date": 1671035723,
+        "rate": 17.5,
+        "last": 17.5,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 12:35 pm",
+        "rate": "Bs. 17,50",
+        "last": "Bs. 17,50",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "dolartoday-btc",
+      "name": "DolarToday (BTC)",
+      "type": "pagina",
+      "origin": "https://dolartoday.com/",
+      "icon": "https://exchangemonitor.net/img/ve/general/dolartoday-btc.webp",
+      "data": {
+        "date": 1671035723,
+        "rate": 17.45,
+        "last": 17.45,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 12:35 pm",
+        "rate": "Bs. 17,45",
+        "last": "Bs. 17,45",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "mkambio",
+      "name": "Mkambio",
+      "type": "pagina",
+      "origin": "https://www.instagram.com/mkambio/",
+      "icon": "https://exchangemonitor.net/img/ve/general/mkambio.webp",
+      "data": {
+        "date": 1671037709,
+        "rate": 17.95,
+        "last": 15.61,
+        "change": 2.34,
+        "percent": 14.99
+      },
+      "format": {
+        "date": "14-12-2022 01:08 pm",
+        "rate": "Bs. 17,95",
+        "last": "Bs. 15,61",
+        "change": "Bs. 2,34",
+        "percent": "14,99%"
+      }
+    },
+    {
+      "id": "cambios-rya",
+      "name": "Cambios R&A",
+      "type": "pagina",
+      "origin": "https://www.instagram.com/cambiosrya/",
+      "icon": "https://exchangemonitor.net/img/ve/general/cambios-rya.webp",
+      "data": {
+        "date": 1671037740,
+        "rate": 17.45,
+        "last": 15.55,
+        "change": 1.9,
+        "percent": 12.22
+      },
+      "format": {
+        "date": "14-12-2022 01:09 pm",
+        "rate": "Bs. 17,45",
+        "last": "Bs. 15,55",
+        "change": "Bs. 1,90",
+        "percent": "12,22%"
+      }
+    },
+    {
+      "id": "monedero-paypal",
+      "name": "PayPal",
+      "type": "e-wallet",
+      "origin": "https://www.paypal.com/ve/home",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/paypal.webp",
+      "data": {
+        "date": 1671066360,
+        "rate": 15.4,
+        "last": 15.4,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 09:06 pm",
+        "rate": "Bs. 15,40",
+        "last": "Bs. 15,40",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "monedero-zinli",
+      "name": "Zinli",
+      "type": "e-wallet",
+      "origin": "https://www.zinli.com/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/zinli.webp",
+      "data": {
+        "date": 1671068760,
+        "rate": 16,
+        "last": 15.9,
+        "change": 0.1,
+        "percent": 0.6289
+      },
+      "format": {
+        "date": "14-12-2022 09:46 pm",
+        "rate": "Bs. 16,00",
+        "last": "Bs. 15,90",
+        "change": "Bs. 0,10",
+        "percent": "0,63%"
+      }
+    },
+    {
+      "id": "monedero-skrill",
+      "name": "Skrill",
+      "type": "e-wallet",
+      "origin": "https://www.skrill.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/skrill.webp",
+      "data": {
+        "date": 1671068760,
+        "rate": 16,
+        "last": 15.9,
+        "change": 0.1,
+        "percent": 0.6289
+      },
+      "format": {
+        "date": "14-12-2022 09:46 pm",
+        "rate": "Bs. 16,00",
+        "last": "Bs. 15,90",
+        "change": "Bs. 0,10",
+        "percent": "0,63%"
+      }
+    },
+    {
+      "id": "monedero-amazon",
+      "name": "Amazon Gift Card",
+      "type": "e-wallet",
+      "origin": "https://www.amazon.es/",
+      "icon": "https://exchangemonitor.net/img/ve/monederos/amazon.webp",
+      "data": {
+        "date": 1671066360,
+        "rate": 15.1,
+        "last": 15.1,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 09:06 pm",
+        "rate": "Bs. 15,10",
+        "last": "Bs. 15,10",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "remesas-zoom",
+      "name": "Remesas Zoom",
+      "type": "nacional",
+      "origin": "https://www.casadecambiozoom.com/",
+      "icon": "https://exchangemonitor.net/img/ve/nacional/remesas-zoom.webp",
+      "data": {
+        "date": 1670997763,
+        "rate": 14.91,
+        "last": 14.91,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 02:02 am",
+        "rate": "Bs. 14,91",
+        "last": "Bs. 14,91",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "italcambio",
+      "name": "Italcambio",
+      "type": "nacional",
+      "origin": "http://www.italcambio.com/",
+      "icon": "https://exchangemonitor.net/img/ve/nacional/italcambio.webp",
+      "data": {
+        "date": 1670997752,
+        "rate": 14.91,
+        "last": 14.91,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 02:02 am",
+        "rate": "Bs. 14,91",
+        "last": "Bs. 14,91",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-bancamiga",
+      "name": "Bancamiga",
+      "type": "banco",
+      "origin": "https://www.bancamiga.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bancamiga.webp",
+      "data": {
+        "date": 1671024902,
+        "rate": 15.1,
+        "last": 13.75,
+        "change": 1.3449,
+        "percent": 9.78
+      },
+      "format": {
+        "date": "14-12-2022 09:35 am",
+        "rate": "Bs. 15,10",
+        "last": "Bs. 13,75",
+        "change": "Bs. 1,34",
+        "percent": "9,78%"
+      }
+    },
+    {
+      "id": "banco-bancaribe",
+      "name": "BanCaribe",
+      "type": "banco",
+      "origin": "https://www.bancaribe.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bancaribe.webp",
+      "data": {
+        "date": 1660766413,
+        "rate": 0,
+        "last": 5.6882,
+        "change": -5.6882,
+        "percent": -100
+      },
+      "format": {
+        "date": "17-08-2022 04:00 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 5,69",
+        "change": "Bs. -5,69",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-de-venezuela",
+      "name": "Banco de Venezuela",
+      "type": "banco",
+      "origin": "http://www.bancodevenezuela.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banco-de-venezuela.webp",
+      "data": {
+        "date": 1670501907,
+        "rate": 12.09,
+        "last": 12.09,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "08-12-2022 08:18 am",
+        "rate": "Bs. 12,09",
+        "last": "Bs. 12,09",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-exterior",
+      "name": "Banco Exterior",
+      "type": "banco",
+      "origin": "http://www.bancoexterior.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banco-exterior.webp",
+      "data": {
+        "date": 1671024966,
+        "rate": 14.14,
+        "last": 13.15,
+        "change": 0.9894,
+        "percent": 7.5242
+      },
+      "format": {
+        "date": "14-12-2022 09:36 am",
+        "rate": "Bs. 14,14",
+        "last": "Bs. 13,15",
+        "change": "Bs. 0,99",
+        "percent": "7,52%"
+      }
+    },
+    {
+      "id": "banco-plaza",
+      "name": "Banco Plaza",
+      "type": "banco",
+      "origin": "http://www.bancoplaza.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banco-plaza.webp",
+      "data": {
+        "date": 1648414814,
+        "rate": 0,
+        "last": 4.4399,
+        "change": -4.4399,
+        "percent": -100
+      },
+      "format": {
+        "date": "27-03-2022 05:00 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 4,44",
+        "change": "Bs. -4,44",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-banplus",
+      "name": "Banplus",
+      "type": "banco",
+      "origin": "http://www.banplus.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banplus.webp",
+      "data": {
+        "date": 1670679844,
+        "rate": 15.22,
+        "last": 15.22,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "10-12-2022 09:44 am",
+        "rate": "Bs. 15,22",
+        "last": "Bs. 15,22",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-nacional-de-credito-bnc",
+      "name": "BNC",
+      "type": "banco",
+      "origin": "http://www.bnc.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bnc.webp",
+      "data": {
+        "date": 1671024921,
+        "rate": 14.89,
+        "last": 14.24,
+        "change": 0.6585,
+        "percent": 4.6258
+      },
+      "format": {
+        "date": "14-12-2022 09:35 am",
+        "rate": "Bs. 14,89",
+        "last": "Bs. 14,24",
+        "change": "Bs. 0,66",
+        "percent": "4,63%"
+      }
+    },
+    {
+      "id": "banco-bod",
+      "name": "BOD",
+      "type": "banco",
+      "origin": "http://www.bod.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bod.webp",
+      "data": {
+        "date": 1630281612,
+        "rate": 0,
+        "last": 4.0838,
+        "change": -4.0838,
+        "percent": -100
+      },
+      "format": {
+        "date": "29-08-2021 08:00 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 4,08",
+        "change": "Bs. -4,08",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-mi-banco",
+      "name": "Mi Banco",
+      "type": "banco",
+      "origin": "http://www.mibanco.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/mi-banco.webp",
+      "data": {
+        "date": 1635976813,
+        "rate": 0,
+        "last": 4.1049,
+        "change": -4.1049,
+        "percent": -100
+      },
+      "format": {
+        "date": "03-11-2021 06:00 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 4,10",
+        "change": "Bs. -4,10",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-activo",
+      "name": "Banco Activo",
+      "type": "banco",
+      "origin": "http://www.bancoactivo.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banco-activo.webp",
+      "data": {
+        "date": 1635652813,
+        "rate": 0,
+        "last": 4.0139,
+        "change": -4.0139,
+        "percent": -100
+      },
+      "format": {
+        "date": "31-10-2021 12:00 am",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 4,01",
+        "change": "Bs. -4,01",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-del-tesoro",
+      "name": "Banco del Tesoro",
+      "type": "banco",
+      "origin": "http://www.bt.gob.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banco-del-tesoro.webp",
+      "data": {
+        "date": 1631478612,
+        "rate": 0,
+        "last": 4.1066,
+        "change": -4.1066,
+        "percent": -100
+      },
+      "format": {
+        "date": "12-09-2021 04:30 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 4,11",
+        "change": "Bs. -4,11",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-banesco",
+      "name": "Banesco",
+      "type": "banco",
+      "origin": "https://www.banesco.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/banesco.webp",
+      "data": {
+        "date": 1671024881,
+        "rate": 14.87,
+        "last": 14.13,
+        "change": 0.737,
+        "percent": 5.2156
+      },
+      "format": {
+        "date": "14-12-2022 09:34 am",
+        "rate": "Bs. 14,87",
+        "last": "Bs. 14,13",
+        "change": "Bs. 0,74",
+        "percent": "5,22%"
+      }
+    },
+    {
+      "id": "banco-bbva-provincial",
+      "name": "BBVA Provincial",
+      "type": "banco",
+      "origin": "https://www.provincial.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bbva-provincial.webp",
+      "data": {
+        "date": 1671024940,
+        "rate": 15.01,
+        "last": 13.92,
+        "change": 1.0833,
+        "percent": 7.7803
+      },
+      "format": {
+        "date": "14-12-2022 09:35 am",
+        "rate": "Bs. 15,01",
+        "last": "Bs. 13,92",
+        "change": "Bs. 1,08",
+        "percent": "7,78%"
+      }
+    },
+    {
+      "id": "banco-mercantil",
+      "name": "Mercantil",
+      "type": "banco",
+      "origin": "https://www.mercantilbanco.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/mercantil.webp",
+      "data": {
+        "date": 1670679823,
+        "rate": 14.6,
+        "last": 14.6,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "10-12-2022 09:43 am",
+        "rate": "Bs. 14,60",
+        "last": "Bs. 14,60",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-100x100-banco",
+      "name": "100% Banco",
+      "type": "banco",
+      "origin": "http://www.100x100banco.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/100x100-banco.webp",
+      "data": {
+        "date": 0,
+        "rate": 0,
+        "last": 0,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 0,00",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-sofitasa",
+      "name": "Sofitasa",
+      "type": "banco",
+      "origin": "http://www.sofitasa.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/sofitasa.webp",
+      "data": {
+        "date": 1625594211,
+        "rate": 0,
+        "last": 0,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "06-07-2021 01:56 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 0,00",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-otras-instituciones",
+      "name": "Otras Instituciones",
+      "type": "banco",
+      "origin": "",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/otras-instituciones.webp",
+      "data": {
+        "date": 1671024989,
+        "rate": 15.07,
+        "last": 14.57,
+        "change": 0.4934,
+        "percent": 3.3853
+      },
+      "format": {
+        "date": "14-12-2022 09:36 am",
+        "rate": "Bs. 15,07",
+        "last": "Bs. 14,57",
+        "change": "Bs. 0,49",
+        "percent": "3,39%"
+      }
+    },
+    {
+      "id": "banco-bicentenario-del-pueblo",
+      "name": "Bicentenario",
+      "type": "banco",
+      "origin": "http://www.bicentenariobu.com/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bicentenario.webp",
+      "data": {
+        "date": 1664051412,
+        "rate": 0,
+        "last": 7.8972,
+        "change": -7.8972,
+        "percent": -100
+      },
+      "format": {
+        "date": "24-09-2022 04:30 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 7,90",
+        "change": "Bs. -7,90",
+        "percent": "-100,00%"
+      }
+    },
+    {
+      "id": "banco-citibank",
+      "name": "Citibank",
+      "type": "banco",
+      "origin": "https://www.citibank.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/citibank.webp",
+      "data": {
+        "date": 1625594211,
+        "rate": 0,
+        "last": 0,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "06-07-2021 01:56 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 0,00",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "banco-bfc-banco-fondo-comun",
+      "name": "BFC",
+      "type": "banco",
+      "origin": "https://www.bfc.com.ve/",
+      "icon": "https://exchangemonitor.net/img/ve/bancos/bfc.webp",
+      "data": {
+        "date": 1625594211,
+        "rate": 0,
+        "last": 0,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "06-07-2021 01:56 pm",
+        "rate": "Bs. 0,00",
+        "last": "Bs. 0,00",
+        "change": "Bs. 0,00",
+        "percent": "0,00%"
+      }
+    }
+  ]
+}

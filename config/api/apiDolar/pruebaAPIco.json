@@ -1,0 +1,182 @@
+{
+  "calls": 50,
+  "success": true,
+  "n": 8,
+  "date": 1671053898,
+  "date-format": "14-12-2022 09:38 pm",
+  "date-utc": "UTC-5",
+  "currency": "USD",
+  "country": "Colombia",
+  "country-code": "CO",
+  "country-currency": "COP",
+  "data": [
+    {
+      "id": "promedio",
+      "name": "Dólar EM",
+      "type": "trm",
+      "origin": "https://es.tradingview.com/symbols/USDCOP/",
+      "icon": "https://exchangemonitor.net/img/ve/exchangemonitor.webp",
+      "data": {
+        "date": 1671048324,
+        "rate": 4773.29,
+        "last": 4772.65,
+        "change": 0.64,
+        "percent": 0.01341
+      },
+      "format": {
+        "date": "14-12-2022 04:05 pm",
+        "rate": "$4.773,29",
+        "last": "$4.772,65",
+        "change": "$0,64",
+        "percent": "0,01%"
+      }
+    },
+    {
+      "id": "trm",
+      "name": "TRM",
+      "type": "trm",
+      "origin": "https://www.superfinanciera.gov.co/",
+      "icon": "https://exchangemonitor.net/img/co/principal/trm.webp",
+      "data": {
+        "date": 1671048909,
+        "rate": 4778.28,
+        "last": 4778.28,
+        "change": 0,
+        "percent": 0
+      },
+      "format": {
+        "date": "14-12-2022 04:15 pm",
+        "rate": "$4.778,28",
+        "last": "$4.778,28",
+        "change": "$0,00",
+        "percent": "0,00%"
+      }
+    },
+    {
+      "id": "binance",
+      "name": "Binance",
+      "type": "pagina",
+      "origin": "https://www.binance.com/es",
+      "icon": "https://exchangemonitor.net/img/ve/general/binance.webp",
+      "data": {
+        "date": 1671071721,
+        "rate": 4660.46,
+        "last": 4311.19,
+        "change": 349.27,
+        "percent": 8.1015
+      },
+      "format": {
+        "date": "14-12-2022 10:35 pm",
+        "rate": "$4.660,46",
+        "last": "$4.311,19",
+        "change": "$349,27",
+        "percent": "8,10%"
+      }
+    },
+    {
+      "id": "localbitcoins",
+      "name": "LocalBitcoins",
+      "type": "pagina",
+      "origin": "https://localbitcoins.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/general/localbitcoins.webp",
+      "data": {
+        "date": 1671071727,
+        "rate": 4954.29,
+        "last": 3525.54,
+        "change": 1428.75,
+        "percent": 40.53
+      },
+      "format": {
+        "date": "14-12-2022 10:35 pm",
+        "rate": "$4.954,29",
+        "last": "$3.525,54",
+        "change": "$1.428,75",
+        "percent": "40,53%"
+      }
+    },
+    {
+      "id": "paxful",
+      "name": "Paxful",
+      "type": "pagina",
+      "origin": "https://paxful.com/es/",
+      "icon": "https://exchangemonitor.net/img/ve/general/paxful.webp",
+      "data": {
+        "date": 1671071730,
+        "rate": 4972.62,
+        "last": 3554.99,
+        "change": 1417.63,
+        "percent": 39.88
+      },
+      "format": {
+        "date": "14-12-2022 10:35 pm",
+        "rate": "$4.972,62",
+        "last": "$3.554,99",
+        "change": "$1.417,63",
+        "percent": "39,88%"
+      }
+    },
+    {
+      "id": "airtm",
+      "name": "AirTM",
+      "type": "pagina",
+      "origin": "https://rates.airtm.com/",
+      "icon": "https://exchangemonitor.net/img/ve/general/airtm.webp",
+      "data": {
+        "date": 1670563814,
+        "rate": 4827,
+        "last": 3657,
+        "change": 1170,
+        "percent": 31.99
+      },
+      "format": {
+        "date": "09-12-2022 01:30 am",
+        "rate": "$4.827,00",
+        "last": "$3.657,00",
+        "change": "$1.170,00",
+        "percent": "31,99%"
+      }
+    },
+    {
+      "id": "yadio",
+      "name": "Yadio",
+      "type": "pagina",
+      "origin": "https://yadio.io/",
+      "icon": "https://exchangemonitor.net/img/ve/general/yadio.webp",
+      "data": {
+        "date": 1671071732,
+        "rate": 4697.04,
+        "last": 3652.7,
+        "change": 1044.34,
+        "percent": 28.59
+      },
+      "format": {
+        "date": "14-12-2022 10:35 pm",
+        "rate": "$4.697,04",
+        "last": "$3.652,70",
+        "change": "$1.044,34",
+        "percent": "28,59%"
+      }
+    },
+    {
+      "id": "monedero-paypal-nequi",
+      "name": "PayPal Nequi",
+      "type": "e-wallet",
+      "origin": "https://www.nequi.com.co/2018/09/18/nequi-en-alianza-con-paypal/",
+      "icon": "https://exchangemonitor.net/img/co/monedero/paypal-nequi.webp",
+      "data": {
+        "date": 1671048911,
+        "rate": 4493.97,
+        "last": 4506.47,
+        "change": -12.5,
+        "percent": -0.2774
+      },
+      "format": {
+        "date": "14-12-2022 04:15 pm",
+        "rate": "$4.493,97",
+        "last": "$4.506,47",
+        "change": "$-12,50",
+        "percent": "-0,28%"
+      }
+    }
+  ]
+}

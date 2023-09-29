@@ -1,0 +1,122 @@
+
+========================================================
+MENU.php para las opciones de Promocion
+Homing2.php Vista
+
+MODULO de Promocion de Campaña TODO
+MODULO de Fechas de Promocion TODO
+MODULO de Existencias de Promocion TODO
+MODULO de PROMOCIONES TODO
+MODULO de PEDIDOS VISTA y CONTROLADOR DE Codigo de llamada a la vista
+MODULO de PAGOS TODO
+MODULO de NOTAS TODO
+
+========================================================
+
+#=========================================#
+# TABLA de FECHA DE SELECCION DE promocion
+#=========================================#
+CREATE TABLE fechas_promocion(
+	id_fecha_promocion SERIAL NOT NULL,
+    id_campana INT,
+    fecha_apertura_promocion VARCHAR(10),
+    fecha_cierre_promocion VARCHAR(10),
+    fecha_pago_promocion VARCHAR(10),
+    estatus INT,
+    PRIMARY KEY(id_fecha_promocion)
+);
+#=========================================#
+
+#=========================================#
+# TABLA de promocion
+#=========================================#
+CREATE TABLE promocion(
+	id_promocion SERIAL NOT NULL,
+    id_campana INT,
+    nombre_promocion VARCHAR(50),
+    precio_promocion VARCHAR(10),
+    estatus INT,
+    PRIMARY KEY(id_promocion)
+);
+#=========================================#
+
+#=========================================#
+# TABLA de productos de la promocion
+#=========================================#
+CREATE TABLE productos_promocion(
+	id_producto_promocion SERIAL NOT NULL,
+    id_campana INT,
+    id_promocion INT,
+    tipo_producto VARCHAR(15),
+    id_producto INT,
+    estatus INT,
+    PRIMARY KEY(id_producto_promocion)
+);
+#=========================================#
+
+#=========================================#
+# TABLA de premios ganados en cada promocion
+#=========================================#
+CREATE TABLE premios_promocion(
+	id_premio_promocion SERIAL NOT NULL,
+    id_campana INT,
+    id_promocion INT,
+    tipo_premio VARCHAR(15),
+    id_premio INT,
+    estatus INT,
+    PRIMARY KEY(id_premio_promocion)
+);
+#=========================================#
+
+#=========================================#
+# TABLA de premios ganados en cada promocion
+#=========================================#
+CREATE TABLE existencias_promocion(
+	id_existencia_promocion SERIAL NOT NULL,
+    id_campana INT,
+    id_promocion INT,
+    existencia_actual INT,
+    existencia_total INT,
+    estatus INT,
+    PRIMARY KEY(id_existencia_promocion)
+);
+#=========================================#
+
+
+
+#=========================================#
+# TABLA de promociones de los líderes
+#=========================================#
+
+CREATE TABLE promociones(
+	id_promociones SERIAL NOT NULL,
+    id_cliente INt,
+    id_pedido INT,
+    id_promocion INT,
+    id_despacho INT,
+    id_campana INT,
+    cantidad_solicitada_promocion INT,
+    fecha_solicitada_promocion VARCHAR(10),
+    hora_solicitada_promocion VARCHAR(10),
+    cantidad_aprobada_promocion INT,
+    fecha_aprobada_promocion VARCHAR(10),
+    hora_aprobada_promocion VARCHAR(10),
+    estatus INT,
+    PRIMARY KEY(id_promociones)
+);
+#=========================================#
+
+
+
+========================================================
+
+
+
+
+
+
+========================================================
+
+
+
+

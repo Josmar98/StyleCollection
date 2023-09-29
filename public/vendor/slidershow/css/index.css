@@ -1,0 +1,191 @@
+
+/*------- Slidesshow (Imagenes animadas)-------*/
+/*------- Slidesshow (Imagenes animadas)-------*/
+
+#slideshow {
+	/*la imagen es de 1033x738 pixel pero en la pagina es de 1000px(100%) por 365.922px(100%)*/
+	width: 100%;
+	height: 100%;	
+}
+
+/*------------------------------ Bienvenidos -----------------------------*/
+/*------------------------------ Bienvenidos -----------------------------*/
+
+#bienvenidos {
+	width: 100%;
+	padding: 20px;
+	margin: 20px 0px;
+	border-radius: 8px;
+	box-shadow: 0px 2px 2px #000;
+		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#0067d8+1,2989d8+50,207cca+51,5697c8+99 */
+	background: #0067d8; /* Old browsers */
+	background: -moz-linear-gradient(top,  #0067d8 1%, #2989d8 50%, #207cca 51%, #5697c8 99%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #0067d8 1%,#2989d8 50%,#207cca 51%,#5697c8 99%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #0067d8 1%,#2989d8 50%,#207cca 51%,#5697c8 99%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0067d8', endColorstr='#5697c8',GradientType=0 ); /* IE6-9 */
+}
+
+#bienvenidos article h3 {
+	color: #fff;
+	font-size: 30px;
+	margin-bottom: 10px;
+
+}
+
+#bienvenidos article a {
+	background: #FFFFFF;
+}
+
+#bienvenidos article a:hover {
+	color: #FF0000;
+}
+
+#bienvenidos article {
+	color: #fff;
+	line-height: 20px;
+	text-indent: 1em;
+}
+
+#bienvenidos article p {
+	font-size: 17px;
+}
+/*--- ---------------------------*/
+/*--- ---------------------------*/
+
+
+
+/*---------------------------- Contenido --------------------------*/
+/*---------------------------- Contenido --------------------------*/
+#main {
+	width: 100%;
+	margin: 10px 0px 0px 0px;
+
+	/*- Flex -*/
+	display: flex;
+	flex-flow: row wrap;
+}
+
+#maint {
+	/*- Flex -*/
+	display: flex;
+}
+
+#contenido {
+	padding: 10px;
+
+	/*- Flex -*/
+	flex: 1 1 100%;
+}
+
+#maint #contenido article {
+	margin-bottom: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #000;
+}
+
+#maint #contenido article:nth-last-child(1){
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border-bottom: none;
+}
+
+#conteido {
+	width: 700px;
+	float: left;
+}
+
+#contenido article {
+	float: left;
+	margin-bottom: 20px;
+}
+
+#contenido article .titulo {
+	font-size: 22px;
+	margin-bottom: 5px;
+}
+
+#contenido article .articulo {
+	float: left;
+	margin: 0px 10px 10px 0px;
+}
+
+#contenido article > p {
+	font-size: 16px;
+	text-align: justify;
+	text-indent: 1em;
+}
+
+/*--------------------------------*/
+
+
+/*--- Sidebar (Contenido de referencia)---*/
+/*--- Sidebar (Contenido de referencia)---*/
+
+aside {
+
+	/*- Flex -*/
+	flex: 1 1 36%;
+}
+
+aside .widget {
+	background: #0067d8;
+	max-width: 240px;
+	height: 424px;
+	margin: 10px 0px 10px 10px;
+	border-radius: 5px;
+	box-shadow: 0px 2px 2px #000;
+	padding-top: 10px;
+}
+
+aside section ul li {
+	list-style: none;
+	padding: 10px 10px 0px 10px;
+
+}
+
+aside section ul li a {
+	text-decoration: none;
+	color: #fff;
+}
+
+aside section ul li a:hover {
+	text-decoration: underline red;
+}
+
+aside section h3 {
+	margin: auto;
+}
+
+aside .widget > h3 {
+	background: #fff;
+	width: 220px;
+	padding: 10px 0px;
+	color: #0067d8;
+	text-align: center;
+	border-bottom: 30px;
+
+	/*--- FLEX ---*/
+	display: flex;
+	justify-content: space-around;
+}
+
+aside .redest {
+	margin-left: 10px;
+}
+
+
+/*--------------------------------------------------JQuery----------------------------------------------------*/
+/*--------------------------------------------------JQuery----------------------------------------------------*/
+
+
+@media screen and (max-width: 1000px){
+
+	aside {
+		display: none;
+	}
+
+	/*-------------------------------------------*/
+	/*-------------------------------------------*/
+}
+/*------------------------------------------------------------------------------------------------------------*/
+/*------------------------------------------------------------------------------------------------------------*/

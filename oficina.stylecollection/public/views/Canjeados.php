@@ -40,6 +40,73 @@
             <!-- /.box-header -->
 
             <div class="box-body">
+              <form action="" method="GET" class="form submitFormFiltrar">
+                  <input type="hidden" name="route" id="route" value="<?=$_GET['route']; ?>">
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <label>Campañas - Despachos</label>
+                      <select class="form-control select2" style="width:100%;" name="camp" id="camp">
+                        <option value=""></option>
+                        <?php 
+                          if(count($pedidos)>1){
+                            foreach ($pedidos as $key){ if(!empty($key['id_campana'])){ ?>
+                              <option value="<?=$key['id_despacho']?>"  <?php if(!empty($_GET['camp']) && $_GET['camp']==$key['id_despacho']){ echo "selected"; } ?>>
+                                <?php
+                                  $ndp = "";
+                                  if($key['numero_despacho']=="1"){ $ndp = "1er"; }
+                                  if($key['numero_despacho']=="2"){ $ndp = "2do"; }
+                                  if($key['numero_despacho']=="3"){ $ndp = "3er"; }
+                                  if($key['numero_despacho']=="4"){ $ndp = "4to"; }
+                                  if($key['numero_despacho']=="5"){ $ndp = "5to"; }
+                                  if($key['numero_despacho']=="6"){ $ndp = "6to"; }
+                                  if($key['numero_despacho']=="7"){ $ndp = "7mo"; }
+                                  if($key['numero_despacho']=="8"){ $ndp = "8vo"; }
+                                  if($key['numero_despacho']=="9"){ $ndp = "9no"; }
+                                  if($key['numero_despacho']!="1"){ echo $ndp; }
+                                  echo " Pedido ";
+                                  echo " de Campaña ".$key['numero_campana']."/".$key['anio_campana']."-".$key['nombre_campana'];
+                                ?>
+                              </option>
+                              <?php 
+                            } }
+                          }
+                        ?>
+                      </select>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-xs-12 col-sm-6">
+                      <label>Fecha de Inicio</label>
+                      <input type="date" class="form-control" name="rangoI" id="rangoI" <?php if(!empty($_GET['rI'])){ echo "value='".$_GET['rI']."'"; } ?>>
+                    </div>
+                    <div class="col-xs-12 col-sm-6">
+                      <label>Fecha de Cierre</label>
+                      <input type="date" class="form-control" name="rangoC" id="rangoC" <?php if(!empty($_GET['rC'])){ echo "value='".$_GET['rC']."'"; } ?>>
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <label>Mostrar premios canjeados</label>
+                      <select class="form-control select2" style="width:100%;" id="opcion" name="opcion">
+                        <option value="">Todos</option>
+                        <option value="1" <?php if(!empty($_GET['opcion']) && $_GET['opcion']=="1"){ echo "selected"; } ?>>Pendientes por Asignar a Nota de entrega</option>
+                        <option value="2" <?php if(!empty($_GET['opcion']) && $_GET['opcion']=="2"){ echo "selected"; } ?>>Asignados a Nota de entrega</option>
+                      </select>
+                    </div>
+                  </div>
+
+              </form>
+                  <br>
+                  <div class="row">
+                    <div class="col-xs-12">
+                      <button class="btn enviar2 FiltrarBusqueda">Filtrar</button>
+                    </div>
+                  </div>
+
+              <hr>
+
               <table id="datatable" class="table table-bordered table-striped" style="text-align:center;width:100%;">
                 <thead>
                 <tr>
@@ -78,7 +145,7 @@
                       <?php if ($data2['estado_canjeo']=="Asignado"): ?>
                           <tr>
                             <td>
-                              <span class="contenido2" style='color:#CCC'>
+                              <span class="contenido2" style='color:#000'>
                                 <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
                                 foreach ($campanas as $camp) {
                                   if(!empty($camp['id_campana'])){
@@ -95,9 +162,9 @@
                                           if($camp['numero_despacho']=="9"){ $ndp = "9no"; }
                                           echo "(";
                                           if($camp['numero_despacho']>"1"){
-                                            echo $ndp;
+                                            echo $ndp." ";
                                           }
-                                      echo " Pedido - Camp ".$camp['numero_campana']."/".$camp['anio_campana'].") <small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small>";
+                                      echo "Pedido - Camp ".$camp['numero_campana']."/".$camp['anio_campana'].") <br><small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small>";
                                       // echo "(Ped ".$camp['numero_despacho']." Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
                                     }
                                   }
@@ -200,6 +267,26 @@ $(document).ready(function(){
     }
     
   }
+
+  $(".FiltrarBusqueda").click(function(){
+    var newRuta = "";
+    newRuta += "route="+$("#route").val();
+    var camp = $("#camp").val();
+    if(camp!=""){
+      newRuta += "&camp="+camp;
+    }
+    var fechaI = $("#rangoI").val();
+    var fechaC = $("#rangoC").val();
+    if(fechaI!="" && fechaC!=""){
+      newRuta += "&rI="+fechaI+"&rC="+fechaC;
+    }
+    var opcion = $("#opcion").val();
+    if(opcion!=""){
+      newRuta += "&opcion="+opcion;
+    }
+    // alert(newRuta);
+    window.location="?"+newRuta;
+  });
 
   $(".modificarBtn").click(function(){
     swal.fire({ 

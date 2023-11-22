@@ -98,7 +98,7 @@ $factura = $lider->consultarQuery("SELECT * FROM factura_despacho WHERE id_pedid
 
 $planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana, tipos_colecciones, pedidos WHERE confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_campana = {$id_campana} and planes_campana.id_campana = {$id_campana} and planes_campana.id_plan = planes.id_plan and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and tipos_colecciones.id_pedido = {$id_pedido} and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id} and planes_campana.id_despacho = {$id_despacho} and confignotaentrega.id_despacho = {$id_despacho}");
 $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
-
+$premios_planes3 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
 $premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = 'Standard' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
 // if(count($premios_planes) < 2){
 // 	$pplan_momentaneo = $planesCol[0]['nombre_plan'];
@@ -487,57 +487,67 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                   // ========================== // =============================== // ============================== //
                                   foreach ($premios_perdidos as $dataperdidos) {
                                     if(!empty($dataperdidos['id_premio_perdido'])){
-                                      if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-                                        $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                        // ========================== // =============================== // ============================== //
-                                        if(!empty($coleccionesPlanPremioPedido[$data2['nombre_plan']])){
-                                          if($coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada']==0){
-                                            $coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada'] = $nuevoResult;
-                                          }
-                                        }
-                                        // ========================== // =============================== // ============================== //
-                                        if($nuevoResult>0){
-                                          foreach ($premios_planes as $planstandard){
-                                            if ($planstandard['id_plan_campana']){
-                                              if ($data2['nombre_plan'] == $planstandard['nombre_plan']){
-                                                if ($planstandard['tipo_premio']==$pagosR['name']){
-                                                  $option = "";
-                                                  foreach ($optNotas as $opt){
-                                                    if(!empty($opt['id_opcion_entrega'])){
-                                                      if($opt['cod']=="S".$planstandard['id_premio']){
-                                                        $option = $opt['val'];
-                                                      }
-                                                    }
-                                                  }
-                                                  if($catalag=="1"){
-                                                  	$condicion = $_GET['S'.$planstandard['id_premio']];	
-                                                  }
-                                                  if($catalag=="0"){
-                                                  	$condicion = $option;
-                                                  }
-                                                  if($condicion=="Y"){
-                                                  	$info .= "
-                                                    <tr>
-                                                      <td class='col1'>
-                                                        ".$nuevoResult."
-                                                      </td>
-                                                      <td class='col2'>
-                                                        ".$planstandard['producto']."
-                                                      </td>
-                                                      <td class='col3'>
-                                                        Premio de ".$pagosR['name'].". P. ".$planstandard['nombre_plan']."
-                                                      </td>
-                                                      <td class='col4'>
-                                                      </td>
-                                                      <td class='col5'>
-                                                      </td>
-                                                    </tr>";
-                                                  } 
-                                                }
-                                              }
-                                            }
-                                          }
-                                        }
+                                    	if($dataperdidos['id_pedido'] == $data['id_pedido']){
+	                                      $comparedPlan = "";
+	                                      if($dataperdidos['codigo']=="nombre"){
+	                                      	$comparedPlan = $data2['nombre_plan'];
+	                                      }
+	                                      if($dataperdidos['codigo']=="nombreid"){
+	                                      	$comparedPlan = $data2['id_plan'];
+	                                      }
+	                                      if( ($dataperdidos['valor'] == $comparedPlan) ){
+	                                      	$nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+	                                        // ========================== // =============================== // ============================== //
+	                                        if(!empty($coleccionesPlanPremioPedido[$data2['nombre_plan']])){
+	                                          if($coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada']==0){
+	                                            $coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada'] = $nuevoResult;
+	                                          }
+	                                        }
+	                                        // ========================== // =============================== // ============================== //
+	                                        if($nuevoResult>0){
+	                                          foreach ($premios_planes3 as $planstandard){
+	                                            if ($planstandard['id_plan_campana']){
+	                                              if ($data2['nombre_plan'] == $planstandard['nombre_plan']){
+	                                                if ($planstandard['tipo_premio']==$pagosR['name']){
+	                                                  $option = "";
+	                                                  $planIDACT=$data2['id_plan'];
+	                                                  foreach ($optNotas as $opt){
+	                                                    if(!empty($opt['id_opcion_entrega'])){
+	                                                      if($opt['cod']==$planIDACT.$planstandard['id_premio']){
+	                                                        $option = $opt['val'];
+	                                                      }
+	                                                    }
+	                                                  }
+	                                                  if($catalag=="1"){
+	                                                  	$condicion = $_GET[$planIDACT.$planstandard['id_premio']];	
+	                                                  }
+	                                                  if($catalag=="0"){
+	                                                  	$condicion = $option;
+	                                                  }
+	                                                  if($condicion=="Y"){
+	                                                  	$info .= "
+	                                                    <tr>
+	                                                      <td class='col1'>
+	                                                        ".$nuevoResult."
+	                                                      </td>
+	                                                      <td class='col2'>
+	                                                        ".$planstandard['producto']."
+	                                                      </td>
+	                                                      <td class='col3'>
+	                                                        Premio de ".$pagosR['name'].". P. ".$planstandard['nombre_plan']."
+	                                                      </td>
+	                                                      <td class='col4'>
+	                                                      </td>
+	                                                      <td class='col5'>
+	                                                      </td>
+	                                                    </tr>";
+	                                                  } 
+	                                                }
+	                                              }
+	                                            }
+	                                          }
+	                                        }
+	                                      }
                                       }
                                     }
                                   }

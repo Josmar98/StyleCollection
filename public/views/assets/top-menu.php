@@ -7,7 +7,7 @@
               <h2 class="logoicon">
                 <!-- <a href="<?=ROOTURL?>" style="font-family:arial;font-size:1.1em"> -->
                 <a href="/" style="font-family:arial;font-size:1.1em">
-                  <img src="public/assets/img/resources/logotipo3.23.png" style="max-width:27.5%;margin:0;box-sizing:border-box;">
+                  <img src="public/assets/img/resources/logotipo4.23.png" style="max-width:27.5%;margin:0;box-sizing:border-box;">
                   <!-- <span style="color:#ED2A77"><b>Style</b></span><span style="color:#000"><b>Collection</b></span> -->
                 </a>
               </h2>  

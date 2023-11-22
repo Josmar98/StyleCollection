@@ -218,10 +218,10 @@ $(document).ready(function(){
     calendarioVerificarDia();
 
     <?php if($_SESSION['nombre_rol']=="Superusuario" && $actualizargemasfacturaD=="1"){ ?>
-      actualizarGemasFacturaPedidosD();
+      //actualizarGemasFacturaPedidosD();
     <?php } ?>
     <?php if($_SESSION['nombre_rol']=="Superusuario" && $actualizargemasfacturaB=="1"){ ?>
-      actualizarGemasFacturaPedidosB();
+      //actualizarGemasFacturaPedidosB();
     <?php } ?>
 
   })

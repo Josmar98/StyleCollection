@@ -197,52 +197,64 @@
                                             // ========================== // =============================== // ============================== //
                                             foreach ($premios_perdidos as $dataperdidos) {
                                               if(!empty($dataperdidos['id_premio_perdido'])){
-                                                if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-                                                  $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                                  // ========================== // =============================== // ============================== //
-                                                  if(!empty($coleccionesPlanPremioPedido[$data2['nombre_plan']])){
-                                                    if($coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada']==0){
-                                                      $coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada'] = $nuevoResult;
-                                                    }
+                                                if($dataperdidos['id_pedido'] == $data['id_pedido']){
+                                                  $comparedPlan = "";
+                                                  if($dataperdidos['codigo']=="nombre"){
+                                                    $comparedPlan = $data2['nombre_plan'];
                                                   }
-                                                  // ========================== // =============================== // ============================== //
-                                                  if($nuevoResult>0){
-                                                    foreach ($premios_planes as $planstandard){
-                                                      if ($planstandard['id_plan_campana']){
-                                                        if ($data2['nombre_plan'] == $planstandard['nombre_plan']){
-                                                          if ($planstandard['tipo_premio']==$pagosR['name']){ ?>
-                                                              <?php 
-                                                                $option = "";
-                                                                foreach ($optNotas as $opt){
-                                                                  if(!empty($opt['id_opcion_entrega'])){
-                                                                    if($opt['cod']=="S".$planstandard['id_premio']){
-                                                                      $option = $opt['val'];
+                                                  if($dataperdidos['codigo']=="nombreid"){
+                                                    $comparedPlan = $data2['id_plan'];
+                                                  }
+                                                  //if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+                                                  //if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+                                                  if( ($dataperdidos['valor'] == $comparedPlan) ){
+                                                    $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                    // ========================== // =============================== // ============================== //
+                                                    if(!empty($coleccionesPlanPremioPedido[$data2['nombre_plan']])){
+                                                      if($coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada']==0){
+                                                        $coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada'] = $nuevoResult;
+                                                      }
+                                                    }
+                                                    // ========================== // =============================== // ============================== //
+                                                    if($nuevoResult>0){
+                                                      foreach ($premios_planes3 as $planstandard){
+                                                        if ($planstandard['id_plan_campana']){
+                                                          if ($data2['nombre_plan'] == $planstandard['nombre_plan']){
+                                                            if ($planstandard['tipo_premio']==$pagosR['name']){ ?>
+                                                                <?php 
+                                                                  $planIDACT=$data2['id_plan'];
+                                                                  $option = "";
+                                                                  foreach ($optNotas as $opt){
+                                                                    if(!empty($opt['id_opcion_entrega'])){
+                                                                      if($opt['cod']==$planIDACT.$planstandard['id_premio']){
+                                                                        $option = $opt['val'];
+                                                                      }
                                                                     }
                                                                   }
-                                                                }
-                                                              ?>
-                                                              <tr class="codigoS<?=$planstandard['id_premio']?>" <?php if ($option=="N"){ ?> style='color:#DDD;' <?php } ?> > <!-- STANDARD -->
-                                                                <td class="col1">
-                                                                  <?php echo $nuevoResult; ?>
-                                                                </td>
-                                                                <td class="col2">
-                                                                  <?php echo $planstandard['producto']; ?>
-                                                                </td>
-                                                                <td class="col3">
-                                                                  Premio de <?=$pagosR['name']; ?>. P. <?=$planstandard['nombre_plan'] ?>
-                                                                </td>
-                                                                <td class="col4">
-                                                                </td>
-                                                                <td class="col5">
-                                                                </td>
-                                                                <td>
-                                                                  <select class="opciones" name="S<?=$planstandard['id_premio']?>">
-                                                                    <option <?php if($option=="Y"){ ?> selected <?php  } ?> value="Y">SI</option>
-                                                                    <option <?php if($option=="N"){ ?> selected <?php  } ?> value="N">No</option>
-                                                                  </select>
-                                                                </td>
-                                                              </tr>
-                                                            <?php 
+                                                                ?>
+                                                                <tr class="codigo<?=$planIDACT;?><?=$planstandard['id_premio']?>" <?php if ($option=="N"){ ?> style='color:#DDD;' <?php } ?> > <!-- STANDARD -->
+                                                                  <td class="col1">
+                                                                    <?php echo $nuevoResult; ?>
+                                                                  </td>
+                                                                  <td class="col2">
+                                                                    <?php echo $planstandard['producto']; ?>
+                                                                  </td>
+                                                                  <td class="col3">
+                                                                    Premio de <?=$pagosR['name']; ?>. P. <?=$planstandard['nombre_plan'] ?>
+                                                                  </td>
+                                                                  <td class="col4">
+                                                                  </td>
+                                                                  <td class="col5">
+                                                                  </td>
+                                                                  <td>
+                                                                    <select class="opciones" name="<?=$planIDACT;?><?=$planstandard['id_premio']?>">
+                                                                      <option <?php if($option=="Y"){ ?> selected <?php  } ?> value="Y">SI</option>
+                                                                      <option <?php if($option=="N"){ ?> selected <?php  } ?> value="N">No</option>
+                                                                    </select>
+                                                                  </td>
+                                                                </tr>
+                                                              <?php 
+                                                            }
                                                           }
                                                         }
                                                       }

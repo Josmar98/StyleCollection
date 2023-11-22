@@ -13,7 +13,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="content-language" content="es" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
-<meta name="description" content="ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="description" content="ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="keywords" content="Estadisticas Peso argentino, tasa Peso argentino, tipo de cambio Peso argentino, precio Peso argentino" />
 <meta name="theme-color" content="#051a2b" />
 <meta name="revisit-after" content="1 day" />
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="es_" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Peso argentino | ARS | Divisas" />
-<meta property="og:description" content="ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta property="og:description" content="ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta property="og:url" content="https://exchangemonitor.net/estadisticas/divisas/ARS" />
 <meta property="og:site_name" content="ExchangeMonitor.net" />
 <meta property="og:image" content="https://exchangemonitor.net/img/general/divisas.webp" />
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ExchangeMonit" />
 <meta name="twitter:title" content="Peso argentino | ARS | Divisas" />
-<meta name="twitter:description" content="ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="twitter:description" content="ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="twitter:creator" content="@ExchangeMonit" />
 <meta name="twitter:image:src" content="https://exchangemonitor.net/img/general/divisas.webp" />
 
@@ -215,7 +215,7 @@
             <li><a target="_blank" href="https://www.instagram.com/exchangemonitor_net/"><span class="icon global-instagram"></span></a></li>
                         <!-- <li><a href="https://blog.exchangemonitor.net/"><span class="icon global-blog"></span></a></li> -->
             <li><a target="_blank" href="/contacto"><span class="icon global-contact"></span></a></li>
-            <li><a href="#" onclick="Compartir('ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/ARS')"><span class="icon global-share"></span></a></li>
+            <li><a href="#" onclick="Compartir('ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/ARS')"><span class="icon global-share"></span></a></li>
         </ul>
     </div>
 </nav>
@@ -232,7 +232,7 @@
                 <span class="toggler-icon toggler-menu"></span>
             </button>
             
-            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/ARS')">
+            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/ARS')">
                 <span class="toggler-icon toggler-share"></span>
             </button>
         </div>
@@ -296,12 +296,12 @@
                     <span class="close-icon" onclick="CloseDialog('share')"></span>
                     <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/divisas/ARS', 'https://exchangemonitor.net/img/general/divisas.webp')" src="/img/icons/share-pinterest.webp" />
                     <img onclick="CompartirPC('facebook', '', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-facebook.webp" />
-                    <img onclick="CompartirPC('twitter', 'ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-twitter.webp" />
+                    <img onclick="CompartirPC('twitter', 'ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-twitter.webp" />
                     <img onclick="CompartirPC('linkedin', '', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-linkedin.webp" />
-                    <img onclick="CompartirPC('telegram', 'ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-telegram.webp" />
+                    <img onclick="CompartirPC('telegram', 'ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-telegram.webp" />
                     <img onclick="CompartirPC('google-plus', '', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-google-plus.webp" /><br>
-                    <img onclick="CompartirPC('gmail', 'ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/ARS', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-gmail.webp" />
-                    <img onclick="CompartirPC('email', 'ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/ARS', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-email.webp" />
+                    <img onclick="CompartirPC('gmail', 'ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/ARS', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-gmail.webp" />
+                    <img onclick="CompartirPC('email', 'ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/ARS', 'https://exchangemonitor.net/estadisticas/divisas/ARS', '')" src="/img/icons/share-email.webp" />
                 </div>
             </div>
         </div>
@@ -374,7 +374,7 @@
                     
                     <div class="margin"></div>
                     <div class="col texto">
-                        <h1>Peso argentino</h1><h2>335,35<small><small> ARS/USD</small></small></h2><p>27-12-2022 01:14 am</p>                    </div>
+                        <h1>Peso argentino</h1><h2>786,16<small><small> ARS/USD</small></small></h2><p>02-10-2023 02:14 pm</p>                    </div>
                     
                             <script>
 
@@ -526,22 +526,22 @@
                                 <div class="margin"></div>
                                 <div itemscope itemtype="https://schema.org/FAQPage">
                                     <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                        <h2>Precio del Peso argentino hoy martes, 27 de Diciembre de 2022</h2>
+                                        <h2>Precio del Peso argentino hoy lunes, 02 de Octubre de 2023</h2>
                                         <h4 itemprop="name">¿A cuánto está el Peso argentino HOY?</h4>
                                         <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
                                             <div itemprop="text">
                                                 <!-- start NewsArticle -->
                                                 <div itemscope itemtype="https://schema.org/NewsArticle">        
-        <meta itemprop="dateCreated"        content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:14 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-10-02T18:14 +00:00" />
+        <meta itemprop="datePublished"      content="2023-10-02T18:14 +00:00" />
+        <meta itemprop="dateModified"       content="2023-10-02T18:14 +00:00" />
         <meta itemprop="articleSection"     content="" />
-        <meta itemprop="description"        content="ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/divisas/ARS" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
             <meta itemprop="url" content="https://exchangemonitor.net/img/general/divisas.webp">
-            <meta itemprop="description" content="ARS | El precio del Peso argentino hoy martes, 27 de Diciembre de 2022 es de 335,35 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="description" content="ARS | El precio del Peso argentino hoy lunes, 02 de Octubre de 2023 es de 786,16 ARS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="478">
             <meta itemprop="height" content="250">
         </span>
@@ -556,9 +556,9 @@
             </span>
         </span>
         
-        <meta itemprop="keywords" content="Estadisticas Peso argentino" /><meta itemprop="keywords" content=" tasa Peso argentino" /><meta itemprop="keywords" content=" tipo de cambio Peso argentino" /><meta itemprop="keywords" content=" precio Peso argentino" />                  <meta itemprop="name headline" content="Precio del Peso argentino hoy martes, 27 de Diciembre de 2022" />
+        <meta itemprop="keywords" content="Estadisticas Peso argentino" /><meta itemprop="keywords" content=" tasa Peso argentino" /><meta itemprop="keywords" content=" tipo de cambio Peso argentino" /><meta itemprop="keywords" content=" precio Peso argentino" />                  <meta itemprop="name headline" content="Precio del Peso argentino hoy lunes, 02 de Octubre de 2023" />
                                                     <div itemprop="articleBody">
-                                                        <p class="text-justify">El precio del Peso argentino hoy <b>martes, 27 de Diciembre de 2022</b> es de <b>335,35 ARS/USD.</b></p>
+                                                        <p class="text-justify">El precio del Peso argentino hoy <b>lunes, 02 de Octubre de 2023</b> es de <b>786,16 ARS/USD.</b></p>
                                                     </div>
                                                 </div>
                                                 <!-- start NewsArticle -->
@@ -583,35 +583,35 @@
                                                             </thead>                               <tbody>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">1$</th>
-                                                                        <td class="text-right">335,35 ARS</td>
+                                                                        <td class="text-right">786,16 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">5$</th>
-                                                                        <td class="text-right">1.676,73 ARS</td>
+                                                                        <td class="text-right">3.930,82 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">10$</th>
-                                                                        <td class="text-right">3.353,45 ARS</td>
+                                                                        <td class="text-right">7.861,64 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">20$</th>
-                                                                        <td class="text-right">6.706,91 ARS</td>
+                                                                        <td class="text-right">15.723,27 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">30$</th>
-                                                                        <td class="text-right">10.060,36 ARS</td>
+                                                                        <td class="text-right">23.584,91 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">40$</th>
-                                                                        <td class="text-right">13.413,82 ARS</td>
+                                                                        <td class="text-right">31.446,54 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">50$</th>
-                                                                        <td class="text-right">16.767,27 ARS</td>
+                                                                        <td class="text-right">39.308,18 ARS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">100$</th>
-                                                                        <td class="text-right">33.534,54 ARS</td>
+                                                                        <td class="text-right">78.616,35 ARS</td>
                                                                     </tr>
                                                                 </tbody>                       </table>
                                                     </div>
@@ -714,7 +714,7 @@
     <script>
     
         var datos;
-        var tasa = '335.34540576794';
+        var tasa = '786.16352201258';
         var tipo = 'divisas';
         var divisa = 'ARS';
         var titulo = 'Peso argentino';
@@ -739,7 +739,7 @@
         var formato = "%d/%m/%Y %H:%M";
         var tooltip = true;
         
-        let fecha_utc = new Date('2022/12/27 05:14');
+        let fecha_utc = new Date('2023/10/02 18:14');
         let fecha_local = new Date();
         
         var utc;

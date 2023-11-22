@@ -13,7 +13,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="content-language" content="es" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
-<meta name="description" content="COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="description" content="COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="keywords" content="Estadisticas Peso colombiano, tasa Peso colombiano, tipo de cambio Peso colombiano, precio Peso colombiano" />
 <meta name="theme-color" content="#051a2b" />
 <meta name="revisit-after" content="1 day" />
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="es_" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Peso colombiano | COP | Divisas" />
-<meta property="og:description" content="COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta property="og:description" content="COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta property="og:url" content="https://exchangemonitor.net/estadisticas/divisas/COP" />
 <meta property="og:site_name" content="ExchangeMonitor.net" />
 <meta property="og:image" content="https://exchangemonitor.net/img/general/divisas.webp" />
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ExchangeMonit" />
 <meta name="twitter:title" content="Peso colombiano | COP | Divisas" />
-<meta name="twitter:description" content="COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="twitter:description" content="COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="twitter:creator" content="@ExchangeMonit" />
 <meta name="twitter:image:src" content="https://exchangemonitor.net/img/general/divisas.webp" />
 
@@ -215,7 +215,7 @@
             <li><a target="_blank" href="https://www.instagram.com/exchangemonitor_net/"><span class="icon global-instagram"></span></a></li>
                         <!-- <li><a href="https://blog.exchangemonitor.net/"><span class="icon global-blog"></span></a></li> -->
             <li><a target="_blank" href="/contacto"><span class="icon global-contact"></span></a></li>
-            <li><a href="#" onclick="Compartir('COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/COP')"><span class="icon global-share"></span></a></li>
+            <li><a href="#" onclick="Compartir('COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/COP')"><span class="icon global-share"></span></a></li>
         </ul>
     </div>
 </nav>
@@ -232,7 +232,7 @@
                 <span class="toggler-icon toggler-menu"></span>
             </button>
             
-            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/COP')">
+            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/divisas/COP')">
                 <span class="toggler-icon toggler-share"></span>
             </button>
         </div>
@@ -296,12 +296,12 @@
                     <span class="close-icon" onclick="CloseDialog('share')"></span>
                     <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/divisas/COP', 'https://exchangemonitor.net/img/general/divisas.webp')" src="/img/icons/share-pinterest.webp" />
                     <img onclick="CompartirPC('facebook', '', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-facebook.webp" />
-                    <img onclick="CompartirPC('twitter', 'COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-twitter.webp" />
+                    <img onclick="CompartirPC('twitter', 'COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-twitter.webp" />
                     <img onclick="CompartirPC('linkedin', '', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-linkedin.webp" />
-                    <img onclick="CompartirPC('telegram', 'COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-telegram.webp" />
+                    <img onclick="CompartirPC('telegram', 'COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-telegram.webp" />
                     <img onclick="CompartirPC('google-plus', '', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-google-plus.webp" /><br>
-                    <img onclick="CompartirPC('gmail', 'COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/COP', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-gmail.webp" />
-                    <img onclick="CompartirPC('email', 'COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/COP', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-email.webp" />
+                    <img onclick="CompartirPC('gmail', 'COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/COP', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-gmail.webp" />
+                    <img onclick="CompartirPC('email', 'COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/divisas/COP', 'https://exchangemonitor.net/estadisticas/divisas/COP', '')" src="/img/icons/share-email.webp" />
                 </div>
             </div>
         </div>
@@ -374,7 +374,7 @@
                     
                     <div class="margin"></div>
                     <div class="col texto">
-                        <h1>Peso colombiano</h1><h2>4.725,90<small><small> COP/USD</small></small></h2><p>27-12-2022 01:14 am</p>                    </div>
+                        <h1>Peso colombiano</h1><h2>4.140,44<small><small> COP/USD</small></small></h2><p>02-10-2023 02:13 pm</p>                    </div>
                     
                             <script>
 
@@ -526,22 +526,22 @@
                                 <div class="margin"></div>
                                 <div itemscope itemtype="https://schema.org/FAQPage">
                                     <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                        <h2>Precio del Peso colombiano hoy martes, 27 de Diciembre de 2022</h2>
+                                        <h2>Precio del Peso colombiano hoy lunes, 02 de Octubre de 2023</h2>
                                         <h4 itemprop="name">¿A cuánto está el Peso colombiano HOY?</h4>
                                         <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
                                             <div itemprop="text">
                                                 <!-- start NewsArticle -->
                                                 <div itemscope itemtype="https://schema.org/NewsArticle">        
-        <meta itemprop="dateCreated"        content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:14 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-10-02T18:13 +00:00" />
+        <meta itemprop="datePublished"      content="2023-10-02T18:13 +00:00" />
+        <meta itemprop="dateModified"       content="2023-10-02T18:13 +00:00" />
         <meta itemprop="articleSection"     content="" />
-        <meta itemprop="description"        content="COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/divisas/COP" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
             <meta itemprop="url" content="https://exchangemonitor.net/img/general/divisas.webp">
-            <meta itemprop="description" content="COP | El precio del Peso colombiano hoy martes, 27 de Diciembre de 2022 es de 4.725,90 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="description" content="COP | El precio del Peso colombiano hoy lunes, 02 de Octubre de 2023 es de 4.140,44 COP/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="478">
             <meta itemprop="height" content="250">
         </span>
@@ -556,9 +556,9 @@
             </span>
         </span>
         
-        <meta itemprop="keywords" content="Estadisticas Peso colombiano" /><meta itemprop="keywords" content=" tasa Peso colombiano" /><meta itemprop="keywords" content=" tipo de cambio Peso colombiano" /><meta itemprop="keywords" content=" precio Peso colombiano" />                  <meta itemprop="name headline" content="Precio del Peso colombiano hoy martes, 27 de Diciembre de 2022" />
+        <meta itemprop="keywords" content="Estadisticas Peso colombiano" /><meta itemprop="keywords" content=" tasa Peso colombiano" /><meta itemprop="keywords" content=" tipo de cambio Peso colombiano" /><meta itemprop="keywords" content=" precio Peso colombiano" />                  <meta itemprop="name headline" content="Precio del Peso colombiano hoy lunes, 02 de Octubre de 2023" />
                                                     <div itemprop="articleBody">
-                                                        <p class="text-justify">El precio del Peso colombiano hoy <b>martes, 27 de Diciembre de 2022</b> es de <b>4.725,90 COP/USD.</b></p>
+                                                        <p class="text-justify">El precio del Peso colombiano hoy <b>lunes, 02 de Octubre de 2023</b> es de <b>4.140,44 COP/USD.</b></p>
                                                     </div>
                                                 </div>
                                                 <!-- start NewsArticle -->
@@ -583,35 +583,35 @@
                                                             </thead>                               <tbody>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">1$</th>
-                                                                        <td class="text-right">4.725,90 COP</td>
+                                                                        <td class="text-right">4.140,44 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">5$</th>
-                                                                        <td class="text-right">23.629,49 COP</td>
+                                                                        <td class="text-right">20.702,22 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">10$</th>
-                                                                        <td class="text-right">47.258,98 COP</td>
+                                                                        <td class="text-right">41.404,44 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">20$</th>
-                                                                        <td class="text-right">94.517,96 COP</td>
+                                                                        <td class="text-right">82.808,88 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">30$</th>
-                                                                        <td class="text-right">141.776,94 COP</td>
+                                                                        <td class="text-right">124.213,32 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">40$</th>
-                                                                        <td class="text-right">189.035,92 COP</td>
+                                                                        <td class="text-right">165.617,75 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">50$</th>
-                                                                        <td class="text-right">236.294,90 COP</td>
+                                                                        <td class="text-right">207.022,19 COP</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">100$</th>
-                                                                        <td class="text-right">472.589,79 COP</td>
+                                                                        <td class="text-right">414.044,39 COP</td>
                                                                     </tr>
                                                                 </tbody>                       </table>
                                                     </div>
@@ -714,7 +714,7 @@
     <script>
     
         var datos;
-        var tasa = '4725.8979206049';
+        var tasa = '4140.4438555813';
         var tipo = 'divisas';
         var divisa = 'COP';
         var titulo = 'Peso colombiano';
@@ -739,7 +739,7 @@
         var formato = "%d/%m/%Y %H:%M";
         var tooltip = true;
         
-        let fecha_utc = new Date('2022/12/27 05:14');
+        let fecha_utc = new Date('2023/10/02 18:13');
         let fecha_local = new Date();
         
         var utc;

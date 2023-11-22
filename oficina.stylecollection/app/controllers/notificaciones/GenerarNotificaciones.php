@@ -312,120 +312,120 @@ if(!empty($_POST['verificarFechaLimitePlanes'])){
 	}
 	echo json_encode($array);
 }
-if(!empty($_POST['verificarActualizarGemasFacturaPedidosBloq'])){
-	$fecha = date('Y-m-d');
-	$query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 and campanas.estatus = 1 and campanas.visibilidad = 1 and '{$fecha}' BETWEEN despachos.limite_pedido and despachos.fecha_segunda_senior ORDER BY pedidos.id_pedido ASC";
-	$clientes = $lider->consultarQuery($query);
+// if(!empty($_POST['verificarActualizarGemasFacturaPedidosBloq'])){
+// 	$fecha = date('Y-m-d');
+// 	$query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 and campanas.estatus = 1 and campanas.visibilidad = 1 and '{$fecha}' BETWEEN despachos.limite_pedido and despachos.fecha_segunda_senior ORDER BY pedidos.id_pedido ASC";
+// 	$clientes = $lider->consultarQuery($query);
 
-	$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
-	$configgema = $configgemas[0];
-	$id_configgema = $configgema['id_configgema'];
-	$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
-	$cantidad_gemas = 0;
+// 	$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
+// 	$configgema = $configgemas[0];
+// 	$id_configgema = $configgema['id_configgema'];
+// 	$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
+// 	$cantidad_gemas = 0;
 
-	foreach ($clientes as $data) {
-		if(!empty($data['id_cliente']) && !empty($data['id_pedido'])){
-			if($data['cantidad_aprobado'] > 0){
+// 	foreach ($clientes as $data) {
+// 		if(!empty($data['id_cliente']) && !empty($data['id_pedido'])){
+// 			if($data['cantidad_aprobado'] > 0){
 
-				$cantidad_aprobado = $data['cantidad_aprobado'];
-				$id_campana = $data['id_campana'];
-				$id_pedido = $data['id_pedido'];
-				$id_cliente = $data['id_cliente'];
-
-
-				if($configgema['condicion']=="Dividir"){
-					$cantidad_gemas = $cantidad_aprobado / $cantidad_gemas_correspondientes;
-				}
-				if($configgema['condicion']=="Multiplicar"){
-					$cantidad_gemas = $cantidad_aprobado * $cantidad_gemas_correspondientes;
-				}
-
-				echo $id_campana." ";
-				echo $id_pedido." ";
-				echo $id_cliente." ";
-				echo $id_configgema." ";
-				echo $cantidad_aprobado." ";
-				echo $cantidad_gemas_correspondientes." ";
-				echo $cantidad_gemas." ";
-				echo "Bloqueado ";
-				echo "1\n";
-				$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id_pedido} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
-
-				$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id_pedido}, {$id_cliente}, {$id_configgema}, '{$cantidad_aprobado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', '0', '{$cantidad_gemas}', 'Bloqueado', 1)";
-				$lider->registrar($query, "gemas", "id_gema");
-
-			}
-		}
-	}
+// 				$cantidad_aprobado = $data['cantidad_aprobado'];
+// 				$id_campana = $data['id_campana'];
+// 				$id_pedido = $data['id_pedido'];
+// 				$id_cliente = $data['id_cliente'];
 
 
+// 				if($configgema['condicion']=="Dividir"){
+// 					$cantidad_gemas = $cantidad_aprobado / $cantidad_gemas_correspondientes;
+// 				}
+// 				if($configgema['condicion']=="Multiplicar"){
+// 					$cantidad_gemas = $cantidad_aprobado * $cantidad_gemas_correspondientes;
+// 				}
 
+// 				echo $id_campana." ";
+// 				echo $id_pedido." ";
+// 				echo $id_cliente." ";
+// 				echo $id_configgema." ";
+// 				echo $cantidad_aprobado." ";
+// 				echo $cantidad_gemas_correspondientes." ";
+// 				echo $cantidad_gemas." ";
+// 				echo "Bloqueado ";
+// 				echo "1\n";
+// 				$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id_pedido} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
 
+// 				$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id_pedido}, {$id_cliente}, {$id_configgema}, '{$cantidad_aprobado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', '0', '{$cantidad_gemas}', 'Bloqueado', 1)";
+// 				$lider->registrar($query, "gemas", "id_gema");
 
-
-	// foreach ($clientes as $data) {
-	// 	echo "\n--------------------------------------------------------\n";
-	// 	echo json_encode($data);
-	// 	echo "\n--------------------------------------------------------\n";
-	// }
-}
-if(!empty($_POST['verificarActualizarGemasFacturaPedidosDispo'])){
-	$fecha = date('Y-m-d');
-	$query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 and campanas.estatus = 1 and campanas.visibilidad = 1 and '{$fecha}' BETWEEN despachos.limite_pedido and despachos.fecha_segunda_senior ORDER BY pedidos.id_pedido ASC";
-	$clientes = $lider->consultarQuery($query);
-
-	$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
-	$configgema = $configgemas[0];
-	$id_configgema = $configgema['id_configgema'];
-	$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
-	$cantidad_gemas = 0;
-
-	foreach ($clientes as $data) {
-		if(!empty($data['id_cliente']) && !empty($data['id_pedido'])){
-			if($data['cantidad_aprobado'] > 0){
-
-				$cantidad_aprobado = $data['cantidad_aprobado'];
-				$id_campana = $data['id_campana'];
-				$id_pedido = $data['id_pedido'];
-				$id_cliente = $data['id_cliente'];
-
-
-				if($configgema['condicion']=="Dividir"){
-					$cantidad_gemas = $cantidad_aprobado / $cantidad_gemas_correspondientes;
-				}
-				if($configgema['condicion']=="Multiplicar"){
-					$cantidad_gemas = $cantidad_aprobado * $cantidad_gemas_correspondientes;
-				}
-
-				echo $id_campana." ";
-				echo $id_pedido." ";
-				echo $id_cliente." ";
-				echo $id_configgema." ";
-				echo $cantidad_aprobado." ";
-				echo $cantidad_gemas_correspondientes." ";
-				echo $cantidad_gemas." ";
-				echo "Bloqueado ";
-				echo "1\n";
-				$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id_pedido} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
-
-				$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id_pedido}, {$id_cliente}, {$id_configgema}, '{$cantidad_aprobado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', '{$cantidad_gemas}', '0', 'Disponible', 1)";
-				$lider->registrar($query, "gemas", "id_gema");
-
-			}
-		}
-	}
+// 			}
+// 		}
+// 	}
 
 
 
 
 
 
-	// foreach ($clientes as $data) {
-	// 	echo "\n--------------------------------------------------------\n";
-	// 	echo json_encode($data);
-	// 	echo "\n--------------------------------------------------------\n";
-	// }
-}
+// 	// foreach ($clientes as $data) {
+// 	// 	echo "\n--------------------------------------------------------\n";
+// 	// 	echo json_encode($data);
+// 	// 	echo "\n--------------------------------------------------------\n";
+// 	// }
+// }
+// if(!empty($_POST['verificarActualizarGemasFacturaPedidosDispo'])){
+// 	$fecha = date('Y-m-d');
+// 	$query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 and campanas.estatus = 1 and campanas.visibilidad = 1 and '{$fecha}' BETWEEN despachos.limite_pedido and despachos.fecha_segunda_senior ORDER BY pedidos.id_pedido ASC";
+// 	$clientes = $lider->consultarQuery($query);
+
+// 	$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
+// 	$configgema = $configgemas[0];
+// 	$id_configgema = $configgema['id_configgema'];
+// 	$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
+// 	$cantidad_gemas = 0;
+
+// 	foreach ($clientes as $data) {
+// 		if(!empty($data['id_cliente']) && !empty($data['id_pedido'])){
+// 			if($data['cantidad_aprobado'] > 0){
+
+// 				$cantidad_aprobado = $data['cantidad_aprobado'];
+// 				$id_campana = $data['id_campana'];
+// 				$id_pedido = $data['id_pedido'];
+// 				$id_cliente = $data['id_cliente'];
+
+
+// 				if($configgema['condicion']=="Dividir"){
+// 					$cantidad_gemas = $cantidad_aprobado / $cantidad_gemas_correspondientes;
+// 				}
+// 				if($configgema['condicion']=="Multiplicar"){
+// 					$cantidad_gemas = $cantidad_aprobado * $cantidad_gemas_correspondientes;
+// 				}
+
+// 				echo $id_campana." ";
+// 				echo $id_pedido." ";
+// 				echo $id_cliente." ";
+// 				echo $id_configgema." ";
+// 				echo $cantidad_aprobado." ";
+// 				echo $cantidad_gemas_correspondientes." ";
+// 				echo $cantidad_gemas." ";
+// 				echo "Bloqueado ";
+// 				echo "1\n";
+// 				$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id_pedido} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
+
+// 				$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id_pedido}, {$id_cliente}, {$id_configgema}, '{$cantidad_aprobado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', '{$cantidad_gemas}', '0', 'Disponible', 1)";
+// 				$lider->registrar($query, "gemas", "id_gema");
+
+// 			}
+// 		}
+// 	}
+
+
+
+
+
+
+// 	// foreach ($clientes as $data) {
+// 	// 	echo "\n--------------------------------------------------------\n";
+// 	// 	echo json_encode($data);
+// 	// 	echo "\n--------------------------------------------------------\n";
+// 	// }
+// }
 
 if(!empty($_POST['calendarioVerificarDia'])){
 	$year = date('Y');

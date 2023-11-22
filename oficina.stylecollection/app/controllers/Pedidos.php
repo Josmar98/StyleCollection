@@ -126,6 +126,7 @@ if($permitir=="1"){
 		$_SESSION['ids_general_estructuraID'] = [];
 		$_SESSION['id_despacho'] = $id_despacho;
 		consultarEstructuraID($_SESSION['id_cliente'], $lider);
+
 		$estructuraHijos = $_SESSION['ids_general_estructuraID'];
 		// $idTem = $_SESSION['id_cliente'];
 		// $pedidosPerson = $lider->consultarQuery("SELECT id_cliente, id_pedido FROM pedidos WHERE id_despacho = $id_despacho and id_cliente = $idTem");
@@ -138,6 +139,7 @@ if($permitir=="1"){
 			}
 		}
 	}
+	// echo " WEEEE ESE ES EL ACCESOOOO ".$accesoSinPost." COJE DATOOOO <br><br> ";
 
 	if(!empty($_POST['id_cliente']) && !empty($_POST['id']) && !empty($_POST['descuentos']) && isset($_POST['valores']) && isset($_POST['totales'])){
 		// print_r($_POST);
@@ -729,12 +731,23 @@ function consultarEstructuraAc($id_c, $lider){
 // }
 
 function consultarEstructuraID($id_c, $lider){
+	// echo $id_c."<br>";
 	$id_despacho = $_SESSION['id_despacho'];
-	$lideres = $lider->consultarQuery("SELECT clientes.id_cliente, pedidos.id_pedido FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_lider = $id_c");
+	$lideres = $lider->consultarQuery("SELECT clientes.id_cliente FROM clientes WHERE clientes.id_lider = $id_c");
+	// $lideres = $lider->consultarQuery("SELECT clientes.id_cliente, pedidos.id_pedido FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_lider = $id_c");
 	if(Count($lideres)>1){
 		foreach ($lideres as $lid) {
 			if(!empty($lid['id_cliente'])){
-				$_SESSION['ids_general_estructuraID'][] = $lid;
+				$pedidos = $lider->consultarQuery("SELECT clientes.id_cliente, pedidos.id_pedido FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and clientes.id_cliente = {$lid['id_cliente']}");
+				// print_r($pedidos);
+				if(Count($pedidos)>1){
+					foreach ($pedidos as $ped) {
+						if(!empty($ped['id_cliente'])){
+							$_SESSION['ids_general_estructuraID'][] = $ped;
+						}
+					}
+				}
+				// $_SESSION['ids_general_estructuraID'][] = $lid;
 				consultarEstructuraID($lid['id_cliente'], $lider);
 			}
 		}

@@ -13,7 +13,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="content-language" content="es" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
-<meta name="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="keywords" content="Estadisticas EnParaleloVzla, tasa EnParaleloVzla, tipo de cambio EnParaleloVzla, precio EnParaleloVzla, Venezuela" />
 <meta name="theme-color" content="#051a2b" />
 <meta name="revisit-after" content="1 day" />
@@ -22,17 +22,17 @@
 <meta property="og:locale" content="es_" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Dólar EnParaleloVzla | Venezuela" />
-<meta property="og:description" content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta property="og:description" content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta property="og:url" content="https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla" />
 <meta property="og:site_name" content="ExchangeMonitor.net" />
-<meta property="og:image" content="https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg" />
+<meta property="og:image" content="https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg" />
 
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ExchangeMonit" />
 <meta name="twitter:title" content="Dólar EnParaleloVzla | Venezuela" />
-<meta name="twitter:description" content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="twitter:description" content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="twitter:creator" content="@ExchangeMonit" />
-<meta name="twitter:image:src" content="https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg" />
+<meta name="twitter:image:src" content="https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg" />
 
 <!-- start loading -->
 <style>
@@ -215,7 +215,7 @@
             <li><a target="_blank" href="https://www.instagram.com/exchangemonitor_net/"><span class="icon global-instagram"></span></a></li>
                         <!-- <li><a href="https://blog.exchangemonitor.net/"><span class="icon global-blog"></span></a></li> -->
             <li><a target="_blank" href="/contacto"><span class="icon global-contact"></span></a></li>
-            <li><a href="#" onclick="Compartir('El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla')"><span class="icon global-share"></span></a></li>
+            <li><a href="#" onclick="Compartir('El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla')"><span class="icon global-share"></span></a></li>
         </ul>
     </div>
 </nav>
@@ -232,7 +232,7 @@
                 <span class="toggler-icon toggler-menu"></span>
             </button>
             
-            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla')">
+            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla')">
                 <span class="toggler-icon toggler-share"></span>
             </button>
         </div>
@@ -294,14 +294,14 @@
             <div class="col-xl-12 text-center">
                 <div class="content">
                     <span class="close-icon" onclick="CloseDialog('share')"></span>
-                    <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg')" src="/img/icons/share-pinterest.webp" />
+                    <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg')" src="/img/icons/share-pinterest.webp" />
                     <img onclick="CompartirPC('facebook', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-facebook.webp" />
-                    <img onclick="CompartirPC('twitter', 'El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-twitter.webp" />
+                    <img onclick="CompartirPC('twitter', 'El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-twitter.webp" />
                     <img onclick="CompartirPC('linkedin', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-linkedin.webp" />
-                    <img onclick="CompartirPC('telegram', 'El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-telegram.webp" />
+                    <img onclick="CompartirPC('telegram', 'El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-telegram.webp" />
                     <img onclick="CompartirPC('google-plus', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-google-plus.webp" /><br>
-                    <img onclick="CompartirPC('gmail', 'El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-gmail.webp" />
-                    <img onclick="CompartirPC('email', 'El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-email.webp" />
+                    <img onclick="CompartirPC('gmail', 'El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-gmail.webp" />
+                    <img onclick="CompartirPC('email', 'El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', 'https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla', '')" src="/img/icons/share-email.webp" />
                 </div>
             </div>
         </div>
@@ -379,7 +379,7 @@
                                         <img alt="Disponible en Google Play" src="/img/icons/social-google-play-badge.webp" height="50px"/>
                                     </a>
                                     <div class="margin-10"></div>
-                                <h1>Dólar EnParaleloVzla  Venezuela</h1><h2>18,42<small><small> BS/USD</small></small></h2><p>27-12-2022 01:14 am</p>                    </div>
+                                <h1>Dólar EnParaleloVzla  Venezuela</h1><h2>36,00<small><small> BS/USD</small></small></h2><p>02-10-2023 02:11 pm</p>                    </div>
                     
                             <script>
 
@@ -537,16 +537,16 @@
                 <div itemprop="text">
                     <!-- start NewsArticle -->
                     <div itemscope itemtype="https://schema.org/NewsArticle">         
-        <meta itemprop="dateCreated"        content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:14 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-10-02T18:11 +00:00" />
+        <meta itemprop="datePublished"      content="2023-10-02T18:11 +00:00" />
+        <meta itemprop="dateModified"       content="2023-10-02T18:11 +00:00" />
         <meta itemprop="articleSection"     content="Venezuela" />
-        <meta itemprop="description"        content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-            <meta itemprop="url" content="https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg">
-            <meta itemprop="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="url" content="https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg">
+            <meta itemprop="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="800">
             <meta itemprop="height" content="800">
         </span>
@@ -566,7 +566,7 @@
                         <div itemprop="articleBody">
                             <p>En <b>EnParaleloVzla</b> es una cuenta de instagram que, desde ya hace varios años, ha venido ofreciendo un precio estimado del <a href="/dolar-promedio-venezuela">dolar promedio en Venezuela</a>, siendo éste el principal referente para la cotización del la divisa estadounidense, desplazando a <a href="/dolartoday-monitor">DolarToday</a> como principal referente del dólar paralelo en Venezuela.</p>
                             <p><b>En Paralelo</b> publica la tasa del dólar dos veces al dia, a las 9:00 AM y a la 1:00 PM. Su valor se calcula de manera muy simple, solo se toma el precio de algunas páginas que indican la tasa o permiten realizar el intercambio entre bólivares y dolares, y luego se realiza un promedio aritmético de las mismas:</p>
-                            <div class="row"><div class="col-xs-12 col-sm-4 text-center"><div class="margin-5"></div><img style="width:100%" src="https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg" alt="@enparalelovzla" /><p class="text-left"><small>Fuente: <a rel="nofollow" target="_blank" href="https://www.instagram.com/enparalelovzla/">@enparalelovzla</a></small></p></div><div class="col-xs-12 col-sm-4 text-center"><div class="margin-5"></div><img style="width:100%" src="https://cdn1.telegram-cdn.org/file/H3W--Xv0cAXpw-00AzJZBFO2EHEmfzyErQEyyGxbiBwmWTsYV2cWME0-UhUmHw0SgIEEVVj5UrB3zSN69-KA339vRpho59Vpgh7dcxxF7IGcaWjXg7uFDNKZLlHsrqv4r8yd1-N2uyGQQw12ABztQrDW7SgRN3dMxyWbyyHhZIv1Pp03fDVX5EWgSY878PdpsvuqSrcG2-sObsfVSRDnNdkyBQ9_tkiR2P3VgmAKndatQLZ1_92UdFwW8PUn1HBYfs4v12Wi-J6A11WR3TicleTVvL8KbB3WFZzA9s_wIMwkuUnVqCU6Cs00wYtPBtlLJwEf4W225s_h9h3fp1Uy_g.jpg" alt="@enparalelovzla" /><p class="text-left"><small>Fuente: <a rel="nofollow" target="_blank" href="https://www.instagram.com/enparalelovzla/">@enparalelovzla</a></small></p></div><div class="col-xs-12 col-sm-4 text-center"><div class="margin-5"></div><img style="width:100%" src="https://cdn1.telegram-cdn.org/file/cnhjbPBpKnkIxBTPlP-qZGREMgg0tuouZP1cQBQytQUsCg1r1Ani4K08ycvTJZx4bCjD41ta6IYiBD-GxhXjULk3WG7T610NgV6OxWh53_5eGvjxChOoivelEv3GI7Mn84SVtICg4vxcSjDq5PeIQiusZEQaTL_uTKkVw57PxLqgFNQCQqfuedhXFvqbSOPm8SMwJClukFKQPLqaT1wrz5qP862a-dbGJWUSIVoU6imYTEilztgZwluGI7VRPI398KqVho29iJ5pZRL3xlWv424T5bQt6D1KQYEDWYC15pnqp0Ay1ux0YM_uU9XJNX8AJZlOm9c8J18C2VnKb7ND8w.jpg" alt="@enparalelovzla" /><p class="text-left"><small>Fuente: <a rel="nofollow" target="_blank" href="https://www.instagram.com/enparalelovzla/">@enparalelovzla</a></small></p></div>
+                            <div class="row"><div class="col-xs-12 col-sm-4 text-center"><div class="margin-5"></div><img style="width:100%" src="https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg" alt="@enparalelovzla" /><p class="text-left"><small>Fuente: <a rel="nofollow" target="_blank" href="https://www.instagram.com/enparalelovzla/">@enparalelovzla</a></small></p></div>
                             </div>
                         </div>
                     </div>
@@ -598,22 +598,22 @@
                                 <div class="margin"></div>
                                 <div itemscope itemtype="https://schema.org/FAQPage">
                                     <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                        <h2>Precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022</h2>
+                                        <h2>Precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023</h2>
                                         <h4 itemprop="name">¿A cuánto está el dólar EnParaleloVzla en Venezuela HOY?</h4>
                                         <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
                                             <div itemprop="text">
                                                 <!-- start NewsArticle -->
                                                 <div itemscope itemtype="https://schema.org/NewsArticle">        
-        <meta itemprop="dateCreated"        content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:14 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-10-02T18:11 +00:00" />
+        <meta itemprop="datePublished"      content="2023-10-02T18:11 +00:00" />
+        <meta itemprop="dateModified"       content="2023-10-02T18:11 +00:00" />
         <meta itemprop="articleSection"     content="Venezuela" />
-        <meta itemprop="description"        content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/ve/dolar-enparalelovzla" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
-            <meta itemprop="url" content="https://cdn1.telegram-cdn.org/file/KaMiYTrROpH7RW3JksajsiAm-AvhO-WykqrkE3tqB1XRcm0NvKmD4otn9l1JMJe9gPAyuqAH0uBBFowZu6qYZrnxNrObP9QxeOJjxxCrpoMvWl14Mg9vWevoCFqDzesa05LIWjXLpgtyZ331ntqVJQH8Vev-iS0sC31P3fXy69Rcu2rCc_3OcmlhfT5eUfjxf3W5bolvJX7Y2VkIljks8ZzeiY9navyo-8Gd_TuyKIP31jEOV8Cv2oEdh5L9CIhOdPx-hidcyZVbfTsp80SZw5YxngKZJa5Up4cW8tScujpUdmbcrnBO5B0O0uDECaIm4TE2UDYUKTSFkZvplWdgzA.jpg">
-            <meta itemprop="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022 es de 18,42 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="url" content="https://cdn1.telegram-cdn.org/file/QWOKt8NUgflctlRSX4K1wG-RnDMdi3Ju3toeOPITQrLR3YHOdg2TjZkUmLvanEyjAScnqAESK65fr1FzQEHmqC4Rnog5TlKibnzrETw1z9-Bb_g715SvOJWsmpjjUzKmTsM1YlR3Zcr5HPs6itlEcwIQJjB0yRyEdLAtQaEmu0IAtCdhNVK6M2Ul_bitKhrhSggm5LCOQRLzaLiy9RYV-YkEuKU0W2pWhiCCaOg43pSehzSv2L2toPEOuUrepNwgtN5z3QdJsqP7qQQUWffZtsIYKmz_tugrnepVuH_hLyB4N3Ifl-yhfFlb1kGDIQdXF1nNmJ_dAe5Kqrj7ZtR6EA.jpg">
+            <meta itemprop="description" content="El precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023 es de 36,00 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="800">
             <meta itemprop="height" content="800">
         </span>
@@ -628,9 +628,9 @@
             </span>
         </span>
         
-        <meta itemprop="keywords" content="Estadisticas EnParaleloVzla" /><meta itemprop="keywords" content=" tasa EnParaleloVzla" /><meta itemprop="keywords" content=" tipo de cambio EnParaleloVzla" /><meta itemprop="keywords" content=" precio EnParaleloVzla" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar EnParaleloVzla en Venezuela hoy martes, 27 de Diciembre de 2022" />
+        <meta itemprop="keywords" content="Estadisticas EnParaleloVzla" /><meta itemprop="keywords" content=" tasa EnParaleloVzla" /><meta itemprop="keywords" content=" tipo de cambio EnParaleloVzla" /><meta itemprop="keywords" content=" precio EnParaleloVzla" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar EnParaleloVzla en Venezuela hoy lunes, 02 de Octubre de 2023" />
                                                     <div itemprop="articleBody">
-                                                        <p class="text-justify">El precio del dólar EnParaleloVzla en Venezuela hoy <b>martes, 27 de Diciembre de 2022</b> es de <b>18,42 BS/USD.</b></p>
+                                                        <p class="text-justify">El precio del dólar EnParaleloVzla en Venezuela hoy <b>lunes, 02 de Octubre de 2023</b> es de <b>36,00 BS/USD.</b></p>
                                                     </div>
                                                 </div>
                                                 <!-- start NewsArticle -->
@@ -661,35 +661,35 @@
                                                             </thead>                               <tbody>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">1$</th>
-                                                                        <td class="text-right">18,42 BS</td>
+                                                                        <td class="text-right">36,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">5$</th>
-                                                                        <td class="text-right">92,10 BS</td>
+                                                                        <td class="text-right">180,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">10$</th>
-                                                                        <td class="text-right">184,20 BS</td>
+                                                                        <td class="text-right">360,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">20$</th>
-                                                                        <td class="text-right">368,40 BS</td>
+                                                                        <td class="text-right">720,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">30$</th>
-                                                                        <td class="text-right">552,60 BS</td>
+                                                                        <td class="text-right">1.080,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">40$</th>
-                                                                        <td class="text-right">736,80 BS</td>
+                                                                        <td class="text-right">1.440,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">50$</th>
-                                                                        <td class="text-right">921,00 BS</td>
+                                                                        <td class="text-right">1.800,00 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">100$</th>
-                                                                        <td class="text-right">1.842,00 BS</td>
+                                                                        <td class="text-right">3.600,00 BS</td>
                                                                     </tr>
                                                                 </tbody>                       </table>
                                                     </div>
@@ -798,7 +798,7 @@
     <script>
     
         var datos;
-        var tasa = '18.42';
+        var tasa = '36';
         var tipo = 've';
         var divisa = 'enparalelovzla';
         var titulo = 'EnParaleloVzla';
@@ -823,7 +823,7 @@
         var formato = "%d/%m/%Y %H:%M";
         var tooltip = true;
         
-        let fecha_utc = new Date('2022/12/27 05:14');
+        let fecha_utc = new Date('2023/10/02 18:11');
         let fecha_local = new Date();
         
         var utc;

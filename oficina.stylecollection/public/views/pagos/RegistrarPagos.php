@@ -1563,6 +1563,13 @@
                               echo ">".$pagosD['tipo_pago_despacho']."</option>";
                             }else{
                               if($pagosObligatorios=="N"){
+                                if($pagosD['tipo_pago_despacho']==$cantidadPagosDespachosFild[0]['name']){
+                                  if($fechaEscogida <= $pagosD['fecha_pago_despacho_senior']){
+                                    echo "<option";
+                                      if(!empty($_SESSION['dataRegistroTemp'])){ if("Contado"==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
+                                    echo ">Contado</option>";
+                                  }
+                                }
                                 if($pagosD['tipo_pago_despacho']=="Inicial"){
                                   if($fechaEscogida <= $pagosD['fecha_pago_despacho_senior']){
                                     echo "<option>Contado</option>";
@@ -1587,7 +1594,7 @@
                                 foreach ($cantidadPagosDespachosFild as $cvPagos){
                                   if($pagosD['tipo_pago_despacho'] == $cvPagos['name']){
                                     if ($idPagoPendiente==$cvPagos['id']){
-                                      if($pagosD['tipo_pago_despacho']=="Inicial"){
+                                      if($pagosD['tipo_pago_despacho']==$cantidadPagosDespachosFild[0]['name']){
                                         if($fechaEscogida <= $pagosD['fecha_pago_despacho_senior']){
                                           echo "<option";
                                           if(!empty($_SESSION['dataRegistroTemp'])){ if("Contado"==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
@@ -2275,18 +2282,31 @@
                       <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                         <option></option>
                         <?php 
+                          $opOne = 0;
+                          $fechaLimiteNumeroUno = "";
                           foreach ($pagos_despacho as $pagosD){ if(!empty($pagosD['id_despacho'])){
+                            if($opOne==0){
+                              $fechaLimiteNumeroUno = $pagosD['fecha_pago_despacho_senior'];
+                              $opOne++;
+                            }
                             if($pagoAbierto==1){
                               echo "<option";
                               if(!empty($_SESSION['dataRegistroTemp'])){ if($pagosD['tipo_pago_despacho']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
                               echo ">".$pagosD['tipo_pago_despacho']."</option>";
                             }else{
                               if($pagosObligatorios=="N"){
-                                if($pagosD['tipo_pago_despacho']=="Inicial"){
+                                if($pagosD['tipo_pago_despacho']==$cantidadPagosDespachosFild[0]['name']){
                                   if($fechaEscogida <= $pagosD['fecha_pago_despacho_senior']){
                                     echo "<option";
-                                    if(!empty($_SESSION['dataRegistroTemp'])){ if("Contado"==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
+                                      if(!empty($_SESSION['dataRegistroTemp'])){ if("Contado"==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
                                     echo ">Contado</option>";
+                                  }
+                                }
+                                    // echo "<option";
+                                    // if(!empty($_SESSION['dataRegistroTemp'])){ if("Contado"==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } }
+                                    // echo ">Contado</option>";
+                                if($pagosD['tipo_pago_despacho']=="Inicial"){
+                                  if($fechaEscogida <= $pagosD['fecha_pago_despacho_senior']){
 
                                     if($opInicial=="Y"){
                                       echo "<option class='opcionInicialReport'";

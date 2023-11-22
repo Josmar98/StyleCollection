@@ -1212,13 +1212,15 @@
                                 if(!empty($_GET['lider'])){
                                   if(empty($acumuladosTotales[$pagosR['id']])){
                                     if($opcionOpcionalInicial=="Y"){
-                                      echo "<br>";
-                                      echo " + ";
-                                      echo "$".number_format($abonadosPagos['inicial'],2, ",",".");
-                                      $equivalenciasPagos[$pagosR['id']] += $abonadosPagos['inicial'];
-                                      echo "<br>";
-                                      echo " = ";
-                                      echo "$".number_format($equivalenciasPagos[$pagosR['id']],2, ",",".");
+                                      if(!empty($abonadosPagos['inicial'])){
+                                        echo "<br>";
+                                        echo " + ";
+                                        echo "$".number_format($abonadosPagos['inicial'],2, ",",".");
+                                        $equivalenciasPagos[$pagosR['id']] += $abonadosPagos['inicial'];
+                                        echo "<br>";
+                                        echo " = ";
+                                        echo "$".number_format($equivalenciasPagos[$pagosR['id']],2, ",",".");
+                                      }
                                     }
                                   }
                                 }
@@ -2448,19 +2450,43 @@
                   </div>
 
                   <div class="box-body">
-                    <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                       <br>
+                        <div class="col-xs-12" style="text-align:right;display:inline;margin-top:-20px;">
+                          <?php 
+                            $newRoute = "";
+                            foreach ($_REQUEST as $key => $value) {
+                              if($newRoute!=""){
+                                $newRoute .= "&";  
+                              }
+                              if($key!="facturas"){
+                                $newRoute .= $key."=".$value;
+                              }
+                            }
+                          ?>
+                          <?php if(empty($_GET['facturas'])){ $labeled = "Líderes"; ?>
+                            <a href="?<?=$newRoute."&facturas=All"; ?>"><label><u>Todas las facturas</u></label></a>
+                          <?php } ?>
+                          <?php if(!empty($_GET['facturas']) && $_GET['facturas']=="All"){  $labeled = "Líderes de todas las campañas"; ?>
+                            <a href="?<?=$newRoute; ?>"><label><u>Solo facturas de la campaña</u></label></a>
+                          <?php } ?>
+                        </div>
                       <div class="row">
                         <div class="form-group col-xs-12">
-                          <label for="lideresPedidos">Líderes</label>
+                          <label for="lideresPedidos"><?=$labeled; ?></label>
                           <!-- <input type="date" > -->
                           <select id="lideresPedidos" name="lideresPedidos" class="form-control select2 lideresPedidos" style="width:100%;">
                             <option value=""></option>
                             <?php
                               foreach ($lideresPedidos as $lidped) {
                                 if(!empty($lidped['id_pedido'])){
+                                  if(!empty($_GET['facturas']) && $_GET['facturas']=="All"){
+                                    $varMostrarLidPed = $lidped['cedula']." ".$lidped['primer_nombre']." ".$lidped['primer_apellido']." (Factura ".$lidped['numero_despacho']." ) ( ".$lidped['numero_campana']."/".$lidped['anio_campana']." )";
+                                  }else{
+                                    $varMostrarLidPed = $lidped['cedula']." ".$lidped['primer_nombre']." ".$lidped['primer_apellido']." (Factura ".$lidped['numero_despacho'].")";
+                                  }
                                     ?>
-                                  <option id="lidped<?=$lidped['id_pedido']; ?>" value="<?=$lidped['id_pedido']; ?>"><?=$lidped['cedula']." ".$lidped['primer_nombre']." ".$lidped['primer_apellido']." (Factura ".$lidped['numero_despacho'].")"; ?></option>
+                                  <option id="lidped<?=$lidped['id_pedido']; ?>" value="<?=$lidped['id_pedido']; ?>"><?=$varMostrarLidPed; ?></option>
                                     <?php
                                 }
                               }

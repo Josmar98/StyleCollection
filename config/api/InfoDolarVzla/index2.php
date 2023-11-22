@@ -1,4 +1,5 @@
 <?php 
+	
 	session_start();
 	ini_set('date.timezone', 'america/caracas');
 	// ini_set('date.timezone', 'europe/madrid');

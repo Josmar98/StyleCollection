@@ -198,17 +198,27 @@
                                                       <?php 
                                                         foreach ($premios_perdidos as $dataperdidos) {
                                                           if(!empty($dataperdidos['id_premio_perdido'])){
-                                                            if(($dataperdidos['valor'] == $data2['nombre_plan']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-                                                              $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                                              echo $data2['cantidad_coleccion_plan']."-".$dataperdidos['cantidad_premios_perdidos'];
-                                                              echo " = ";
-                                                              echo "<b>".$nuevoResult." Plan ".$dataperdidos['valor']."</b>";
-                                                              echo "<br>";
-                                                              if(!empty($totalPremiosPerdidos[$dataperdidos['valor']])){
-                                                                $totalPremiosPerdidos[$dataperdidos['valor']]['cantidad'] += $nuevoResult;
-                                                              }else{
-                                                                $totalPremiosPerdidos[$dataperdidos['valor']]['name'] = $dataperdidos['valor'];
-                                                                $totalPremiosPerdidos[$dataperdidos['valor']] = ['codigo'=>'nombre', 'plan'=>$dataperdidos['valor'], 'id'=>mb_strtolower($dataperdidos['valor']), 'name'=>$dataperdidos['valor'], 'cantidad'=>$nuevoResult];
+                                                            if($dataperdidos['id_pedido'] == $data['id_pedido']){
+                                                              $comparedPlan = "";
+                                                              if($dataperdidos['codigo']=="nombre"){
+                                                                $comparedPlan = $data2['nombre_plan'];
+                                                              }
+                                                              if($dataperdidos['codigo']=="nombreid"){
+                                                                $comparedPlan = $data2['id_plan'];
+                                                              }
+                                                              if( ($dataperdidos['valor'] == $comparedPlan) ){
+                                                                $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                                echo $data2['cantidad_coleccion_plan']."-".$dataperdidos['cantidad_premios_perdidos'];
+                                                                echo " = ";
+                                                                echo "<b>".$nuevoResult." Premios de Plan ".$data2['nombre_plan']."</b>";
+                                                                echo "<br>";
+
+                                                                if(!empty($totalPremiosPerdidos[$dataperdidos['valor']])){
+                                                                  $totalPremiosPerdidos[$dataperdidos['valor']]['cantidad'] += $nuevoResult;
+                                                                }else{
+                                                                  $totalPremiosPerdidos[$dataperdidos['valor']]['name'] = $dataperdidos['valor'];
+                                                                  $totalPremiosPerdidos[$dataperdidos['valor']] = ['codigo'=>'nombre', 'plan'=>$dataperdidos['valor'], 'id'=>mb_strtolower($dataperdidos['valor']), 'name'=>$dataperdidos['valor'], 'cantidad'=>$nuevoResult];
+                                                                }
                                                               }
                                                             }
                                                           }
@@ -314,20 +324,6 @@
                           <?php } ?>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                               
                             <?php $num++; ?>
                         <?php endif; endforeach; ?>
@@ -361,17 +357,19 @@
                                                 <th style="text-align:left;">
                                                   <?php 
                                                     foreach ($totalPremiosPerdidos as $premioP) {
-                                                      if($key['nombre_plan']==$premioP['name']){
-                                                        if(!empty($premioP['premios'])){
-                                                          $premiosPer = $premioP['premios'];
-                                                          // print_r($premioP);
-                                                          foreach ($premiosPer as $premiosperdids) {
-                                                            if(!empty($premioP[$premiosperdids])){
-                                                              echo $premioP[$premiosperdids]['cantidad']." ".$premiosperdids."<br>";
+                                                      if(!empty($premioP['name'])){
+                                                        if($key['nombre_plan']==$premioP['name']){
+                                                          if(!empty($premioP['premios'])){
+                                                            $premiosPer = $premioP['premios'];
+                                                            // print_r($premioP);
+                                                            foreach ($premiosPer as $premiosperdids) {
+                                                              if(!empty($premioP[$premiosperdids])){
+                                                                echo $premioP[$premiosperdids]['cantidad']." ".$premiosperdids."<br>";
+                                                              }
                                                             }
+                                                          }else{
+                                                            echo $premioP['cantidad']." Premios de ".$premioP['plan'];
                                                           }
-                                                        }else{
-                                                          echo $premioP['cantidad']." Premios de ".$premioP['plan'];
                                                         }
                                                       }
                                                     }
@@ -401,8 +399,10 @@
                                             <th>
                                               <?php 
                                                 foreach ($totalPremiosPerdidos as $premioP) {
-                                                  if($pagosR['name']==$premioP['name']){
-                                                    echo $premioP['cantidad']." Premios de ".$pagosR['name'];
+                                                  if(!empty($premioP['name'])){
+                                                    if($pagosR['name']==$premioP['name']){
+                                                      echo $premioP['cantidad']." Premios de ".$pagosR['name'];
+                                                    }
                                                   }
                                                 }
                                               ?>

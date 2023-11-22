@@ -2,20 +2,16 @@
 
 abstract class Conexion extends PDO
 {
-	private $host = 'iglesiamcm.org'; //servidor
-	private $bd = 'iglesiamcm_datalog';  //base de datos
-	private $user = 'iglesiamcm'; //usuario
+	private $host = 'stylecollection.org'; //servidor
+	private $bd = 'stylecollection_pages';  //base de datos
+	private $user = 'stylecollection'; //usuario
 	private $password = 'Dinero@2023'; // clave
-	// private $host = 'stylecollection.org'; //servidor
-	// private $bd = 'stylecollection_pages';  //base de datos
-	// private $user = 'stylecollection'; //usuario
-	// private $password = 'Dinero@2023'; // clave
 	// private $host = 'localhost'; //servidor
 	// private $bd = 'stylecollection_pages';  //base de datos
 	// private $user = 'supersu'; //usuario
 	// private $password = '12345678'; // clave
-	private $respuestaConexion = false;
 	private $port = 3306; // puerto
+	private $respuestaConexion = false;
 
 
 	private $errorMensaje = "";

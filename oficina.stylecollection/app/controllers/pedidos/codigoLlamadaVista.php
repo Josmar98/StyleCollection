@@ -342,8 +342,11 @@
 					$fechaPagoLimiteFinal = $pagosRecorridos[count($pagosRecorridos)-1]['fecha_pago'];
 					$abonado_lider_gemas = 0;
 					$fecha_pago_cierre_lider = "";
+					// print_r($pagosRecorridos);
 					foreach ($pagosRecorridos as $pagosR) {
-						$fechaPagoConceptoAct = $pagosR['fecha_pago'];
+						if(!empty($pagosR['fecha_pago'])){
+							$fechaPagoConceptoAct = $pagosR['fecha_pago'];
+						}
 						// $conceptoPagoConceptoAct = $pagosR['name'];
 						// $pagosGemas = $lider->consultarQuery("SELECT * FROM pagos WHERE id_pedido = {$id} and estado = 'Abonado' and tipo_pago = '{$conceptoPagoConceptoAct}' and fecha_pago <= '{$fechaPagoConceptoAct}' ORDER BY fecha_pago DESC");
 						// if(count($pagosGemas)>1){

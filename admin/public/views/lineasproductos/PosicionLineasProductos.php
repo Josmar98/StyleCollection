@@ -114,7 +114,6 @@
                                 <div class="form-group col-xs-12" style="padding:0;">
                                   <label for="producto<?=$cata['codigo_producto_catalogo']; ?>" style="padding:10px;" class="">
                                     <div class="form-group col-xs-12 col-md-8" style="border-right:1px solid #CCC;">
-                                        <?=$cata['imagen_producto_catalogo']; ?>
                                         <?php if($imagenModelo!=""){ ?>
                                           <img style="width:15%" src="<?=$imagenModelo; ?>">
                                         <?php } ?>

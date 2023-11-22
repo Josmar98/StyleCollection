@@ -57,25 +57,37 @@ if($typeCommand=="text"){
 		}
 
 		case '/loadapi': {
-			$response = "Cargando . . .";
+			// ini_set('max_execution_time', 60);
+			$response = "Cargando (api) . . .";
 			$r = sendMessage($chatId, $response);
-			
 			$urlWeb = "https://stylecollection.org/config/api/InfoDolarVzla/index2.php";
-			$rsp = file_get_contents($urlWeb);
-			$response = "Resultado API : \n".$rsp;
+			// $rsp = file_get_contents($urlWeb);
+			$ch = curl_init(); 
+			curl_setopt($ch, CURLOPT_URL, $urlWeb); 
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			$rsp = curl_exec($ch);
+			curl_close($ch);
+			$response = "Resultado API: \n".$rsp;
+			// $response = "Resultado API: FINALIZADO ";
 			$r = sendMessage($chatId, $response);
-
-			// sendMessage($chatId, $r);
 			break;
 		}
 
 		case '/reloadapi': {
-			$response = "Cargando . . .";
+			// ini_set('max_execution_time', 60);
+			$response = "Cargando (dolar api) . . .";
 			$r = sendMessage($chatId, $response);
-			
 			$urlWeb = "https://stylecollection.org/config/api/infoDolar/index2.php";
-			$rsp = file_get_contents($urlWeb);
-			$response = "Resultado API : \n".$rsp;
+			// $rsp = file_get_contents($urlWeb);
+			$ch = curl_init(); 
+			curl_setopt($ch, CURLOPT_URL, $urlWeb); 
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			$rsp = curl_exec($ch);
+			curl_close($ch);
+			$response = "Resultado Dolar API : \n".$rsp;
+			// $response = "Resultado Dolar API: FINALIZADO ";
 			$r = sendMessage($chatId, $response);
 
 			// sendMessage($chatId, $r);

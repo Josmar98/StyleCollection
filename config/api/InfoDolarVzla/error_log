@@ -1,3 +1,17 @@
 [10-Jan-2022 12:50:53 america/caracas] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/stylecollection/public_html/config/api/InfoDolarVzla/sources/control/App.php:188) in /home/stylecollection/public_html/config/api/InfoDolarVzla/index.php on line 11
 [10-Jan-2022 12:51:01 america/caracas] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/stylecollection/public_html/config/api/InfoDolarVzla/sources/control/App.php:188) in /home/stylecollection/public_html/config/api/InfoDolarVzla/index.php on line 11
 [10-Jan-2022 12:51:45 america/caracas] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/stylecollection/public_html/config/api/InfoDolarVzla/sources/control/App.php:188) in /home/stylecollection/public_html/config/api/InfoDolarVzla/index.php on line 11
+[15-Nov-2022 02:21:49 america/caracas] PHP Parse error:  syntax error, unexpected ';', expecting ']' in /home/stylecollection/public_html/config/api/InfoDolarVzla/sources/control/App.php on line 213
+[15-Nov-2022 02:22:11 america/caracas] PHP Parse error:  syntax error, unexpected ';', expecting ']' in /home/stylecollection/public_html/config/api/InfoDolarVzla/sources/control/App.php on line 213
+[15-Nov-2022 02:36:40 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method App::runz() in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php on line 10
+[15-Nov-2022 02:36:45 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method App::runz() in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php on line 10
+[15-Nov-2022 02:36:47 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method App::runz() in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php:10
+Stack trace:
+#0 {main}
+  thrown in /home/stylecollection/public_html/config/api/InfoDolarVzla/index2.php on line 10

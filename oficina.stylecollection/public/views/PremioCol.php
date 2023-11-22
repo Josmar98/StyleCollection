@@ -180,104 +180,80 @@
                 $x = 0;
                 // print_r($planesCol);
                 // echo Count($planesCol);
+                $nameTPremios = "";
                 foreach ($pagos_despacho as $pDesp){ if(!empty($pDesp['id_despacho'])){ if($pDesp['asignacion_pago_despacho']=="seleccion_premios"){
-                foreach ($planesCol as $data){ if(!empty($data['id_tipo_coleccion'])){
-                    foreach ($premios_planes as $premios){ if(!empty($premios['id_plan_campana'])){
-                      if($premios['tipo_premio']==$pDesp['tipo_pago_despacho']){
-                        if($opStandard==0){
-                          if($data['nombre_plan']=="Standard"){
-                            if($data['cantidad_coleccion_plan']>0){
-                              if($x == 0){
-                                  ?>
-                              <tr style="background:<?=$data['color_plan']?>77">
-                                <td style="width:5%;" >
-                                  <span class="contenido2">
-                                    <?php echo $num++; ?>
-                                  </span>
-                                </td>
-                                <td style="width:20%">
-                                  <span class="contenido2">
-                                    <h4>
-                                      <?php 
-                                        echo "<span style='font-size:.9em;'>(".$data['cantidad_coleccion_plan'];
-                                        if ($data['cantidad_coleccion_plan'] == 1){
-                                          echo " Plan) </span>";
-                                        }else{
-                                          echo " Planes) </span>";
-                                        }
-                                        echo $data['nombre_plan'];
-                                      ?>
-                                    </h4>
-                                  </span>
-                                </td>
-
-                                <td style="width:20%">
-                                  <?php foreach ($premios_planes_strandar as $key0){ if(!empty($key0['producto'])){ ?>
-                                    <?php if ($pDesp['tipo_pago_despacho']==$key0['tipo_premio']): ?>
-                                      
-                                      <span class="contenido2">
-                                        <?=$data['cantidad_coleccion_plan']." ".$key0['producto']?>
-                                        <br>
-                                      </span>
-                                    <?php endif; ?>
-                                  <?php }} ?>
-                                </td>
-                              </tr>
-
-                                  <?php 
-                              $x++;
-                              }
-                            }
-                          }
-                        }
-
-                        if($data['id_plan_campana'] == $premios['id_plan_campana']){
-                          if($data['cantidad_coleccion_plan']!=0){
-                            ?>
-                            <tr style="background:<?=$data['color_plan']?>77">
-                              <td style="width:5%;" >
-                                <span class="contenido2">
-                                  <?php //print_r($data); ?>
-                                  <?php echo $num++; ?>
-                                </span>
-                              </td>
-                              <td style="width:20%">
-                                <span class="contenido2">
-                                  <h4>
-                                    <?php 
-                                      echo "<span style='font-size:.9em;'>(".$data['cantidad_coleccion_plan'];
-                                      if ($data['cantidad_coleccion_plan'] == 1){
-                                        echo " Plan) </span>";
-                                      }else{
-                                        echo " Planes) </span>";
-                                      }
-                                      echo $data['nombre_plan'];
-                                    ?>
-                                  </h4>
-                                </span>
-                              </td>
-
-                              <td style="width:20%">
-                                <?php
-                                  foreach ($premioscol as $key1){ if(!empty($key1['id_plan_campana'])){
-                                    if($key1['id_plan_campana'] == $premios['id_plan_campana']){
-                                      if ($key1['cantidad_premios_plan'] > 0){ ?>
-                                        <span class="contenido2">
-                                          <?=$key1['cantidad_premios_plan']." ".$key1['nombre_premio']."<br>"; ?>
-                                        </span>
-                                      <?php }
-                                    }
-                                  }}
-                                ?>
-                              </td>
-                            </tr>
-                            <?php
-                          }
-                        }
-                      }
-                    }}
-                }}
+                  $nameTPremios = $pDesp['tipo_pago_despacho'];
                 }}}
+                echo $nameTPremios;
+                  // $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_despacho = {$id_despacho}");
+                  // echo "SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_despacho = {$id_despacho}";
+
+                  foreach ($planesCol as $data){ if(!empty($data['id_tipo_coleccion'])){
+                    if($data['cantidad_coleccion_plan']>0){
+                      ?>
+                        <tr style="background:<?=$data['color_plan']?>77">
+                          <td style="width:5%;" >
+                            <span class="contenido2">
+                              <?php echo $num++; ?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <h4>
+                                <?php 
+                                  echo "<span style='font-size:.9em;'>(".$data['cantidad_coleccion_plan'];
+                                  if ($data['cantidad_coleccion_plan'] == 1){
+                                    echo " Plan) </span>";
+                                  }else{
+                                    echo " Planes) </span>";
+                                  }
+                                  echo $data['nombre_plan'];
+                                ?>
+                              </h4>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <?php
+                              $colsss = ($data['cantidad_coleccion']*$data['cantidad_coleccion_plan']);
+                              $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$data['id_plan']} and premios_planes_campana.tipo_premio='{$nameTPremios}'";
+                              $tempPlanes = $lider->consultarQuery($sql0);
+                              $nameTPlanesTemp = $tempPlanes[0]['tipo_premio_producto'];
+                              $namePlanesTemp = $data['nombre_plan'];
+                              $sql1 = "";
+                              $cantTxtPrem = 0;
+                              $namecantTxtPrem = "";
+                              $nameTxtPrem = "";
+                              if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){
+                                $sql1 = "SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = '{$nameTPlanesTemp}' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and premios_planes_campana.tipo_premio='{$nameTPremios}'";
+                                $nameTxtPrem = "producto";
+                              }
+                              if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Premios")){
+                                $sql1 = "SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and pedidos.id_pedido = {$data['id_pedido']}";
+                                $namecantTxtPrem = "cantidad_premios_plan";
+                                $nameTxtPrem = "nombre_premio";
+                              }
+                              if($sql1!=""){
+                                $premios_planes_seleccionados = $lider->consultarQuery($sql1);
+                                foreach ($premios_planes_seleccionados as $dataPrem) {
+                                  if(!empty($dataPrem['id_plan_campana'])){
+                                    if($namecantTxtPrem==""){
+                                      $cantTxtPrem = $colsss;
+                                    }else{
+                                      $cantTxtPrem = $dataPrem[$namecantTxtPrem];
+                                    }
+                                    if($cantTxtPrem>0){
+                                      echo "(".$cantTxtPrem.") ".$dataPrem[$nameTxtPrem]."<br>";
+                                    }
+                                  }
+                                }
+                              }
+                            ?>
+                          </td>
+                        </tr>
+                      <?php
+                    }
+                  }}
+                
                 ?>
                 </tbody>
                 <tfoot>

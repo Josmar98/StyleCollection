@@ -1,0 +1,42 @@
+[14-Apr-2023 18:05:12 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::ConsultarSesion() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:35
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 35
+[14-Apr-2023 18:05:14 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::ConsultarSesion() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:35
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 35
+[10-Jul-2023 12:09:35 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::Modificar() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:111
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 111
+[10-Jul-2023 12:38:08 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::Modificar() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:111
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 111
+[10-Jul-2023 12:52:17 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::Modificar() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:112
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 112
+[10-Jul-2023 12:54:36 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::Modificar() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:112
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 112
+[10-Jul-2023 12:57:13 america/caracas] PHP Fatal error:  Uncaught Error: Call to undefined method TUsers::Modificar() in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php:111
+Stack trace:
+#0 /home/stylecollection/public_html/config/api/tmcm/app/controllers/index.php(9): require_once()
+#1 /home/stylecollection/public_html/config/api/tmcm/index.php(11): require_once('/home/stylecoll...')
+#2 {main}
+  thrown in /home/stylecollection/public_html/config/api/tmcm/app/controllers/Users.php on line 111

@@ -44,8 +44,12 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 		}
 	}
 
-
-	$lideresPedidos = $lider->consultarQuery("SELECT * FROM clientes, pedidos, despachos, campanas WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and clientes.estatus = 1 and pedidos.estatus = 1 and despachos.estatus = 1 and campanas.estatus = 1 and campanas.id_campana = {$id_campana}");
+	// if(!empty())
+	if(!empty($_GET['facturas']) && $_GET['facturas']=="All"){
+		$lideresPedidos = $lider->consultarQuery("SELECT * FROM clientes, pedidos, despachos, campanas WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and clientes.estatus = 1 and pedidos.estatus = 1 and despachos.estatus = 1 and campanas.estatus = 1");
+	}else{
+		$lideresPedidos = $lider->consultarQuery("SELECT * FROM clientes, pedidos, despachos, campanas WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and clientes.estatus = 1 and pedidos.estatus = 1 and despachos.estatus = 1 and campanas.estatus = 1 and campanas.id_campana = {$id_campana}");
+	}
 
 	$configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
 	$accesoBloqueo = "0";

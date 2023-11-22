@@ -406,7 +406,7 @@
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
 			curl_setopt($ch, CURLOPT_HEADER, 0);
 			$output = curl_exec($ch);
-			curl_close($ch); 
+			curl_close($ch);
 			$file = "sources/control/".$moneda.".php";
 			if(file_exists($file)){
 				file_put_contents($file, $output);

@@ -13,7 +13,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="content-language" content="es" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
-<meta name="description" content="El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="description" content="El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="keywords" content="Estadisticas BCV, tasa BCV, tipo de cambio BCV, precio BCV, Venezuela" />
 <meta name="theme-color" content="#051a2b" />
 <meta name="revisit-after" content="1 day" />
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="es_" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Dólar BCV | Venezuela" />
-<meta property="og:description" content="El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta property="og:description" content="El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta property="og:url" content="https://exchangemonitor.net/estadisticas/ve/dolar-bcv" />
 <meta property="og:site_name" content="ExchangeMonitor.net" />
 <meta property="og:image" content="https://exchangemonitor.net/img/general/dolar-ve.webp" />
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ExchangeMonit" />
 <meta name="twitter:title" content="Dólar BCV | Venezuela" />
-<meta name="twitter:description" content="El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="twitter:description" content="El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="twitter:creator" content="@ExchangeMonit" />
 <meta name="twitter:image:src" content="https://exchangemonitor.net/img/general/dolar-ve.webp" />
 
@@ -215,7 +215,7 @@
             <li><a target="_blank" href="https://www.instagram.com/exchangemonitor_net/"><span class="icon global-instagram"></span></a></li>
                         <!-- <li><a href="https://blog.exchangemonitor.net/"><span class="icon global-blog"></span></a></li> -->
             <li><a target="_blank" href="/contacto"><span class="icon global-contact"></span></a></li>
-            <li><a href="#" onclick="Compartir('El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-bcv')"><span class="icon global-share"></span></a></li>
+            <li><a href="#" onclick="Compartir('El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-bcv')"><span class="icon global-share"></span></a></li>
         </ul>
     </div>
 </nav>
@@ -232,7 +232,7 @@
                 <span class="toggler-icon toggler-menu"></span>
             </button>
             
-            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-bcv')">
+            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-bcv')">
                 <span class="toggler-icon toggler-share"></span>
             </button>
         </div>
@@ -296,12 +296,12 @@
                     <span class="close-icon" onclick="CloseDialog('share')"></span>
                     <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', 'https://exchangemonitor.net/img/general/dolar-ve.webp')" src="/img/icons/share-pinterest.webp" />
                     <img onclick="CompartirPC('facebook', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-facebook.webp" />
-                    <img onclick="CompartirPC('twitter', 'El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-twitter.webp" />
+                    <img onclick="CompartirPC('twitter', 'El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-twitter.webp" />
                     <img onclick="CompartirPC('linkedin', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-linkedin.webp" />
-                    <img onclick="CompartirPC('telegram', 'El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-telegram.webp" />
+                    <img onclick="CompartirPC('telegram', 'El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-telegram.webp" />
                     <img onclick="CompartirPC('google-plus', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-google-plus.webp" /><br>
-                    <img onclick="CompartirPC('gmail', 'El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-bcv', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-gmail.webp" />
-                    <img onclick="CompartirPC('email', 'El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-bcv', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-email.webp" />
+                    <img onclick="CompartirPC('gmail', 'El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-bcv', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-gmail.webp" />
+                    <img onclick="CompartirPC('email', 'El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-bcv', 'https://exchangemonitor.net/estadisticas/ve/dolar-bcv', '')" src="/img/icons/share-email.webp" />
                 </div>
             </div>
         </div>
@@ -379,7 +379,7 @@
                                         <img alt="Disponible en Google Play" src="/img/icons/social-google-play-badge.webp" height="50px"/>
                                     </a>
                                     <div class="margin-10"></div>
-                                <h1>Dólar BCV  Venezuela</h1><h2>16,57<small><small> BS/USD</small></small></h2><p>27-12-2022 01:14 am</p>                    </div>
+                                <h1>Dólar BCV  Venezuela</h1><h2>34,43<small><small> BS/USD</small></small></h2><p>02-10-2023 02:12 pm</p>                    </div>
                     
                             <script>
 
@@ -531,22 +531,22 @@
                                 <div class="margin"></div>
                                 <div itemscope itemtype="https://schema.org/FAQPage">
                                     <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                        <h2>Precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022</h2>
+                                        <h2>Precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023</h2>
                                         <h4 itemprop="name">¿A cuánto está el dólar BCV en Venezuela HOY?</h4>
                                         <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
                                             <div itemprop="text">
                                                 <!-- start NewsArticle -->
                                                 <div itemscope itemtype="https://schema.org/NewsArticle">        
-        <meta itemprop="dateCreated"        content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:14 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:14 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-10-02T18:12 +00:00" />
+        <meta itemprop="datePublished"      content="2023-10-02T18:12 +00:00" />
+        <meta itemprop="dateModified"       content="2023-10-02T18:12 +00:00" />
         <meta itemprop="articleSection"     content="Venezuela" />
-        <meta itemprop="description"        content="El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/ve/dolar-bcv" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
             <meta itemprop="url" content="https://exchangemonitor.net/img/general/dolar-ve.webp">
-            <meta itemprop="description" content="El precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,57 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="description" content="El precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023 es de 34,43 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="478">
             <meta itemprop="height" content="250">
         </span>
@@ -561,9 +561,9 @@
             </span>
         </span>
         
-        <meta itemprop="keywords" content="Estadisticas BCV" /><meta itemprop="keywords" content=" tasa BCV" /><meta itemprop="keywords" content=" tipo de cambio BCV" /><meta itemprop="keywords" content=" precio BCV" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar BCV en Venezuela hoy martes, 27 de Diciembre de 2022" />
+        <meta itemprop="keywords" content="Estadisticas BCV" /><meta itemprop="keywords" content=" tasa BCV" /><meta itemprop="keywords" content=" tipo de cambio BCV" /><meta itemprop="keywords" content=" precio BCV" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar BCV en Venezuela hoy lunes, 02 de Octubre de 2023" />
                                                     <div itemprop="articleBody">
-                                                        <p class="text-justify">El precio del dólar BCV en Venezuela hoy <b>martes, 27 de Diciembre de 2022</b> es de <b>16,57 BS/USD.</b></p>
+                                                        <p class="text-justify">El precio del dólar BCV en Venezuela hoy <b>lunes, 02 de Octubre de 2023</b> es de <b>34,43 BS/USD.</b></p>
                                                     </div>
                                                 </div>
                                                 <!-- start NewsArticle -->
@@ -594,35 +594,35 @@
                                                             </thead>                               <tbody>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">1$</th>
-                                                                        <td class="text-right">16,57 BS</td>
+                                                                        <td class="text-right">34,43 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">5$</th>
-                                                                        <td class="text-right">82,83 BS</td>
+                                                                        <td class="text-right">172,15 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">10$</th>
-                                                                        <td class="text-right">165,67 BS</td>
+                                                                        <td class="text-right">344,30 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">20$</th>
-                                                                        <td class="text-right">331,33 BS</td>
+                                                                        <td class="text-right">688,60 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">30$</th>
-                                                                        <td class="text-right">497,00 BS</td>
+                                                                        <td class="text-right">1.032,90 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">40$</th>
-                                                                        <td class="text-right">662,66 BS</td>
+                                                                        <td class="text-right">1.377,20 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">50$</th>
-                                                                        <td class="text-right">828,33 BS</td>
+                                                                        <td class="text-right">1.721,50 BS</td>
                                                                     </tr>
                                                                     <tr>
                                                                         <th scope="col" class="text-left">100$</th>
-                                                                        <td class="text-right">1.656,66 BS</td>
+                                                                        <td class="text-right">3.443,00 BS</td>
                                                                     </tr>
                                                                 </tbody>                       </table>
                                                     </div>
@@ -731,7 +731,7 @@
     <script>
     
         var datos;
-        var tasa = '16.5666';
+        var tasa = '34.43';
         var tipo = 've';
         var divisa = 'bcv';
         var titulo = 'BCV';
@@ -756,7 +756,7 @@
         var formato = "%d/%m/%Y %H:%M";
         var tooltip = true;
         
-        let fecha_utc = new Date('2022/12/27 05:14');
+        let fecha_utc = new Date('2023/10/02 18:12');
         let fecha_local = new Date();
         
         var utc;

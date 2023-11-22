@@ -75,13 +75,14 @@
                     </div>
                     <div class="row">
                       <div class="form-group col-xs-12 col-sm-6">
-                        <label for="">¿Los Pagos son Obligatorio?</label>
+                        <label for="">¿Los Pagos son Full?</label>
                         <!-- <small>Si no va a haber opcional mantenga en "SI"</small> -->
                         <br>
                         <select class="form-control select2" id="" name="opOblig" style="width:100%;">
                           <option value="Y">SI</option>
                           <option value="N">NO</option>
                         </select>
+                        <small><b style="color:#000;">Pagos Full: </b><b style="color:red;">Se debe pagar el 100% de cada pago para pasar al siguiente concepto de pago</b></small>
                       </div>
 
                       <div class="form-group col-xs-12 col-sm-6">

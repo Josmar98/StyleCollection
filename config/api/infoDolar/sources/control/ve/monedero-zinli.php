@@ -1,10 +1,10 @@
 
-
-<!DOCTYPE html>
-<html lang="es">
-    
-    <!-- start head -->
-    <head>
+
+<!DOCTYPE html>
+<html lang="es">
+    
+    <!-- start head -->
+    <head>
         <title>Dólar Zinli | Venezuela | ExchangeMonitor.net</title>
 <link rel="icon" href="/img/web/favicon.ico" />
 <link rel="canonical" href="https://exchangemonitor.net/estadisticas/ve/dolar-zinli" hreflang="x-default" />
@@ -13,7 +13,7 @@
 <meta charset="UTF-8"/>
 <meta http-equiv="content-language" content="es" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
-<meta name="description" content="El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="description" content="El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="keywords" content="Estadisticas Zinli, tasa Zinli, tipo de cambio Zinli, precio Zinli, Venezuela" />
 <meta name="theme-color" content="#051a2b" />
 <meta name="revisit-after" content="1 day" />
@@ -22,7 +22,7 @@
 <meta property="og:locale" content="es_" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Dólar Zinli | Venezuela" />
-<meta property="og:description" content="El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta property="og:description" content="El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta property="og:url" content="https://exchangemonitor.net/estadisticas/ve/dolar-zinli" />
 <meta property="og:site_name" content="ExchangeMonitor.net" />
 <meta property="og:image" content="https://exchangemonitor.net/img/general/dolar-ve.webp" />
@@ -30,7 +30,7 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@ExchangeMonit" />
 <meta name="twitter:title" content="Dólar Zinli | Venezuela" />
-<meta name="twitter:description" content="El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+<meta name="twitter:description" content="El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
 <meta name="twitter:creator" content="@ExchangeMonit" />
 <meta name="twitter:image:src" content="https://exchangemonitor.net/img/general/dolar-ve.webp" />
 
@@ -171,42 +171,42 @@
         
 <!-- Google Adsense -->
 <script data-ad-client="ca-pub-5327490266190788" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <script type="application/ld+json">
-        {
-            "@context": "https://schema.org",
-            "@type": "BreadcrumbList",
-            "itemListElement": [{
-                "@type": "ListItem",
-                "position": 1,
-                "name": "Inicio",
-                "item": "https://exchangemonitor.net/"
-            }
-            ,{
-                        "@type": "ListItem",
-                        "position": 2,
-                        "name": "Estadísticas",
-                        "item": "https://exchangemonitor.net/estadisticas"
-                    },{
-                            "@type": "ListItem",
-                            "position": 3,
-                            "name": "Venezuela",
-                            "item": "https://exchangemonitor.net/estadisticas/ve"
-                        },{
-                            "@type": "ListItem",
-                            "position": 4,
-                            "name": "Zinli",
-                            "item": "https://exchangemonitor.net/estadisticas/ve/dolar-zinli"
-                        }]
-        }
-        </script>
-        
-    </head>
-
-    <!-- start body -->
-    <body>
-        
-        <!-- start menu / dialogs -->
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [{
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Inicio",
+                "item": "https://exchangemonitor.net/"
+            }
+            ,{
+                        "@type": "ListItem",
+                        "position": 2,
+                        "name": "Estadísticas",
+                        "item": "https://exchangemonitor.net/estadisticas"
+                    },{
+                            "@type": "ListItem",
+                            "position": 3,
+                            "name": "Venezuela",
+                            "item": "https://exchangemonitor.net/estadisticas/ve"
+                        },{
+                            "@type": "ListItem",
+                            "position": 4,
+                            "name": "Zinli",
+                            "item": "https://exchangemonitor.net/estadisticas/ve/dolar-zinli"
+                        }]
+        }
+        </script>
+        
+    </head>
+
+    <!-- start body -->
+    <body>
+        
+        <!-- start menu / dialogs -->
         <!-- start global menu -->
 <nav class="navbar navbar-default navbar-fixed-top" id="navbarGlobal">
     <div class="container">
@@ -215,7 +215,7 @@
             <li><a target="_blank" href="https://www.instagram.com/exchangemonitor_net/"><span class="icon global-instagram"></span></a></li>
                         <!-- <li><a href="https://blog.exchangemonitor.net/"><span class="icon global-blog"></span></a></li> -->
             <li><a target="_blank" href="/contacto"><span class="icon global-contact"></span></a></li>
-            <li><a href="#" onclick="Compartir('El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-zinli')"><span class="icon global-share"></span></a></li>
+            <li><a href="#" onclick="Compartir('El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-zinli')"><span class="icon global-share"></span></a></li>
         </ul>
     </div>
 </nav>
@@ -232,7 +232,7 @@
                 <span class="toggler-icon toggler-menu"></span>
             </button>
             
-            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-zinli')">
+            <button type="button" class="navbar-toggle toggle-share" data-toggle="collapse" onclick="Compartir('El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.','https://exchangemonitor.net/estadisticas/ve/dolar-zinli')">
                 <span class="toggler-icon toggler-share"></span>
             </button>
         </div>
@@ -296,12 +296,12 @@
                     <span class="close-icon" onclick="CloseDialog('share')"></span>
                     <img onclick="CompartirPC('pinterest', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', 'https://exchangemonitor.net/img/general/dolar-ve.webp')" src="/img/icons/share-pinterest.webp" />
                     <img onclick="CompartirPC('facebook', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-facebook.webp" />
-                    <img onclick="CompartirPC('twitter', 'El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-twitter.webp" />
+                    <img onclick="CompartirPC('twitter', 'El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos. \n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-twitter.webp" />
                     <img onclick="CompartirPC('linkedin', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-linkedin.webp" />
-                    <img onclick="CompartirPC('telegram', 'El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-telegram.webp" />
+                    <img onclick="CompartirPC('telegram', 'El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\n', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-telegram.webp" />
                     <img onclick="CompartirPC('google-plus', '', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-google-plus.webp" /><br>
-                    <img onclick="CompartirPC('gmail', 'El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-zinli', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-gmail.webp" />
-                    <img onclick="CompartirPC('email', 'El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-zinli', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-email.webp" />
+                    <img onclick="CompartirPC('gmail', 'El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-zinli', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-gmail.webp" />
+                    <img onclick="CompartirPC('email', 'El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.\n\nConoce más en:\nhttps://exchangemonitor.net/estadisticas/ve/dolar-zinli', 'https://exchangemonitor.net/estadisticas/ve/dolar-zinli', '')" src="/img/icons/share-email.webp" />
                 </div>
             </div>
         </div>
@@ -360,27 +360,27 @@
         </div>
         
 <!-- background -->
-<div id="dialog_background" class="dialog-background" onclick="CloseDialog('contact'), CloseDialog('share'), CloseDialog('share_item')"></div>        <!-- end menu / dialogs -->
-        
-        <!-- start section -->
-        <section class="light-bg">
-            <div class="container">
-                
-                                <!-- start inicio -->
-                <div class="row inicio">
-                    
-                    <div class="col-xs-12 text-center">
-                                            </div>
-                    
-                    <div class="margin"></div>
-                    <div class="col texto">
-                        
-                                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.ve.exchangemonitor">
-                                        <img alt="Disponible en Google Play" src="/img/icons/social-google-play-badge.webp" height="50px"/>
-                                    </a>
-                                    <div class="margin-10"></div>
-                                <h1>Dólar Zinli  Venezuela</h1><h2>16,80<small><small> BS/USD</small></small></h2><p>27-12-2022 01:13 am</p>                    </div>
-                    
+<div id="dialog_background" class="dialog-background" onclick="CloseDialog('contact'), CloseDialog('share'), CloseDialog('share_item')"></div>        <!-- end menu / dialogs -->
+        
+        <!-- start section -->
+        <section class="light-bg">
+            <div class="container">
+                
+                                <!-- start inicio -->
+                <div class="row inicio">
+                    
+                    <div class="col-xs-12 text-center">
+                                            </div>
+                    
+                    <div class="margin"></div>
+                    <div class="col texto">
+                        
+                                    <a target="_blank" href="https://play.google.com/store/apps/details?id=com.ve.exchangemonitor">
+                                        <img alt="Disponible en Google Play" src="/img/icons/social-google-play-badge.webp" height="50px"/>
+                                    </a>
+                                    <div class="margin-10"></div>
+                                <h1>Dólar Zinli  Venezuela</h1><h2>32,20<small><small> BS/USD</small></small></h2><p>29-09-2023 03:17 pm</p>                    </div>
+                    
                             <script>
 
             if( screen.width>=992)
@@ -439,77 +439,77 @@
             document.writeln( ad_html );
                 
         </script>
-                        </div>  
-                <!-- end inicio -->
-                
-                <!-- star grafico -->
-                <div class="margin d-pc"></div>
-                <div class="margin d-tablet"></div>
-                <div class="row">
-                    <div class="col-xs-12 text-center no-padding">
-                        <div id="credits"></div>
-                        <div id="grafico"></div>
-                        <div id="loading"></div>
-                        <div id="no_data"></div>
-                    </div>
-                </div>
-                <!-- end grafico -->
-                
-                <!-- star botones -->
-                <div class="row boton-grafico text-center">
-                    <form method="POST" action="" class="col-xs-12">
-                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de área" value="GRAFICO DE AREA" class="button area active">
-                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de líneas" value="GRAFICO DE LINEAS" class="button lineas ">
-                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de barras" value="GRAFICO DE BARRAS" class="button barras ">
-                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de velas" value="GRAFICO DE VELAS" class="button velas ">
-                    </form>
-                </div>
-                <!-- end grafico -->
-                
-                <!-- start datos -->
-                <div class="row text-center datos">
-                    <div class="col-xs-12 text-center">
-                        <p><b id="label">DATOS DEL ULTIMO MES</b></p>
-                    </div>
-                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
-                    
-                    <div class="col-xs-4">
-                        <h3 id="inicial" class="numero">········</h3>
-                        <h6 id="fecha_inicial" class="fecha numero">········</h6>
-                        <p><strong>Apertura</strong></p>
-                    </div>
-                    <div class="col-xs-4">
-                        <h3 id="cambio" class="numero">········</h3>
-                        <h6 id="porcentaje" class="numero">········</h6>
-                        <p><strong>Cambio</strong></p>
-                    </div>
-                    <div class="col-xs-4">
-                        <h3 id="final" class="numero">········</h3>
-                        <h6 id="fecha_final" class="fecha numero">········</h6>
-                        <p><strong>Cierre</strong></p>
-                    </div>
-                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
-                    
-                    <div class="col-xs-4">
-                        <h3 id="min" class="numero">········</h3>
-                        <p><strong>Mínimo</strong></p>
-                    </div>
-                    <div class="col-xs-4">
-                        <h3 id="prom" class="numero">········</h3>
-                        <p><strong>Promedio</strong></p>
-                    </div>
-                    <div class="col-xs-4">
-                        <h3 id="max" class="numero">········</h3>
-                        <p><strong>Máximo</strong></p>
-                    </div>
-                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
-                </div>
-                <!-- end datos -->
-                                
-                
-                            <!-- Publicidad Adsense - DISPLAY AUTO -->
-                            <div class="margin d-pc"></div>
-                            <div class="margin d-tablet"></div>
+                        </div>  
+                <!-- end inicio -->
+                
+                <!-- star grafico -->
+                <div class="margin d-pc"></div>
+                <div class="margin d-tablet"></div>
+                <div class="row">
+                    <div class="col-xs-12 text-center no-padding">
+                        <div id="credits"></div>
+                        <div id="grafico"></div>
+                        <div id="loading"></div>
+                        <div id="no_data"></div>
+                    </div>
+                </div>
+                <!-- end grafico -->
+                
+                <!-- star botones -->
+                <div class="row boton-grafico text-center">
+                    <form method="POST" action="" class="col-xs-12">
+                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de área" value="GRAFICO DE AREA" class="button area active">
+                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de líneas" value="GRAFICO DE LINEAS" class="button lineas ">
+                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de barras" value="GRAFICO DE BARRAS" class="button barras ">
+                        <input type="submit" name="grafico" data-toggle="tooltip" data-placement="bottom" title="Gráfico de velas" value="GRAFICO DE VELAS" class="button velas ">
+                    </form>
+                </div>
+                <!-- end grafico -->
+                
+                <!-- start datos -->
+                <div class="row text-center datos">
+                    <div class="col-xs-12 text-center">
+                        <p><b id="label">DATOS DEL ULTIMO MES</b></p>
+                    </div>
+                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
+                    
+                    <div class="col-xs-4">
+                        <h3 id="inicial" class="numero">········</h3>
+                        <h6 id="fecha_inicial" class="fecha numero">········</h6>
+                        <p><strong>Apertura</strong></p>
+                    </div>
+                    <div class="col-xs-4">
+                        <h3 id="cambio" class="numero">········</h3>
+                        <h6 id="porcentaje" class="numero">········</h6>
+                        <p><strong>Cambio</strong></p>
+                    </div>
+                    <div class="col-xs-4">
+                        <h3 id="final" class="numero">········</h3>
+                        <h6 id="fecha_final" class="fecha numero">········</h6>
+                        <p><strong>Cierre</strong></p>
+                    </div>
+                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
+                    
+                    <div class="col-xs-4">
+                        <h3 id="min" class="numero">········</h3>
+                        <p><strong>Mínimo</strong></p>
+                    </div>
+                    <div class="col-xs-4">
+                        <h3 id="prom" class="numero">········</h3>
+                        <p><strong>Promedio</strong></p>
+                    </div>
+                    <div class="col-xs-4">
+                        <h3 id="max" class="numero">········</h3>
+                        <p><strong>Máximo</strong></p>
+                    </div>
+                    <div class="col-xs-12 no-padding"><div class="line"></div></div>
+                </div>
+                <!-- end datos -->
+                                
+                
+                            <!-- Publicidad Adsense - DISPLAY AUTO -->
+                            <div class="margin d-pc"></div>
+                            <div class="margin d-tablet"></div>
                                 <div class="row">
             <div class="ad col-xs-12 text-center">
                 <div class="display display-auto">
@@ -526,27 +526,27 @@
                 </div>
             </div>
         </div>
-        
-                                <!-- start contenido -->
-                                <div class="margin"></div>
-                                <div itemscope itemtype="https://schema.org/FAQPage">
-                                    <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                        <h2>Precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022</h2>
-                                        <h4 itemprop="name">¿A cuánto está el dólar Zinli en Venezuela HOY?</h4>
-                                        <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
-                                            <div itemprop="text">
-                                                <!-- start NewsArticle -->
+        
+                                <!-- start contenido -->
+                                <div class="margin"></div>
+                                <div itemscope itemtype="https://schema.org/FAQPage">
+                                    <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                                        <h2>Precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023</h2>
+                                        <h4 itemprop="name">¿A cuánto está el dólar Zinli en Venezuela HOY?</h4>
+                                        <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
+                                            <div itemprop="text">
+                                                <!-- start NewsArticle -->
                                                 <div itemscope itemtype="https://schema.org/NewsArticle">        
-        <meta itemprop="dateCreated"        content="2022-12-27T05:13 +00:00" />
-        <meta itemprop="datePublished"      content="2022-12-27T05:13 +00:00" />
-        <meta itemprop="dateModified"       content="2022-12-27T05:13 +00:00" />
+        <meta itemprop="dateCreated"        content="2023-09-29T19:17 +00:00" />
+        <meta itemprop="datePublished"      content="2023-09-29T19:17 +00:00" />
+        <meta itemprop="dateModified"       content="2023-09-29T19:17 +00:00" />
         <meta itemprop="articleSection"     content="Venezuela" />
-        <meta itemprop="description"        content="El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
+        <meta itemprop="description"        content="El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos." />
         <meta itemprop="mainEntityOfPage"   itemscope itemtype="https://schema.org/WebPage" itemid="https://exchangemonitor.net/estadisticas/ve/dolar-zinli" />
    
         <span itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
             <meta itemprop="url" content="https://exchangemonitor.net/img/general/dolar-ve.webp">
-            <meta itemprop="description" content="El precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022 es de 16,80 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
+            <meta itemprop="description" content="El precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023 es de 32,20 BS/USD. Consulta los gráficos estadísticos actualizados cada 5 minutos.">
             <meta itemprop="width" content="478">
             <meta itemprop="height" content="250">
         </span>
@@ -561,85 +561,85 @@
             </span>
         </span>
         
-        <meta itemprop="keywords" content="Estadisticas Zinli" /><meta itemprop="keywords" content=" tasa Zinli" /><meta itemprop="keywords" content=" tipo de cambio Zinli" /><meta itemprop="keywords" content=" precio Zinli" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar Zinli en Venezuela hoy martes, 27 de Diciembre de 2022" />
-                                                    <div itemprop="articleBody">
-                                                        <p class="text-justify">El precio del dólar Zinli en Venezuela hoy <b>martes, 27 de Diciembre de 2022</b> es de <b>16,80 BS/USD.</b></p>
-                                                    </div>
-                                                </div>
-                                                <!-- start NewsArticle -->
-                                            </div>
-                                                <p>La información mostrada se toma directamente desde el sitio web del <b>dólar Zinli en Venezuela</b> cada 5 minutos para obtener el mejor resultado posible.</p>
-                                                <div class="margin-5"></div>
-                                                <p>
-                                                    👉 <a href="/calculadora/dolar/ve/monedero-zinli">Calculadora del dólar Zinli en Venezuela</a><br>
-                                                    👉 <a href="/historico/ve/dolar-zinli">Histórico del dólar Zinli en Venezuela</a><br>
-                                                    👉 <a href="/dolar-venezuela">Dolar en Venezuela</a>
-                                                </p>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="col-xs-12 col-md-6">
-                                        <div class="row">
-                                            <div class="margin"></div>
-                                            <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
-                                                <h4 itemprop="name">¿Cuánto vale un dólar Zinli en Venezuela?</h4>
-                                                <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
-                                                    <div itemprop="text">
-                                                        <table class="table number" style="color:#737373">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th scope="col" class="text-left">Cant</th>
-                                                                    <th scope="col" class="text-right">Precio</th>
-                                                                </tr>
-                                                            </thead>                               <tbody>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">1$</th>
-                                                                        <td class="text-right">16,80 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">5$</th>
-                                                                        <td class="text-right">84,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">10$</th>
-                                                                        <td class="text-right">168,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">20$</th>
-                                                                        <td class="text-right">336,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">30$</th>
-                                                                        <td class="text-right">504,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">40$</th>
-                                                                        <td class="text-right">672,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">50$</th>
-                                                                        <td class="text-right">840,00 BS</td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th scope="col" class="text-left">100$</th>
-                                                                        <td class="text-right">1.680,00 BS</td>
-                                                                    </tr>
-                                                                </tbody>                       </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                        <div class="col-xs-12 col-md-6">
-                                            <div class="margin"></div>
-                                            <h4 class="text-left">Histórico del dólar Zinli en Venezuela</h4>
-                                            <div id="historico" class="table-historico" style="color:#737373"><br>Cargando...</div>
-                                            <div class="margin"></div>
-                                        </div>
-                                </div>
-                                <!-- end contenido -->
-                                            
-                <!-- start contenido recomendado -->
+        <meta itemprop="keywords" content="Estadisticas Zinli" /><meta itemprop="keywords" content=" tasa Zinli" /><meta itemprop="keywords" content=" tipo de cambio Zinli" /><meta itemprop="keywords" content=" precio Zinli" /><meta itemprop="keywords" content=" Venezuela" />                  <meta itemprop="name headline" content="Precio del dólar Zinli en Venezuela hoy viernes, 29 de Septiembre de 2023" />
+                                                    <div itemprop="articleBody">
+                                                        <p class="text-justify">El precio del dólar Zinli en Venezuela hoy <b>viernes, 29 de Septiembre de 2023</b> es de <b>32,20 BS/USD.</b></p>
+                                                    </div>
+                                                </div>
+                                                <!-- start NewsArticle -->
+                                            </div>
+                                                <p>La información mostrada se toma directamente desde el sitio web del <b>dólar Zinli en Venezuela</b> cada 5 minutos para obtener el mejor resultado posible.</p>
+                                                <div class="margin-5"></div>
+                                                <p>
+                                                    👉 <a href="/calculadora/dolar/ve/monedero-zinli">Calculadora del dólar Zinli en Venezuela</a><br>
+                                                    👉 <a href="/historico/ve/dolar-zinli">Histórico del dólar Zinli en Venezuela</a><br>
+                                                    👉 <a href="/dolar-venezuela">Dolar en Venezuela</a>
+                                                </p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-xs-12 col-md-6">
+                                        <div class="row">
+                                            <div class="margin"></div>
+                                            <div itemprop="mainEntity" itemscope itemtype="https://schema.org/Question">
+                                                <h4 itemprop="name">¿Cuánto vale un dólar Zinli en Venezuela?</h4>
+                                                <div itemprop="suggestedAnswer acceptedAnswer" itemscope itemtype="https://schema.org/Answer" >
+                                                    <div itemprop="text">
+                                                        <table class="table number" style="color:#737373">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th scope="col" class="text-left">Cant</th>
+                                                                    <th scope="col" class="text-right">Precio</th>
+                                                                </tr>
+                                                            </thead>                               <tbody>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">1$</th>
+                                                                        <td class="text-right">32,20 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">5$</th>
+                                                                        <td class="text-right">161,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">10$</th>
+                                                                        <td class="text-right">322,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">20$</th>
+                                                                        <td class="text-right">644,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">30$</th>
+                                                                        <td class="text-right">966,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">40$</th>
+                                                                        <td class="text-right">1.288,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">50$</th>
+                                                                        <td class="text-right">1.610,00 BS</td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <th scope="col" class="text-left">100$</th>
+                                                                        <td class="text-right">3.220,00 BS</td>
+                                                                    </tr>
+                                                                </tbody>                       </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                        <div class="col-xs-12 col-md-6">
+                                            <div class="margin"></div>
+                                            <h4 class="text-left">Histórico del dólar Zinli en Venezuela</h4>
+                                            <div id="historico" class="table-historico" style="color:#737373"><br>Cargando...</div>
+                                            <div class="margin"></div>
+                                        </div>
+                                </div>
+                                <!-- end contenido -->
+                                            
+                <!-- start contenido recomendado -->
                 <div class="margin"></div><!--googleoff: index-->
 <div class="row recomendado">
 
@@ -670,10 +670,10 @@
                              (adsbygoogle = window.adsbygoogle || []).push({});
                         </script>
                         </div><div class="line"></div></div></div>
-<!--googleon: index-->                <!-- end contenido recomendado -->
-                
-                <!-- Publicidad Adsense - DISPLAY AUTO -->
-                <div class="margin"></div>
+<!--googleon: index-->                <!-- end contenido recomendado -->
+                
+                <!-- Publicidad Adsense - DISPLAY AUTO -->
+                <div class="margin"></div>
                         <div class="row">
             <div class="ad col-xs-12 text-center">
                 <div class="display display-auto">
@@ -690,17 +690,17 @@
                 </div>
             </div>
         </div>
-        
-            </div>
-        </section>
-        <!-- end section -->
-        
-        <!-- start footer -->
-        <div class="margin d-pc"></div>
-        <div class="margin d-tablet"></div>
-        <footer>
-            <div class="container">
-                <div class="row">
+        
+            </div>
+        </section>
+        <!-- end section -->
+        
+        <!-- start footer -->
+        <div class="margin d-pc"></div>
+        <div class="margin d-tablet"></div>
+        <footer>
+            <div class="container">
+                <div class="row">
                     <div class="col-xs-12 col-sm-5">
     <div class="social">
         <p>Conecta con ExchangeMonitor.net</p>
@@ -719,102 +719,102 @@
     <a target="_blank" href="https://exchangemonitor.net/contacto">Contacto</a><span class="separator">|</span>
     <a target="_blank" href="https://exchangemonitor.net/politica-de-cookies">Política de cookies</a><span class="separator">|</span>
     <a target="_blank" href="https://exchangemonitor.net/politica-de-privacidad">Política de privacidad</a>
-</div>                </div>
-            </div>
-        </footer>
-        <!-- end footer -->
-        
-    </body>
-    <!-- end body -->
-    
-    <!-- start on load -->
-    <script>
-    
-        var datos;
-        var tasa = '16.8';
-        var tipo = 've';
-        var divisa = 'monedero-zinli';
-        var titulo = 'Zinli';
-        var moneda = 'BS/USD';
-        var grafico = 'GRAFICO DE AREA';
-        var reconversiones = JSON.parse(' [{"date":1633063920000,"reconv":1000000,"data":"data-2021","moneda":"VES","dolar":4600000},{"date":null,"reconv":1,"data":"data","moneda":null,"dolar":null}] '); 
-        
-        var n;
-        if( tipo == 'par' || tipo == 'divisas' || tipo == 'criptos')
-        {
-            if(tasa === 0 || tasa >= 10)    n=2;
-            else if(tasa >= 0.1)            n=4;
-            else if(tasa >= 0.001)          n=6;
-            else if(tasa >= 0.00001)        n=8;
-            else if(tasa >= 0.0000001)      n=10;
-            else                            n=12;
-        }
-        else{
-            n = 2;
-        }
-        
-        var formato = "%d/%m/%Y %H:%M";
-        var tooltip = true;
-        
-        let fecha_utc = new Date('2022/12/27 05:13');
-        let fecha_local = new Date();
-        
-        var utc;
-        utc = ( fecha_local.getTime() - fecha_utc.getTime() )/3600000;
-        utc = Math.round(utc,1);
-        utc = utc*3600000;
-        
-        if(tipo == 'par')
-        {
-            var json = 'https://exchangemonitor.net/rates/data?type=par&type1=&type2=&badge1=&badge2=';
-        }
-        else
-        {
-            var hist_pagina = 'dolar-zinli';
-            var hist_titulo = 'Precio del dólar Zinli en Venezuela';
-            var hist_url = 'precio-de-dolar-zinli';
-            
-            var candles = ""
-            if( grafico==='GRAFICO DE VELAS' ) candles = "&candles=1";
-            
-            if( !reconversiones )
-                var json = 'https://exchangemonitor.net/rates/data-new?type='+ tipo +'&badge='+ divisa + candles;
-            else
-                var json = 'https://exchangemonitor.net/rates/data-new?reconv=1&type='+ tipo +'&badge='+ divisa + candles;
-        }
-        
-        window.onload = function()
-        {
-            if(tasa)
-            {
-                $.ajax({
-                    url: json,
-                    type: 'GET',
-                    dataType : 'json',
-                    
-                    success: function(response){
-                        datos = response.data;
-                        switch(grafico){
-                            case 'GRAFICO DE VELAS':  GraficarVelas();  break;
-                            case 'GRAFICO DE BARRAS': GraficarBarras(); break;
-                            case 'GRAFICO DE LINEAS': GraficarLineas(); break;
-                            default:                  Graficar();       break;
-                        } 
-                    },
-                    
-                    error:function(e){
-                        console.log( eval(e) );
-                        $('#loading').fadeOut(500);
-                        $('#no_data').fadeIn(500);
-                    }
-                });
-            }
-            else
-            {
-                $('#loading').fadeOut(500);
-                $('#no_data').fadeIn(500);
-            }
-        }
-
-    </script>
+</div>                </div>
+            </div>
+        </footer>
+        <!-- end footer -->
+        
+    </body>
+    <!-- end body -->
+    
+    <!-- start on load -->
+    <script>
+    
+        var datos;
+        var tasa = '32.2';
+        var tipo = 've';
+        var divisa = 'monedero-zinli';
+        var titulo = 'Zinli';
+        var moneda = 'BS/USD';
+        var grafico = 'GRAFICO DE AREA';
+        var reconversiones = JSON.parse(' [{"date":1633063920000,"reconv":1000000,"data":"data-2021","moneda":"VES","dolar":4600000},{"date":null,"reconv":1,"data":"data","moneda":null,"dolar":null}] '); 
+        
+        var n;
+        if( tipo == 'par' || tipo == 'divisas' || tipo == 'criptos')
+        {
+            if(tasa === 0 || tasa >= 10)    n=2;
+            else if(tasa >= 0.1)            n=4;
+            else if(tasa >= 0.001)          n=6;
+            else if(tasa >= 0.00001)        n=8;
+            else if(tasa >= 0.0000001)      n=10;
+            else                            n=12;
+        }
+        else{
+            n = 2;
+        }
+        
+        var formato = "%d/%m/%Y %H:%M";
+        var tooltip = true;
+        
+        let fecha_utc = new Date('2023/09/29 19:17');
+        let fecha_local = new Date();
+        
+        var utc;
+        utc = ( fecha_local.getTime() - fecha_utc.getTime() )/3600000;
+        utc = Math.round(utc,1);
+        utc = utc*3600000;
+        
+        if(tipo == 'par')
+        {
+            var json = 'https://exchangemonitor.net/rates/data?type=par&type1=&type2=&badge1=&badge2=';
+        }
+        else
+        {
+            var hist_pagina = 'dolar-zinli';
+            var hist_titulo = 'Precio del dólar Zinli en Venezuela';
+            var hist_url = 'precio-de-dolar-zinli';
+            
+            var candles = ""
+            if( grafico==='GRAFICO DE VELAS' ) candles = "&candles=1";
+            
+            if( !reconversiones )
+                var json = 'https://exchangemonitor.net/rates/data-new?type='+ tipo +'&badge='+ divisa + candles;
+            else
+                var json = 'https://exchangemonitor.net/rates/data-new?reconv=1&type='+ tipo +'&badge='+ divisa + candles;
+        }
+        
+        window.onload = function()
+        {
+            if(tasa)
+            {
+                $.ajax({
+                    url: json,
+                    type: 'GET',
+                    dataType : 'json',
+                    
+                    success: function(response){
+                        datos = response.data;
+                        switch(grafico){
+                            case 'GRAFICO DE VELAS':  GraficarVelas();  break;
+                            case 'GRAFICO DE BARRAS': GraficarBarras(); break;
+                            case 'GRAFICO DE LINEAS': GraficarLineas(); break;
+                            default:                  Graficar();       break;
+                        } 
+                    },
+                    
+                    error:function(e){
+                        console.log( eval(e) );
+                        $('#loading').fadeOut(500);
+                        $('#no_data').fadeIn(500);
+                    }
+                });
+            }
+            else
+            {
+                $('#loading').fadeOut(500);
+                $('#no_data').fadeIn(500);
+            }
+        }
+
+    </script>
 </html>

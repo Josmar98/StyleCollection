@@ -111,28 +111,44 @@
                                           </u>
                                         </label>
                                       <?php
-                                      if($data2['nombre_plan']=="Standard"){ ?>
+                                      $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$data2['id_plan']} and premios_planes_campana.tipo_premio='{$pagosR['name']}'";
+                                      $tempPlanes = $lider->consultarQuery($sql0);
+                                      $nameTPlanesTemp = $tempPlanes[0]['tipo_premio_producto'];
+                                      $idPlanesTemp = $data2['id_plan'];
+                                      $namePlanesTemp = $data2['nombre_plan'];
+                                      //echo " | ".$nameTPlanesTemp." | ".$idPlanesTemp." | ".$namePlanesTemp." | ";
+
+                                      // if($data2['nombre_plan']=="Standard"){ 
+                                      if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){ ?>
                                         <?php
                                           $cantidadPerdidoAct = 0;
                                           foreach ($premios_perdidos as $premiosPerd){ if(!empty($premiosPerd['id_premio_perdido'])){
-                                            if ($premiosPerd['valor']=="Standard"){
+                                            $comparedPlan = "";
+                                            if($premiosPerd['codigo']=="nombre"){
+                                              $comparedPlan = $data2['nombre_plan'];
+                                            }
+                                            if($premiosPerd['codigo']=="nombreid"){
+                                              $comparedPlan = $data2['id_plan'];
+                                            }
+                                            if( ($premiosPerd['valor'] == $comparedPlan) ){
+                                            // if ($premiosPerd['valor']=="Standard"){
                                               $cantidadPerdidoAct = $premiosPerd['cantidad_premios_perdidos'];
                                             }
                                           }}
                                         ?>
                                         <div class="form-group col-xs-12">
-                                          <label>Premios Standard</label>
+                                          <label>Premios <?=$namePlanesTemp; ?></label>
                                           <div class="input-group">
                                             <span class="input-group-addon"><?=$data2['cantidad_coleccion_plan'];?></span>
 
-                                            <input type="hidden" name="dataoculta[]" value="<?="nombre*Standard*".$data2['id_tipo_coleccion']."*0*".$data2['cantidad_coleccion_plan']."*".$data2['id_pedido']."*".$data['id_cliente']; ?>">
+                                            <input type="hidden" name="dataoculta[]" value="<?="nombreid*".$idPlanesTemp."*".$data2['id_tipo_coleccion']."*0*".$data2['cantidad_coleccion_plan']."*".$data2['id_pedido']."*".$data['id_cliente']; ?>">
                                             <?php
-                                              $planess[$num] = ['codigo'=>'nombre', 'valor'=>"Standard"]; 
+                                              $planess[$num] = ['codigo'=>'nombreid', 'valor'=>$idPlanesTemp]; 
                                               $num++;
                                             ?>
-                                            <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombre_Standard form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                            <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
                                           </div>
-                                          <span class="error_nombre_Standard errors"></span>
+                                          <span class="error_nombreid_<?=$idPlanesTemp; ?> errors"></span>
                                         </div>
                                       <?php 
                                       }else{

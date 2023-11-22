@@ -179,7 +179,9 @@ if($estado_campana=="1"){
 				if($despacho['opcionOpcionalInicial']=="Y"){
 					if(!empty($pagosR['calcular'])){
 						if($pagosR['calcular']==2){
-							$pagosRealizados[$pagosR['id']] += $pagosRealizados['inicial'];
+							if(!empty($pagosRealizados['inicial'])){
+								$pagosRealizados[$pagosR['id']] += $pagosRealizados['inicial'];
+							}
 						}
 					}
 				}
@@ -373,7 +375,9 @@ if($estado_campana=="1"){
 					if($despacho['opcionOpcionalInicial']=="Y"){
 						if(!empty($pagosR['calcular'])){
 							if($pagosR['calcular']==2){
-								$pagosRealizados[$pagosR['id']] += $pagosRealizados['inicial'];
+								if(!empty($pagosRealizados['inicial'])){
+									$pagosRealizados[$pagosR['id']] += $pagosRealizados['inicial'];
+								}
 							}
 						}
 						// if(!empty($pagosR['calcular'])){

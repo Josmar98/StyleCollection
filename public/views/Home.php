@@ -25,35 +25,50 @@
 		<div class="head seccionFull"></div><!-- INDISPENSABLE NO SE PUEDE BORRAR -->
 
 		<div style="max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;overflow:hidden;">
-			<div style="background:url('public/assets/img/resources/fondo3.23.png');background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:0.1;"></div>
+			<div style="background:#FFF;background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:0.1;"></div>
 
 
 
 
 			<div style="" class="box1logotipo">
 				<div style="" class="box2logotipo">
-					<img src="public/assets/img/resources/logotipo3.23.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/logotipo4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1emblema" style="background:red;">
 				<div style="" class="box2emblema">
-					<img src="public/assets/img/resources/emblema3.23.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/emblema4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1cintillo">
 				<div style="" class="box2cintillo">
-					<img src="public/assets/img/resources/cintillo_campana3.23.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/cintillo_campana4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1detalle1">
 				<div style="" class="box2detalle1">
-					<img src="public/assets/img/resources/detalle1.3.23.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/detalle1.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 
 			<div style="" class="box1detalle2">
 				<div style="" class="box2detalle2">
-					<img src="public/assets/img/resources/detalle2.3.23.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/detalle2.4.23.png" style="max-width:100%;">
+				</div>
+			</div>
+			<div style="" class="box1detalle31">
+				<div style="" class="box2detalle31">
+					<img src="public/assets/img/resources/detalle3.1.4.23.png" style="max-width:100%;">
+				</div>
+			</div>
+			<div style="" class="box1detalle32">
+				<div style="" class="box2detalle32">
+					<img src="public/assets/img/resources/detalle3.2.4.23.png" style="max-width:100%;">
+				</div>
+			</div>
+			<div style="" class="box1detalle4">
+				<div style="" class="box2detalle4">
+					<img src="public/assets/img/resources/detalle4.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 		</div>

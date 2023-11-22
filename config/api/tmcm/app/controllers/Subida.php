@@ -250,57 +250,6 @@
 				}
 			}
 		}
-		// if($action=="BajarDatass"){
-		// 	//echo json_encode(['msj'=>"Peticion Consulta Recibida"]);
-		// 	// if($_SERVER['REQUEST_METHOD']=='POST'){
-		// 		// $_POST = json_decode(file_get_contents('php://input'), true);
-		// 		//echo json_encode(["data"=>json_encode($_POST)]);
-		// 		$dominio = "Servicio.JAE.08-07";
-		// 		// $dominio = "pruebas";
-		// 		$generalCM = 0;
-		// 		$generalCF = 0;
-		// 		$generalCG = 0;
-		// 		$results = $app->ConsultarBajadas($dominio);
-		// 		if($results['msj']=="Good"){
-		// 			if(count($results['data'])>0){
-		// 				$totalGeneral = $results['data'][0];
-		// 				if($totalGeneral['cantM']!=null && $totalGeneral['cantF']!=null && $totalGeneral['cantG']!=null){
-		// 					$return['msjGeneral'] = "Good";
-		// 					$return['General'] = [];
-		// 					$return['General']['cantM']=$totalGeneral['cantM'];
-		// 					$return['General']['cantF']=$totalGeneral['cantF'];
-		// 					$return['General']['cantG']=$totalGeneral['cantG'];
-		// 					$iglesias = $app->ConsultarListaIglesias();
-		// 					$index = 0;
-		// 					$return['Iglesias'] = [];
-		// 					foreach ($iglesias['data'] as $iglesia) {
-		// 						$iglesia = $iglesia['nombre_iglesia'];
-		// 						$resultsIg = $app->ConsultarBajadasIglesias($dominio, $iglesia);
-		// 						if($resultsIg['msj']=="Good"){
-		// 							if(count($resultsIg['data'])>0){
-		// 								$return['msjIglesias'] = "Good";
-		// 								$totalIg = $resultsIg['data'][$index];
-		// 								$return['Iglesias'][$iglesia]['cantM']=$totalIg['cantM'];
-		// 								$return['Iglesias'][$iglesia]['cantF']=$totalIg['cantF'];
-		// 								$return['Iglesias'][$iglesia]['cantG']=$totalIg['cantG'];
-		// 							}else{
-		// 								$return['msjIglesias'] = "Vacio";
-		// 							}
-		// 						}
-		// 					}
-		// 				}else{
-		// 					$return['msjGeneral'] = "Vacio";
-		// 				}
-		// 				echo json_encode($return);
-		// 			}else{
-		// 				$return['msjGeneral'] = "Vacio";
-		// 			}
-		// 		}
-
-
-
-		// 	// }
-		// }
 		if($action=="BajarDatas"){
 			//echo json_encode(['msj'=>"Peticion Consulta Recibida"]);
 				$dominio = "pruebas";

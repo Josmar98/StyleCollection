@@ -1,6 +1,6 @@
 <?php 
 
-if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){	
+if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor"){	
 
 	$id_campana = $_GET['campaing'];
 	$numero_campana = $_GET['n'];

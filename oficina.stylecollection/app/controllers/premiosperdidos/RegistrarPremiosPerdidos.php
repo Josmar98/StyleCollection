@@ -79,6 +79,8 @@ if($estado_campana=="1"){
 		$num = 1;
 		$i = 0;
 		$responses = [];
+		// print_r($dataoculta);
+		
 		$exec1 = $lider->eliminar("DELETE FROM premios_perdidos WHERE id_pedido = $id_pedido and id_cliente = $id");
 		if($exec1['ejecucion']==true){
 			foreach ($dataoculta as $key) {
@@ -203,19 +205,24 @@ if($estado_campana=="1"){
 
 			// =============================================================================================================== //
 		}
-			if(!empty($action)){
-				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
-					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
-				}else{
-				    require_once 'public/views/error404.php';
-				}
+
+		if(!empty($action)){
+			if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
+				require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
 			}else{
-				if (is_file('public/views/'.$url.'.php')) {
-					require_once 'public/views/'.$url.'.php';
-				}else{
-				    require_once 'public/views/error404.php';
-				}
-			}	
+			    require_once 'public/views/error404.php';
+			}
+		}else{
+			if (is_file('public/views/'.$url.'.php')) {
+				require_once 'public/views/'.$url.'.php';
+			}else{
+			    require_once 'public/views/error404.php';
+			}
+		}	
+
+
+
+
 		// }else{
 			    // require_once 'public/views/error404.php';
 	}

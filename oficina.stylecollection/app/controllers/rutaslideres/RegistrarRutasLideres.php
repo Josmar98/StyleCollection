@@ -106,8 +106,8 @@ if($_SESSION['nombre_rol']!="Vendedor" && $_SESSION['nombre_rol']!="Conciliador"
 
     
     $lideres = $lider->consultarQuery("SELECT * FROM clientes, usuarios WHERE clientes.id_cliente = usuarios.id_cliente and clientes.estatus = 1 and usuarios.estatus = 1 ORDER BY clientes.id_cliente ASC");
-    $rutalider = $lider->consultarQuery("SELECT * FROM clientes, rutaslideres, rutas WHERE rutaslideres.id_cliente = clientes.id_cliente and rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta");
-    $rutasya = $lider->consultarQuery("SELECT DISTINCT rutas.id_ruta, nombre_ruta, rutaslideres.estatus FROM rutaslideres, rutas WHERE rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta");
+    $rutalider = $lider->consultarQuery("SELECT * FROM clientes, rutaslideres, rutas WHERE rutaslideres.id_cliente = clientes.id_cliente and rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta and rutaslideres.estatus=1 and rutas.estatus=1");
+    $rutasya = $lider->consultarQuery("SELECT DISTINCT rutas.id_ruta, nombre_ruta, rutaslideres.estatus FROM rutaslideres, rutas WHERE rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta and rutaslideres.estatus=1 and rutas.estatus=1");
     
     $rutas = $lider->consultarQuery("SELECT * FROM rutas WHERE rutas.estatus = 1");
     $cantidadMaxima = 10;
@@ -132,8 +132,8 @@ if($_SESSION['nombre_rol']!="Vendedor" && $_SESSION['nombre_rol']!="Conciliador"
 
   if(empty($_POST)){
     $lideres = $lider->consultarQuery("SELECT * FROM clientes, usuarios WHERE clientes.id_cliente = usuarios.id_cliente and clientes.estatus = 1 and usuarios.estatus = 1 ORDER BY clientes.id_cliente ASC");
-    $rutalider = $lider->consultarQuery("SELECT * FROM clientes, rutaslideres, rutas WHERE rutaslideres.id_cliente = clientes.id_cliente and rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta");
-    $rutasya = $lider->consultarQuery("SELECT DISTINCT rutas.id_ruta, nombre_ruta, rutaslideres.estatus FROM rutaslideres, rutas WHERE rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta");
+    $rutalider = $lider->consultarQuery("SELECT * FROM clientes, rutaslideres, rutas WHERE rutaslideres.id_cliente = clientes.id_cliente and rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta and rutaslideres.estatus=1 and rutas.estatus=1");
+    $rutasya = $lider->consultarQuery("SELECT DISTINCT rutas.id_ruta, nombre_ruta, rutaslideres.estatus FROM rutaslideres, rutas WHERE rutaslideres.estatus = 1 and rutas.id_ruta = rutaslideres.id_ruta and rutaslideres.estatus=1 and rutas.estatus=1");
     
     $rutas = $lider->consultarQuery("SELECT * FROM rutas WHERE rutas.estatus = 1");
     $cantidadMaxima = 10;

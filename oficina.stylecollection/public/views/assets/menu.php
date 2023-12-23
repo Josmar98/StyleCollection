@@ -916,7 +916,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 <!-- ======================================================================================================================= -->
         
 
-        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>
 
                             <?php if($url=="ObsequiosGemas" || $url=="ObsequiosGemasBorrados"){ ?>
@@ -931,18 +931,21 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-
+                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
                             <?php if($url=="ObsequiosGemas" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ObsequiosGemas&action=Registrar"><i class="fa fa-diamond"></i> Agregar Gemas autorizadas</a></li>
                             <?php }else{ ?>
             <li class=""><a href="?<?php echo $menu ?>&route=ObsequiosGemas&action=Registrar"><i class="fa fa-diamond"></i> Agregar Gemas autorizadas</a></li>
                             <?php } ?>
+                      <?php } ?>
 
+                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
                             <?php if($url=="ObsequiosGemas" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ObsequiosGemas"><i class="fa fa-diamond"></i> Ver Gemas autorizadas</a></li>
                             <?php }else{ ?>
             <li><a href="?<?php echo $menu ?>&route=ObsequiosGemas"><i class="fa fa-diamond"></i> Ver Gemas autorizadas</a></li>
                             <?php } ?>
+                      <?php } ?>
 
                       <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
                         <?php if($url=="ObsequiosGemasBorrados" && empty($action)){ ?>

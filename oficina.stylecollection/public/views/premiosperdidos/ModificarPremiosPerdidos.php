@@ -74,8 +74,10 @@
                         </div>
                         <?php foreach ($pagosRecorridos as $pagosR): ?>
 
+                            <input type="hidden" id="seleccion_premios" class="seleccion_premios<?=$pagosR['id']; ?>" value="<?=$pagosR['id']; ?>">
                           <?php if (!empty($pagosR['asignacion']) && $pagosR['asignacion']=="seleccion_premios"){ ?>
-                            <input type="hidden" id="seleccion_premios" value="<?=$pagosR['id']; ?>">
+                            <!-- <input type="hidden" id="seleccion_premios" value="<?=$pagosR['id']; ?>"> -->
+
                             <div class="form-group col-xs-12">
                               <br>
                                 <b style="font-size:1.3em;">
@@ -89,7 +91,7 @@
                               </label>
                               <input type="hidden" name="" class="maximosHidden<?=$pagosR['id']; ?>" value="<?=$data['cantidad_aprobado']-$totalPremiosGanados[$pagosR['id']];?>" readonly>
                               <input type="number" name="" class="form-control maximos<?=$pagosR['id']; ?>" value="0" readonly>
-                              <span class="error_maximos errors"></span>
+                              <span class="error_maximos<?=$pagosR['id']; ?> errors"></span>
                               <br>
                             </div>
                             <hr>
@@ -143,7 +145,7 @@
 
                                             <input type="hidden" name="dataoculta[]" value="<?="nombreid*".$idPlanesTemp."*".$data2['id_tipo_coleccion']."*0*".$data2['cantidad_coleccion_plan']."*".$data2['id_pedido']."*".$data['id_cliente']; ?>">
                                             <?php
-                                              $planess[$num] = ['codigo'=>'nombreid', 'valor'=>$idPlanesTemp]; 
+                                              $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$idPlanesTemp]; 
                                               $num++;
                                             ?>
                                             <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
@@ -173,7 +175,7 @@
 
                                                         <input type="hidden" name="dataoculta[]" value="<?="id"."*".$data3['id_premio']."*".$data3['id_tipo_coleccion']."*".$data3['id_tppc']."*".$data3['cantidad_premios_plan']."*".$data['id_pedido']."*".$data['id_cliente']; ?>">
                                                         <?php
-                                                          $planess[$num] = ['codigo'=>'id', 'valor'=>$data3['id_premio']]; 
+                                                          $planess[$num] = ['codigo'=>'id', 'pagos'=>$pagosR['id'], 'valor'=>$data3['id_premio']]; 
                                                           $num++;
                                                         ?>
                                                         <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="<?='id'.'_'.$data3['id_premio']?> form-control cantidadPerdidas" id="<?=$data3['cantidad_premios_plan'];?>"  name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="<?=$data3['cantidad_coleccion']?>">
@@ -197,6 +199,7 @@
                               }
                             ?>
                           <?php } else { ?>
+
                             <div class="form-group col-xs-12">
                               <br>
                                 <b style="font-size:1.3em;">
@@ -205,20 +208,102 @@
                                   Premios de <?=$pagosR['name']; ?> Perdidos <?=$data['cantidad_aprobado']-$totalPremiosGanados[$pagosR['id']];?>
                                 </b>
                               <br>
+                              <label>Premios perdidos de <?=$pagosR['name']; ?></label>
                               <br>
-                              <label>Premios de <?=$pagosR['name']; ?></label>
-                              <div class="input-group">
-                                <span class="input-group-addon"><?=$data['cantidad_aprobado'];?></span>
-                                  
-                                    <input type="hidden" name="dataoculta[]" value="<?="nombre*".$pagosR['id']."*0*0*".$data['cantidad_aprobado']."*".$data['id_pedido']."*".$data['id_cliente']; ?>">
-                                    <?php
-                                      $planess[$num] = ['codigo'=>'nombre', 'valor'=>$pagosR['id']]; 
-                                      $num++;
-                                    ?>
-                                    <input type="number" class="nombre_<?=$pagosR['id']; ?> form-control cantidadPerdidas" id="<?=$cantidad_colecciones;?>" name="cantidadesPedidas[]" value="<?=$data['cantidad_aprobado']-$totalPremiosGanados[$pagosR['id']]; ?>" title="<?=$pagosR['id']; ?>" readonly>
-                              </div>
-                              <span class="error_nombre_<?=$pagosR['id']; ?> errors"></span>
+                              <input type="hidden" name="" class="maximosHidden<?=$pagosR['id']; ?>" value="<?=$data['cantidad_aprobado']-$totalPremiosGanados[$pagosR['id']];?>" readonly>
+                              <input type="number" name="" class="form-control maximos<?=$pagosR['id']; ?>" value="0" readonly>
+                              <span class="error_maximos<?=$pagosR['id']; ?> errors"></span>
+
+                              <br>
+                              <?php
+
+                                foreach ($planesCol as $data2){
+                                  if(!empty($data2['nombre_plan'])){
+                                    if($data['id_pedido'] == $data2['id_pedido']){
+                                      if($data2['cantidad_coleccion_plan']>0){
+                                        //echo $data2['nombre_plan']." | ".$data2['id_pedido']. " <br> ";
+                                        ?>
+
+                                        <div class="row">
+                                          <div class="form-group col-xs-12">
+                                            <label>
+                                              <u style="font-size:1.2em;">
+                                              <?php $colecciones = $data2['cantidad_coleccion']*$data2['cantidad_coleccion_plan']; ?>
+                                              <?=$colecciones;?> Colecciones de (<?=$data2['cantidad_coleccion_plan'];?>) Plan <?=$data2['nombre_plan'];?>
+                                              </u>
+                                            </label>
+
+                                            <?php
+                                              $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$data2['id_plan']} and premios_planes_campana.tipo_premio='{$pagosR['name']}'";
+                                              $tempPlanes = $lider->consultarQuery($sql0);
+                                              $nameTPlanesTemp = $tempPlanes[0]['tipo_premio_producto'];
+                                              $idPlanesTemp = $data2['id_plan'];
+                                              $namePlanesTemp = $data2['nombre_plan'];
+
+                                              if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){ 
+                                                ?>
+                                                <?php
+                                                  $cantidadPerdidoAct = 0;
+                                                  foreach ($premios_perdidos as $premiosPerd){ if(!empty($premiosPerd['id_premio_perdido'])){
+                                                    $comparedPlan = "";
+                                                    if($premiosPerd['codigo']=="nombre"){
+                                                      $comparedPlan = $data2['nombre_plan'];
+                                                    }
+                                                    if($premiosPerd['codigo']=="nombreid"){
+                                                      $comparedPlan = $data2['id_plan'];
+                                                    }
+
+                                                    if( ($premiosPerd['valor'] == $pagosR['id'].$comparedPlan) ){
+                                                    // if( ($premiosPerd['valor'] == $comparedPlan) ){
+                                                    // if ($premiosPerd['valor']=="Standard"){
+                                                      $cantidadPerdidoAct = $premiosPerd['cantidad_premios_perdidos'];
+                                                    }
+                                                  }}
+                                                ?>
+
+                                                <div class="form-group col-xs-12">
+                                                  <label>Premios <?=$namePlanesTemp; ?></label>
+                                                  <div class="input-group">
+                                                    <span class="input-group-addon"><?=$data2['cantidad_coleccion_plan'];?></span>
+
+                                                    <input type="hidden" name="dataoculta[]" value="<?="nombreid*".$pagosR['id'].$idPlanesTemp."*".$data2['id_tipo_coleccion']."*0*".$data['cantidad_aprobado']."*".$data['id_pedido']."*".$data['id_cliente']; ?>">
+                                                    <?php
+                                                      $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$pagosR['id'].$idPlanesTemp]; 
+                                                      $num++;
+                                                    ?>
+                                                    <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                                  </div>
+                                                  <span class="error_nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> errors"></span>
+                                                </div>
+                                                <?php 
+                                                  
+                                              }
+                                              ?>
+
+
+
+
+
+
+
+
+
+                                          </div>
+                                        </div>
+
+
+
+                                        <?php
+                                      }
+                                    }
+                                  }
+                                }
+                              ?>
+                              <br>
+
+                             
                             </div>
+
                           <?php } ?>
                           <hr>
                           
@@ -227,10 +312,20 @@
                       }
                     }
                   ?>
+
                     <input type="hidden" name="id_pedido" value="<?=$pedido['id_pedido']?>">
                     <br>
                     <br>
-                  <span class="name_planes d-none"><?php echo json_encode($planess)?></span>
+                  <?php 
+                    $pagosssR = [];
+                    $indxx = 0;
+                    foreach ($pagosRecorridos as $pagosR){
+                      $pagosssR[$indxx]['name']=$pagosR['id'];
+                      $indxx++;
+                    }
+                  ?>
+                  <span class="name_pagos d-none"><?php echo json_encode($pagosssR); ?></span>
+                  <span class="name_planes d-none"><?php echo json_encode($planess); ?></span>
                   <div class="box-footer">
                     <span type="submit" class="btn btn-default enviar color-button-sweetalert" >Enviar</span>
                     <input type="hidden" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
@@ -349,7 +444,9 @@ $(document).ready(function(){
 
 
   $(".cantidadPerdidas").keyup(function(){
-    var seleccion_premios = $("#seleccion_premios").val();
+    var title = $(this).attr("title");
+    var seleccion_premios = $(".seleccion_premios"+title).val();
+    // var seleccion_premios = $("#seleccion_premios").val();
     var limite = parseInt($(this).attr("id"));
     var maximoshidden = parseInt($(".maximosHidden"+seleccion_premios).val());
     var maximos = parseInt($(".maximos"+seleccion_premios).val());
@@ -437,7 +534,9 @@ $(document).ready(function(){
   });
 
   $(".cantidadPerdidas").change(function(){
-    var seleccion_premios = $("#seleccion_premios").val();
+    var title = $(this).attr("title");
+    var seleccion_premios = $(".seleccion_premios"+title).val();
+    // var seleccion_premios = $("#seleccion_premios").val();
     var limite = parseInt($(this).attr("id"));
     var maximoshidden = parseInt($(".maximosHidden"+seleccion_premios).val());
     var maximos = parseInt($(".maximos"+seleccion_premios).val());
@@ -525,7 +624,9 @@ $(document).ready(function(){
   });
 
   $(".cantidadPerdidas").focusout(function(){
-    var seleccion_premios = $("#seleccion_premios").val();
+    var title = $(this).attr("title");
+    var seleccion_premios = $(".seleccion_premios"+title).val();
+    // var seleccion_premios = $("#seleccion_premios").val();
     var limite = parseInt($(this).attr("id"));
     var maximoshidden = parseInt($(".maximosHidden"+seleccion_premios).val());
     var maximos = parseInt($(".maximos"+seleccion_premios).val());
@@ -610,544 +711,6 @@ $(document).ready(function(){
 
   });
 
-  // $(".cantidadPerdidas").keyup(function(){
-  //   var limite = parseInt($(this).attr("id"));
-  //   var maximoshidden = parseInt($(".maximosPrimerPagoHidden").val());
-  //   var maximos = parseInt($(".maximosPrimerPago").val());
-  //   var val = $(this).val();
-  //   // if(val==""){
-  //     // $(this).val(limite);
-  //   // }
-  //   var cant = parseInt($(this).val());
-  //   if(cant < 0){
-  //     $(this).val(0);
-  //   }
-  //   if(cant > limite){
-  //     $(this).val(limite);
-  //   }
-
-  //   var titulo = $(this).attr("title");
-  //   var colss = $(this).attr("src");
-  //   if(titulo == "Primer Pago"){
-
-  //     cant = parseInt($(this).val());
-  //     if(cant > maximos){
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(maximos);
-  //     }
-
-  //     var name_planes = $(".name_planes").html();
-  //     var planes = JSON.parse(name_planes);
-
-  //     var acumPP = 0;
-  //     for (var i = 0; i < planes.length; i++) {
-  //       var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //       if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //         var values = $("."+claseTemp).val();
-  //         var cols = $("."+claseTemp).attr("src");
-  //         if(values==""){
-  //           values = 0;
-  //         }else{
-  //           values = parseInt(values) * cols;
-  //           // values = parseInt(values);
-  //         }
-  //         acumPP += values;
-  //       }
-  //     }
-      
-  //     if(acumPP <= maximoshidden){
-  //       $(this).val(cant);
-  //       var acumPP = 0;
-  //       for (var i = 0; i < planes.length; i++) {
-  //         var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //         if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //           var values = $("."+claseTemp).val();
-  //           var cols = $("."+claseTemp).attr("src");
-  //           if(values==""){
-  //             values = 0;
-  //           }else{
-  //             values = parseInt(values) * cols;
-  //           }
-  //           acumPP += values;
-  //           // console.log(claseTemp+': '+values);
-  //         }
-  //       } 
-  //     }
-
-  //     $(".maximosPrimerPago").val(maximoshidden-acumPP);
-      
-  //     if(acumPP > maximoshidden){
-  //       var newvalmin = parseInt($(".maximosPrimerPago").val()) / colss;
-  //       // console.log("NUEVO VALOR DE MINIMOOOOOO "+newvalmin);
-  //       newvalmin = Math.ceil(newvalmin);
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(cant-(newvalmin*(-1)));
-  //       // console.log(cant);
-  //       // console.log(newvalmin*(-1));
-  //     }
-  //     // console.log("Maximos: "+maximoshidden);
-  //     // console.log("Acumulado: "+acumPP);
-  //     // console.log("Cantidad: "+cant);
-  //   }
-
-  // });
-  // $(".cantidadPerdidas").change(function(){
-  //   var limite = parseInt($(this).attr("id"));
-  //   var maximoshidden = parseInt($(".maximosPrimerPagoHidden").val());
-  //   var maximos = parseInt($(".maximosPrimerPago").val());
-  //   var val = $(this).val();
-  //   // if(val==""){
-  //     // $(this).val(limite);
-  //   // }
-  //   var cant = parseInt($(this).val());
-  //   if(cant < 0){
-  //     $(this).val(0);
-  //   }
-  //   if(cant > limite){
-  //     $(this).val(limite);
-  //   }
-
-  //   var titulo = $(this).attr("title");
-  //   var colss = $(this).attr("src");
-  //   if(titulo == "Primer Pago"){
-
-  //     cant = parseInt($(this).val());
-  //     if(cant > maximos){
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(maximos);
-  //     }
-
-  //     var name_planes = $(".name_planes").html();
-  //     var planes = JSON.parse(name_planes);
-
-  //     var acumPP = 0;
-  //     for (var i = 0; i < planes.length; i++) {
-  //       var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //       if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //         var values = $("."+claseTemp).val();
-  //         var cols = $("."+claseTemp).attr("src");
-  //         if(values==""){
-  //           values = 0;
-  //         }else{
-  //           values = parseInt(values) * cols;
-  //           // values = parseInt(values);
-  //         }
-  //         acumPP += values;
-  //       }
-  //     }
-      
-  //     if(acumPP <= maximoshidden){
-  //       $(this).val(cant);
-  //       var acumPP = 0;
-  //       for (var i = 0; i < planes.length; i++) {
-  //         var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //         if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //           var values = $("."+claseTemp).val();
-  //           var cols = $("."+claseTemp).attr("src");
-  //           if(values==""){
-  //             values = 0;
-  //           }else{
-  //             values = parseInt(values) * cols;
-  //           }
-  //           acumPP += values;
-  //           // console.log(claseTemp+': '+values);
-  //         }
-  //       } 
-  //     }
-
-  //     $(".maximosPrimerPago").val(maximoshidden-acumPP);
-      
-  //     if(acumPP > maximoshidden){
-  //       var newvalmin = parseInt($(".maximosPrimerPago").val()) / colss;
-  //       // console.log("NUEVO VALOR DE MINIMOOOOOO "+newvalmin);
-  //       newvalmin = Math.ceil(newvalmin);
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(cant-(newvalmin*(-1)));
-  //       // console.log(cant);
-  //       // console.log(newvalmin*(-1));
-  //     }
-  //     // console.log("Maximos: "+maximoshidden);
-  //     // console.log("Acumulado: "+acumPP);
-  //     // console.log("Cantidad: "+cant);
-  //   }
-
-  // });
-  // $(".cantidadPerdidas").focusout(function(){
-  //   var limite = parseInt($(this).attr("id"));
-  //   var maximoshidden = parseInt($(".maximosPrimerPagoHidden").val());
-  //   var maximos = parseInt($(".maximosPrimerPago").val());
-  //   var val = $(this).val();
-  //   if(val==""){
-  //     $(this).val(limite);
-  //   }
-  //   var cant = parseInt($(this).val());
-  //   if(cant < 0){
-  //     $(this).val(0);
-  //   }
-  //   if(cant > limite){
-  //     $(this).val(limite);
-  //   }
-
-  //   var titulo = $(this).attr("title");
-  //   var colss = $(this).attr("src");
-  //   if(titulo == "Primer Pago"){
-
-  //     cant = parseInt($(this).val());
-  //     if(cant > maximos){
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(maximos);
-  //     }
-
-  //     var name_planes = $(".name_planes").html();
-  //     var planes = JSON.parse(name_planes);
-
-  //     var acumPP = 0;
-  //     for (var i = 0; i < planes.length; i++) {
-  //       var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //       if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //         var values = $("."+claseTemp).val();
-  //         var cols = $("."+claseTemp).attr("src");
-  //         if(values==""){
-  //           values = 0;
-  //         }else{
-  //           values = parseInt(values) * cols;
-  //           // values = parseInt(values);
-  //         }
-  //         acumPP += values;
-  //       }
-  //     }
-      
-  //     if(acumPP <= maximoshidden){
-  //       $(this).val(cant);
-  //       var acumPP = 0;
-  //       for (var i = 0; i < planes.length; i++) {
-  //         var claseTemp = planes[i]['codigo']+'_'+planes[i]['valor'];
-  //         if($("."+claseTemp).attr("title") == "Primer Pago"){
-  //           var values = $("."+claseTemp).val();
-  //           var cols = $("."+claseTemp).attr("src");
-  //           if(values==""){
-  //             values = 0;
-  //           }else{
-  //             values = parseInt(values) * cols;
-  //           }
-  //           acumPP += values;
-  //           // console.log(claseTemp+': '+values);
-  //         }
-  //       } 
-  //     }
-
-  //     $(".maximosPrimerPago").val(maximoshidden-acumPP);
-      
-  //     if(acumPP > maximoshidden){
-  //       var newvalmin = parseInt($(".maximosPrimerPago").val()) / colss;
-  //       // console.log("NUEVO VALOR DE MINIMOOOOOO "+newvalmin);
-  //       newvalmin = Math.ceil(newvalmin);
-  //       $(".maximosPrimerPago").val(0);
-  //       $(this).val(cant-(newvalmin*(-1)));
-  //       // console.log(cant);
-  //       // console.log(newvalmin*(-1));
-  //     }
-  //     // console.log("Maximos: "+maximoshidden);
-  //     // console.log("Acumulado: "+acumPP);
-  //     // console.log("Cantidad: "+cant);
-  //   }
-
-
-  // });
-
-  // $(".cantidades").change(function(){
-  //   var cantidad = parseInt($(this).val());
-      
-  //   var pUNIC = $(this).attr('id');
-
-    
-  //   var planesss = $(".name_planes").html();
-  //   var planesss2 = $(".name_planes2").html();
-  //   var planesss3 = $(".name_planes3").html();
-  //   var planes3 = JSON.parse(planesss3);
-  //   var planes2 = JSON.parse(planesss2);
-  //   var planes1 = JSON.parse(planesss);
-  //   var pl = 0;
-  //   for (var i = 0; i < planes2.length; i++) {
-  //     var p2 = planes2[i];
-  //     var aprob = parseInt($(".max"+p2).val());
-  //     var resul = 0;
-
-
-  //         for (var k = 0; k < planes3.length; k++) {
-  //           var p3 = planes3[k];
-  //       for (var j = 0; j < planes1.length; j++) {
-  //         var p1 = planes1[j];
-  //           if(p1==p2+p3){
-  //             // alert(p1);
-  //             // alert(p2);
-  //               var values = parseInt($("#"+p1).val());
-
-  //                     resul += values;
-  //                   if(p1==pUNIC){
-                      
-  //                     var existencia = parseInt($("#existencia"+pUNIC).val());
-  //                     if(!isNaN(existencia)){
-
-  //                       if(existencia-cantidad>=0){
-  //                         $("#newexistencia"+pUNIC).val(existencia-cantidad);
-  //                         if($("#newexistencia"+pUNIC).val()==0){
-  //                           $(".existenciaDisponible"+pUNIC).html("Premio Agotado");
-  //                         }else{
-  //                           $(".existenciaDisponible"+pUNIC).html("");
-  //                         }
-  //                       }else{
-  //                         $(this).val($(this).val()-1);
-  //                         resul--;
-  //                         if($("#newexistencia"+pUNIC).val()==0){
-  //                           $("#newexistencia"+pUNIC).val(parseInt($("#newexistencia"+pUNIC).val())+1);
-  //                         }
-  //                         if($("#newexistencia"+pUNIC).val()!=0){
-  //                           $(".existenciaDisponible"+pUNIC).html("");
-  //                         }
-  //                       }
-  //                         $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                     }
-  //                      $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                   }
-  //           }
-  //         }
-  //       }
-
-  //           if((aprob-resul)>=0){
-  //             $(".aprobado"+p2).val(aprob-resul);
-  //           }else{
-  //             while(resul>aprob){      
-  //               $(this).val($(this).val()-1);
-  //               resul = 0;
-  //               for (var j = 0; j < planes1.length; j++) {
-  //                 var p1 = planes1[j];
-  //                 for (var k = 0; k < planes3.length; k++) {
-  //                   var p3 = planes3[k];
-  //                   if(p1==p2+p3){
-  //                     var values = parseInt($("#"+p1).val());
-  //                     resul += values;
-  //                   }
-  //                 }
-  //               }    
-  //               if((aprob-resul)>=0){
-  //                 $(".aprobado"+p2).val(aprob-resul);
-  //               }
-  //             }
-  //           }
-
-
-  //   }
-  // });
-
-  // $(".cantidades").keyup(function(){
-  //   var cantidad = parseInt($(this).val());
-      
-  //   var pUNIC = $(this).attr('id');
-
-    
-  //   var planesss = $(".name_planes").html();
-  //   var planesss2 = $(".name_planes2").html();
-  //   var planesss3 = $(".name_planes3").html();
-  //   var planes3 = JSON.parse(planesss3);
-  //   var planes2 = JSON.parse(planesss2);
-  //   var planes1 = JSON.parse(planesss);
-  //   var pl = 0;
-  //   for (var i = 0; i < planes2.length; i++) {
-  //     var p2 = planes2[i];
-  //     var aprob = parseInt($(".max"+p2).val());
-  //     var resul = 0;
-
-
-  //       for (var j = 0; j < planes1.length; j++) {
-  //         var p1 = planes1[j];
-  //         for (var k = 0; k < planes3.length; k++) {
-  //           var p3 = planes3[k];
-  //           if(p1==p2+p3){
-  //               var values = parseInt($("#"+p1).val());
-  //                     resul += values;
-  //                   if(p1==pUNIC){
-  //                     var existencia = parseInt($("#existencia"+pUNIC).val());
-  //                     if(!isNaN(existencia)){
-  //                           if(existencia-cantidad>=0){
-  //                             $("#newexistencia"+pUNIC).val(existencia-cantidad);
-  //                             if($("#newexistencia"+pUNIC).val()==0){
-  //                               $(".existenciaDisponible"+pUNIC).html("Premio Agotado");
-  //                             }else{
-  //                               $(".existenciaDisponible"+pUNIC).html("");
-  //                             }
-  //                           }else{
-  //                             var xd = $(this).val();
-  //                             if(xd > existencia){
-  //                               // alert("yes");
-  //                               $(this).val(existencia);
-  //                             }else{
-  //                               $(this).val(0);
-  //                             }
-  //                             // alert($("#llenar"+pUNIC).val());
-  //                             resul--;
-  //                             if($("#newexistencia"+pUNIC).val()==0){
-  //                               $("#newexistencia"+pUNIC).val(parseInt($("#newexistencia"+pUNIC).val())+1);
-  //                             }
-  //                             if($("#newexistencia"+pUNIC).val()!=0){
-  //                               $(".existenciaDisponible"+pUNIC).html("");
-  //                             }
-  //                             $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                           }
-  //                         }
-  //                       // alert($(".cant"+pUNIC).val());
-  //                         $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                   }
-  //                   // $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //           }
-  //         }
-  //       }
-
-  //           if((aprob-resul)>=0){
-  //             $(".aprobado"+p2).val(aprob-resul);
-  //           }else{
-  //             while(resul>aprob){      
-  //               $(this).val($(this).val()-1);
-  //               resul = 0;
-  //               for (var j = 0; j < planes1.length; j++) {
-  //                 var p1 = planes1[j];
-  //                 for (var k = 0; k < planes3.length; k++) {
-  //                   var p3 = planes3[k];
-  //                   if(p1==p2+p3){
-  //                     var values = parseInt($("#"+p1).val());
-  //                     resul += values;
-  //                   }
-  //                 }
-  //               }    
-  //               // alert(aprobado-resul);
-  //               if((aprob-resul)>=0){
-  //                 $(".aprobado"+p2).val(aprob-resul);
-  //                 $("#newexistencia"+pUNIC).val(parseInt($("#existencia"+pUNIC).val())-resul);
-  //                 if($("#newexistencia"+pUNIC).val()==0){
-  //                   $(".existenciaDisponible"+pUNIC).html("Premio Agotado");
-  //                 }else{
-  //                   $(".existenciaDisponible"+pUNIC).html("");
-  //                 }
-  //               }
-  //             }
-  //           }
-
-
-  //   }
-  // });
-
-  // $(".cantidades").focusout(function(){
-  //   var cantidad = $(this).val();
-  //   if(cantidad==""){
-  //     $(this).val(0);
-  //   }
-
-  //   cantidad = parseInt($(this).val());
-      
-  //   var pUNIC = $(this).attr('id');
-
-    
-  //   var planesss = $(".name_planes").html();
-  //   var planesss2 = $(".name_planes2").html();
-  //   var planesss3 = $(".name_planes3").html();
-  //   var planes3 = JSON.parse(planesss3);
-  //   var planes2 = JSON.parse(planesss2);
-  //   var planes1 = JSON.parse(planesss);
-  //   var pl = 0;
-  //   for (var i = 0; i < planes2.length; i++) {
-  //     var p2 = planes2[i];
-  //     var aprob = parseInt($(".max"+p2).val());
-  //     var resul = 0;
-
-
-  //       for (var j = 0; j < planes1.length; j++) {
-  //         var p1 = planes1[j];
-  //         for (var k = 0; k < planes3.length; k++) {
-  //           var p3 = planes3[k];
-  //           if(p1==p2+p3){
-  //               var values = parseInt($("#"+p1).val());
-  //                     resul += values;
-  //                   if(p1==pUNIC){
-  //                     var existencia = parseInt($("#existencia"+pUNIC).val());
-  //                     if(!isNaN(existencia)){
-
-  //                       if(existencia-cantidad>=0){
-  //                         $("#newexistencia"+pUNIC).val(existencia-cantidad);
-  //                         if($("#newexistencia"+pUNIC).val()==0){
-  //                           $(".existenciaDisponible"+pUNIC).html("Premio Agotado");
-  //                         }else{
-  //                           $(".existenciaDisponible"+pUNIC).html("");
-  //                         }
-  //                       }else{
-  //                     // alert(existencia-cantidad);  
-  //                     // alert(resul);
-  //                     // alert($("#llenar"+pUNIC).val());
-  //                         // $(this).val($("#llenar"+pUNIC).val());
-  //                         var r = parseInt($(".aprobado"+p2).val());
-  //                         // alert(r)
-  //                         // $(this).val(0);
-  //                         var xd = $(this).val();
-  //                             if(xd > existencia){
-  //                               // alert("yes");
-  //                               $(this).val(existencia);
-  //                             }else{
-  //                               $(this).val(0);
-  //                             }
-  //                         $(".aprobado"+p2).val(r+parseInt($("#llenar"+pUNIC).val()));
-                          
-  //                         resul--;
-  //                         if($("#newexistencia"+pUNIC).val()==0){
-  //                           $("#newexistencia"+pUNIC).val(parseInt($("#newexistencia"+pUNIC).val())+1);
-  //                         }
-  //                         if($("#newexistencia"+pUNIC).val()!=0){
-  //                           $(".existenciaDisponible"+pUNIC).html("");
-  //                         }
-  //                         $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                       }
-  //                     }
-  //                   // alert($(".cant"+pUNIC).val());
-  //                     $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //                   }
-  //                   // $("#llenar"+pUNIC).val($(".cant"+pUNIC).val());
-  //           }
-  //         }
-  //       }
-
-  //           if((aprob-resul)>=0){
-  //             $(".aprobado"+p2).val(aprob-resul);
-  //           }else{
-  //             while(resul>aprob){      
-  //               $(this).val($(this).val()-1);
-  //               resul = 0;
-  //               for (var j = 0; j < planes1.length; j++) {
-  //                 var p1 = planes1[j];
-  //                 for (var k = 0; k < planes3.length; k++) {
-  //                   var p3 = planes3[k];
-  //                   if(p1==p2+p3){
-  //                     var values = parseInt($("#"+p1).val());
-  //                     resul += values;
-  //                   }
-  //                 }
-  //               }    
-  //               if((aprob-resul)>=0){
-  //                 $(".aprobado"+p2).val(aprob-resul);
-  //                 $("#newexistencia"+pUNIC).val(parseInt($("#existencia"+pUNIC).val())-resul);
-  //                 if($("#newexistencia"+pUNIC).val()==0){
-  //                   $(".existenciaDisponible"+pUNIC).html("Premio Agotado");
-  //                 }else{
-  //                   $(".existenciaDisponible"+pUNIC).html("");
-  //                 }
-  //               }
-  //             }
-  //           }
-
-
-  //   }
-  // });
-
-
-
-
   $(".enviar").click(function(){
     var response = validadPerdidos();
 
@@ -1166,8 +729,8 @@ $(document).ready(function(){
           closeOnCancel: false 
       }).then((isConfirm) => {
           if (isConfirm.value){      
-                          $(".btn-enviar").removeAttr("disabled");
-                          $(".btn-enviar").click();
+            $(".btn-enviar").removeAttr("disabled");
+            $(".btn-enviar").click();
           }else { 
               swal.fire({
                   type: 'error',
@@ -1176,8 +739,6 @@ $(document).ready(function(){
               });
           } 
       });
-
-
 
     
     }
@@ -1188,63 +749,114 @@ $(document).ready(function(){
 
 });
 function validadPerdidos(){
-  var seleccion_premios = $("#seleccion_premios").val();
-  var planes = $(".name_planes").html();
-  var data = JSON.parse(planes);
-  var cod = "";
-  var val = "";
-  var clase = "";
-  var cant = "";
-  var results = [];
-  for (var i = 0; i < data.length; i++) {
-    // alert(data[i]['codigo']+"_"+data[i]['valor']);
-    results[i] = false;
-    cod = data[i]['codigo'];
-    val = data[i]['valor'];
-    clase = data[i]['codigo']+"_"+data[i]['valor'];
-    cant = $("."+clase).val();
-    // alert(cant);
-    if(cant==""){
-      results[i] = false;
-      $(".error_"+clase).html("Debe llenar la cantidad de premios pedidos.");
+  var pagoss = $(".name_pagos").html();
+  var pagosR = JSON.parse(pagoss);
+  var variablesCant = 0;
+
+    var planes = $(".name_planes").html();
+    var data = JSON.parse(planes);
+  var indexxxx = 0;
+  var resultss = [];
+    var results = [];
+
+
+
+  for (var x = 0; x < pagosR.length; x++) {
+    results[x] = [];
+    var number = 0;
+    var title = pagosR[x]['name'];
+    var seleccion_premios = $(".seleccion_premios"+title).val();
+
+    // var seleccion_premios = $("#seleccion_premios").val();
+    var tipoPago = "";
+    var cod = "";
+    var val = "";
+    var clase = "";
+    var cant = "";
+
+    for (var i = 0; i < data.length; i++) {
+      results[x][i] = false;
+      // alert(data[i]['codigo']+"_"+data[i]['valor']);
+      tipoPago = data[i]['pagos'];
+      // alert(seleccion_premios);
+      if(seleccion_premios==tipoPago){
+        cod = data[i]['codigo'];
+        val = data[i]['valor'];
+        clase = data[i]['codigo']+"_"+data[i]['valor'];
+        cant = $("."+clase).val();
+        
+        if(cant==""){
+          results[x][i] = false;
+          number++;
+          $(".error_"+clase).html("Debe llenar la cantidad de premios pedidos.");
+        }else{
+          results[x][i] = true;
+          $(".error_"+clase).html("");
+        }
+
+      }
+    }
+
+
+    var result = false;
+    // for (var i = 0; i < results.length; i++) {
+    //   number[i]=0;
+    //   var elements = results[i];
+    //   alert(elements);
+    //   // for (var j = 0; j < elements.length; j++) {
+    //   //   // alert(j+": "+elements[j]);
+    //   //   if(elements[j]==false){
+    //   //     number++;
+    //   //   }
+    //   // }
+      
+    //   // alert(number);
+
+    // }
+    // console.log(results);
+
+
+
+    // if(number==0){
+    //   result = true;
+    // }else{
+    //   result = false;    
+    // }
+    // return result;
+    // alert(seleccion_premios);
+
+    var maximosPrimerPago = parseInt($(".maximos"+seleccion_premios).val());
+    var rmaximosPrimerPago = false;
+    if(maximosPrimerPago == 0){
+      rmaximosPrimerPago = true;
+      $(".error_maximos"+seleccion_premios).html("");
     }else{
-      results[i] = true;
-      $(".error_"+clase).html("");
+      rmaximosPrimerPago = false;
+      $(".error_maximos"+seleccion_premios).html("Debe seleccionar la cantidad de premios perdidos del pago marcado");
+    }
+    // alert(rmaximosPrimerPago+" | "+number);
+    if(number==0 && rmaximosPrimerPago==true){
+      result = true;
+    }else{
+      result = false;    
+    }
+    resultss[indexxxx]=result;
+    indexxxx++;
+  }
+  console.log(resultss);
+  var cantFalse = 0;
+  for (var i = 0; i < resultss.length; i++) {
+    if(resultss[i]==false){
+      cantFalse++;
     }
   }
-  var result = false;
-  var number = 0;
-  for (var i = 0; i < results.length; i++) {
-    if(results[i]==false){
-      number++;
-    }
-  }
-
-
-  // if(number==0){
-  //   result = true;
-  // }else{
-  //   result = false;    
-  // }
-  // return result;
-
-  var maximosPrimerPago = parseInt($(".maximos"+seleccion_premios).val());
-  var rmaximosPrimerPago = false;
-  if(maximosPrimerPago == 0){
-    rmaximosPrimerPago = true;
-    $(".error_maximos").html("");
+  var resultFinal = false;
+  if(cantFalse==0){
+    resultFinal = true;
   }else{
-    rmaximosPrimerPago = false;
-    $(".error_maximos").html("Debe seleccionar la cantidad de premios perdidos de pagos marcados");
+    resultFinal = false;
   }
-
-  if(number==0 && rmaximosPrimerPago==true){
-    result = true;
-  }else{
-    result = false;    
-  }
-  // alert(result);
-  return result;
+  return resultFinal;
 
 }
 function cambiarPremiosCantidad(){

@@ -160,7 +160,9 @@
                 <thead>
                 <tr>
                   <th>Nº</th>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
                   <th>---</th>
+                  <?php } ?>
                   <th>Lider</th>
                   <th>Campaña</th>
                   <th>Gemas</th>
@@ -198,6 +200,7 @@
                             <?php echo $num++; ?>
                           </span>
                         </td>
+                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
                         <td style="width:8%">
                           <?php if($estado_campana=="1"){ ?>
                               <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?=$menu?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_obsequio_gema'] ?>">
@@ -210,6 +213,7 @@
 
                           <?php } ?>
                         </td>
+                        <?php } ?>
                         <td style="width:16%">
                           <span class="contenido2">
                             <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
@@ -263,7 +267,9 @@
                 <tfoot>
                 <tr>
                   <th>Nº</th>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
                   <th>---</th>
+                  <?php } ?>
                   <th>Lider</th>
                   <th>Campaña</th>
                   <th>Gemas</th>

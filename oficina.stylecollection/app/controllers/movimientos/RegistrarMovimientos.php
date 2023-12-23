@@ -115,8 +115,10 @@ if($amMovimientosR == 1){
             // $resp['ejecucion']=true;
           // }else{
             // // $query = "SELECT * FROM movimientos WHERE id_banco = $id_banco and num_movimiento = '{$referencias[$i]}' and  fecha_movimiento = '{$fechaAct}' and monto_movimiento = '{$montos[$i]}' and estatus = 1";
+          
             
             $query = "SELECT * FROM movimientos WHERE id_banco = $id_banco and num_movimiento = '{$referencias[$i]}' and  fecha_movimiento = '{$fechaAct}' and monto_movimiento = '{$montoActual}' and estatus = 1";
+            // $query = "SELECT * FROM movimientos WHERE id_banco = $id_banco and num_movimiento LIKE '%{$referencias[$i]}' and  fecha_movimiento = '{$fechaAct}' and monto_movimiento = '{$montoActual}' and estatus = 1";
             $resp = $lider->consultarQuery($query);
           // }
 

@@ -35,14 +35,14 @@ if($amReportesC == 1){
         $pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = $id");
         $pedido = $pedidos[0];
         $id_pedido = $pedido['id_pedido'];
-        $premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE id_pedido = $id_pedido and estatus = 1");
+        $premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE id_pedido = $id_pedido and estatus = 1 ORDER BY id_premio_perdido ASC;");
 	}else{
         $id = $_SESSION['id_cliente'];
         $pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho");
-        $premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE estatus = 1");
+        $premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE estatus = 1 ORDER BY id_premio_perdido ASC;");
 	}
-      $premios_planes3 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
-      $premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = 'Standard' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
+      $premios_planes3 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
+      $premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = 'Standard' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
       // if(count($premios_planes)<2){
       //   $premios_planes = [];
       //   $premios_planes2 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
@@ -57,7 +57,7 @@ if($amReportesC == 1){
       // }
 
       $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
-      $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
+      $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
        $retos = $lider->consultarQuery("SELECT * FROM retos, retos_campana, premios WHERE retos.id_reto_campana = retos_campana.id_reto_campana and retos_campana.id_premio = premios.id_premio and retos_campana.id_campana = $id_campana and retos.id_campana = $id_campana");
         
         $retosCamp = $lider->consultarQuery("SELECT DISTINCT * FROM retos_campana, premios WHERE retos_campana.id_premio = premios.id_premio and retos_campana.id_campana = $id_campana");
@@ -115,7 +115,7 @@ if($amReportesC == 1){
 	    // ========================== // =============================== // ============================== //
 	    if(count($premios_planes)<2){
         $premios_planes = [];
-        $premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
+        $premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
 
         $id_planes_camp = [];
         $nidxp = 0;
@@ -144,7 +144,7 @@ if($amReportesC == 1){
         foreach ($id_planes_camp as $keys) {
           $id_plan_camp = $keys['id_plan'];
           $tipo_plan_camp = $keys['id_tipo'];
-          $newPlan = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = {$id_plan_camp} and premios_planes_campana.tipo_premio = '{$tipo_plan_camp}' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
+          $newPlan = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = {$id_plan_camp} and premios_planes_campana.tipo_premio = '{$tipo_plan_camp}' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
           foreach ($newPlan as $nplan) {
             if(!empty($nplan['id_plan_campana'])){
               $premios_planes[$n1] = $nplan;
@@ -154,7 +154,7 @@ if($amReportesC == 1){
         }
       }
 
-      $premiosXplanes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
+      $premiosXplanes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
       $controladorPremios = [];
       $numeroX = 0;
       foreach ($planesCol as $key1) {
@@ -269,8 +269,8 @@ if($amReportesC == 1){
 						</tr>
 					</thead>
 					<tbody> ";
-						$planes = $lider->consultarQuery("SELECT planes.id_plan, planes.nombre_plan FROM planes, planes_campana, campanas, despachos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = campanas.id_campana and campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
-						$premios = $lider->consultarQuery("SELECT planes_campana.id_plan, planes.nombre_plan, premios.id_premio, premios.nombre_premio FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, planes, despachos WHERE premios.id_premio = tipos_premios_planes_campana.id_premio and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and planes_campana.id_plan = planes.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
+						$planes = $lider->consultarQuery("SELECT planes.id_plan, planes.nombre_plan FROM planes, planes_campana, campanas, despachos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = campanas.id_campana and campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
+						$premios = $lider->consultarQuery("SELECT planes_campana.id_plan, planes.nombre_plan, premios.id_premio, premios.nombre_premio FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, planes, despachos WHERE premios.id_premio = tipos_premios_planes_campana.id_premio and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and planes_campana.id_plan = planes.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
 						$num = 1; 
 						$acumColecciones = 0;
 						$totalesPremios = [];
@@ -524,40 +524,109 @@ if($amReportesC == 1){
 				                            	<td style='text-align:left;'>";
 																					foreach ($premios_perdidos as $dataperdidos) {
 																						if(!empty($dataperdidos['id_premio_perdido'])){
-																							if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-																								$alcanzados = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
-																								// ========================== // =============================== // ============================== //
-																								if($maxDisponiblePremiosSeleccion>0){
-																									if($alcanzados>$maxDisponiblePremiosSeleccion){
-																										$alcanzados = $maxDisponiblePremiosSeleccion;
-																									}
-																								}
-																								// ========================== // =============================== // ============================== //
-																								foreach ($premios_planes as $planstandard){
-																									if (!empty($planstandard['id_plan_campana'])){
-																										if ($planstandard['tipo_premio']==$pagosR['name']){
-																											$info .= "<table style='width:100%;'>
-																												<tr>
-																													<td style='text-align:left;'>".
-																														"(".$alcanzados.") ".$planstandard['producto']."
-																													</td>
-																													<td style='text-align:right;'>";
-																														$porcentSelected = $data['cantidad_aprobado'];
-																														$porcentAlcanzados = $alcanzados;
-																														$porcentResul = ($porcentAlcanzados/$porcentSelected)*100;
-																														if(!empty($totalesPremios[$pagosR['name']][$planstandard['producto']])){
-																															$totalesPremios[$pagosR['name']][$planstandard['producto']]['cantidad'] += $alcanzados;
-																														}else{
-																															$totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
-																															$totalesPremios[$pagosR['name']][$planstandard['producto']] = ['id'=>$pagosR['id'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
-																														}
-																														$info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
-																													</td>
-																												</tr>
-																											</table>";
-																										}
-																									}
-																								}
+                                              // if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+                                              if($dataperdidos['id_pedido'] == $data['id_pedido']){
+                                                $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
+                                                $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
+                                                $dataComparar = "";
+                                                if($posOrigin==""){
+                                                  $dataComparar = $dataperdidos['valor'];
+                                                }else{
+                                                  $dataComparar = $dataNamePerdido;
+                                                }
+                                                if(($dataComparar == $pagosR['id'])){
+                                                  if($dataNamePerdidoIdPlan==""){
+    																								$alcanzados = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
+    																								// ========================== // =============================== // ============================== //
+    																								if($maxDisponiblePremiosSeleccion>0){
+    																									if($alcanzados>$maxDisponiblePremiosSeleccion){
+    																										$alcanzados = $maxDisponiblePremiosSeleccion;
+    																									}
+    																								}
+    																								// ========================== // =============================== // ============================== //
+    																								foreach ($premios_planes as $planstandard){
+    																									if (!empty($planstandard['id_plan_campana'])){
+    																										if ($planstandard['tipo_premio']==$pagosR['name']){
+    																											$info .= "<table style='width:100%;'>
+    																												<tr>
+    																													<td style='text-align:left;'>".
+    																														"(".$alcanzados.") ".$planstandard['producto']."
+    																													</td>
+    																													<td style='text-align:right;'>";
+    																														$porcentSelected = $data['cantidad_aprobado'];
+    																														$porcentAlcanzados = $alcanzados;
+    																														$porcentResul = ($porcentAlcanzados/$porcentSelected)*100;
+    																														if(!empty($totalesPremios[$pagosR['name']][$planstandard['producto']])){
+    																															$totalesPremios[$pagosR['name']][$planstandard['producto']]['cantidad'] += $alcanzados;
+    																														}else{
+    																															$totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
+    																															$totalesPremios[$pagosR['name']][$planstandard['producto']] = ['id'=>$pagosR['id'], 'plan'=>$planstandard['nombre_plan'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
+    																														}
+    																														$info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
+    																													</td>
+    																												</tr>
+    																											</table>";
+    																										}
+    																									}
+    																								}
+                                                  } else {
+
+                                                    foreach ($planesCol as $data2){ if(!empty($data2['id_cliente'])){
+                                                      if ($data['id_pedido'] == $data2['id_pedido']){
+                                                        if ($data2['cantidad_coleccion_plan']>0){
+                                                          if($dataNamePerdidoIdPlan==$data2['id_plan']){
+                                                            if(!empty($dataperdidos['id_premio_perdido'])){
+                                                              
+                                                              $alcanzados = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                              // ========================== // =============================== // ============================== //
+                                                              if($maxDisponiblePremiosSeleccion>0){
+                                                                if($alcanzados>$maxDisponiblePremiosSeleccion){
+                                                                  $alcanzados = $maxDisponiblePremiosSeleccion;
+                                                                }
+                                                              }
+                                                              // ========================== // =============================== // ============================== //
+                                                              foreach ($premios_planes3 as $premiosP) { if(!empty($premiosP['nombre_plan'])){
+                                                                if($data2['nombre_plan']==$premiosP['nombre_plan']){
+                                                                  if($pagosR['name']==$premiosP['tipo_premio']){
+                                                                    $info .= "<table style='width:100%;'>
+                                                                      <tr>
+                                                                        <td style='width:60%;text-align:left;'>".
+                                                                          "(".$alcanzados.") ".$premiosP['producto']."
+                                                                        </td>
+                                                                        <td style='width:25%;text-align:left;'>".
+                                                                          "(".$data2['nombre_plan'].")
+                                                                        </td>
+                                                                        <td style='width:15%;text-align:right;'>";
+                                                                          $porcentSelected = $data['cantidad_aprobado'];
+                                                                          $porcentPerdido = $alcanzados;
+                                                                          $porcentResul = ($porcentPerdido/$porcentSelected)*100;
+                                                                          if(!empty($totalesPremios[$pagosR['name']][$premiosP['producto']])){
+                                                                            $totalesPremios[$pagosR['name']][$premiosP['producto']]['cantidad'] += $alcanzados;
+                                                                          }else{
+                                                                            $totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
+                                                                            $totalesPremios[$pagosR['name']][$premiosP['producto']] = ['id'=>$pagosR['id'], 'plan'=>$data2['nombre_plan'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
+                                                                          }
+                                                                          $info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
+                                                                        </td>
+                                                                      </tr>
+                                                                    </table>";
+                                                                  }
+                                                                }
+                                                              } }
+
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    } }
+
+
+                                                  }
+                                                }
+
+
 																							}
 																						}
 																					}
@@ -759,7 +828,7 @@ if($amReportesC == 1){
 																	".$totalesPremios[$plan['nombre_plan']]['colecciones']." Plan ".$plan['nombre_plan']."<br>
 																</td>
 																<td style='text-align:left;width:65%;'>";
-                                  $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$plan['id_plan']} and premios_planes_campana.tipo_premio='{$pagosR['name']}'";
+                                  $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$plan['id_plan']} and premios_planes_campana.tipo_premio='{$pagosR['name']}' ORDER BY planes.id_plan ASC";
                                   $tempPlanes = $lider->consultarQuery($sql0);
                                   $nameTPlanesTemp = $tempPlanes[0]['tipo_premio_producto'];
                                   $namePlanesTemp = $plan['nombre_plan'];
@@ -838,29 +907,34 @@ if($amReportesC == 1){
 												</td>
 												<td style='text-align:left;'>";
 												
-												foreach ($premios_planes as $planstandard){
+												foreach ($premios_planes3 as $planstandard){
 													if ($planstandard['id_plan_campana']){
 														if ($planstandard['tipo_premio']==$pagosR['name']){
 															foreach ($totalesPremios as $key) {
 																if(!empty($key['name']) && $key['name'] == $planstandard['tipo_premio']){
 																	if(!empty($key[$planstandard['producto']])){
-																		$cantidadMostrar = $key[$planstandard['producto']]['cantidad'];
-																		//if($cantidadMostrar>0){
-																			$info .= "<table style='width:100%;'>
-																				<tr>
-																					<td style='text-align:left;'>".
-																						"(".$cantidadMostrar.") ".$planstandard['producto']."
-																					</td>
-																					<td style='text-align:right;'>";
-																						$totSelected = $acumColecciones;
-																						$totAlcanzado = $cantidadMostrar;
-																						$totResul = ($totAlcanzado/$totSelected)*100;
-																						$info .= "<b>".number_format($totResul,2,',','.')."%</b>
+                                    if($key[$planstandard['producto']]['plan']==$planstandard['nombre_plan']){
+  																		$cantidadMostrar = $key[$planstandard['producto']]['cantidad'];
+  																		//if($cantidadMostrar>0){
+  																			$info .= "<table style='width:100%;'>
+  																				<tr>
+  																					<td style='width:60%;text-align:left;'>".
+                                              "(".$cantidadMostrar.") ".$planstandard['producto']."
+                                            </td>
+                                            <td style='width:25%;text-align:left;'>".
+                                              "(".$key[$planstandard['producto']]['plan'].")
+                                            </td>
+  																					<td style='width:15%;text-align:right;'>";
+  																						$totSelected = $acumColecciones;
+  																						$totAlcanzado = $cantidadMostrar;
+  																						$totResul = ($totAlcanzado/$totSelected)*100;
+  																						$info .= "<b>".number_format($totResul,2,',','.')."%</b>
 
-																					</td>
-																				</tr>
-																			</table>";
-																		//}
+  																					</td>
+  																				</tr>
+  																			</table>";
+                                      //}
+                                    }
 																	}
 																}
 															}
@@ -997,10 +1071,10 @@ if($amReportesC == 1){
 	$ancho = 528.00;
 	$alto = 816.009;
 	// $altoMedio = $alto / 2;
-	// echo $info;
 	$dompdf->loadHtml($info);
 	$dompdf->render();
 	$dompdf->stream("Premios Alcanzados de Campaña {$numeroCampana}-{$anioCampana} - StyleCollection", array("Attachment" => false));
+	// echo $info;
 }else{
   require_once 'public/views/error404.php';
 }

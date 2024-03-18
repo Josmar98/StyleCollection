@@ -124,6 +124,13 @@
               if(!empty($pedido) && count($pedido)>1){
                 $primerPago = $pedido['cantidad_aprobado'] * $pedido['primer_precio_coleccion'];
               }
+
+              $limiteDefinitivo = "";
+              if($despachos[0]['limite_pedido'] < $limiteFechaMinimo){
+                $limiteDefinitivo = $despachos[0]['limite_pedido'];
+              }else{
+                $limiteDefinitivo = $limiteFechaMinimo;
+              }
               // echo $abonos."<br>";
             ?>
               <div class="boxForm boxFormDivisasDolares" style="display:">
@@ -133,7 +140,7 @@
 
                         <div class="form-group col-xs-12 col-sm-6 col-md-6">
                            <label for="fechaPago">Fecha de Pago</label>
-                           <input type="date" class="form-control fechaPago" min="<?=$limiteFechaMinimo?>" value="<?=$pago['fecha_pago']?>"  name="fechaPago" id="fechaPago" max="<?=date('Y-m-d')?>">
+                           <input type="date" class="form-control fechaPago" min="<?=$limiteDefinitivo; ?>" value="<?=$pago['fecha_pago']?>"  name="fechaPago" id="fechaPago" max="<?=date('Y-m-d')?>">
                            <span id="error_fechaPago" class="errors"></span>
                         </div>
 

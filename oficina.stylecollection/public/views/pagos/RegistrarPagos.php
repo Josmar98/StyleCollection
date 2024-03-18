@@ -716,12 +716,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -729,7 +729,7 @@
                           }
                         ?>
                       </select>
-                      
+
                       <span id="error_tipoPago" class="errors"></span>
                     </div>
 
@@ -894,12 +894,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ ?> selected <?php } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1081,12 +1081,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1257,12 +1257,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1444,12 +1444,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1627,12 +1627,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1795,12 +1795,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -1982,12 +1982,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -2163,12 +2163,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -2279,6 +2279,7 @@
                     <div class="form-group col-xs-12 col-sm-6 col-md-6">
                       <label for="tipoPago">Tipo de pago <small>Ej. (Inicial / Primer Pago, etc.)</small></label>
                       <br>
+                      
                       <select class="form-control select2" id="tipoPago" name="tipoPago" style="width:100%;">
                         <option></option>
                         <?php 
@@ -2360,12 +2361,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }
@@ -2529,12 +2530,12 @@
                               if($promoPagos['cantidad_aprobada_promocion']>0){
                                 if(count($fechasPromociones)>0){
                                   if($fechaEscogida<=$fechasPromociones['fecha_pago_promocion']){ ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                     <?php
                                   }
                                 }else{
                                   ?>
-                                    <option <?php if($pago['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
+                                    <option <?php if($pagosD['tipo_pago']==$promoPagos['nombre_promocion']){ ?> selected <?php } ?> <?php if(!empty($_SESSION['dataRegistroTemp'])){ if($promoPagos['nombre_promocion']==$_SESSION['dataRegistroTemp']['tipoPago']){ echo " selected "; } } ?> ><?=$promoPagos['nombre_promocion'] ?></option>
                                   <?php
                                 }
                               }

@@ -104,10 +104,12 @@
                   <?php endif; ?>
               <span style="clear:both;"></span>
             </div>
+
             <!-- /.box-header -->
             <div class="box-body">
                 <?php
                 $limiteSeleccionPromocion = $fechasPromo['fecha_cierre_promocion'];
+                //$promociones=[]; $despacho['limite_pedido']=date('Y-m-d'); $infoCamp['restoFactura']=5;
               if(Count($promociones)>1){
                   $promocion = $promociones[0];
                   if($promocion['cantidad_aprobada_promocion']>0){ ?>
@@ -201,21 +203,52 @@
                 //echo "<br>Limite: ".$limiteSeleccionPromocion."<br>";
                 // $limite = "2021-10-14";
                   if($limite <= $limiteSeleccionPromocion){
-                ?>
-                    <div style="margin-left:3%;font-size:1.1em;">
-                      <b><i>
-                        <span style="color:red;margin-left:1%;" >Importante: </span>
-                        Podra solicitar sus promociones para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> hasta la fecha <u><?php echo $lider->formatFecha($limiteSeleccionPromocion); ?></u>. de lo contrario la opcion para solicitar sus promociones ya no estara disponible. Gracias.
-                      </i></b> 
-                    </div>
-                    <?php if($_SESSION['cuenta']['estatus'] == 1){ ?>
-                      <center>
-                        <a class="btn" style="color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Promociones&action=Registrar">
-                          <b>Realizar Solicitud de Promociones</b>    
-                        </a>
-                      </center>
-                    <?php } ?>
-                <?php
+
+                    if(!empty($infoCamp['restoFactura']) && $infoCamp['restoFactura']>0 && $opcionFacturasCerradas==1){
+                      ?>
+                        <div style="margin-left:3%;font-size:1.1em;">
+                          <b><i>
+                            <span style="color:red;margin-left:1%;" >Importante: </span>
+                            Actualmente usted cuenta con factura pendiente por cerrar en la <?=$infoCamp[0]['info']; ?>.
+
+                            Podra solicitar su pedido para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> una vez haya cerrado su factura pendiente <u>a tiempo</u>, tiene disponibilidad hasta la fecha <u><?php echo $lider->formatFecha($despacho['limite_pedido']); ?></u>. de lo contrario la opcion para solicitar su pedido ya no estara disponible. 
+                            <br><br>
+                            Una vez haya solicitado su pedido, podrá solicitar las promociones deseadas.
+                            Gracias.
+
+                            <br><br>El monto pendiente en la <?=$infoCamp[0]['info']; ?> es $<?=number_format($infoCamp['restoFactura'],2,',','.'); ?>
+                          </i></b> 
+                        </div>
+                      <?php
+                    } else {
+                      if(count($pedidos)>1){
+                        ?>
+                        <div style="margin-left:3%;font-size:1.1em;">
+                          <b><i>
+                            <span style="color:red;margin-left:1%;" >Importante: </span>
+                            Podra solicitar sus promociones para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> hasta la fecha <u><?php echo $lider->formatFecha($limiteSeleccionPromocion); ?></u>. de lo contrario la opcion para solicitar sus promociones ya no estara disponible. Gracias.
+                          </i></b> 
+                        </div>
+                        <?php 
+                        if($_SESSION['cuenta']['estatus'] == 1){ ?>
+                          <center>
+                            <a class="btn" style="color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Promociones&action=Registrar">
+                              <b>Realizar Solicitud de Promociones</b>    
+                            </a>
+                          </center>
+                          <?php 
+                        } 
+                      } else {
+                        ?>
+                          <div style="margin-left:3%;font-size:1.1em;">
+                            <b><i>
+                              <span style="color:red;margin-left:1%;" >Importante: </span>
+                              Realice la solicitud de pedidos de colecciones para está campaña <?=$numero_campana."/".$anio_campana; ?> Para solicitar las promociones deseadas. Gracias.
+                            </i></b> 
+                          </div>
+                        <?php
+                      }
+                    }
                   }else{
                 ?>
                       <div style="margin-left:3%;font-size:1.1em;">

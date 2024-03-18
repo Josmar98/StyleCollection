@@ -39,6 +39,7 @@
           $accesoBloqueo = "0";
           $superAnalistaBloqueo="1";
           $analistaBloqueo="1";
+          $opcionFacturasCerradas = 0;
           foreach ($configuraciones as $config) {
             if(!empty($config['id_configuracion'])){
               if($config['clausula']=='Analistabloqueolideres'){
@@ -88,56 +89,67 @@
                         <input type="hidden" name="action" value="<?=$_GET['action'] ?>">
                         <input type="hidden" name="admin" value="<?=$_GET['admin']."1"; ?>">
                     <div class="form-group col-xs-12">
-                      <label for="Cliente">Cliente</label>
+                      <label for="Cliente">Cliente</label> <?php //echo $promocionLimitadaPorPedidoAprobado; ?>
                         <select class="form-control select2" name="lider" id="cliente" style="width:100%">
                           <option value="">Seleccione</option>
-                          <?php foreach ($clientss as $client) { if($client['id_cliente']){ if($client['cantidad_aprobado']>0){ ?>
+                          <?php foreach ($clientss as $client) { if($client['id_cliente']){  ?>
                             <?php
-                              if($accesoBloqueo=="1"){
-                                if(!empty($accesosEstructuras)){
-                                  foreach ($accesosEstructuras as $struct) {
-                                    if(!empty($struct['id_cliente'])){
-                                      if($struct['id_cliente']==$client['id_cliente']){
-                                        ?>
-                                        <!-- <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?> selected="selected" <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option> -->
-                                        <option 
-                                        <?php 
-                                          // foreach ($clientesConPromociones as $key){ if(!empty($key['id_cliente'])){
-                                          //   if($key['id_cliente'] == $client['id_cliente']){ echo "disabled"; }
-                                          //   }
-                                          // }
-                                          if(!empty($_GET['lider']) && $_GET['lider']==$client['id_cliente']){ echo "selected"; } 
-                                        ?>
-                                        value="<?php echo $client['id_cliente'] ?>"><?php echo $client['primer_nombre']." ".$client['primer_apellido']." - ".$client['cedula']; ?></option>
-                                        <?php 
+                              $limitarLideres = true;
+                              if($promocionLimitadaPorPedidoAprobado==1){
+                                if($client['cantidad_aprobado']>0){
+                                  $limitarLideres=true;
+                                }else{
+                                  $limitarLideres=false;
+                                }
+                              }else{
+
+                                if($client['cantidad_pedido']>0){
+                                  $limitarLideres=true;
+                                }else{
+                                  $limitarLideres=false;
+                                }
+                              }
+                            ?>
+                            <?php if($limitarLideres){ ?>
+                              <?php
+                                if($accesoBloqueo=="1"){
+                                  if(!empty($accesosEstructuras)){
+                                    foreach ($accesosEstructuras as $struct) {
+                                      if(!empty($struct['id_cliente'])){
+                                        if($struct['id_cliente']==$client['id_cliente']){
+                                          ?>
+                                          <!-- <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?> selected="selected" <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option> -->
+                                          <option 
+                                          <?php 
+                                            // foreach ($clientesConPromociones as $key){ if(!empty($key['id_cliente'])){
+                                            //   if($key['id_cliente'] == $client['id_cliente']){ echo "disabled"; }
+                                            //   }
+                                            // }
+                                            if(!empty($_GET['lider']) && $_GET['lider']==$client['id_cliente']){ echo "selected"; } 
+                                          ?>
+                                          value="<?php echo $client['id_cliente'] ?>"><?php echo $client['primer_nombre']." ".$client['primer_apellido']." - ".$client['cedula']; ?></option>
+                                          <?php 
+                                        }
                                       }
                                     }
                                   }
+                                }else if($accesoBloqueo=="0"){
+                                  ?>
+                                  <!-- <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?> selected="selected" <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option> -->
+                                  <option 
+                                    <?php 
+                                      // foreach ($clientesConPromociones as $key){ if(!empty($key['id_cliente'])){
+                                      //   if($key['id_cliente'] == $client['id_cliente']){ echo "disabled"; }
+                                      //   }
+                                      // } 
+                                      if(!empty($_GET['lider']) && $_GET['lider']==$client['id_cliente']){ echo "selected"; } 
+                                    ?> 
+                                     value="<?php echo $client['id_cliente'] ?>"><?php echo $client['primer_nombre']." ".$client['primer_apellido']." - ".$client['cedula']; ?></option>
+                                  <?php
                                 }
-                              }else if($accesoBloqueo=="0"){
-                                ?>
-                                <!-- <option <?php if (!empty($_GET['lider'])): if($data['id_cliente']==$_GET['lider']): ?> selected="selected" <?php endif; endif; ?> value="<?=$data['id_cliente']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']?></option> -->
-                                <option 
-                                  <?php 
-                                    // foreach ($clientesConPromociones as $key){ if(!empty($key['id_cliente'])){
-                                    //   if($key['id_cliente'] == $client['id_cliente']){ echo "disabled"; }
-                                    //   }
-                                    // } 
-                                    if(!empty($_GET['lider']) && $_GET['lider']==$client['id_cliente']){ echo "selected"; } 
-                                  ?> 
-                                   value="<?php echo $client['id_cliente'] ?>"><?php echo $client['primer_nombre']." ".$client['primer_apellido']." - ".$client['cedula']; ?></option>
-                                <?php
-                              }
-                            ?>
-
-
-
-
-
-
-
-
-                          <?php } } } ?>
+                              ?>
+                            <?php } ?>
+                          <?php  } } ?>
                         </select>
 
                       <span id="error_clientes" class="errors"></span>
@@ -186,7 +198,24 @@
           </div>
 
         </div>
-        <input type="hidden" id="cantidad_max" value="<?=$pedido['cantidad_aprobado'];?>">
+        <?php 
+          $newLimitePedidos = 0;
+          $limiteMax = 10;
+          if($promocionLimitadaPorPedidoAprobado==1){
+            if(count($pedidos)>1){
+              if($pedido['cantidad_aprobado']>0){
+                $newLimitePedidos=$pedido['cantidad_aprobado'];
+              }else{
+                $newLimitePedidos=$pedido['cantidad_pedido'];
+              }
+            // }else{
+              // $newLimitePedidos=$limiteMax;
+            }
+          } else {
+            $newLimitePedidos=$limiteMax;
+          } 
+        ?>
+        <input type="hidden" id="cantidad_max" value="<?=$newLimitePedidos;?>">
       </div>
       <!-- /.row -->
     </section>

@@ -60,6 +60,7 @@
 		}
 	}
 
+
 	$formasPago = [
 		0=>['id'=>0, 'name'=>'Transferencia Banco a Banco', 'type'=>'banco'],
 		1=>['id'=>1, 'name'=>'Transferencia de Otros Bancos', 'type'=>'banco'],

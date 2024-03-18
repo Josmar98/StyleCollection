@@ -48,14 +48,15 @@ if($amClientesR == 1){
           }
 
         }else{
-          $correolen1 = strlen($correo) - 4;
-          $correolen2 = strlen($correo);
-          $correoterminator = substr($correo, $correolen1, $correolen2);
-          if($correoterminator == ".com"){
-            $response = "1";
-          }else{
-            $response = "4";
-          }
+          $response = "1";
+          // $correolen1 = strlen($correo) - 4;
+          // $correolen2 = strlen($correo);
+          // $correoterminator = substr($correo, $correolen1, $correolen2);
+          // if($correoterminator == ".com"){
+          //   $response = "1";
+          // }else{
+          //   $response = "4";
+          // }
         }
       }else{
         $response = "5"; // echo 'Error en la conexion con la bd';

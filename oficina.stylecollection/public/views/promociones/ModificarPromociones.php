@@ -69,6 +69,12 @@
           <div class="box">
             <div class="box-header with-border">
               <h3 class="box-title">Editar Solicitud de Promoción</h3>
+              <?php
+                if(count($lideres)>1){
+                  echo "<br>";
+                  echo "<h4><i>Líder <b>".$lideres[0]['primer_nombre']." ".$lideres[0]['primer_apellido']."</b></i></h4>";
+                }
+              ?>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -177,7 +183,24 @@
           </div>
 
         </div>
-        <input type="hidden" id="cantidad_max" value="<?=$pedido['cantidad_aprobado'];?>">
+        <?php 
+          $newLimitePedidos = 0;
+          $limiteMax = 10;
+          if($promocionLimitadaPorPedidoAprobado==1){
+            if(count($pedidos)>1){
+              if($pedido['cantidad_aprobado']>0){
+                $newLimitePedidos=$pedido['cantidad_aprobado'];
+              }else{
+                $newLimitePedidos=$pedido['cantidad_pedido'];
+              }
+            // }else{
+              // $newLimitePedidos=$limiteMax;
+            }
+          } else {
+            $newLimitePedidos=$limiteMax;
+          } 
+        ?>
+        <input type="hidden" id="cantidad_max" value="<?=$newLimitePedidos;?>">
       </div>
       <!-- /.row -->
     </section>

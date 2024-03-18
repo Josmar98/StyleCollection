@@ -67,6 +67,7 @@
           $accesoBloqueo = "0";
           $superAnalistaBloqueo="1";
           $analistaBloqueo="1";
+          
           foreach ($configuraciones as $config) {
             if(!empty($config['id_configuracion'])){
               if($config['clausula']=='Analistabloqueolideres'){
@@ -75,8 +76,10 @@
               if($config['clausula']=='Superanalistabloqueolideres'){
                 $superAnalistaBloqueo = $config['valor'];
               }
+              
             }
           }
+
           if($_SESSION['nombre_rol']=="Analista"){$accesoBloqueo = $analistaBloqueo;}
           if($_SESSION['nombre_rol']=="Analista Supervisor"){$accesoBloqueo = $superAnalistaBloqueo;}
 
@@ -107,6 +110,7 @@
             <!-- /.box-header -->
             <div class="box-body">
                   <?php
+                  //$pedidos=[]; $despacho['limite_pedido']=date('Y-m-d'); $infoCamp['restoFactura']=5;
               if(Count($pedidos)>1){
                   $pedido = $pedidos[0];
                   if($pedido['cantidad_aprobado']>0){ ?>
@@ -210,24 +214,40 @@
               }else{
                 ?>
                       <?php 
-                      $limite = date('Y-m-d');
-                      // $limite = "2021-10-14";
+                        $limite = date('Y-m-d');
+                        // $limite = "2021-10-14";
                         if($limite <= $despacho['limite_pedido']){
-                      ?>
-                          <div style="margin-left:3%;font-size:1.1em;">
-                            <b><i>
-                              <span style="color:red;margin-left:1%;" >Importante: </span>
-                              Podra solicitar su pedido para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> hasta la fecha <u><?php echo $lider->formatFecha($despacho['limite_pedido']); ?></u>. de lo contrario la opcion para solicitar su pedido ya no estara disponible. Gracias.
-                            </i></b> 
-                          </div>
-                          <?php if($_SESSION['cuenta']['estatus'] == 1){ ?>
-                            <center>
-                              <a class="btn" style="color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Pedidos&action=Registrar">
-                                <b>Realizar Solicitud de Pedido</b>    
-                              </a>
-                            </center>
-                          <?php } ?>
-                      <?php
+                          
+                          if(!empty($infoCamp['restoFactura']) && $infoCamp['restoFactura']>0 && $opcionFacturasCerradas==1){
+                            ?>
+                                <div style="margin-left:3%;font-size:1.1em;">
+                                  <b><i>
+                                    <span style="color:red;margin-left:1%;" >Importante: </span>
+                                    Actualmente usted cuenta con factura pendiente por cerrar en la <?=$infoCamp[0]['info']; ?>.
+
+                                    Podra solicitar su pedido para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> una vez haya cerrado su factura pendiente <u>a tiempo</u>, tiene disponibilidad hasta la fecha <u><?php echo $lider->formatFecha($despacho['limite_pedido']); ?></u>. de lo contrario la opcion para solicitar su pedido ya no estara disponible. Gracias.
+
+                                    <br><br>El monto pendiente en la <?=$infoCamp[0]['info']; ?> es $<?=number_format($infoCamp['restoFactura'],2,',','.'); ?>
+                                  </i></b> 
+                                </div>
+                            <?php
+                          } else {
+                            ?>
+                                <div style="margin-left:3%;font-size:1.1em;">
+                                  <b><i>
+                                    <span style="color:red;margin-left:1%;" >Importante: </span>
+                                    Podra solicitar su pedido para esta Campaña <?php echo $numero_campana."/".$anio_campana; ?> hasta la fecha <u><?php echo $lider->formatFecha($despacho['limite_pedido']); ?></u>. de lo contrario la opcion para solicitar su pedido ya no estara disponible. Gracias.
+                                  </i></b> 
+                                </div>
+                                <?php if($_SESSION['cuenta']['estatus'] == 1){ ?>
+                                  <center>
+                                    <a class="btn" style="color:#FFF;background:<?php echo $color_btn_sweetalert ?>" href="?<?php echo $menu3; ?>route=Pedidos&action=Registrar">
+                                      <b>Realizar Solicitud de Pedido</b>    
+                                    </a>
+                                  </center>
+                                <?php } ?>
+                            <?php
+                          }
                         }else{
                       ?>
                             <div style="margin-left:3%;font-size:1.1em;">

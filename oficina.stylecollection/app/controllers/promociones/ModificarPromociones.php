@@ -147,6 +147,7 @@ if(empty($_POST)){
       $id_user = $_SESSION['id_cliente'];
     }
   }
+  $lideres = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente={$id_user}");
   $promociones = $lider->consultarQuery("SELECT * FROM promocion WHERE id_campana = {$id_campana}");
   $pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = $id_user and pedidos.id_despacho = $id_despacho");
   $promocionEditar = $lider->consultarQuery("SELECT * FROM promociones WHERE promociones.id_promociones = {$id}");

@@ -175,12 +175,12 @@ $(document).ready(function(){
     
   }
 
-  // $("#descuento_coleccion").keyup(function(){
-  //   var max = parseFloat($(".max_total_descuento").val());
-  //   var descuento = parseFloat($(this).val());
-  //   var total = (max+descuento).toFixed(2);
-  //   $("#total_descuento").val(total);
-  // });
+  $("#descuento_coleccion").keyup(function(){
+    var max = parseFloat($(".max_total_descuento").val());
+    var descuento = parseFloat($(this).val());
+    var total = (max+descuento).toFixed(2);
+    $("#total_descuento").val(total);
+  });
   $(".enviar").click(function(){
     var response = validarLiderazgos();
 

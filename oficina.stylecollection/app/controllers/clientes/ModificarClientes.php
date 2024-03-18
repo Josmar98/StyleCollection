@@ -34,14 +34,15 @@ if($amClientesE == 1){
       $res1 = $lider->consultarQuery($query);
       if($res1['ejecucion']==true){
         if(Count($res1)>1){
-          $correolen1 = strlen($correo) - 4;
-          $correolen2 = strlen($correo);
-          $correoterminator = substr($correo, $correolen1, $correolen2);
-          if($correoterminator == ".com"){
-            $response = "1";
-          }else{
-            $response = "4";
-          }
+          $response = "1";
+          // $correolen1 = strlen($correo) - 4;
+          // $correolen2 = strlen($correo);
+          // $correoterminator = substr($correo, $correolen1, $correolen2);
+          // if($correoterminator == ".com"){
+          //   $response = "1";
+          // }else{
+          //   $response = "4";
+          // }
         }else{
           $response = "9"; //echo "Registro ya guardado.";
         }

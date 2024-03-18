@@ -183,7 +183,24 @@
           </div>
 
         </div>
-        <input type="hidden" id="cantidad_max" value="<?=$promociones['cantidad_aprobado'];?>">
+        <?php 
+          $newLimitePedidos = 0;
+          $limiteMax = 10;
+          if($promocionLimitadaPorPedidoAprobado==1){
+            if(count($promociones)>1){
+              if($promociones['cantidad_aprobado']>0){
+                $newLimitePedidos=$promociones['cantidad_aprobado'];
+              }else{
+                $newLimitePedidos=$promociones['cantidad_pedido'];
+              }
+            // }else{
+              // $newLimitePedidos=$limiteMax;
+            }
+          } else {
+            $newLimitePedidos=$limiteMax;
+          } 
+        ?>
+        <input type="hidden" id="cantidad_max" value="<?=$newLimitePedidos;?>">
         <input type="hidden" id="existencia_max" value="<?=$actualExistencia;?>">
       </div>
       <!-- /.row -->

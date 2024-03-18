@@ -13,64 +13,62 @@
 		// $ruta = "#";
 	?>
 	<?php //if((date("Y-m-d")>="2023-05-17")&&(date("H:i")>="10:00")){ ?>
-	<div style="background:;position:absolute;bottom:25%;right:0;z-index:500;background:#e5007e;padding:5px 4px;border-radius:5px;">
-		<span id="enlaceAccess" class="d-none" style="font-size:1.2em;padding-left:10px;background:#e5007e;color:#FFF;margin-right:2px"><a class="enlaceOpen" href="<?=$ruta; ?>" style="color:#FFF;"><b>Líneas de productos</b></a></span>
+	<div style="background:;position:absolute;bottom:25%;right:0;z-index:500;background:#29938C;padding:5px 4px;border-radius:5px;">
+		<span id="enlaceAccess" class="d-none" style="font-size:1.2em;padding-left:10px;background:#29938C;color:#FFF;margin-right:2px"><a class="enlaceOpen" href="<?=$ruta; ?>" style="color:#FFF;"><b>Líneas de productos</b></a></span>
 		<span class="btn expandAccess">
 			<i style="font-size:1.5em;color:#FFF;" id="idExpandAccess" class="fa fa-chevron-circle-left"></i>
 		</span>
 	</div>
 	<?php //} ?>
-	<style type="text/css">
-		.fondo{
-			width: 100%;
-			object-fit: cover;
-			object-position: bottom;
-		}
-	</style>
-	<div class="wrapper" style="background:url('public/assets/img/resources/fondo1.24.png');background-repeat:no-repeat;background-size:100% 100%;">
+	<div class="wrapper">
 
 		<div class="head seccionFull"></div><!-- INDISPENSABLE NO SE PUEDE BORRAR -->
 
-		<div style="max-width:100%;min-width:100%;width:100%;min-height:90vh;max-height:90vh;overflow:hidden;">
-			<!-- <div style="background:#FFF;background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:0.1;"></div> -->
+		<div style="max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;overflow:hidden;">
+			<div style="background:#FFF;background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:0.1;"></div>
 
 
 
 
 			<div style="" class="box1logotipo">
 				<div style="" class="box2logotipo">
-					<img src="public/assets/img/resources/logotipoFucsia.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/logotipo4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1emblema" style="background:red;">
 				<div style="" class="box2emblema">
-					<img src="public/assets/img/resources/emblema1.24.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/emblema4.23.png" style="max-width:100%;">
 				</div>
 			</div>
-			<!-- <div style="" class="box1cintillo"> -->
-				<!-- <div style="" class="box2cintillo"> -->
-					<!-- <img src="public/assets/img/resources/cintillo_campana4.23.png" style="max-width:100%;"> -->
-				<!-- </div> -->
-			<!-- </div> -->
+			<div style="" class="box1cintillo">
+				<div style="" class="box2cintillo">
+					<img src="public/assets/img/resources/cintillo_campana4.23.png" style="max-width:100%;">
+				</div>
+			</div>
 			<div style="" class="box1detalle1">
-				<div style="" class="box2detalle1" style="">
-					<img src="public/assets/img/resources/montanas1.24.png" class=""  style="max-width:100%;width:100%;object-fit:cover;">
+				<div style="" class="box2detalle1">
+					<img src="public/assets/img/resources/detalle1.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 
 			<div style="" class="box1detalle2">
 				<div style="" class="box2detalle2">
-					<img src="public/assets/img/resources/detalle1.1.24.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/detalle2.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
-			<div style="" class="box1detalle3">
-				<div style="" class="box2detalle3">
-					<img src="public/assets/img/resources/detalle2.1.24.png" style="max-width:100%;">
+			<div style="" class="box1detalle31">
+				<div style="" class="box2detalle31">
+					<img src="public/assets/img/resources/detalle3.1.4.23.png" style="max-width:100%;">
+				</div>
+			</div>
+			<div style="" class="box1detalle32">
+				<div style="" class="box2detalle32">
+					<img src="public/assets/img/resources/detalle3.2.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1detalle4">
 				<div style="" class="box2detalle4">
-					<img src="public/assets/img/resources/detalle3.1.24.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/detalle4.4.23.png" style="max-width:100%;">
 				</div>
 			</div>
 		</div>
@@ -111,7 +109,7 @@
 <?php require_once 'public/views/assets/stylesheet.php'; ?>
 <style type="text/css">
 .expandAccess{
-	background:#e5007e;color:#FFF;margin-top:-2px;
+	background:#29938C;color:#FFF;margin-top:-2px;
 }
 .enlaceOpen:hover{
 	text-decoration:underline;

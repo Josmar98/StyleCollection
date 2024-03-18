@@ -6,7 +6,7 @@
 	if(is_file('../config/database.php')){
 		require_once'../config/database.php';
 	}
-	class TDominios extends Conexion{
+	class TCortes extends Conexion{
 		private $id;
 		private $dominio;
 
@@ -44,7 +44,7 @@
 		}
 
 
-		public function Consultar(){
+		public function ConsultarDominios(){
 			if(Conexion::getEstatusConexion()){
 				$query = "SELECT id, dominio, estatus FROM tdominios WHERE estatus = 1 ORDER BY id ASC";
 				try{

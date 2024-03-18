@@ -148,7 +148,8 @@
 						// print_r($clientesPedidos);
 						if(count($liderazgos)>1){
 			                $clientePedidos = $clientesPedidos[0];
-							$lidera = $liderazgos[0];					
+							$lidera = $liderazgos[0];
+							// print_r($lidera);
 							$precio_coleccion = $clientePedidos['precio_coleccion'];
 			                $cantidad_aprobado = $clientePedidos['cantidad_aprobado'];
 			                $total_costo = $precio_coleccion * $cantidad_aprobado;
@@ -193,7 +194,6 @@
 				                $total_cantidad_hijas = $cantidad_total - $cantidad_aprobado;
 				                $descuento_full_hijos = $total_cantidad_hijas * $descuentoXColeccion;
 				                $descuento_distribucion_real = $descuento_full_hijos - $descuentoAdicional;
-
 				               if($_SESSION['tomandoEnCuentaDistribucion'] == "1"){
 				                $total_descuento_distribucion = $descuento_total + $descuento_distribucion_real; // TOMANDO EN CUENTA LA DISTRIBUCION
 				               }

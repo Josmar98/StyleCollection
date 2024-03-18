@@ -1,11 +1,11 @@
 <?php
-	if(is_file('app/models/tdominios.php')){
-		require_once'app/models/tdominios.php';
+	if(is_file('app/models/tcortes.php')){
+		require_once'app/models/tcortes.php';
 	}
-	if(is_file('../app/models/tdominios.php')){
-		require_once'../app/models/tdominios.php';
+	if(is_file('../app/models/tcortes.php')){
+		require_once'../app/models/tcortes.php';
 	}
-	$app = new TDominios();
+	$app = new TCortes();
 
 	if(!empty($_GET['action'])){
 		$action = $_GET['action'];
@@ -44,36 +44,78 @@
 		if($action=="Registrar"){
 			// echo json_encode(['msj'=>"Peticion Consulta Recibida"]);
 			if($_SERVER['REQUEST_METHOD']=='POST'){
-				$_POST = json_decode(file_get_contents('php://input'), true);
+				// $_POST = json_decode(file_get_contents('php://input'), true);
 				// echo json_encode(["data"=>json_encode($_POST)]);
-				$app->setDominio($_POST['dominio']);
-				$search = $app->ConsultarOne("dominio");
-				if($search['msj']=="Good"){
-					if(count($search['data'])>0){
-						if($search['data'][0]['estatus']==0){
-							$users = $app->Modificar();
-							if($users['msj']=="Good"){
-								echo json_encode($users);
-							}
-							if($users['msj']=="Error"){
-								echo json_encode($users);
-							}
-						}else{
-							echo json_encode(['msj'=>"Repetido"]);
-						}
-					}else{
-						$users = $app->Registrar();
-						if($users['msj']=="Good"){
-							echo json_encode($users);
-						}
-						if($users['msj']=="Error"){
-							echo json_encode($users);
-						}
-					}
-				}
-				if($search['msj']=="Error"){
-					echo json_encode($search);
-				}
+				$data = [
+					'nombre' => $_POST['corte'],
+					'dominio' => $_POST['dominio'],
+					'fecha' => date('Y-m-d'),
+					'hora' => date('H:i'),
+				];
+				print_r($data);
+
+
+				// $app->setDominio($_POST['dominio']);
+				// $search = $app->ConsultarOne("dominio");
+				// if($search['msj']=="Good"){
+				// 	if(count($search['data'])>0){
+				// 		if($search['data'][0]['estatus']==0){
+				// 			$users = $app->Modificar();
+				// 			if($users['msj']=="Good"){
+				// 				echo json_encode($users);
+				// 			}
+				// 			if($users['msj']=="Error"){
+				// 				echo json_encode($users);
+				// 			}
+				// 		}else{
+				// 			echo json_encode(['msj'=>"Repetido"]);
+				// 		}
+				// 	}else{
+				// 		$users = $app->Registrar();
+				// 		if($users['msj']=="Good"){
+				// 			echo json_encode($users);
+				// 		}
+				// 		if($users['msj']=="Error"){
+				// 			echo json_encode($users);
+				// 		}
+				// 	}
+				// }
+				// if($search['msj']=="Error"){
+				// 	echo json_encode($search);
+				// }
+			} else {
+				$dominios = $app->ConsultarDominios();
+				print_r($dominios);
+				?>
+				<!DOCTYPE html>
+				<html>
+				<head>
+					<meta charset="utf-8">
+					<meta name="viewport" content="width=device-width, initial-scale=1">
+					<title>Registrar Corte</title>
+				</head>
+				<body>
+					<form action="" method="post">
+						<div>
+							<label>Nombre del Corte</label>
+							<input type="text" name="corte" required>
+						</div>
+						<div>
+							<label>Dominio</label>
+							<select name='dominio' required>
+								<option value=""></option>
+								<?php foreach ($dominios['data'] as $key){ ?>
+								<option><?=$key['dominio']; ?></option>
+								<?php } ?>
+							</select>
+						</div>
+						<div>
+							<button>Enviar Corte</button>
+						</div>
+					</form>
+				</body>
+				</html>
+				<?php
 			}
 		}
 		if($action=="Modificar"){

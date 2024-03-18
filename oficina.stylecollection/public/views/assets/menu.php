@@ -142,6 +142,14 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
               <!--  PROMOCIONES   -->
 <!-- ======================================================================================================================= -->
     <?php 
+      $promocionLimitadaPorPedidoAprobado=0;
+      $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+      foreach ($configuraciones as $config) {
+        if($config['clausula']=='Promocion Limitada Por Pedido Aprobado'){
+          $promocionLimitadaPorPedidoAprobado = $config['valor'];
+        }
+      }
+
       $promos = $lider->consultarQuery("SELECT * FROM promocion WHERE estatus = 1 and id_campana = {$id_campana}");
       $mostrarMenuPromociones = false;
       if(count($promos)>1){
@@ -156,30 +164,37 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
         }else{
           $claseActivePromo = "";
         }
-      $mostrarOpcionPromociones = false;
-      if($_SESSION['nombre_rol']!="Vendedor"){
-        $mostrarOpcionPromociones = true;
-      }else{
-        if($_SESSION['nombre_rol']=="Conciliador"){
-          $mostrarOpcionPromociones = false;
-        }
-        if($pppedi['cantidad_aprobado']>0){
+        $mostrarOpcionPromociones = false;
+        if($_SESSION['nombre_rol']!="Vendedor"){
           $mostrarOpcionPromociones = true;
         }else{
-          $mostrarOpcionPromociones = false;
+          if($_SESSION['nombre_rol']=="Conciliador"){
+            $mostrarOpcionPromociones = false;
+          }
+          if($promocionLimitadaPorPedidoAprobado==1){
+            if($pppedi['cantidad_aprobado']>0){
+              $mostrarOpcionPromociones = true;
+            }else{
+              $mostrarOpcionPromociones = false;
+            }
+          }else{
+            $mostrarOpcionPromociones = true;
+          }
         }
-      }
-      if($mostrarOpcionPromociones){
+        if($mostrarOpcionPromociones){
+          ?>
+          <li class="<?=$claseActivePromo; ?>">
+            <a href="?<?php echo $menu ?>&route=Promociones">
+              <i class="fa fa-dashboard"></i> <span>Promociones de Campaña</span>
+              <span class="pull-right-container">
+                <!-- <small class="label pull-right bg-green">new</small> -->
+              </span>
+            </a>
+          </li>
+            <?php
+        } 
+      } 
     ?>
-        <li class="<?=$claseActivePromo; ?>">
-          <a href="?<?php echo $menu ?>&route=Promociones">
-            <i class="fa fa-dashboard"></i> <span>Promociones de Campaña</span>
-            <span class="pull-right-container">
-              <!-- <small class="label pull-right bg-green">new</small> -->
-            </span>
-          </a>
-        </li>
-    <?php } } ?>
 
 
 <!-- ======================================================================================================================= -->

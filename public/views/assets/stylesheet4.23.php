@@ -23,60 +23,73 @@
       INICIO PAGINA
 */
 
-/*=== LOGOTIPO 1-24 =========*/
+/*=== LOGOTIPO 4-23 =========*/
 .box2logotipo{
   position:absolute;
   top:15%;
-  left:44%;
-  width:12%;
+  left:45%;
+  width:10%;
 }
 /*==========================*/
 
-/*=== EMBLEMA 1-24 =========*/
+/*=== CINTILLO 4-23 =========*/
+.box2cintillo{
+  width:14%;
+  position:absolute;
+  left:43%;
+  bottom:8%;  
+}
+/*==========================*/
+
+/*=== EMBLEMA 4-23 =========*/
 .box2emblema{
   position:absolute;
   top:30vh;
-  width:60%;
-  margin-left:20%;
-  margin-right:20%;
+  width:50%;
+  margin-left:25%;
+  margin-right:25%;
 }
 /*==========================*/
 
-/*=== DETALLE 1 1-24 =========*/
+/*=== DETALLE 1 4-23 =========*/
 .box2detalle1{
   position:absolute;
-  bottom:0;
+  width:45%;
+/*  top:0%;*/
   left:0%;
-  width:100%;
-  margin-left:0%;
-  margin-right:0%;
 }
 /*==========================*/
 
-/*=== DETALLE 2 1-24 =========*/
+/*=== DETALLE 2 4-23 =========*/
 .box2detalle2{
   position:absolute;
-  width:30%;
-  left:0%;
+  width:25%;
+  right:0%;
   bottom:0%;
 }
 /*==========================*/
 
-/*=== DETALLE 3 1-24 =========*/
-.box2detalle3{
+/*=== DETALLE 3 4-23 =========*/
+.box2detalle31{
   position:absolute;
-  width:30%;
-  right:0;
-  bottom:0%;
+  width:23%;
+  right:5%;
+  top:5%;
+}
+.box2detalle32{
+  position:absolute;
+  width:23%;
+  right:5%;
+  bottom:5%;
 }
 /*==========================*/
 
-/*=== DETALLE 4 1-24 =========*/
+/*=== DETALLE 4 4-23 =========*/
 .box2detalle4{
   position:absolute;
-  width:65%;
-  left:20%;
-  top:12%;
+  width:15%;
+  left:8%;
+  bottom:5%;
 }
 /*==========================*/
 
@@ -91,34 +104,48 @@
     left:44%;
     width:12%;
   }
+  .box2cintillo{
+    width:15%;
+    position:absolute;
+    left:42.5%;
+    bottom:8%;
+  }
   .box2emblema{
     position:absolute;
-    top:32.5vh;
-    width:60%;
-    margin-left:20%;
-    margin-right:20%;
-    /*background:red;*/
+    top:30vh;
+    width:50%;
+    margin-left:25%;
+    margin-right:25%;
+/*    background:red;*/
   }
-  .box2detalle1 img{
-    height:37vh;
+  .box2detalle1{
+    position:absolute;
+    width:45%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:35%;
-    left:0%;
+    width:30%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:35%;
-    right:0;
-    bottom:0%;
+    width:30%;
+    right:5%;
+    top:7%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:30%;
+    right:5%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:60%;
-    left:20%;
-    top:12%;
+    width:23%;
+    left:8%;
+    bottom:5%;
   }
 }
 
@@ -126,8 +153,8 @@
   .box2logotipo{
     position:absolute;
     top:20%;
-    left:40%;
-    width:20%;
+    left:43%;
+    width:14%;
   }
   .box2cintillo{
     width:15%;
@@ -137,32 +164,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:38vh;
+    top:40vh;
     width:50%;
     margin-left:25%;
     margin-right:25%;
-    /*background:blue;*/
+/*    background:blue;*/
   }
-  .box2detalle1 img{
-    height:30vh;
+  .box2detalle1{
+    position:absolute;
+    width:45%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:37.5%;
-    left:0%;
+    width:30%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:37.5%;
-    right:0;
-    bottom:0%;
+    width:30%;
+    right:5%;
+    top:7%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:30%;
+    right:5%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:80%;
-    left:10%;
-    top:20%;
+    width:23%;
+    left:8%;
+    bottom:5%;
   }
 }
 
@@ -170,8 +205,8 @@
   .box2logotipo{
     position:absolute;
     top:20%;
-    left:35%;
-    width:30%;
+    left:37.5%;
+    width:25%;
   }
   .box2cintillo{
     width:18%;
@@ -181,32 +216,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:45vh;
+    top:40vh;
     width:60%;
     margin-left:20%;
     margin-right:20%;
-    /*background:green;*/
+/*    background:green;*/
   }
-  .box2detalle1 img{
-    height:25vh;
+  .box2detalle1{
+    position:absolute;
+    width:50%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:40%;
-    left:0%;
+    width:33%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:40%;
-    right:0;
-    bottom:0%;
+    width:30%;
+    right:5%;
+    top:12%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:30%;
+    right:5%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:85%;
-    left:10%;
-    top:20%;
+    width:23%;
+    left:8%;
+    bottom:5%;
   }
 }
 
@@ -214,8 +257,8 @@
   .box2logotipo{
     position:absolute;
     top:20%;
-    left:35%;
-    width:30%;
+    left:36%;
+    width:28%;
   }
   .box2cintillo{
     width:24%;
@@ -225,32 +268,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:47.5vh;
+    top:40vh;
     width:60%;
     margin-left:20%;
     margin-right:20%;
-    /*background:pink;*/
+/*    background:pink;*/
   }
-  .box2detalle1 img{
-    height:24vh;
+  .box2detalle1{
+    position:absolute;
+    width:50%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:40%;
-    left:0%;
+    width:35%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:40%;
-    right:0;
-    bottom:0%;
+    width:30%;
+    right:5%;
+    top:12%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:30%;
+    right:5%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    width:25%;
+    left:8%;
+    bottom:5%;
   }
 }
 
@@ -258,8 +309,8 @@
   .box2logotipo{
     position:absolute;
     top:20%;
-    left:31%;
-    width:33%;
+    left:35%;
+    width:30%;
   }
   .box2cintillo{
     width:25%;
@@ -269,32 +320,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:48vh;
+    top:40vh;
     width:70%;
     margin-left:15%;
     margin-right:15%;
-    /*background:purple;*/
+/*    background:purple;*/
   }
-  .box2detalle1 img{
-    height:23vh;
+  .box2detalle1{
+    position:absolute;
+    width:55%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:41%;
-    left:0%;
+    width:37%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:41%;
-    right:0;
-    bottom:0%;
+    width:32%;
+    right:5%;
+    top:13%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:32%;
+    right:7%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    width:28%;
+    left:8%;
+    bottom:5%;
   }
 }
 
@@ -302,8 +361,8 @@
   .box2logotipo{
     position:absolute;
     top:20%;
-    left:30%;
-    width:35%;
+    left:35%;
+    width:30%;
   }
   .box2cintillo{
     width:30%;
@@ -313,32 +372,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:48vh;
+    top:40vh;
     width:75%;
     margin-left:12.5%;
     margin-right:12.5%;
-    /*background:yellow;*/
+/*    background:yellow;*/
   }
-  .box2detalle1 img{
-    height:22vh;
+  .box2detalle1{
+    position:absolute;
+    width:60%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:42%;
-    left:0%;
+    width:35%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:42%;
-    right:0;
-    bottom:0%;
+    width:32%;
+    right:5%;
+    top:13%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:32%;
+    right:7%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:90%;
+    width:28%;
     left:5%;
-    top:20%;
+    bottom:5%;
   }
 }
 
@@ -357,32 +424,40 @@
   }
   .box2emblema{
     position:absolute;
-    top:45vh;
+    top:40vh;
     width:80%;
     margin-left:10%;
     margin-right:10%;
-    /*background:#4ac;*/
+/*    background:black;*/
   }
-  .box2detalle1 img{
-    height:22vh;
+  .box2detalle1{
+    position:absolute;
+    width:70%;
+    left:0%;
   }
   .box2detalle2{
     position:absolute;
-    width:43%;
-    left:0%;
+    width:40%;
+    right:0%;
     bottom:0%;
   }
-  .box2detalle3{
+  .box2detalle31{
     position:absolute;
-    width:43%;
-    right:0;
-    bottom:0%;
+    width:32%;
+    right:5%;
+    top:13%;
+  }
+  .box2detalle32{
+    position:absolute;
+    width:32%;
+    right:7%;
+    bottom:5%;
   }
   .box2detalle4{
     position:absolute;
-    width:90%;
+    width:28%;
     left:5%;
-    top:20%;
+    bottom:5%;
   }
 }
 

@@ -43,6 +43,8 @@ $dompdf = new Dompdf();
 	else if(strlen($num_factura2)==5){$num_factura = "0".$num_factura2;}
 	else if(strlen($num_factura2)==6){$num_factura = $num_factura2;}
 	else{$num_factura = $num_factura2;}
+	$simbolo="$";
+	
 
 
 $var = dirname(__DIR__, 3);
@@ -120,22 +122,23 @@ body{
 						</table>
 					</span>
 
-					<br>
+					<br><br>
 					<table class='table1'>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-							<td class='celcontent'><span class='content-table'>".$factura['primer_nombre']." ".$factura['primer_apellido']."</span></td>
+							<td class='celcontent'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Dirección: </b></td>
-							<td class='celcontent' colspan='2'><span class='content-table'>".$factura['direccion']."</span></td>
+							<td class='celcontent' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 							
 						</tr>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Cédula o RIF: </b></td>
-							<td class='celcontent'><span class='content-table'>".$factura['cod_cedula']."-".number_format($factura['cedula'],0,'','.')."</span></td>
+							<!-- <td class='celcontent'><span class='content-table'>".$factura['cod_cedula']."-".number_format($factura['cedula'],0,'','.')."</span></td> -->
+							<td class='celcontent'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
@@ -163,9 +166,9 @@ body{
 							<td class='celcontent'><span class='content-table'>".$factura['cantidad_aprobado']."</span></td>
 							<td class='celcontent'><span class='content-table'>Colecciones Cosméticos Campaña ".$numero_campana."-".$anio_campana."</span></td>
 							<td class='celcontentR'><span class='content-table'>01</span></td>
-							<td class='celcontentR'><span class='content-table'>$".number_format($precio_coleccion,2,',','.')."</span></td>
+							<td class='celcontentR'><span class='content-table'>".$simbolo."".number_format($precio_coleccion,2,',','.')."</span></td>
 							<td class='celcontentR'><span class='content-table'>16%</span></td>
-							<td class='celcontentR'><span class='content-table'>$".number_format($precio_coleccion_total,2,',','.')."</span></td>
+							<td class='celcontentR'><span class='content-table'>".$simbolo."".number_format($precio_coleccion_total,2,',','.')."</span></td>
 						</tr>
 					</table>
 
@@ -178,15 +181,15 @@ body{
 						<table style='width:100%;'>
 							<tr>
 								<td class='celtitleL'>Total Neto: </td>
-								<td class='celcontentR'><span class='content-table'>$".number_format($precio_coleccion_total,2,',','.')."</span></td>
+								<td class='celcontentR'><span class='content-table'>".$simbolo."".number_format($precio_coleccion_total,2,',','.')."</span></td>
 							</tr>
 							<tr>
 								<td class='celtitleL'>Impuesto (I.V.A): </td>
-								<td class='celcontentR'><span class='content-table'>$".number_format($ivaT,2,',','.')."</span></td>
+								<td class='celcontentR'><span class='content-table'>".$simbolo."".number_format($ivaT,2,',','.')."</span></td>
 							</tr>
 							<tr>
 								<td class='celtitleL'>Total Operacion: </td>
-								<td class='celcontentR'><span class='content-table'>$".number_format($precio_final_factura,2,',','.')."</span></td>
+								<td class='celcontentR'><span class='content-table'>".$simbolo."".number_format($precio_final_factura,2,',','.')."</span></td>
 							</tr>
 						</table>
 					</div>

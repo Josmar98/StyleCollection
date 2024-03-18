@@ -114,10 +114,10 @@
 			<div class="elemento" style="font-size:<?=$sizeList; ?>;background:#FFFFFFEE;width:100% !important;height:100vh;">
 				<!-- #00000011  -->
 				<div style="max-width:100%;height:100vh;overflow-x:hidden;">
-					<div style="background:url('public/assets/img/resources/fondo3.23.png');background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:.07;z-index:1;"></div>
+					<div style="background:url('public/assets/img/resources/fondo1.24.png');background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:100vh;max-height:100vh;opacity:;z-index:1;"></div>
 					<!-- background:url('public/assets/img/resources/fondoActual.jpg');background-size:100% 100%; -->
 					<div style="display:flex;">
-						<h3 class="row" style="display:flex;color:#FFFFFF;background:#0ca9e1;font-size:1.8em;padding:1% 5%;z-index:2;opacity:1;">
+						<h3 class="row" style="display:flex;color:#FFFFFF;background:#e5007e;font-size:1.8em;padding:1% 5%;z-index:2;opacity:1;">
 							<div class="col-xs-10" style="margin:0;padding:0;padding-top:2%;box-sizing:border-box;width:;">
 								<b><?=mb_strtoupper($tituloGeneral); ?></b>
 							</div>
@@ -160,7 +160,7 @@
 											}
 										}
 										?>
-										<a class="clicProducto" <?php if($ruta!=""){ ?> href="<?=$ruta; ?>" <?php } ?> style="background:;padding:3% 5% 3% 10%;margin-left:0;display:block;width:100%;color:#212121;text-shadow:1px 1px 5px #0ca9e1;" ><?=$line['nombre_producto_catalogo']; ?></a>
+										<a class="clicProducto" <?php if($ruta!=""){ ?> href="<?=$ruta; ?>" <?php } ?> style="background:;padding:3% 5% 3% 10%;margin-left:0;display:block;width:100%;color:#212121;text-shadow:1px 1px 5px #e5007e;" ><?=$line['nombre_producto_catalogo']; ?></a>
 										<?php
 									}
 								}

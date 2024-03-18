@@ -791,6 +791,7 @@
                             <div class="col-md-4">
                               <span style="font-size:1.1em;color:#000;"><b>Descuento por nivel de Liderazgo</b></span>    
                                 <table class="col-xs-12" style="font-size:0.9em;">
+                                  <?php $totalAp=0; ?>
                                   <?php foreach ($liderazgosAll as $data): if (!empty($data['id_liderazgo'])): ?>
                                     <?php if ($lidera['id_liderazgo'] >= $data['id_liderazgo']): ?>
                                       <tr>
@@ -816,6 +817,7 @@
                                             <?php 
                                               $t = $data['descuento_coleccion']*$cantidad_aprobado; 
                                               echo "$".number_format($t,2,',','.');
+                                              $totalAp+=$t;
                                             ?>
                                           </b>
                                         </td>

@@ -39,6 +39,8 @@ $dompdf = new Dompdf();
 	else if(strlen($num_nota2)==5){$num_nota = "0".$num_nota2;}
 	else if(strlen($num_nota2)==6){$num_nota = $num_nota2;}
 	else {$num_nota = $num_nota2;}
+	// $simbolo="Bss";
+	$simbolo="";
 
 	$var = dirname(__DIR__, 3);
 	$urlCss1 = $var . '/public/vendor/bower_components/bootstrap/dist/css/';
@@ -129,22 +131,23 @@ body{
 						</table>
 					</span>
 
-					<br>
+					<br><br>
 					<table class='table1'>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-							<td class='celcontent'><span class='content-table'>".$nota['primer_nombre']." ".$nota['primer_apellido']."</span></td>
+							<td class='celcontent'><span class='content-table'>".$nota['primer_nombre']." ".$nota['segundo_nombre']." ".$nota['primer_apellido']." ".$nota['segundo_apellido']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Dirección: </b></td>
-							<td class='celcontent' colspan='2'><span class='content-table'>".$nota['direccion']."</span></td>
+							<td class='celcontent' colspan='3'><span class='content-table'>".$nota['direccion']."</span></td>
 							
 						</tr>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Cédula o RIF: </b></td>
-							<td class='celcontent'><span class='content-table'>".$nota['cod_cedula']."-".number_format($nota['cedula'],0,'','.')."</span></td>
+							<!-- <td class='celcontent'><span class='content-table'>".$nota['cod_cedula']."-".number_format($nota['cedula'],0,'','.')."</span></td> -->
+							<td class='celcontent'><span class='content-table'>".$nota['cod_rif']."".$nota['rif']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
@@ -172,9 +175,9 @@ body{
 							<td class='celcontent'><span class='content-table'>".$nota['cantidad_colecciones']."</span></td>
 							<td class='celcontent'><span class='content-table'>Colecciones Cosméticos Campaña ".$numero_campana."-".$anio_campana."</span></td>
 							<td class='celcontentR'><span class='content-table'>01</span></td>
-							<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion,2,',','.')." Bs</span></td>
+							<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion,2,',','.')." ".$simbolo."</span></td>
 							<td class='celcontentR'><span class='content-table'>16%</span></td>
-							<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion_total,2,',','.')." Bs</span></td>
+							<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion_total,2,',','.')." ".$simbolo."</span></td>
 						</tr>
 					</table>
 
@@ -187,15 +190,15 @@ body{
 						<table style='width:100%;'>
 							<tr>
 								<td class='celtitleL'>Total Neto: </td>
-								<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion_total,2,',','.')." Bs</span></td>
+								<td class='celcontentR'><span class='content-table'>".number_format($precio_coleccion_total,2,',','.')." ".$simbolo."</span></td>
 							</tr>
 							<tr>
 								<td class='celtitleL'>Impuesto (I.V.A): </td>
-								<td class='celcontentR'><span class='content-table'>".number_format($ivaT,2,',','.')." Bs</span></td>
+								<td class='celcontentR'><span class='content-table'>".number_format($ivaT,2,',','.')." ".$simbolo."</span></td>
 							</tr>
 							<tr>
 								<td class='celtitleL'>Total Operacion: </td>
-								<td class='celcontentR'><span class='content-table'>".number_format($precio_final_nota,2,',','.')." Bs</span></td>
+								<td class='celcontentR'><span class='content-table'>".number_format($precio_final_nota,2,',','.')." ".$simbolo."</span></td>
 							</tr>
 						</table>
 					</div>

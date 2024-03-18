@@ -126,7 +126,8 @@
 
 		public function ConsultarBajadas($dominio){
 			if(Conexion::getEstatusConexion()){
-				$query = "SELECT SUM(tpastores.cantM) as cantM, SUM(tpastores.cantF) as cantF, SUM(tpastores.cantG) as cantG FROM tpastores, tdominios WHERE tpastores.id_dominio = tdominios.id and tdominios.dominio = :dominio and tpastores.estatus = 1";
+				$query = "SELECT SUM(tcontador_pastores.cantIgM) as cantM, SUM(tcontador_pastores.cantIgF) as cantF, SUM(tcontador_pastores.cantIgG) as cantG FROM tcontador_pastores, tdominios WHERE tcontador_pastores.id_dominio = tdominios.id and tdominios.dominio = :dominio and tcontador_pastores.estatus = 1";
+				// $query = "SELECT SUM(tpastores.cantM) as cantM, SUM(tpastores.cantF) as cantF, SUM(tpastores.cantG) as cantG FROM tpastores, tdominios WHERE tpastores.id_dominio = tdominios.id and tdominios.dominio = :dominio and tpastores.estatus = 1";
 				try{
 					$strExe = Conexion::prepare($query);
 					$strExe->bindValue(":dominio", $dominio);
@@ -336,7 +337,8 @@
 		public function EliminarPastores($data){
 			if(Conexion::getEstatusConexion()) {
 				// $query = "DELETE FROM tdominios WHERE id = :id";
-				$query = "DELETE FROM tcontador_pastores WHERE id_contador = :id";
+				// $query = "DELETE FROM tcontador_pastores WHERE id_contador = :id";
+				$query = "UPDATE tcontador_pastores SET estatus=0 WHERE id_contador = :id";
 				//$query = "DELETE FROM tcontador_pastores WHERE id_dominio = :idDomim and id_users=:idUser";
 				try{
 					$strExe = Conexion::prepare($query);

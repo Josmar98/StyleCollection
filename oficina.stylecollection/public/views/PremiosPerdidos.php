@@ -293,8 +293,15 @@
                                                   foreach ($premios_perdidos as $dataperdidos) {
                                                     if(!empty($dataperdidos['id_premio_perdido'])){
                                                       if($dataperdidos['id_pedido'] == $data['id_pedido']){
-                                                        $posOrigin = strpos($dataperdidos['valor'], "_pago");
-                                                        $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        // $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                        // $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        if(strtolower($pagosR['name'])=="inicial"){
+                                                          $posOrigin = strpos($dataperdidos['valor'], "cial");
+                                                          $posIDPago = strpos($dataperdidos['valor'], "cial") + strlen("cial");
+                                                        }else{
+                                                          $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                          $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        }
                                                         $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
                                                         $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
                                                         // echo $dataNamePerdido." - ";

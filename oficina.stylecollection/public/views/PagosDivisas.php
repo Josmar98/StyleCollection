@@ -265,9 +265,12 @@
                       <?php if(!empty($_GET['Abonado'])){ ?>
                       <input type="hidden" value="<?=$_GET['Abonado']?>" name="Abonado">
                       <?php } ?>
-                      <button class="btn btn-success"><b>Exportar a Excel  
-                        <span class="fa fa-file-excel-o" style="color:#FFF;margin-left:5px;"></span>
-                      </b></button>
+                      
+                      <button class="btn btn-success">
+                        <b>Exportar a Excel  
+                          <span class="fa fa-file-excel-o" style="color:#FFF;margin-left:5px;"></span>
+                        </b>
+                      </button>
                         <!-- <img src="public/assets/img/excel_icon.png" style="width:20px;"> -->
                     </form>
                   </div>

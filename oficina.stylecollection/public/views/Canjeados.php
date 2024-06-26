@@ -119,58 +119,81 @@
                 <tbody>
                 <?php 
                 $num = 1;
-                // print_r($clientes);
-                foreach ($lideres as $data):
-                if(!empty($data['id_cliente'])):  
-                ?>
-                <tr>
-                  <td style="width:5%">
-                    <span class="contenido2">
-                      <?php echo $num++; ?>
-                    </span>
-                  </td>
-                  <td style="width:35%">
-                    <span class="contenido2">
-                      <?php echo number_format($data['cedula'], 0, '.','.')." ".$data['primer_nombre']." ".$data['primer_apellido']; ?>
-                      <br>
-                      <a href="?route=<?=$_GET['route']?>&action=Asignar&id=<?=$data['id_cliente'];?>"><u>Asignar a nota de entrega</u></a>
-                    </span>
-                  </td>
-                  <td style="width:60%">
-                        <table class="table" style="background:none;">
-                    <?php 
-                      foreach ($premiosCanjeados as $data2) { if(!empty($data2['id_canjeo'])){
-                        if($data['id_cliente'] == $data2['id_cliente']){
-                    ?>
-                      <?php if ($data2['estado_canjeo']=="Asignado"): ?>
-                          <tr>
-                            <td>
-                              <span class="contenido2" style='color:#000'>
-                                <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
-                                foreach ($campanas as $camp) {
-                                  if(!empty($camp['id_campana'])){
-                                    if(($data2['id_campana'] == $camp['id_campana']) && $data2['id_despacho'] == $camp['id_despacho']){
-                                          $ndp = "";
-                                          if($camp['numero_despacho']=="1"){ $ndp = "1er"; }
-                                          if($camp['numero_despacho']=="2"){ $ndp = "2do"; }
-                                          if($camp['numero_despacho']=="3"){ $ndp = "3er"; }
-                                          if($camp['numero_despacho']=="4"){ $ndp = "4to"; }
-                                          if($camp['numero_despacho']=="5"){ $ndp = "5to"; }
-                                          if($camp['numero_despacho']=="6"){ $ndp = "6to"; }
-                                          if($camp['numero_despacho']=="7"){ $ndp = "7mo"; }
-                                          if($camp['numero_despacho']=="8"){ $ndp = "8vo"; }
-                                          if($camp['numero_despacho']=="9"){ $ndp = "9no"; }
-                                          echo "(";
-                                          if($camp['numero_despacho']>"1"){
-                                            echo $ndp." ";
-                                          }
-                                      echo "Pedido - Camp ".$camp['numero_campana']."/".$camp['anio_campana'].") <br><small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small>";
-                                      // echo "(Ped ".$camp['numero_despacho']." Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
+                $premiosTotales = [];
+                foreach ($lideres as $data){ if(!empty($data['id_cliente'])){
+                  ?>
+                  <tr>
+                    <td style="width:5%">
+                      <span class="contenido2">
+                        <?php echo $num++; ?>
+                      </span>
+                    </td>
+                    <td style="width:35%">
+                      <span class="contenido2">
+                        <?php echo number_format($data['cedula'], 0, '.','.')." ".$data['primer_nombre']." ".$data['primer_apellido']; ?>
+                        <br>
+                        <a href="?route=<?=$_GET['route']?>&action=Asignar&id=<?=$data['id_cliente'];?>"><u>Asignar a nota de entrega</u></a>
+                      </span>
+                    </td>
+                    <td style="width:60%;text-align:left;">
+                          <table class="table" style="background:none;">
+                      <?php 
+
+                        foreach ($premiosCanjeados as $data2) { if(!empty($data2['id_canjeo'])){
+                          if($data['id_cliente'] == $data2['id_cliente']){
+                            if(!empty($premiosTotales[$data2['id_catalogo']])){
+                              $premiosTotales[$data2['id_catalogo']]['gemas'] += $data2['cantidad_gemas'];
+                              $premiosTotales[$data2['id_catalogo']]['cantidad'] += 1;
+
+                            }else{
+                              $premiosTotales[$data2['id_catalogo']] = ['name'=>$data2['nombre_catalogo'], 'gemas'=>$data2['cantidad_gemas'], 'precio'=>$data2['cantidad_gemas'], 'cantidad'=>1];                                    
+                            }
+                        ?>
+                        <?php if ($data2['estado_canjeo']=="Asignado"){ ?>
+                            <tr>
+                              <td>
+                                <span class="contenido2" style='color:#000'>
+                                  <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']." -> ";
+                                  $premiosTotales;
+                                  foreach ($campanas as $camp) {
+                                    if(!empty($camp['id_campana'])){
+                                      if(($data2['id_campana'] == $camp['id_campana']) && $data2['id_despacho'] == $camp['id_despacho']){
+                                            $ndp = "";
+                                            if($camp['numero_despacho']=="1"){ $ndp = "1er"; }
+                                            if($camp['numero_despacho']=="2"){ $ndp = "2do"; }
+                                            if($camp['numero_despacho']=="3"){ $ndp = "3er"; }
+                                            if($camp['numero_despacho']=="4"){ $ndp = "4to"; }
+                                            if($camp['numero_despacho']=="5"){ $ndp = "5to"; }
+                                            if($camp['numero_despacho']=="6"){ $ndp = "6to"; }
+                                            if($camp['numero_despacho']=="7"){ $ndp = "7mo"; }
+                                            if($camp['numero_despacho']=="8"){ $ndp = "8vo"; }
+                                            if($camp['numero_despacho']=="9"){ $ndp = "9no"; }
+                                            echo "(";
+                                            if($camp['numero_despacho']>"1"){
+                                              echo $ndp." ";
+                                            }
+                                        echo "Pedido - Camp ".$camp['numero_campana']."/".$camp['anio_campana'].") <br><small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small>";
+                                        // echo "(Ped ".$camp['numero_despacho']." Camp ".$camp['numero_campana']."/".$camp['anio_campana'].")";
+                                      }
                                     }
                                   }
-                                }
-                                // echo "<br>"; 
-                                ?>
+                                  // echo "<br>"; 
+                                  ?>
+                                </span>
+                              </td>
+                              <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Analista2"): ?>
+                              <td>
+                                <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data2['id_canjeo'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                                </button>
+                              </td>
+                              <?php endif ?>
+                            </tr>
+                        <?php } else { ?>
+                          <tr>
+                            <td>
+                              <span class="contenido2">
+                                <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']."<br><small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small><br>"; ?>
                               </span>
                             </td>
                             <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Analista2"): ?>
@@ -181,32 +204,17 @@
                             </td>
                             <?php endif ?>
                           </tr>
-                      <?php else: ?>
-                        <tr>
-                          <td>
-                            <span class="contenido2">
-                              <?php echo "<img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$data2['cantidad_gemas']." <span style='margin-right:5px;margin-left:5px;'>-</span> ".$data2['nombre_catalogo']."<br><small> (".$lider->formatFecha($data2['fecha_canjeo'])."-".$data2['hora_canjeo'].")</small><br>"; ?>
-                            </span>
-                          </td>
-                          <?php if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Analista2"): ?>
-                          <td>
-                            <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?route=<?php echo $url; ?>&id=<?php echo $data2['id_canjeo'] ?>&permission=1">
-                              <span class="fa fa-trash"></span>
-                            </button>
-                          </td>
-                          <?php endif ?>
-                        </tr>
-                      <?php endif; ?>
-                    <?php 
-                        }
-                      } }
-                    ?>
-                        </table>
-                  </td>
-                      
-                </tr>
-                <?php
-               endif; endforeach;
+                        <?php } ?>
+                        <?php 
+                          }
+                        } }
+                      ?>
+                          </table>
+                    </td>
+                        
+                  </tr>
+                  <?php
+                } }
                 ?>
                 </tbody>
                 <tfoot>
@@ -218,7 +226,24 @@
                 </tr>
                 </tfoot>
               </table>
+              <table class="table table-bordered table-striped" style="text-align:center;width:100%;">
+                <?php foreach ($premiosTotales as $key) { ?>
+                <tr>
+                  <td style="width:5%">-</td>
+                  <td style="width:35%">-</td>
+                  <td style="width:60%;text-align:left;">
+                    <?php 
+                      $cantidadPremios = $key['gemas']/$key['precio'];
+                      echo "(<b style='font-size:1.1em;'>".$cantidadPremios."</b>) <b>".$key['name']."</b> <small>por <img style='width:20px;margin-right:1px;' src='{$fotoGema}'> ".$key['precio']." gemas c/u</small>";
+                    ?>
+                  </td>
+                </tr>
+                <?php } ?>
+              </table>
 
+              <div>
+
+              </div>
             </div>
             <!-- /.box-body -->
           </div>

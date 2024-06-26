@@ -931,7 +931,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 <!-- ======================================================================================================================= -->
         
 
-        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>
 
                             <?php if($url=="ObsequiosGemas" || $url=="ObsequiosGemasBorrados"){ ?>
@@ -954,7 +954,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                             <?php } ?>
                       <?php } ?>
 
-                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista"){ ?>
                             <?php if($url=="ObsequiosGemas" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=ObsequiosGemas"><i class="fa fa-diamond"></i> Ver Gemas autorizadas</a></li>
                             <?php }else{ ?>
@@ -2106,7 +2106,99 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 <!-- ======================================================================================================================= -->
 
 
+        <?php if($url=="Proveedores" || $url=="Libroiva"){ ?>
+          <li class="active treeview">
+        <?php }else{ ?>
+          <li class="treeview">
+        <?php } ?>
+          <a href="#">
+            <i class="fa fa-folder-open"></i> <span>Contabilidad</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu treeview-menu2">
 
+            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Contable"){ ?>
+              <?php if($url=="Proveedores"){ ?>
+                <li class="active treeview">
+              <?php }else{ ?>
+                <li class="treeview">
+              <?php } ?>
+                <a href="#">
+                  <i class="fa fa-book"></i> <span>Proveedores</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <?php 
+                    $class="";
+                    if($url=="Proveedores" && !empty($action) && $action == "Registrar"){
+                      $class="active";
+                    } 
+                  ?>
+                  <li class="<?=$class; ?>"><a href="?route=Proveedores&action=Registrar"><i class="fa fa-book"></i> Registrar Proveedores</a></li>
+
+                  <?php 
+                    $class="";
+                    if($url=="Proveedores" && empty($action)){
+                      $class="active";
+                    } 
+                  ?>
+                  <li class="<?=$class; ?>"><a href="?route=Proveedores"><i class="fa fa-book"></i> Ver Proveedores</a></li>
+
+                </ul>
+              </li>
+            <?php } ?>
+
+            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Contable"){ ?>
+              <?php if($url=="Libroiva"){ ?>
+                <li class="active treeview">
+              <?php }else{ ?>
+                <li class="treeview">
+              <?php } ?>
+                <a href="#">
+                  <i class="fa fa-book"></i> <span>Libros de IVA</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Contable"){  ?>
+                  <?php 
+                    $class="";
+                    if($url=="Libroiva" && !empty($action) && $action == "RegistrarCompras"){
+                      $class="active";
+                    } 
+                  ?>
+                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=RegistrarCompras"><i class="fa fa-book"></i> Registrar Compras</a></li>
+                  <?php }  ?>
+                  
+                  <?php 
+                    $class="";
+                    if($url=="Libroiva" && !empty($action) && $action == "VerCompras"){
+                      $class="active";
+                    } 
+                  ?>
+                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=VerCompras"><i class="fa fa-book"></i> Ver Compras</a></li>
+
+                  <?php 
+                    $class="";
+                    if($url=="Libroiva" && !empty($action) && $action == "ComprasVentas"){
+                      $class="active";
+                    } 
+                  ?>
+                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=ComprasVentas"><i class="fa fa-book"></i> Ver Libros de IVA <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp de Compras y Ventas</a></li>
+
+                </ul>
+              </li>
+            <?php } ?>
+
+
+
+          </ul>
+        </li>
 
 
 
@@ -3029,7 +3121,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
                       </ul>
                     </li>
 
-                  <?php if($url == "Reportes" && !empty($action) && ($action=="PremiosPerdidos" || $action=="PremiosAlcanzados"  || $action=="PremiosEstructuraAlcanzados" || $action=="PremiosAlcanzadosRutas")){ ?>
+                  <?php if($url == "Reportes" && !empty($action) && ($action=="PremiosPerdidos" || $action=="PremiosAlcanzados"  || $action=="PremiosEstructuraAlcanzados" || $action=="PremiosAlcanzadosRutas"  || $action=="PremiosAlcanzadosLideres")){ ?>
                     <li class="active treeview">
                   <?php  }else{ ?>
                     <li class="treeview">
@@ -3053,6 +3145,12 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
             <li class="active "><a href="?route=Reportes&action=PremiosAlcanzados"><i class="fa  fa-file-pdf-o"></i> Premios Alcanzados</a></li>
                             <?php }else{ ?>
             <li><a href="?route=Reportes&action=PremiosAlcanzados"><i class="fa  fa-file-pdf-o"></i> Premios Alcanzados</a></li>
+                            <?php } ?>
+
+                            <?php if($url=="Reportes" && !empty($action) && $action=="PremiosAlcanzadosLideres"){ ?>
+            <li class="active "><a href="?route=Reportes&action=PremiosAlcanzadosLideres"><i class="fa  fa-file-pdf-o"></i> Premios Alcanzados <br>&nbsp&nbsp&nbsp&nbsp Por Líderes</a></li>
+                            <?php }else{ ?>
+            <li><a href="?route=Reportes&action=PremiosAlcanzadosLideres"><i class="fa  fa-file-pdf-o"></i> Premios Alcanzados <br>&nbsp&nbsp&nbsp&nbsp Por Líderes</a></li>
                             <?php } ?>
 
                             <?php if($url=="Reportes" && !empty($action) && $action=="PremiosEstructuraAlcanzados"){ ?>

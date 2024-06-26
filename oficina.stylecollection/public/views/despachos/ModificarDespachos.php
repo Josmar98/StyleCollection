@@ -689,13 +689,15 @@ $(document).ready(function(){
     var operation = parseFloat(cantidad) * valor;
 
     if($(this).prop('checked')){
+      var newPrecioCol = parseFloat((precioactual+operation).toFixed(2));
       $(".cantidad"+id).attr("readonly","1");
       $(".preciosid"+id).attr("readonly","1");
-      $("#precio_coleccion").val(precioactual+operation);
+      $("#precio_coleccion").val(newPrecioCol);
     }else{
+      var newPrecioCol = parseFloat((precioactual-operation).toFixed(2));
       $(".cantidad"+id).removeAttr("readonly","0");
       $(".preciosid"+id).removeAttr("readonly","0");
-      $("#precio_coleccion").val(precioactual-operation);
+      $("#precio_coleccion").val(newPrecioCol);
     }
 
   });
@@ -821,6 +823,7 @@ function validar(){
 
   /*===================================================================*/  
   var cantPagos = $("#cantPagos").val();
+  // alert(cantPagos);
   var rpagos = false;
   if(parseInt(cantPagos) > 0 && parseInt(cantPagos) <= parseInt(cantPagosMax)){
     var clavePagos = $(".json_pagos").html();
@@ -857,6 +860,7 @@ function validar(){
 
   /*===================================================================*/
   var precio_coleccion = $("#precio_coleccion").val();
+  // alert(precio_coleccion);
   var rprecio_coleccion = false;
   if(precio_coleccion.length != 0){
     if(precio_coleccion > 0){
@@ -948,7 +952,7 @@ function validar(){
   }
   /*===================================================================*/
 
-
+  // alert(totalidad);
   /*===================================================================*/
   var comparativa = false;
   if(rprecios==true){

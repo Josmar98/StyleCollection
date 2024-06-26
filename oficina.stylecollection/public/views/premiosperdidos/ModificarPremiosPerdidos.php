@@ -148,7 +148,7 @@
                                               $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$idPlanesTemp]; 
                                               $num++;
                                             ?>
-                                            <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                            <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="<?=$data2['cantidad_coleccion']; ?>">
                                           </div>
                                           <span class="error_nombreid_<?=$idPlanesTemp; ?> errors"></span>
                                         </div>
@@ -271,7 +271,7 @@
                                                       $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$pagosR['id'].$idPlanesTemp]; 
                                                       $num++;
                                                     ?>
-                                                    <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                                    <input type="number" value="<?=$cantidadPerdidoAct; ?>" class="nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="<?=$data2['cantidad_coleccion']; ?>">
                                                   </div>
                                                   <span class="error_nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> errors"></span>
                                                 </div>

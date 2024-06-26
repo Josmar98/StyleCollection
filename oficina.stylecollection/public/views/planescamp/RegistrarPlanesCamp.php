@@ -72,6 +72,17 @@
                     
                   </div>
 
+                  <div class="row">
+                    <div class="form-group col-xs-12">
+                       <label for="opcion_plan">Opción adicional de Plan</label>
+                       <select id="opcion_plan" name="opcion_plan" class="form-control select2" style="width:100%">
+                         <?php foreach ($opcionesSeconds as $key){ ?>
+                           <option value="<?=$key['id']; ?>" id="<?=$key['id']; ?>"><?=$key['name']; ?></option>
+                         <?php } ?>
+                       </select>
+                       <span id="error_opcion_plan" class="errors"></span>
+                    </div>
+                  </div>
 
                   <div class="row">
                     <div class="form-group col-xs-12">

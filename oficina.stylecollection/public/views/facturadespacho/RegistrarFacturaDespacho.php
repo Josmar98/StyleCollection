@@ -139,7 +139,6 @@
                     </div>
                   </div>
                   <div class="row">
-
                     <div class="form-group col-sm-6">
                        <label for="fecha1">Emision de Factura</label>
                        <input type="date" class="form-control" id="fecha1" name="fecha1" value="<?php echo date('Y-m-d'); ?>">
@@ -151,8 +150,20 @@
                        <input type="date" class="form-control" id="fecha2" name="fecha2" min="<?php echo date('Y-m-d'); ?>">
                        <span id="error_fecha2" class="errors"></span>
                     </div>
+                  </div>
 
-
+                  <div class="row">
+                    <div class="form-group col-sm-6">
+                       <label for="control1">Numero de control #1 (<small>En talonario</small>)</label>
+                       <input type="number" class="form-control" id="control1" name="control1" value="<?=$numero_control2; ?>">
+                       <span id="error_control1" class="errors"></span>
+                    </div>
+                    
+                    <div class="form-group col-sm-6">
+                       <label for="control2">Numero de control #2 (<small>En talonario</small>)</label>
+                       <input type="number" class="form-control" id="control2" name="control2" min="<?=$numero_control2; ?>" value="<?=$numero_control2+1; ?>">
+                       <span id="error_control2" class="errors"></span>
+                    </div>
                   </div>
                 
                 
@@ -371,18 +382,38 @@ function validarLiderazgos(){
   /*===================================================================*/
 
   /*===================================================================*/
-
+  var control1 = $("#control1").val();
+  var rcontrol1 = checkInput(control1, numberPattern);
+  if(rcontrol1 == false){ 
+    if( control1.length  > 0 ){
+      $("#error_control1").html("EL numero de control solo debe tener numeros");
+    }else{
+      $("#error_control1").html("Debe ingresar el numero de control acorde al talonario");
+    }
+  }else{
+    $("#error_control1").html("");
+  }
   /*===================================================================*/
 
   /*===================================================================*/
-
+  var control2 = $("#control2").val();
+  var rcontrol2 = checkInput(control2, numberPattern);
+  if(rcontrol2 == false){ 
+    if( control2.length  > 0 ){
+      $("#error_control2").html("EL numero de control solo debe tener numeros");
+    }else{
+      $("#error_control2").html("Debe ingresar el numero de control acorde al talonario");
+    }
+  }else{
+    $("#error_control2").html("");
+  }
   /*===================================================================*/
 
 
 
   /*===================================================================*/
   var result = false;
-  if( rpedido==true && rfecha1==true && rfecha2==true){
+  if( rpedido==true && rfecha1==true && rfecha2==true && rcontrol1==true && rcontrol2==true){
     result = true;
   }else{
     result = false;

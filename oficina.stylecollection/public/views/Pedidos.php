@@ -1635,8 +1635,7 @@
                           // echo "Resta actual: ".number_format($restaTotalResponsabilidad,1,',','.')."<br>";
                           // echo "Resta Gemas: ".number_format($restaTotalGemas,1,',','.')."<br>";
                           // $reclamargemasporcentaje = 0;
-
-                          if (count($gemasReclamar)>1): 
+                          if (count($gemasReclamar)>1){
                             $gemaReclamar = $gemasReclamar[0];
                             $gemasAReclamar = $gemaReclamar['cantidad_gemas'];
                             if($porcentajeAbonadoPuntual <= 100){
@@ -1644,88 +1643,93 @@
                               $porcentajeAbonadoPuntual = 100;
                             }
                             //echo $porcentajeAbonadoPuntual;
-                            // echo "<br><h1>".$reclamargemasporcentaje."<br>".number_format($restaTotalResponsabilidad,1,',','.')."</h1><br>";
+                            // $restaTotalResponsabilidad-=0.08;
+                            // echo "<br><h1>".$reclamargemasporcentaje."<br>".number_format($restaTotalResponsabilidad,2,'.',',')."</h1><br>";
 
                             $gemasAReclamarPorcentaje = ($gemaReclamar['cantidad_gemas']/100)*$porcentajeAbonadoPuntual;
-                            if ($reclamargemasporcentaje=="0") {
-                              if( ($fecha_pago_cierre_lider <= $despacho['fecha_segunda_senior']) && (number_format($restaTotalGemas,1,',','.') <= 0) ){ ?>
-                                <?php if ($_SESSION['id_cliente'] == $pedido['id_cliente']): ?>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-xs-12" style="border:1px solid #CCC;">
-                                        <div>
-                                          <input type="hidden" id="cantidad_gemas_lider" value="<?=number_format($gemasAReclamar,2,',','.')?>">
-                                          <button class="btn enviar2 reclamarGemasBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamar=1&gema=<?=$gemaReclamar['id_gema']?>">
-                                            <span class="fa fa-diamond"></span>
-                                            Reclamar Gemas Totat
-                                            <span class="fa fa-diamond"></span>
-                                          </button>
-                                        </div>
+                            if($cantidad_acumuladaVer >= $varMinimaColeccionesParaGemas){
+                              if ($reclamargemasporcentaje=="0") {
+                                if( ($fecha_pago_cierre_lider <= $despacho['fecha_segunda_senior']) && (number_format($restaTotalGemas,1,',','.') <= 0) ){ ?>
+                                  <?php if ($_SESSION['id_cliente'] == $pedido['id_cliente']): ?>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-xs-12" style="border:1px solid #CCC;">
+                                          <div>
+                                            <input type="hidden" id="cantidad_gemas_lider" value="<?=number_format($gemasAReclamar,2,',','.')?>">
+                                            <button class="btn enviar2 reclamarGemasBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamar=1&gema=<?=$gemaReclamar['id_gema']?>">
+                                              <span class="fa fa-diamond"></span>
+                                              Reclamar Gemas Totat
+                                              <span class="fa fa-diamond"></span>
+                                            </button>
+                                          </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <br>
-                                <?php else: ?>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-xs-12" style="border:1px solid #CCC;">
-                                        <div>
-                                          <input type="hidden" value="<?=number_format($gemasAReclamar,2,',','.')?>">
-                                          <input type="hidden" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
-                                          <button class="btn col-xs-12" style="background:#999;color:#fff">
-                                            <span class="fa fa-diamond"></span>
-                                            Reclamar Gemas Porcent
-                                            <span class="fa fa-diamond"></span>
-                                          </button>
-                                        </div>
+                                    <br>
+                                  <?php else: ?>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-xs-12" style="border:1px solid #CCC;">
+                                          <div>
+                                            <input type="hidden" value="<?=number_format($gemasAReclamar,2,',','.')?>">
+                                            <input type="hidden" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
+                                            <button class="btn col-xs-12" style="background:#999;color:#fff">
+                                              <span class="fa fa-diamond"></span>
+                                              Reclamar Gemas Porcent
+                                              <span class="fa fa-diamond"></span>
+                                            </button>
+                                          </div>
+                                      </div>
                                     </div>
-                                  </div>
-                                  <br>
-                                <?php endif; ?>
-                                <?php  
+                                    <br>
+                                  <?php endif; ?>
+                                  <?php  
+                                }
                               }
+
+                              if ($reclamargemasporcentaje=="1") {
+                                // echo $restaTotalResponsabilidad;
+                                // echo "<br>";
+                                // echo number_format($restaTotalResponsabilidad,2,'.','');
+                                if( number_format($restaTotalResponsabilidad,2,'.','') <= 0.01 ){
+
+                                  if ($_SESSION['id_cliente'] == $pedido['id_cliente']){ ?>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-xs-12" style="border:1px solid #CCC;">
+                                          <div>
+                                            <input type="hidden" id="cantidad_gemas_lider_porcent" value="<?=number_format($gemasAReclamar,2,',','.')?>">
+                                            <input type="hidden" id="porcentaje_gemas_lider" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
+
+                                            <button class="btn enviar2 reclamarGemasPorcentajeBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamarporcentaje=1&gema=<?=$gemaReclamar['id_gema'];?>&porcentaje=<?=$gemasAReclamarPorcentaje;?>&porcentPago=<?=number_format($porcentajeAbonadoPuntual,2,'.',''); ?>">
+                                              <span class="fa fa-diamond"></span>
+                                              Reclamar Gemas 
+                                              <span class="fa fa-diamond"></span>
+                                            </button>
+                                          </div>
+                                      </div>
+                                    </div>
+                                    <br>
+                                  <?php } else { ?>
+                                    <br>
+                                    <div class="row">
+                                      <div class="col-xs-12" style="border:1px solid #CCC;">
+                                          <div>
+                                            <input type="hidden" value="<?=number_format($gemasAReclamar,2,',','.')?>">
+                                            <input type="hidden" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
+                                            <button class="btn col-xs-12" style="background:#999;color:#fff">
+                                              <span class="fa fa-diamond"></span>
+                                              Reclamar Gemas 
+                                              <span class="fa fa-diamond"></span>
+                                            </button>
+                                          </div>
+                                      </div>
+                                    </div>
+                                    <br>
+                                  <?php }
+                                }
+                              } 
                             }
-
-                            if ($reclamargemasporcentaje=="1") {
-
-                              if( number_format($restaTotalResponsabilidad,1,',','.') <= 0 ){ ?>
-                                <?php if ($_SESSION['id_cliente'] == $pedido['id_cliente']): ?>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-xs-12" style="border:1px solid #CCC;">
-                                        <div>
-                                          <input type="hidden" id="cantidad_gemas_lider_porcent" value="<?=number_format($gemasAReclamar,2,',','.')?>">
-                                          <input type="hidden" id="porcentaje_gemas_lider" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
-
-                                          <button class="btn enviar2 reclamarGemasPorcentajeBtn col-xs-12" value="?<?=$menu?>&route=<?=$url?>&id=<?=$id?>&reclamarporcentaje=1&gema=<?=$gemaReclamar['id_gema'];?>&porcentaje=<?=$gemasAReclamarPorcentaje;?>&porcentPago=<?=number_format($porcentajeAbonadoPuntual,2,'.',''); ?>">
-                                            <span class="fa fa-diamond"></span>
-                                            Reclamar Gemas 
-                                            <span class="fa fa-diamond"></span>
-                                          </button>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <br>
-                                <?php else: ?>
-                                  <br>
-                                  <div class="row">
-                                    <div class="col-xs-12" style="border:1px solid #CCC;">
-                                        <div>
-                                          <input type="hidden" value="<?=number_format($gemasAReclamar,2,',','.')?>">
-                                          <input type="hidden" value="<?=number_format($gemasAReclamarPorcentaje,2,',','.')?>">
-                                          <button class="btn col-xs-12" style="background:#999;color:#fff">
-                                            <span class="fa fa-diamond"></span>
-                                            Reclamar Gemas 
-                                            <span class="fa fa-diamond"></span>
-                                          </button>
-                                        </div>
-                                    </div>
-                                  </div>
-                                  <br>
-                                <?php endif; ?>
-                                <?php  
-                              }
-                            } 
-                          endif;
+                          }
 
                         ?>
 

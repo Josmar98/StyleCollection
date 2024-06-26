@@ -123,7 +123,7 @@ body{
 					<table class='table1'>
 						<tr>
 							<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-							<td class='celcontent'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
+							<td class='celcontent' colspan='3'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>

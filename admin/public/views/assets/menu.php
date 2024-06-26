@@ -350,7 +350,47 @@
 
 
 
+<!-- ======================================================================================================================= -->
+              <!--  PRODUCTOS CATALOGOS  -->
+<!-- ======================================================================================================================= -->
+     
+                            <?php if($url=="Catalogos" || $url=="CatalogosBorrados"){ ?>
+        <li class="active treeview">
+                            <?php }else{ ?>
+        <li class="treeview">
+                            <?php } ?>
+          <a href="#">
+            <i class="fa fa-inbox"></i> <span>Catalogos</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
 
+
+                            <?php if($url=="Catalogos" && !empty($action) && $action == "Registrar"){ ?>
+            <li class="active"><a href="?route=Catalogos&action=Registrar"><i class="fa fa-archive"></i> Registrar Catalogos</a></li>
+                            <?php }else{ ?>
+            <li class=""><a href="?route=Catalogos&action=Registrar"><i class="fa fa-archive"></i> Registrar Catalogos</a></li>
+                            <?php } ?>
+
+
+                            <?php if($url=="Catalogos" && empty($action)){ ?>
+            <li class="active"><a href="?route=Catalogos"><i class="fa fa-archive"></i> Ver Catalogos</a></li>
+                            <?php }else{ ?>
+            <li><a href="?route=Catalogos"><i class="fa fa-archive"></i> Ver Catalogos</a></li>
+                            <?php } ?>
+
+                            <?php if($url=="CatalogosBorrados" && empty($action)){ ?>
+            <li class="active"><a href="?route=CatalogosBorrados"><i class="fa fa-archive"></i> Ver Catalogos Borrados</a></li>
+                            <?php }else{ ?>
+            <li><a href="?route=CatalogosBorrados"><i class="fa fa-archive"></i> Ver Catalogos Borrados</a></li>
+                            <?php } ?>
+
+          </ul>
+        </li>
+
+<!-- ======================================================================================================================= -->
 
 
 <!-- ======================================================================================================================= -->

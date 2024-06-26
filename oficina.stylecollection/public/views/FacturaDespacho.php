@@ -136,12 +136,17 @@
                         <?php echo $num++; ?>
                       </span>
                     </td>
-                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                      <td style="width:20%">
-                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu3; ?>route=<?php echo $url ?>&id=<?php echo $data['id_factura_despacho'] ?>&permission=1">
+                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
+                    <td style="width:20%">
+                        <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?=$url; ?>&action=Modificar&id=<?=$data['id_factura_despacho']?>">
+                          <span class="fa fa-wrench"></span>
+                        </button>
+                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
+                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu3; ?>route=<?=$url; ?>&id=<?=$data['id_factura_despacho']; ?>&permission=1">
                           <span class="fa fa-trash"></span>
                         </button>
-                      </td>
+                      <?php } ?>
+                    </td>
                     <?php } ?>
                     <td style="width:20%">
                       <span class="contenido2">
@@ -180,7 +185,7 @@
                     </td>
                     <td style="width:20%">
                       <span class="contenido2">
-                        <?php echo $lider->formatFecha($data['fecha_emision']) . " -> " . $lider->formatFecha($data['fecha_vencimiento']); ?>
+                        <?php echo $lider->formatFecha($data['fecha_emision']) . " / " . $lider->formatFecha($data['fecha_vencimiento']); ?>
                       </span>
                     </td>
                     <td style="width:20%">
@@ -212,18 +217,18 @@
                                   Generar Factura en USD.
                                 </a>
                               <?php 
-                                $fiscal = $lider->consultarQuery("SELECT * FROM opcion_factura_despacho WHERE opcion_factura_despacho.id_campana = {$id_campana} and estatus = 1");
-                                if(count($fiscal)>1){
+                                // $fiscal = $lider->consultarQuery("SELECT * FROM opcion_factura_despacho WHERE opcion_factura_despacho.id_campana = {$id_campana} and estatus = 1");
+                                // if(count($fiscal)>1){
 
                               ?>
                                 <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>">
                                   Generar Factura Fiscal.
                                 </a>
-                              <?php } else { ?>
-                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF">
-                                  Generar Factura Fiscal.
-                                </a>
-                              <?php } ?>
+                              <?php //} else { ?>
+                                <!-- <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF"> -->
+                                  <!-- Generar Factura Fiscal. -->
+                                <!-- </a> -->
+                              <?php //} ?>
                             
                           </td>
                         </tr>
@@ -326,7 +331,7 @@ $(document).ready(function(){
     if(response == "1"){
       swal.fire({
           type: 'success',
-          title: '¡Datos borrados correctamente!',
+          title: '¡Factura anulada correctamente!',
           confirmButtonColor: "#ED2A77",
       }).then(function(){
         var campaing = $(".campaing").val();
@@ -373,8 +378,8 @@ $(document).ready(function(){
 
   $(".eliminarBtn").click(function(){
       swal.fire({ 
-          title: "¿Desea borrar los datos?",
-          text: "Se borraran los datos escogidos, ¿desea continuar?",
+          title: "¿Desea anular el registro?",
+          text: "Se anulará el registro escogido, ¿desea continuar?",
           type: "error",
           showCancelButton: true,
           confirmButtonColor: "#ED2A77",
@@ -386,8 +391,8 @@ $(document).ready(function(){
           if (isConfirm.value){            
       
                 swal.fire({ 
-                    title: "¿Esta seguro de borrar los datos?",
-                    text: "Se borraran los datos, esta opcion no se puede deshacer, ¿desea continuar?",
+                    title: "¿Esta seguro de anular el registro?",
+                    text: "Se anulará el registro, esta opcion no se puede deshacer, ¿desea continuar?",
                     type: "error",
                     showCancelButton: true,
                     confirmButtonColor: "#ED2A77",

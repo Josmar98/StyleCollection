@@ -26,34 +26,49 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 	}
 
 	if(!empty($_GET['bloqueo']) && $_GET['bloqueo'] == 1 ){
-		$query = "UPDATE gemas SET estado = 'Bloqueado' WHERE id_gema = $id";
-		$res1 = $lider->modificar($query);
+		$regis = $lider->consultarQuery("SELECT * FROM gemas WHERE id_gema = {$id}");
+		if(count($regis)>1){
+			$reg = $regis[0];
+			$inactivas = $reg['activas'];
+			$query = "UPDATE gemas SET inactivas={$inactivas}, estado='Bloqueado' WHERE id_gema = {$id}";
+			$res1 = $lider->modificar($query);
 
-		if($res1['ejecucion']==true){
-			$response = "1";
-			if(!empty($modulo) && !empty($accion)){
-					$fecha = date('Y-m-d');
-					$hora = date('H:i:a');
-					$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Gemas', 'Bloquear', '{$fecha}', '{$hora}')";
-					$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-				}
-		}else{
+			if($res1['ejecucion']==true){
+				$response = "1";
+				if(!empty($modulo) && !empty($accion)){
+						$fecha = date('Y-m-d');
+						$hora = date('H:i:a');
+						$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Gemas', 'Bloquear', '{$fecha}', '{$hora}')";
+						$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+					}
+			}else{
+				$response = "2"; // echo 'Error en la conexion con la bd';
+			}
+		} else {
 			$response = "2"; // echo 'Error en la conexion con la bd';
 		}
+		
 	}
 
 	if(!empty($_GET['desbloqueo']) && $_GET['desbloqueo'] == 1 ){
-		$query = "UPDATE gemas SET estado = 'Disponible' WHERE id_gema = $id";
-		$res1 = $lider->modificar($query);
+		$regis = $lider->consultarQuery("SELECT * FROM gemas WHERE id_gema = {$id}");
+		if(count($regis)>1){
+			$reg = $regis[0];
+			$activas = $reg['inactivas'];
+			$query = "UPDATE gemas SET activas={$activas}, estado='Disponible' WHERE id_gema = {$id}";
+			$res1 = $lider->modificar($query);
 
-		if($res1['ejecucion']==true){
-			$response = "1";
-			if(!empty($modulo) && !empty($accion)){
-					$fecha = date('Y-m-d');
-					$hora = date('H:i:a');
-					$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Gemas', 'Desbloquear', '{$fecha}', '{$hora}')";
-					$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-				}
+			if($res1['ejecucion']==true){
+				$response = "1";
+				if(!empty($modulo) && !empty($accion)){
+						$fecha = date('Y-m-d');
+						$hora = date('H:i:a');
+						$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Gemas', 'Desbloquear', '{$fecha}', '{$hora}')";
+						$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+					}
+			}else{
+				$response = "2"; // echo 'Error en la conexion con la bd';
+			}
 		}else{
 			$response = "2"; // echo 'Error en la conexion con la bd';
 		}

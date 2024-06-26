@@ -25,7 +25,10 @@ foreach ($accesos as $access) {
   }
 }
 if($amPlanesCampC == 1){
-
+	$opcionesSeconds = [
+    ['id'=>0, 'name'=>'No hacer nada'],
+    ['id'=>1, 'name'=>'Seleccionar segunda opción de premios'],
+  ];
 
 	$id_campana = $_GET['campaing'];
 	$numero_campana = $_GET['n'];

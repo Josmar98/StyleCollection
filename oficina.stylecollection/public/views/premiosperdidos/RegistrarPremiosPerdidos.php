@@ -211,7 +211,7 @@
                                               $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$idPlanesTemp]; 
                                               $num++;
                                             ?>
-                                            <input type="number" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                            <input type="number" class="nombreid_<?=$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="<?=$data2['cantidad_coleccion']; ?>">
                                           </div>
                                           <span class="error_nombreid_<?=$idPlanesTemp; ?> errors"></span>
                                         </div>
@@ -315,7 +315,7 @@
                                                       $planess[$num] = ['codigo'=>'nombreid', 'pagos'=>$pagosR['id'], 'valor'=>$pagosR['id'].$idPlanesTemp]; 
                                                       $num++;
                                                     ?>
-                                                    <input type="number" class="nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="1">
+                                                    <input type="number" class="nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> form-control cantidadPerdidas" id="<?=$data2['cantidad_coleccion_plan'];?>" name="cantidadesPedidas[]" title="<?=$pagosR['id']; ?>" src="<?=$data2['cantidad_coleccion']; ?>">
                                                   </div>
                                                   <span class="error_nombreid_<?=$pagosR['id'].$idPlanesTemp; ?> errors"></span>
                                                 </div>
@@ -619,6 +619,7 @@ $(document).ready(function(){
           var values = $("."+claseTemp).val();
           // alert(values);
           // alert('asdasd');
+          // alert(claseTemp);
           var cols = $("."+claseTemp).attr("src");
           if(values==""){
             values = 0;
@@ -626,6 +627,8 @@ $(document).ready(function(){
             values = parseInt(values) * cols;
             // values = parseInt(values);
           }
+          // alert(planes[i]['valor']);
+          // alert(cols);
           acumPP += values;
         }
       }
@@ -648,7 +651,7 @@ $(document).ready(function(){
           }
         } 
       }
-
+        // alert(acumPP);
       $(".maximos"+seleccion_premios).val(maximoshidden-acumPP);
       
       if(acumPP > maximoshidden){

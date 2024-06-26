@@ -22,367 +22,274 @@
 /*
       INICIO PAGINA
 */
-
-/*=== LOGOTIPO 1-24 =========*/
+.fondoGeneral{
+  width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+}
 .box2logotipo{
-  position:absolute;
-  top:15%;
-  left:44%;
-  width:12%;
+  position:absolute;top:13%;left:3%;width:12%;
 }
-/*==========================*/
-
-/*=== EMBLEMA 1-24 =========*/
+.box2cintillo{
+  position:absolute;top:13%;right:3%;width:9%;
+}
 .box2emblema{
-  position:absolute;
-  top:30vh;
-  width:60%;
-  margin-left:20%;
-  margin-right:20%;
+  position:absolute;top:13vh;width:40%;margin-left:30%;margin-right:30%;
 }
-/*==========================*/
-
-/*=== DETALLE 1 1-24 =========*/
 .box2detalle1{
-  position:absolute;
-  bottom:0;
-  left:0%;
-  width:100%;
-  margin-left:0%;
-  margin-right:0%;
+  position:absolute;width:30%;bottom:0%;left:35%;
 }
-/*==========================*/
-
-/*=== DETALLE 2 1-24 =========*/
 .box2detalle2{
-  position:absolute;
-  width:30%;
-  left:0%;
-  bottom:0%;
+  /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
+  position:absolute;width:80%;top:25%;left:10%;
 }
-/*==========================*/
-
-/*=== DETALLE 3 1-24 =========*/
 .box2detalle3{
-  position:absolute;
-  width:30%;
-  right:0;
-  bottom:0%;
+  /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
+  position:absolute;width:55%;left:20%;top:20%;
 }
-/*==========================*/
-
-/*=== DETALLE 4 1-24 =========*/
 .box2detalle4{
-  position:absolute;
-  width:65%;
-  left:20%;
-  top:12%;
+  position:absolute;width:20%;left:0%;bottom:0%;
 }
-/*==========================*/
+.box2detalle5{
+/*  position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+  position:absolute;width:25%;right:0%;bottom:0%;
+}
 
 
-
-
-/*=================================================*/
 @media screen and (min-width: 1025px) and (max-width: 1280px){
-  .box2logotipo{
-    position:absolute;
-    top:15%;
-    left:44%;
-    width:12%;
+  .fondoGeneral{
+    width:100%;height:90%;position:absolute;top:10%;left:0;overflow:none;opacity:.7;
   }
-  .box2emblema{
-    position:absolute;
-    top:32.5vh;
-    width:60%;
-    margin-left:20%;
-    margin-right:20%;
+  .box2logotipo{
     /*background:red;*/
-  }
-  .box2detalle1 img{
-    height:37vh;
-  }
-  .box2detalle2{
-    position:absolute;
-    width:35%;
-    left:0%;
-    bottom:0%;
-  }
-  .box2detalle3{
-    position:absolute;
-    width:35%;
-    right:0;
-    bottom:0%;
-  }
-  .box2detalle4{
-    position:absolute;
-    width:60%;
-    left:20%;
-    top:12%;
-  }
-}
-
-@media screen and (min-width: 981px) and (max-width: 1024px){
-  .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:40%;
-    width:20%;
+    position:absolute;top:13%;left:3%;width:12%;
   }
   .box2cintillo{
-    width:15%;
-    position:absolute;
-    left:42.5%;
-    bottom:8%;
+    position:absolute;top:13%;right:3%;width:9%;
   }
   .box2emblema{
-    position:absolute;
-    top:38vh;
-    width:50%;
-    margin-left:25%;
-    margin-right:25%;
-    /*background:blue;*/
+    position:absolute;top:13vh;width:40%;margin-left:30%;margin-right:30%;
   }
-  .box2detalle1 img{
-    height:30vh;
+  .box2detalle1{
+    position:absolute;width:30%;bottom:0%;left:35%;
   }
   .box2detalle2{
-    position:absolute;
-    width:37.5%;
-    left:0%;
-    bottom:0%;
+    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
+    position:absolute;width:80%;top:25%;left:10%;
   }
   .box2detalle3{
-    position:absolute;
-    width:37.5%;
-    right:0;
-    bottom:0%;
+    /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
+    position:absolute;width:55%;left:20%;top:20%;
   }
   .box2detalle4{
-    position:absolute;
-    width:80%;
-    left:10%;
-    top:20%;
+    position:absolute;width:20%;left:0%;bottom:0%;
+  }
+  .box2detalle5{
+  /*  position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;width:25%;right:0%;bottom:0%;
+  }
+}
+
+
+@media screen and (min-width: 981px) and (max-width: 1024px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2logotipo{
+    /*background:blue;*/
+    position:absolute;top:15%;left:3%;width:12%;
+  }
+  .box2cintillo{
+    position:absolute;top:15%;right:3%;width:9%;
+  }
+  .box2emblema{
+    position:absolute;top:20%;width:40%;margin-left:30%;margin-right:30%;
+  }
+  .box2detalle1{
+    position:absolute;bottom:0%;left:35%;width:30%;
+  }
+  .box2detalle2{
+    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
+    position:absolute;top:30%;left:10%;width:80%;
+  }
+  .box2detalle3{
+    /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
+    position:absolute;top:25%;left:20%;width:55%;
+  }
+  .box2detalle4{
+    position:absolute;bottom:0%;left:0%;width:20%;
+  }
+  .box2detalle5{
+  /*  position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:25%;
   }
 }
 
 @media screen and (min-width: 861px) and (max-width: 980px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
   .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:35%;
-    width:30%;
+    /*background:green;*/
+    position:absolute;width:28%;top:15%;left:36%;
   }
   .box2cintillo{
-    width:18%;
-    position:absolute;
-    left:41%;
-    bottom:8%;
+    position:absolute;top:16%;right:2%;width:20%;
   }
   .box2emblema{
-    position:absolute;
-    top:45vh;
-    width:60%;
-    margin-left:20%;
-    margin-right:20%;
-    /*background:green;*/
+    position:absolute;top:30%;width:60%;margin-left:20%;margin-right:20%;
   }
-  .box2detalle1 img{
-    height:25vh;
+  .box2detalle1{
+    position:absolute;bottom:0%;left:25%;width:50%;
   }
   .box2detalle2{
-    position:absolute;
-    width:40%;
-    left:0%;
-    bottom:0%;
+    position:absolute;top:40%;left:0%;width:100%;
+    /*position:absolute;width:20%;left:-0.7%;bottom:15%;transform: rotate(33deg);*/
   }
   .box2detalle3{
-    position:absolute;
-    width:40%;
-    right:0;
-    bottom:0%;
+    position:absolute;top:38%;left:10%;width:70%;
+    /*position:absolute;width:30%;right:-9%;top:20%;transform: rotate(33deg);*/
   }
   .box2detalle4{
-    position:absolute;
-    width:85%;
-    left:10%;
-    top:20%;
+    position:absolute;bottom:0%;left:0%;width:25%;
+  }
+  .box2detalle5{
+    /*position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:30%;
   }
 }
 
 @media screen and (min-width: 641px) and (max-width: 860px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
   .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:35%;
-    width:30%;
+    /*background:pink;*/
+    position:absolute;width:28%;top:15%;left:36%;
   }
   .box2cintillo{
-    width:24%;
-    position:absolute;
-    left:38%;
-    bottom:8%;
+    position:absolute;top:14%;right:2%;width:15%;
   }
   .box2emblema{
-    position:absolute;
-    top:47.5vh;
-    width:60%;
-    margin-left:20%;
-    margin-right:20%;
-    /*background:pink;*/
+    position:absolute;top:30%;width:60%;margin-left:20%;margin-right:20%;
   }
-  .box2detalle1 img{
-    height:24vh;
+  .box2detalle1{
+    position:absolute;bottom:0%;left:25%;width:50%;
   }
   .box2detalle2{
-    position:absolute;
-    width:40%;
-    left:0%;
-    bottom:0%;
+    position:absolute;top:38%;left:0%;width:100%;
+    /*position:absolute;width:20%;left:-0.7%;bottom:15%;transform: rotate(33deg);*/
   }
   .box2detalle3{
-    position:absolute;
-    width:40%;
-    right:0;
-    bottom:0%;
+    position:absolute;top:36%;left:10%;width:70%;
+    /*position:absolute;width:30%;right:-9%;top:20%;transform: rotate(33deg);*/
   }
   .box2detalle4{
-    position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    position:absolute;bottom:0%;left:0%;width:25%;
+  }
+  .box2detalle5{
+    /*position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:30%;
   }
 }
 
 @media screen and (min-width: 521px) and (max-width: 640px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
   .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:31%;
-    width:33%;
+    /*background:purple;*/
+    position:absolute;width:28%;top:15%;left:36%;
   }
   .box2cintillo{
-    width:25%;
-    position:absolute;
-    left:37.5%;
-    bottom:8%;
+    position:absolute;top:14%;right:2%;width:15%;
   }
   .box2emblema{
-    position:absolute;
-    top:48vh;
-    width:70%;
-    margin-left:15%;
-    margin-right:15%;
-    /*background:purple;*/
+    position:absolute;top:32%;width:70%;margin-left:15%;margin-right:15%;
   }
-  .box2detalle1 img{
-    height:23vh;
+  .box2detalle1{
+    position:absolute;bottom:0%;left:25%;width:50%;
   }
   .box2detalle2{
-    position:absolute;
-    width:41%;
-    left:0%;
-    bottom:0%;
+    position:absolute;top:25%;left:0%;width:100%;
+    /*position:absolute;width:20%;left:-0.7%;bottom:15%;transform: rotate(33deg);*/
   }
   .box2detalle3{
-    position:absolute;
-    width:41%;
-    right:0;
-    bottom:0%;
+    position:absolute;top:23%;left:10%;width:70%;
+    /*position:absolute;width:30%;right:-9%;top:20%;transform: rotate(33deg);*/
   }
   .box2detalle4{
-    position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    position:absolute;bottom:0%;left:0%;width:25%;
+  }
+  .box2detalle5{
+    /*position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:30%;
   }
 }
 
 @media screen and (min-width: 361px) and (max-width: 520px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
   .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:30%;
-    width:35%;
+    /*background:yellow;*/
+    position:absolute;width:28%;top:15%;left:36%;
   }
   .box2cintillo{
-    width:30%;
-    position:absolute;
-    left:35%;
-    bottom:10%;
+    position:absolute;top:14%;right:2%;width:15%;
   }
   .box2emblema{
-    position:absolute;
-    top:48vh;
-    width:75%;
-    margin-left:12.5%;
-    margin-right:12.5%;
-    /*background:yellow;*/
+    position:absolute;top:32%;width:80%;margin-left:10%;margin-right:10%;
   }
-  .box2detalle1 img{
-    height:22vh;
+  .box2detalle1{
+    position:absolute;bottom:0%;left:25%;width:50%;
   }
   .box2detalle2{
-    position:absolute;
-    width:42%;
-    left:0%;
-    bottom:0%;
+    position:absolute;top:25%;left:0%;width:100%;
+    /*position:absolute;width:20%;left:-0.7%;bottom:15%;transform: rotate(33deg);*/
   }
   .box2detalle3{
-    position:absolute;
-    width:42%;
-    right:0;
-    bottom:0%;
+    position:absolute;top:22.5%;left:10%;width:75%;
+    /*position:absolute;width:30%;right:-9%;top:20%;transform: rotate(33deg);*/
   }
   .box2detalle4{
-    position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    position:absolute;bottom:0%;left:0%;width:25%;
+  }
+  .box2detalle5{
+    /*position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:30%;
   }
 }
 
 @media screen and (min-width: 100px) and (max-width: 360px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
   .box2logotipo{
-    position:absolute;
-    top:20%;
-    left:32.5%;
-    width:35%;
+    /*background:#4ac;*/
+    position:absolute;width:28%;top:15%;left:36%;
   }
   .box2cintillo{
-    width:35%;
-    position:absolute;
-    left:32.5%;
-    bottom:12%;
+    position:absolute;top:14%;right:2%;width:15%;
   }
   .box2emblema{
-    position:absolute;
-    top:45vh;
-    width:80%;
-    margin-left:10%;
-    margin-right:10%;
-    /*background:#4ac;*/
+    position:absolute;top:32%;width:80%;margin-left:10%;margin-right:10%;
   }
-  .box2detalle1 img{
-    height:22vh;
+  .box2detalle1{
+    position:absolute;bottom:0%;left:25%;width:50%;
   }
   .box2detalle2{
-    position:absolute;
-    width:43%;
-    left:0%;
-    bottom:0%;
+    position:absolute;top:25%;left:0%;width:100%;
+    /*position:absolute;width:20%;left:-0.7%;bottom:15%;transform: rotate(33deg);*/
   }
   .box2detalle3{
-    position:absolute;
-    width:43%;
-    right:0;
-    bottom:0%;
+    position:absolute;top:22.5%;left:10%;width:75%;
+    /*position:absolute;width:30%;right:-9%;top:20%;transform: rotate(33deg);*/
   }
   .box2detalle4{
-    position:absolute;
-    width:90%;
-    left:5%;
-    top:20%;
+    position:absolute;bottom:0%;left:0%;width:25%;
+  }
+  .box2detalle5{
+    /*position:absolute;width:3.5%;left:28%;bottom:0%;transform: scaleX(-1);*/
+    position:absolute;bottom:0%;right:0%;width:30%;
   }
 }
 

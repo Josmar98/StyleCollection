@@ -8,6 +8,8 @@
 	// }
 	// $lider = new Models();
 
+$opcionesSecondTxt = "Segunda opción";
+
 
 $id_campana = $_GET['campaing'];
 $numero_campana = $_GET['n'];
@@ -60,6 +62,13 @@ if(!empty($_POST['validarData'])){
 if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_tipo_coleccion'])){
 	// print_r($_POST);
 
+	// echo "<br><br>";
+	// foreach ($_POST as $key => $value) {
+	// 	echo $key."<br>";
+	// 	print_r($value);
+	// 	echo "<br><br>";
+	// }
+
 	$id_tipo = $_POST['id_tipo_coleccion'];
 	$id_tppc = $_POST['id_tppc'];
 	$cantidad = $_POST['cantidad_premios_plan'];
@@ -74,6 +83,25 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 		$existenciaNew = $_POST['existenciaNew'];
 	}
 
+	$id_tipo_opcion = $_POST['id_tipo_coleccion1'];
+	$id_tppc_opcion = $_POST['id_tppc1'];
+	$cantidad_opcion = $_POST['cantidad_premios_plan1'];
+	// echo "<br><br>id_tipo: ";
+	// print_r($id_tipo);
+	// echo "<br><br>id_tipo_opcion: ";
+	// print_r($id_tipo_opcion);
+	// echo "<br><br>id_tppc: ";
+	// print_r($id_tppc);
+	// echo "<br><br>id_tppc_opcion" ;
+	// print_r($id_tppc_opcion);
+	// echo "<br><br>cantidad: ";
+	// print_r($cantidad);
+	// echo "<br><br>cantidad_opcion: ";
+	// print_r($cantidad_opcion);
+	// echo "<br><br>";
+
+	// die();
+	
 	$h=0;
 	$valid = [];
 	if(!empty($id_existencia)){
@@ -167,6 +195,27 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 	}else{
 		$response="77";
 	}
+
+	// ======================== Registro de segunda opcion ======================== ========================
+	$x = 0;
+	foreach ($id_tppc_opcion as $id_t1) {
+		$buscar = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion WHERE id_tipo_coleccion = {$id_tipo_opcion[$x]} and id_tppc = {$id_t1} and cantidad_premios_plan = {$cantidad_opcion[$x]}");
+		if($buscar['ejecucion'] == 1 && Count($buscar)>1){
+			$response = "1";
+		}else{
+			$query = "INSERT INTO premio_coleccion_opcion (id_premio_coleccion_opcion, id_tipo_coleccion, id_tppc, cantidad_premios_plan, estatus) VALUES (DEFAULT, {$id_tipo[$x]}, {$id_t1}, {$cantidad_opcion[$x]}, 1)";
+
+			$exec = $lider->registrar($query, "premio_coleccion_opcion", "id_premio_coleccion_opcion");
+			if($exec['ejecucion']==true){
+				$response_opcion = "1";
+			}else{
+				$response_opcion = "2"; //echo 'Error en SQL, no se guardaron los cambios';
+			}
+		}
+		$x++;
+	}
+	// ======================== Registro de segunda opcion ======================== ========================
+
 
 	if($response=="1"){
 		if(!empty($modulo) && !empty($accion)){

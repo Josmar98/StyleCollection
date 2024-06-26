@@ -27,8 +27,10 @@
 			object-position: bottom;
 		}
 	</style>
-	<div class="wrapper" style="background:url('public/assets/img/resources/fondo1.24.png');background-repeat:no-repeat;background-size:100% 100%;">
+	<div class="wrapper" style="background:url('public/assets/img/resources/3.24/fondo3.24.png');background-repeat:no-repeat;background-size:100% 100%;background-position-y:100%;opacity:1;">
+	<!-- <div class="wrapper" style="background:red;width:100%;"> -->
 
+		<img src="public/assets/img/resources/3.24/fondo3.24.png" class="fondoGeneral">
 		<div class="head seccionFull"></div><!-- INDISPENSABLE NO SE PUEDE BORRAR -->
 
 		<div style="max-width:100%;min-width:100%;width:100%;min-height:90vh;max-height:90vh;overflow:hidden;">
@@ -39,40 +41,63 @@
 
 			<div style="" class="box1logotipo">
 				<div style="" class="box2logotipo">
-					<img src="public/assets/img/resources/logotipoFucsia.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/logotipoGris2.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-			<div style="" class="box1emblema" style="background:red;">
+			<div style="" class="box1emblema">
 				<div style="" class="box2emblema">
-					<img src="public/assets/img/resources/emblema1.24.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/3.24/emblema3.24.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-			<!-- <div style="" class="box1cintillo"> -->
-				<!-- <div style="" class="box2cintillo"> -->
-					<!-- <img src="public/assets/img/resources/cintillo_campana4.23.png" style="max-width:100%;"> -->
-				<!-- </div> -->
-			<!-- </div> -->
+			<div style="" class="box1cintillo">
+				<div style="" class="box2cintillo">
+					<img src="public/assets/img/resources/3.24/cintillo3.24.png" style="max-width:100%;width:100%;">
+				</div>
+			</div>
 			<div style="" class="box1detalle1">
-				<div style="" class="box2detalle1" style="">
-					<img src="public/assets/img/resources/montanas1.24.png" class=""  style="max-width:100%;width:100%;object-fit:cover;">
+				<div style="" class="box2detalle1">
+					<img src="public/assets/img/resources/3.24/personas3.24.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
 
 			<div style="" class="box1detalle2">
 				<div style="" class="box2detalle2">
-					<img src="public/assets/img/resources/detalle1.1.24.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/3.24/nubes3.24.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1detalle3">
 				<div style="" class="box2detalle3">
-					<img src="public/assets/img/resources/detalle2.1.24.png" style="max-width:100%;">
+					<img src="public/assets/img/resources/3.24/aves3.24.png" class=""  style="max-width:100%;width:100%;">
 				</div>
 			</div>
 			<div style="" class="box1detalle4">
 				<div style="" class="box2detalle4">
-					<img src="public/assets/img/resources/detalle3.1.24.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/3.24/detalle3.24.1.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
+			<div style="" class="box1detalle5">
+				<div style="" class="box2detalle5">
+					<img src="public/assets/img/resources/3.24/detalle3.24.2.png" style="max-width:100%;width:100%;">
+				</div>
+			</div>
+			<!-- 
+			<div style="" class="box1detalle6">
+				<div style="" class="box2detalle6">
+					<img src="public/assets/img/resources/2.24/detalle6.2.24.png" style="max-width:100%;width:100%;">
+				</div>
+			</div>
+
+			<div style="" class="box1detalle7">
+				<div style="" class="box2detalle7">
+					<img src="public/assets/img/resources/2.24/detalle7.2.24.png" style="max-width:100%;width:100%;">
+				</div>
+			</div>
+
+			<div style="" class="box1detalle8">
+				<div style="" class="box2detalle8">
+					<img src="public/assets/img/resources/2.24/detalle8.2.24.png" style="max-width:100%;width:100%;">
+				</div>
+			</div> -->
 		</div>
 				<!-- <a href="./oficina.stylecollection/" target="_blank">
 					<button class="btn btnContent col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5" style="position:absolute;bottom:2%;"> 

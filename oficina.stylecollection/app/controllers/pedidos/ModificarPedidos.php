@@ -1,5 +1,7 @@
 <?php 
 
+  $varMinimaColeccionesParaGemas = 30;
+
   // if(is_file('app/models/indexModels.php')){
   //   require_once'app/models/indexModels.php';
   // }
@@ -261,11 +263,51 @@ if(!empty($_POST['cantidad'])){
         //   $cantidad_gemas = $cantidad * $cantidad_gemas_correspondientes;
         // }
 
-        $lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
+        // $lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
 
-        $query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id}, {$id_cliente}, {$id_configgema}, '{$cantidad}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', 0, '{$cantidad_gemas}', 'Bloqueado', 1)";
-        $lider->registrar($query, "gemas", "id_gema");
-        
+        // $query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id}, {$id_cliente}, {$id_configgema}, '{$cantidad}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', 0, '{$cantidad_gemas}', 'Bloqueado', 1)";
+        // $lider->registrar($query, "gemas", "id_gema");
+
+        $pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
+        $cantidad_acumulada = 0;
+        foreach ($pedidosAcumulados as $keyss) {
+          if(!empty($keyss['id_pedido'])){
+            $cantidad_acumulada += $keyss['cantidad_aprobado'];
+          }
+        }
+        // echo "Cantidad: ".$cantidad."<br>";
+        // echo "Cantidad Acumulada: ".$cantidad_acumulada."<br><br>";
+
+        $cantidad_acumulada_separado = 0;
+        foreach ($pedidosAcumulados as $keyss) {
+          if(!empty($keyss['id_pedido'])){
+            $cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
+            if($cantidad_acumulada >= $varMinimaColeccionesParaGemas){
+              // echo "Mayor a 30 Colecciones <br><br>";
+              $cantidad_gemas_separado = $cantidad_acumulada_separado / $cantidad_gemas_correspondientes;
+            }else{
+              // echo "Menos a 30 Colecciones <br>";
+              $cantidad_gemas_separado = 0;
+            }
+            // echo "Separado - Despacho: ".$keyss['id_despacho']."<br>";
+            // echo "Separado - Campaña: ".$keyss['id_campana']."<br>";
+            // echo "Separado - Factura: ".$keyss['numero_despacho']."<br>";
+            // echo "Separado - Cliente: ".$keyss['id_cliente']."<br>";
+            // echo "Separado - Pedido: ".$keyss['id_pedido']."<br>";
+            // echo "Separado - Cantidad: ".$cantidad_acumulada_separado."<br>";
+            // echo "Separado - Gemas: ".$cantidad_gemas_separado."<br>";
+
+            // echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
+            $lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
+            $query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
+            $lider->registrar($query, "gemas", "id_gema");
+
+            // echo $query."<br>";
+
+            // echo "<br>";
+          }
+        }
+        // die();
 
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

@@ -513,17 +513,8 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 		// echo "<br>".$descuentosTotales."<br>";
 
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos + $resultDeudaPorPromociones;
-		// echo "Descuento de Nivel: <b>".$resulttDescuentoNivelLider."</b><br>";
-		// echo "Descuento de Bono COntado: <b>".$bonoContado1Puntual."</b><br>";
-		// echo "Descuento Directo: <b>".$resulttDescuentoDirecto."</b><br>";
-		// echo "Descuendo de Pagos Puntuales: <b>".$bonoPagosPuntuales."</b><br>";
-		// echo "Descuentos por Cierre De Estructura: <b>".$bonoAcumuladoCierreEstructura."</b><br>";
-		// echo "Descuentos de Traspasos recibidos: <b>".$totalTraspasoRecibido."</b><br>";
-		// echo "Descuento Obtenido por Liquidacion de Gemas: <b>".$liquidacion_gemas."</b><br>";
+		
 
-		// echo "Descuentos Totales: ".$descuentosTotales."<br>";
-		// echo "Deuda: ".$deudaTotal."<br>";
-		// echo "Descuentos: ".$descuentosTotales."<br>";
 
 		//$planes = $lider->consultarQuery("SELECT * FROm planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id_cliente} and planes.estatus = 1 and pedidos.estatus = 1");
 
@@ -625,6 +616,24 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 			// $opcionOpcionalInicial = "N";
 			// echo $opcionOpcionalInicial;
 			// echo $despacho['opcionOpcionalInicial'];
+
+
+			// echo "Descuento de Nivel: <b>".$resulttDescuentoNivelLider."</b><br>";
+			// echo "Descuento de Bono COntado: <b>".$bonoContado1Puntual."</b><br>";
+			// echo "Descuento Directo: <b>".$resulttDescuentoDirecto."</b><br>";
+			// echo "Descuendo de Pagos Puntuales: <b>".$bonoPagosPuntuales."</b><br>";
+			// echo "Descuentos por Cierre De Estructura: <b>".$bonoAcumuladoCierreEstructura."</b><br>";
+			// echo "Descuentos de Traspasos recibidos: <b>".$totalTraspasoRecibido."</b><br>";
+			// echo "Descuento Obtenido por Liquidacion de Gemas: <b>".$liquidacion_gemas."</b><br>";
+
+			// echo "Descuentos Totales: ".$descuentosTotales."<br>";
+			// echo "Deuda: ".$deudaTotal."<br>";
+			// echo "Descuentos: ".$descuentosTotales."<br>";
+			// echo "TOTAL: ".$nuevoTotal."<br>";
+			// echo "ABONADO: ".$abonado."<br>";
+
+
+
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

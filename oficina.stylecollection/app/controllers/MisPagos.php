@@ -140,7 +140,7 @@ $_SESSION['tomandoEnCuentaLiderazgo'] = "1";
 	 			}
 	 		}
 	 		
-	 		$gemas_liquidadas = $lider->consultarQuery("SELECT * FROM descuentos_gemas WHERE estatus = 1 and id_cliente = {$id_cliente}");
+	 		$gemas_liquidadas = $lider->consultarQuery("SELECT * FROM descuentos_gemas WHERE estatus = 1 and id_pedido = $id_pedido and id_cliente = {$id_cliente}");
 	 		if(count($gemas_liquidadas)>1){
 	 			foreach ($gemas_liquidadas as $liquidadas) {
 	 				if(!empty($liquidadas['total_descuento_gemas'])){
@@ -296,6 +296,19 @@ $_SESSION['tomandoEnCuentaLiderazgo'] = "1";
 					// }
 				}
 			}
+
+			// echo "Descuento de Nivel: <b>".$resulttDescuentoNivelLider."</b><br>";
+			// echo "Descuento de Bono COntado: <b>".$bonoContado1Puntual."</b><br>";
+			// echo "Descuento Directo: <b>".$resulttDescuentoDirecto."</b><br>";
+			// echo "Descuendo de Pagos Puntuales: <b>".$bonoPagosPuntuales."</b><br>";
+			// echo "Descuentos por Cierre De Estructura: <b>".$bonoAcumuladoCierreEstructura."</b><br>";
+			// echo "Descuentos de Traspasos recibidos: <b>".$totalTraspasoRecibido."</b><br>";
+			// echo "Descuento Obtenido por Liquidacion de Gemas: <b>".$liquidacion_gemas."</b><br>";
+			// echo "Descuentos Totales: ".$descuentosTotales."<br>";
+			// echo "Deuda: ".$deudaTotal."<br>";
+			// echo "Descuentos: ".$descuentosTotales."<br>";
+			// echo "TOTAL: ".$nuevoTotal."<br>";
+			// echo "ABONADO: ".$abonado."<br>";
 
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

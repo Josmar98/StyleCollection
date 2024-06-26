@@ -94,7 +94,7 @@
                           <select class="form-control select2 tipos_seleccion" style="width:100%;" name="tipos[inicial]" id="tipo_inicial">
                             <option value=""></option>
                             <option <?php if($tipo_premioAct=="Productos"){ echo "selected='selected'"; } ?>>Productos</option>
-                            <option <?php if($tipo_premioAct=="Premios"){ echo "selected='selected'"; } ?>>Premios</option>
+                            <!-- <option <?php if($tipo_premioAct=="Premios"){ echo "selected='selected'"; } ?>>Premios</option> -->
                           </select>
                           <span id="error_tipo_inicial" class="errors"></span>
                         </div>
@@ -151,7 +151,15 @@
                                 <select class="form-control select2 tipos_seleccion" style="width:100%;" name="tipos[<?=$pagosDFill['id']; ?>]" id="tipo_<?=$pagosDFill['id']; ?>">
                                   <option value=""></option>
                                   <option <?php if($tipo_premioAct=="Productos"){ echo "selected='selected'"; } ?>>Productos</option>
-                                  <option <?php if($tipo_premioAct=="Premios"){ echo "selected='selected'"; } ?>>Premios</option>
+                                  <?php
+                                  foreach ($pagos_despacho as $key) {
+                                    if($key['tipo_pago_despacho']==$pagosDFill['name']){
+                                      if($key['asignacion_pago_despacho']=="seleccion_premios"){ ?>
+                                        <option <?php if($tipo_premioAct=="Premios"){ echo "selected='selected'"; } ?>>Premios</option>
+                                      <?php }
+                                    }
+                                  }
+                                  ?>
                                 </select>
                                 <span id="error_tipo_<?=$pagosDFill['id']; ?>" class="errors"></span>
                               </div>

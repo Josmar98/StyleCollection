@@ -86,7 +86,7 @@
                           <select class="form-control select2 tipos_seleccion" style="width:100%;" name="tipos[inicial]" id="tipo_inicial">
                             <option value=""></option>
                             <option>Productos</option>
-                            <option>Premios</option>
+                            <!-- <option>Premios</option> -->
                           </select>
                           <span id="error_tipo_inicial" class="errors"></span>
                         </div>
@@ -121,6 +121,7 @@
                       </div>
                     </div>
                   <?php } ?>
+
                   <?php
                     foreach ($cantidadPagosDespachosFild as $pagosDFill){
                       foreach ($pagos_despacho as $pagosD){
@@ -133,7 +134,15 @@
                                 <select class="form-control select2 tipos_seleccion" style="width:100%;" name="tipos[<?=$pagosDFill['id']; ?>]" id="tipo_<?=$pagosDFill['id']; ?>">
                                   <option value=""></option>
                                   <option>Productos</option>
-                                  <option>Premios</option>
+                                  <?php
+                                  foreach ($pagos_despacho as $key) {
+                                    if($key['tipo_pago_despacho']==$pagosDFill['name']){
+                                      if($key['asignacion_pago_despacho']=="seleccion_premios"){ ?>
+                                        <option>Premios</option>
+                                      <?php }
+                                    }
+                                  }
+                                  ?>
                                 </select>
                                 <span id="error_tipo_<?=$pagosDFill['id']; ?>" class="errors"></span>
                               </div>

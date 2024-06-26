@@ -249,12 +249,15 @@
                           <tbody>
                             <?php
                               $num = 1;
+                              
                               foreach ($pedidos as $data){ 
                                 if(!empty($data['id_pedido'])){
                                   // ========================== // =============================== // ============================== //
                                   $coleccionesPlanPremioPedido = [];
                                   // ========================== // =============================== // ============================== //
                                   foreach ($pagosRecorridos as $pagosR){
+                                    $arrayMostrarNota = [];
+                                    $arrayMostrarNota[$pagosR['name']] = [];
                                     if (!empty($pagosR['asignacion']) && $pagosR['asignacion']=="seleccion_premios"){
                                       foreach ($planesCol as $data2){
                                         if(!empty($data2['id_cliente'])) { 
@@ -297,7 +300,7 @@
                                                                       <?php echo $planstandard['producto']; ?>
                                                                     </td>
                                                                     <td class="col3">
-                                                                      Premio de <?=$pagosR['name']; ?>. P. <?=$planstandard['nombre_plan'] ?>
+                                                                      Premio de <?=$pagosR['name']; ?> <small style="font-size:.8em;">(Plan <?=$planstandard['nombre_plan']; ?>)</small>
                                                                     </td>
                                                                     <td class="col4"></td>
                                                                     <td class="col5">
@@ -305,7 +308,7 @@
                                                                     <td>
                                                                       <select class="opciones" name="opts[<?=$planIDACT;?><?=$planstandard['id_premio']?>]" id="<?=$planIDACT;?><?=$planstandard['id_premio']?>">
                                                                         <option <?php if($data2['opcion']=="1"){ ?> selected <?php  } ?> value="Y">SI</option>
-                                                                          <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">No</option>
+                                                                        <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">NO</option>
                                                                       </select>
                                                                     </td>
                                                                   </tr>
@@ -343,14 +346,14 @@
                                                                       <?php echo $data3['nombre_premio']; ?>
                                                                     </td>
                                                                     <td class="col3">
-                                                                      Premio de <?=$pagosR['name']; ?>. P. <?=$data3['nombre_plan'] ?>
+                                                                      Premio de <?=$pagosR['name']; ?> <small style="font-size:.8em;">(Plan <?=$data3['nombre_plan']; ?>)</small>
                                                                     </td>
                                                                     <td class="col4"></td>
                                                                     <td class="col5"></td>
                                                                     <td>
                                                                       <select class="opciones" name="opts[P<?=$data3['id_premio']?>]" id="P<?=$data3['id_premio']?>">
                                                                         <option <?php if($data2['opcion']=="1"){ ?> selected <?php  } ?> value="Y">SI</option>
-                                                                        <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">No</option>
+                                                                        <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">NO</option>
                                                                       </select>
                                                                     </td>
                                                                   </tr>
@@ -395,6 +398,8 @@
                                               $seleccionado = $coleccionesPlanPremioPedido[$data2['nombre_plan']]['cantidad_alcanzada'];
                                               $cantidadCols = $data2['cantidad_coleccion'] * $seleccionado;
                                               $premiosDispPlanSeleccion = $controladorPremios[$data2['nombre_plan']][$pagosR['name']];
+                                              // print_r($controladorPremios[$data2['nombre_plan']]);
+                                              // echo "<br>".$cantidadCols." x ".$premiosDispPlanSeleccion."<br>";
                                               $multiDisponiblePremiosSeleccion = ($premiosDispPlanSeleccion*$cantidadCols);
                                               $maxDisponiblePremiosSeleccion += $multiDisponiblePremiosSeleccion;
                                               // echo "<br>";
@@ -403,35 +408,35 @@
                                               // echo "<br>";
                                               // echo "<br> | ".$seleccionado." | ".$multiDisponiblePremiosSeleccion." | <br>";
                                               // echo $premiosDispPlanSeleccion."*".$cantidadCols." = ".$multiDisponiblePremiosSeleccion." Cols. de Plan ".$data2['nombre_plan']."<br>";
-                                              if($premiosDispPlanSeleccion==0){
-                                                $opPlansinPremio = true;
-                                                $cantidadRestar+=$cantidadCols;
-                                              }
+                                              // if($premiosDispPlanSeleccion==0){
+                                              //   $opPlansinPremio = true;
+                                              //   $cantidadRestar+=$cantidadCols;
+                                              // }
                                               // $optOption = $data2['opcion'];
                                               // echo "OPCION: ".$data2['opcion'];
                                             }
                                           }
                                         }
                                       } }
+                                      // echo "<br>".$pagosR['name']." ".$cantidadRestar." ||| ";
                                       if($opMaxDisp==0){
                                         $maxDisponiblePremiosSeleccion = -1;
                                       }
-                                      // echo "<h1>";
-                                      // if($opPlansinPremio==false){
-                                      //   echo "0";
-                                      // }else{
-                                      //   echo "1";
-                                      // }
-                                      // echo "</h1>";
+                                      
                                       // ========================== // =============================== // ============================== //
                                       // print_r($pagos_despacho);
                                       foreach ($premios_perdidos as $dataperdidos) {
-                                        // echo "asdasdasdasdasdasdasd asdasdasdasdasdasdasd asdasdasdasdasdasdasd asdasdasdasdasdasdasd";
-                                        //echo $dataperdidos['valor']." | ".$pagosR['id'];
+                                        // echo $dataperdidos['valor']." | ".$pagosR['id']."<br>";
                                         // if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
                                         if($dataperdidos['id_pedido'] == $data['id_pedido']){
-                                          $posOrigin = strpos($dataperdidos['valor'], "_pago");
-                                          $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                          // if($posOrigin==""){
+                                          if(strtolower($pagosR['name'])=="inicial"){
+                                            $posOrigin = strpos($dataperdidos['valor'], "cial");
+                                            $posIDPago = strpos($dataperdidos['valor'], "cial") + strlen("cial");
+                                          }else{
+                                            $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                            $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                          }
                                           $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
                                           $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
                                           $dataComparar = "";
@@ -440,8 +445,8 @@
                                           }else{
                                             $dataComparar = $dataNamePerdido;
                                           }
+
                                           if(($dataComparar == $pagosR['id'])){
-                                            // echo "*".$dataNamePerdidoIdPlan."* ".$pagosR['id']." | ".$dataComparar." | ";
                                             if($dataNamePerdidoIdPlan==""){
                                               $nuevoResult = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
                                               // ========================== // =============================== // ============================== //
@@ -460,33 +465,42 @@
                                                     if (!empty($planstandard['id_plan_campana'])){
                                                       if ($planstandard['tipo_premio'] == $pagosR['name']){ 
                                                         $codigoPagoAdd = $pagosR['cod'].$planstandard['id_premio'];
+
+                                                        if(!empty($arrayMostrarNota[$pagosR['name']][$planstandard['producto']])){
+                                                          $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
+                                                          $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]['planes'].=" | ".$data2['nombre_plan'];
+                                                        }else{
+                                                          $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]=[
+                                                            'id'=>$planstandard['id_producto'],
+                                                            'nombre'=>$planstandard['producto'],
+                                                            'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
+                                                            'tipo'=>$pagosR['name'],
+                                                            'planes'=>$data2['nombre_plan'],
+                                                            'cod'=>$codigoPagoAdd,
+                                                          ];
+                                                        }
                                                         ?>
-                                                          <tr class="codigo<?=$codigoPagoAdd; ?>"> <!-- INICIAL -->
+                                                          <!-- <tr class="codigo<?=$codigoPagoAdd; ?>">
                                                             <td class="col1">
-                                                              <?php
-                                                              ?>
-                                                              <?php echo $nuevoResult; ?>
+                                                              <?php //echo ($nuevoResult*$data2['cantidad_coleccion']); ?>
                                                             </td>
                                                             <td class="col2">
-                                                              <?php echo $planstandard['producto']; ?>
+                                                              <?php //echo $planstandard['producto']; ?>
                                                             </td>
                                                             <td class="col3">
-                                                              Premio de <?=$pagosR['name']; ?>
+                                                              Premio de <?php //echo $pagosR['name']; ?>
                                                             </td>
                                                             <td class="col4">
-                                                              <?php 
-                                                                // echo $optOption; 
-                                                              ?>
                                                             </td>
                                                             <td class="col5">
                                                             </td>
                                                             <td>
                                                               <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
                                                                 <option value="Y">SI</option>
-                                                                <option value="N">No</option>
+                                                                <option value="N">NO</option>
                                                               </select>
                                                             </td>
-                                                          </tr>
+                                                          </tr> -->
                                                         <?php 
                                                       }
                                                     }
@@ -494,6 +508,7 @@
                                                 }
                                               }
                                             }else{
+                                              // $arrayMostrarNota = [];
                                               foreach ($planesCol as $data2){ if(!empty($data2['id_cliente'])){
                                                 if ($data['id_pedido'] == $data2['id_pedido']){
                                                   if ($data2['cantidad_coleccion_plan']>0){
@@ -511,39 +526,53 @@
                                                           // }
                                                         }
                                                         // ========================== // =============================== // ============================== //
+                                                        // echo $data2['cantidad_coleccion_plan']." - ".$dataperdidos['cantidad_premios_perdidos']."=";
+                                                        // echo $nuevoResult;
+                                                        // echo $data2['cantidad_coleccion'];
                                                         if($nuevoResult>0){
                                                           foreach ($premios_planes3 as $premiosP) {
                                                             if(!empty($premiosP['nombre_plan'])){
                                                               if($data2['nombre_plan']==$premiosP['nombre_plan']){
                                                                 if($pagosR['name']==$premiosP['tipo_premio']){
-                                                                  // $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
-                                                                  // echo $codigoPagoAdd." | ";
-                                                                  // echo $nuevoResult." | ".$data2['nombre_plan']." | ".$premiosP['nombre_plan']." | "." | ".$pagosR['name']." | ".$premiosP['tipo_premio']." | ".$premiosP['producto']." | <br>";  
+                                                                  $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
+                                                                  $codigoPagoAdd = $pagosR['cod'].$premiosP['id_premio'];
+
+                                                                  if(!empty($arrayMostrarNota[$pagosR['name']][$premiosP['producto']])){
+                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
+                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['planes'].=" | ".$premiosP['nombre_plan'];
+                                                                  }else{
+                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]=[
+                                                                      'id'=>$premiosP['id_premio'],
+                                                                      'nombre'=>$premiosP['producto'],
+                                                                      'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
+                                                                      'tipo'=>$premiosP['tipo_premio'],
+                                                                      'planes'=>$premiosP['nombre_plan'],
+                                                                      'cod'=>$codigoPagoAdd,
+                                                                    ];
+                                                                  }
+                                                                  // echo $codigoPagoAdd."<br>";
                                                                   ?>
-                                                                  <tr class="codigo<?=$codigoPagoAdd; ?>"> <!-- INICIAL -->
-                                                                    <td class="col1">
-                                                                      <?php echo $nuevoResult; ?>
-                                                                    </td>
-                                                                    <td class="col2">
-                                                                      <?php echo $premiosP['producto']; ?>
-                                                                    </td>
-                                                                    <td class="col3">
-                                                                      Premio de <?=$premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']; ?>
-                                                                    </td>
-                                                                    <td class="col4">
-                                                                      <?php 
-                                                                        // echo $optOption; 
-                                                                      ?>
-                                                                    </td>
-                                                                    <td class="col5">
-                                                                    </td>
-                                                                    <td>
-                                                                      <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
-                                                                        <option value="Y">SI</option>
-                                                                        <option value="N">No</option>
-                                                                      </select>
-                                                                    </td>
-                                                                  </tr>
+                                                                    <!-- <tr class="codigo<?=$codigoPagoAdd; ?>">
+                                                                      <td class="col1">
+                                                                        <?php //echo ($nuevoResult*$data2['cantidad_coleccion']); ?>
+                                                                      </td>
+                                                                      <td class="col2">
+                                                                        <?php echo $premiosP['producto']; ?>
+                                                                      </td>
+                                                                      <td class="col3">
+                                                                        Premio de <?php //echo $premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']; ?>
+                                                                      </td>
+                                                                      <td class="col4">
+                                                                      </td>
+                                                                      <td class="col5">
+                                                                      </td>
+                                                                      <td>
+                                                                        <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
+                                                                          <option value="Y">SI</option>
+                                                                          <option value="N">NO</option>
+                                                                        </select>
+                                                                      </td>
+                                                                    </tr> -->
                                                                   <?php 
                                                                 }
                                                               }
@@ -562,6 +591,41 @@
                                           }
                                         }
                                       }
+
+
+                                      // echo $pagosR['name']."<br>";
+                                      // echo "<br><br>";
+                                      foreach ($arrayMostrarNota[$pagosR['name']] as $key) {
+                                        ?>
+                                          <tr class="codigo<?=$key['cod']; ?>"> <!-- INICIAL -->
+                                            <td class="col1">
+                                              <?php echo $key['cantidad']; ?>
+                                            </td>
+                                            <td class="col2">
+                                              <?php echo $key['nombre']; ?>
+                                            </td>
+                                            <td class="col3">
+                                              <?php
+                                                $nameTPlan = "";
+                                                $posiposi = strpos($key['planes'], "|");
+                                                $nameTPlan = ($posiposi=='') ? 'Plan' : 'Planes';
+                                              ?>
+                                              Premio de <?=$key['tipo']." <small style='font-size:.8em;'>(".$nameTPlan.": ".$key['planes'].")</small>"; ?>
+                                            </td>
+                                            <td class="col4">
+                                            </td>
+                                            <td class="col5">
+                                            </td>
+                                            <td>
+                                              <select class="opciones" name="opts[<?=$key['cod']; ?>]" id="<?=$key['cod']; ?>">
+                                                <option value="Y">SI</option>
+                                                <option value="N">NO</option>
+                                              </select>
+                                            </td>
+                                          </tr>
+                                        <?php 
+                                      }
+
                                     }
                                   }
 
@@ -586,7 +650,7 @@
                                                 <td>
                                                   <select class="opciones" name="opts[R<?=$reto['id_premio']?>]" id="R<?=$reto['id_premio']?>">
                                                     <option value="Y">SI</option>
-                                                    <option value="N">No</option>
+                                                    <option value="N">NO</option>
                                                   </select>
                                                 </td>
                                               </tr>
@@ -641,7 +705,7 @@
                                             <td>
                                               <select class="opciones" name="opts[<?=$idPromo; ?>]" id="<?=$idPromo; ?>">
                                                 <option value="Y">SI</option>
-                                                <option value="N">No</option>
+                                                <option value="N">NO</option>
                                               </select>
                                             </td>
                                           </tr>
@@ -679,7 +743,7 @@
                                                 <td>
                                                   <select class="opciones" name="opts[PA<?=$premiosAutorizados['id_PA']?>]" id="PA<?=$premiosAutorizados['id_PA']?>">
                                                     <option value="Y">SI</option>
-                                                    <option value="N">No</option>
+                                                    <option value="N">NO</option>
                                                   </select>
                                                 </td>
                                               </tr>
@@ -715,7 +779,7 @@
                                                 <td>
                                                   <select class="opciones" name="opts[PA<?=$premiosAutorizados['id_PA']?>]" id="PA<?=$premiosAutorizados['id_PA']?>">
                                                     <option value="Y">SI</option>
-                                                    <option value="N">No</option>
+                                                    <option value="N">NO</option>
                                                   </select>
                                                 </td>
                                               </tr>
@@ -765,7 +829,7 @@
                                             <td>
                                               <select class="opciones" name="opts[CG<?=$canjeos['id_catalogo']?>]" id="CG<?=$canjeos['id_catalogo']?>">
                                                 <option value="Y">SI</option>
-                                                <option value="N">No</option>
+                                                <option value="N">NO</option>
                                               </select>
                                             </td>
                                           </tr>

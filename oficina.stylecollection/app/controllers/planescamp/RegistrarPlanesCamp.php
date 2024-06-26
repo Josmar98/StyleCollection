@@ -25,7 +25,13 @@ foreach ($accesos as $access) {
   }
 }
 if($amPlanesCampR == 1){
-  
+      
+    $opcionesSeconds = [
+      ['id'=>0, 'name'=>'No hacer nada'],
+      ['id'=>1, 'name'=>'Seleccionar segunda opción de premios'],
+    ];
+
+
     $id_campana = $_GET['campaing'];
     $numero_campana = $_GET['n'];
     $anio_campana = $_GET['y'];
@@ -50,6 +56,7 @@ if($amPlanesCampR == 1){
 
       $id_plan = $_POST['planes'];
       $color_plan = $_POST['color_plan'];
+      $opcion_plan = $_POST['opcion_plan'];
       $descuento_directo = $_POST['descuento_directo'];
       $descuentos = $_POST['descuentos'];
       $pagos_plan_campana = [];
@@ -61,7 +68,7 @@ if($amPlanesCampR == 1){
       // $exec = $lider->eliminar("DELETE FROM planes_campana WHERE id_campana = $id_campana");
       // if($exec['ejecucion'] == true){
       //   foreach ($planes as $id_plan) {
-              $query = "INSERT INTO planes_campana (id_plan_campana, id_plan, id_campana, id_despacho, color_plan, descuento_directo, estatus) VALUES (DEFAULT, $id_plan, $id_campana, $id_despacho, '{$color_plan}', $descuento_directo, 1)";
+              $query = "INSERT INTO planes_campana (id_plan_campana, id_plan, id_campana, id_despacho, color_plan, opcion_plan, descuento_directo, estatus) VALUES (DEFAULT, $id_plan, $id_campana, $id_despacho, '{$color_plan}', $opcion_plan, $descuento_directo, 1)";
               $exec = $lider->registrar($query, "planes_campana", "id_plan_campana");
               if($exec['ejecucion']==true ){
                 $id_plan_campana = $exec['id'];

@@ -128,6 +128,7 @@ $(document).ready(function(){
       },
       responsive: true,
     });
+    
     $('.datatable2').DataTable({
       "language": {
         "url": "public/vendor/plugins/DataTables/spanish.json",
@@ -161,6 +162,32 @@ $(document).ready(function(){
         'info': true,
       },
       responsive: true,
+    });
+    $('#datatables').DataTable({
+      "language": {
+        "url": "public/vendor/plugins/DataTables/spanish.json",
+        'info': true,
+      },
+    });
+    $('.datatables').DataTable({
+      "language": {
+        "url": "public/vendor/plugins/DataTables/spanish.json",
+        'info': true,
+      },
+    });
+    $('#datatables1').DataTable({
+      "language": {
+        "url": "public/vendor/plugins/DataTables/spanish.json",
+        'info': true,
+      },
+      "order": [[ 2, "asc" ],[ 3, "asc" ]],
+    });
+    $('.datatables1').DataTable({
+      "language": {
+        "url": "public/vendor/plugins/DataTables/spanish.json",
+        'info': true,
+      },
+      "order": [[ 2, "asc" ],[ 3, "asc" ]],
     });
     $('#datatable2').DataTable({
       "language": {

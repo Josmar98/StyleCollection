@@ -454,18 +454,16 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
               <table class='table table-bordered text-left' >
                 <thead style='background:#EEE;font-size:1.00em;'>
                   <tr>
-                    <th style=text-align:center;width:4%;>Cantidad</th>
-                    <th style=text-align:left;width:38%;>Descripcion</th>
-                    <th style=text-align:left;width:38%;>Concepto</th>
-                    <th style=text-align:left;width:10%;></th>
-                    <th style=text-align:left;width:10%;></th>
+                    <th style=text-align:center;width:4%;>Cant.</th>
+                    <th style=text-align:left;width:50%;>Descripcion</th>
+                    <th style=text-align:left;width:40%;>Concepto</th>
+                    <th style=text-align:left;width:6%;></th>
                   </tr>
                   <style>
                     .col1{text-align:center;}
                     .col2{text-align:left;}
                     .col3{text-align:left;}
                     .col4{text-align:left;}
-                    .col5{text-align:left;}
                   </style>
                 </thead>
                 <tbody>";
@@ -476,6 +474,8 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                       $coleccionesPlanPremioPedido = [];
                       // ========================== // =============================== // ============================== //
                       foreach ($pagosRecorridos as $pagosR){
+                      	$arrayMostrarNota = [];
+                      	$arrayMostrarNota[$pagosR['name']] = [];
                         if (!empty($pagosR['asignacion']) && $pagosR['asignacion']=="seleccion_premios"){
                           foreach ($planesCol as $data2){
                             if(!empty($data2['id_cliente'])) { 
@@ -534,11 +534,9 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
 	                                                        ".$planstandard['producto']."
 	                                                      </td>
 	                                                      <td class='col3'>
-	                                                        Premio de ".$pagosR['name'].". P. ".$planstandard['nombre_plan']."
+	                                                        Premio de ".$pagosR['name']." <small style='font-size:.8em;'>(Plan ".$planstandard['nombre_plan'].")</small>
 	                                                      </td>
 	                                                      <td class='col4'>
-	                                                      </td>
-	                                                      <td class='col5'>
 	                                                      </td>
 	                                                    </tr>";
 	                                                  } 
@@ -591,11 +589,10 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                                           ".$data3['nombre_premio']."
                                                         </td>
                                                         <td class='col3'>
-                                                          Premio de ".$pagosR['name'].". P. ".$data3['nombre_plan']."
+                                                          Premio de ".$pagosR['name']." <small style='font-size:.8em;'>(Plan ".$data3['nombre_plan'].")</small>
                                                         </td>
                                                         <td class='col4'>
                                                         </td>
-                                                        <td class='col5'></td>
                                                       </tr>";
                                                     }
                                                   }
@@ -637,10 +634,10 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                   $multiDisponiblePremiosSeleccion = ($premiosDispPlanSeleccion*$cantidadCols);
                                   $maxDisponiblePremiosSeleccion += $multiDisponiblePremiosSeleccion;
                                   // echo $premiosDispPlanSeleccion."*".$cantidadCols." = ".$multiDisponiblePremiosSeleccion." Cols. de Plan ".$data2['nombre_plan']."<br>";
-                                  if($premiosDispPlanSeleccion==0){
-                                    $opPlansinPremio = true;
-                                    $cantidadRestar+=$cantidadCols;
-                                  }
+                                  // if($premiosDispPlanSeleccion==0){
+                                  //   $opPlansinPremio = true;
+                                  //   $cantidadRestar+=$cantidadCols;
+                                  // }
                                 }
                               }
                             }
@@ -653,8 +650,15 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                             if(!empty($dataperdidos['id_premio_perdido'])){
                               // if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
                               if($dataperdidos['id_pedido'] == $data['id_pedido']){
-                              	$posOrigin = strpos($dataperdidos['valor'], "_pago");
-                                $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                              	// $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                // $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                if(strtolower($pagosR['name'])=="inicial"){
+                                	$posOrigin = strpos($dataperdidos['valor'], "cial");
+                                	$posIDPago = strpos($dataperdidos['valor'], "cial") + strlen("cial");
+                                }else{
+                                	$posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                	$posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                }
                                 $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
                                 $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
                                 $dataComparar = "";
@@ -697,22 +701,34 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
 			                                        	$condicion = $option;
 			                                        }
 			                                      	if($condicion=="Y"){
-			                                        	$info .= "
-			                                          <tr>
-			                                            <td class='col1'>
-			                                              ".$nuevoResult."
-			                                            </td>
-			                                            <td class='col2'>
-			                                              ".$planstandard['producto']."
-			                                            </td>
-			                                            <td class='col3'>
-			                                              Premio de ".$pagosR['name']."
-			                                            </td>
-			                                            <td class='col4'>
-			                                            </td>
-			                                            <td class='col5'>
-			                                            </td>
-			                                          </tr>";
+			                                      		if(!empty($arrayMostrarNota[$pagosR['name']][$planstandard['producto']])){
+	                                                $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
+	                                                $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]['planes'].=" | ".$data2['nombre_plan'];
+	                                              }else{
+	                                                $arrayMostrarNota[$pagosR['name']][$planstandard['producto']]=[
+	                                                  'id'=>$planstandard['id_producto'],
+	                                                  'nombre'=>$planstandard['producto'],
+	                                                  'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
+	                                                  'tipo'=>$pagosR['name'],
+	                                                  'planes'=>$data2['nombre_plan'],
+	                                                ];
+	                                              }
+			                                        	// $info .= "
+			                                          // <tr>
+			                                          //   <td class='col1'>
+			                                          //     ".($nuevoResult*$data2['cantidad_coleccion'])."
+			                                          //   </td>
+			                                          //   <td class='col2'>
+			                                          //     ".$planstandard['producto']."
+			                                          //   </td>
+			                                          //   <td class='col3'>
+			                                          //     Premio de ".$pagosR['name']."
+			                                          //   </td>
+			                                          //   <td class='col4'>
+			                                          //   </td>
+			                                          //   <td class='col5'>
+			                                          //   </td>
+			                                          // </tr>";
 			                                      	}
 			                                      }
 			                                    }
@@ -743,6 +759,7 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                                     if($data2['nombre_plan']==$premiosP['nombre_plan']){
                                                       if($pagosR['name']==$premiosP['tipo_premio']){
                                                         $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
+                                                        $codigoPagoAdd = $pagosR['cod'].$premiosP['id_premio'];
 								                                        $option = "";
 								                                        foreach ($optNotas as $opt){
 								                                          if(!empty($opt['id_opcion_entrega'])){
@@ -758,22 +775,34 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
 								                                        	$condicion = $option;
 								                                        }
 								                                      	if($condicion=="Y"){
-								                                        	$info .= "
-								                                          <tr>
-								                                            <td class='col1'>
-								                                              ".$nuevoResult."
-								                                            </td>
-								                                            <td class='col2'>
-								                                              ".$premiosP['producto']."
-								                                            </td>
-								                                            <td class='col3'>
-								                                              Premio de ".$premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']."
-								                                            </td>
-								                                            <td class='col4'>
-								                                            </td>
-								                                            <td class='col5'>
-								                                            </td>
-								                                          </tr>";
+								                                      		if(!empty($arrayMostrarNota[$pagosR['name']][$premiosP['producto']])){
+                                                            $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
+                                                            $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['planes'].=" | ".$premiosP['nombre_plan'];
+                                                          }else{
+                                                            $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]=[
+                                                              'id'=>$premiosP['id_premio'],
+                                                              'nombre'=>$premiosP['producto'],
+                                                              'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
+                                                              'tipo'=>$premiosP['tipo_premio'],
+                                                              'planes'=>$premiosP['nombre_plan'],
+                                                            ];
+                                                          }
+								                                        	// $info .= "
+								                                          // <tr>
+								                                          //   <td class='col1'>
+								                                          //     ".($nuevoResult*$data2['cantidad_coleccion'])."
+								                                          //   </td>
+								                                          //   <td class='col2'>
+								                                          //     ".$premiosP['producto']."
+								                                          //   </td>
+								                                          //   <td class='col3'>
+								                                          //     Premio de ".$premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']."
+								                                          //   </td>
+								                                          //   <td class='col4'>
+								                                          //   </td>
+								                                          //   <td class='col5'>
+								                                          //   </td>
+								                                          // </tr>";
 								                                          
 								                                      	}
                                                        
@@ -795,6 +824,30 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                               }
                             }
                           }
+
+                          // $info .=$pagosR['name']."<br>";
+                          foreach ($arrayMostrarNota[$pagosR['name']] as $key) {
+                          	$nameTPlan = "";
+                          	$posiposi = strpos($key['planes'], "|");
+                          	$nameTPlan = ($posiposi=='') ? 'Plan' : 'Planes';
+                          	$info .= "
+                              <tr>
+                                <td class='col1'>
+                                  ".$key['cantidad']."
+                                </td>
+                                <td class='col2'>
+                                  ".$key['nombre']."
+                                </td>
+                                <td class='col3'>
+                                  Premio de ".$key['tipo']." <small style='font-size:.8em;'>(".$nameTPlan." ".$key['planes'].")</small>
+                                </td>
+                                <td class='col4'>
+                                </td>
+                              </tr>";
+                          }
+
+
+
                         }
                       }
                       foreach ($retos as $reto){
@@ -828,7 +881,6 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                         Premio de Reto Junior
                                     </td>
                                     <td class='col4'></td>
-                                    <td class='col5'></td>
                                   </tr>";
                             		}
                             }
@@ -897,7 +949,6 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                         Premio de ".$nombrePromocion."
                                     </td>
                                     <td class='col4'></td>
-                                    <td class='col5'></td>
                                   </tr>";
                             		}
                             }
@@ -941,7 +992,6 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                       ".$conten."
                                     </td>
                                     <td class='col4'></td>
-                                    <td class='col5'></td>
                                   </tr>";
                             		}
                             }
@@ -985,7 +1035,6 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                       ".$conten."
                                     </td>
                                     <td class='col4'></td>
-                                    <td class='col5'></td>
                                   </tr>";
                             		}
                             }
@@ -1044,8 +1093,6 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                         Premios Canjeados
                                     </td>
                                     <td class='col4'>
-                                    </td>
-                                    <td class='col5'>
                                     </td>
                                   </tr>";
                               	}

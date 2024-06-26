@@ -233,6 +233,48 @@
                   </form>
                 </div>
                 
+                <br>
+                <div class="row">
+                  <div class="col-xs-12 col-md-12" style="text-align:right;">
+                    <form action="" method="get" target="_blank">
+                      <input type="hidden" value="<?=$id_campana;?>" name="campaing">
+                      <input type="hidden" value="<?=$numero_campana;?>" name="n">
+                      <input type="hidden" value="<?=$anio_campana;?>" name="y">
+                      <input type="hidden" value="<?=$id_despacho;?>" name="dpid">
+                      <input type="hidden" value="<?=$num_despacho;?>" name="dp">
+                      <input type="hidden" value="<?=$url;?>" name="route">
+                      <input type="hidden" value="Exportar" name="action">
+                      <?php if(!empty($_GET['admin'])){ ?>
+                      <input type="hidden" value="1" name="admin">
+                      <?php } ?>
+                      <?php if(!empty($_GET['lider'])){ ?>
+                      <input type="hidden" value="<?=$_GET['lider']?>" name="lider">
+                      <?php } ?>
+                      <?php if(!empty($_GET['rangoI'])){ ?>
+                      <input type="hidden" value="<?=$_GET['rangoI']?>" name="rangoI">
+                      <?php } ?>
+                      <?php if(!empty($_GET['rangoF'])){ ?>
+                      <input type="hidden" value="<?=$_GET['rangoF']?>" name="rangoF">
+                      <?php } ?>
+                      <?php if(!empty($_GET['Banco'])){ ?>
+                      <input type="hidden" value="<?=$_GET['Banco']?>" name="Banco">
+                      <?php } ?>
+                      <?php if(!empty($_GET['Diferido'])){ ?>
+                      <input type="hidden" value="<?=$_GET['Diferido']?>" name="Diferido">
+                      <?php } ?>
+                      <?php if(!empty($_GET['Abonado'])){ ?>
+                      <input type="hidden" value="<?=$_GET['Abonado']?>" name="Abonado">
+                      <?php } ?>
+                      
+                      <button class="btn btn-success">
+                        <b>Exportar a Excel  
+                          <span class="fa fa-file-excel-o" style="color:#FFF;margin-left:5px;"></span>
+                        </b>
+                      </button>
+                        <!-- <img src="public/assets/img/excel_icon.png" style="width:20px;"> -->
+                    </form>
+                  </div>
+                </div>
 
                 <style>
                   .text-xs { text-align:right; }

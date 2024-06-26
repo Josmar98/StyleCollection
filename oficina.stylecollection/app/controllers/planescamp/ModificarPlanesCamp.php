@@ -24,7 +24,10 @@ foreach ($accesos as $access) {
   }
 }
 if($amPlanesCampE == 1){
-
+    $opcionesSeconds = [
+      ['id'=>0, 'name'=>'No hacer nada'],
+      ['id'=>1, 'name'=>'Seleccionar segunda opción de premios'],
+    ];
         
   $id_campana = $_GET['campaing'];
   $numero_campana = $_GET['n'];
@@ -52,12 +55,13 @@ if($amPlanesCampE == 1){
 
     $planes = $_POST['planes'];
     $color_plan = $_POST['color_plan'];
+    $opcion_plan = $_POST['opcion_plan'];
     $descuento_directo = $_POST['descuento_directo'];
     // $descuento_primer = $_POST['descuento_primer'];
     // $descuento_segundo = $_POST['descuento_segundo'];
     $descuentos = $_POST['descuentos'];
     
-    $query = "UPDATE planes_campana SET id_campana=$id_campana, id_plan=$planes, color_plan = '{$color_plan}', descuento_directo=$descuento_directo WHERE id_plan_campana=$id";
+    $query = "UPDATE planes_campana SET id_campana=$id_campana, id_plan=$planes, color_plan = '{$color_plan}', opcion_plan=$opcion_plan, descuento_directo=$descuento_directo WHERE id_plan_campana=$id";
     $exec = $lider->modificar($query);
     if($exec['ejecucion']==true ){
       $response = "1";

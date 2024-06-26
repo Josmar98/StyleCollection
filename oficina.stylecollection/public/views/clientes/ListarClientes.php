@@ -50,8 +50,9 @@
                   <th>Nº</th>
                   <th>ID</th>
                   <th>Cedula</th>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
+                  <th>Rif</th>
+                  <th>Nombres y apellidos</th>
+                  <!-- <th>Apellidos</th> -->
                   <!-- <th>Fecha de Nacimiento</th> -->
                   <!-- <th>Telefono</th> -->
                   <!-- <th>Direccion</th> -->
@@ -61,11 +62,11 @@
                 <tbody>
             <?php 
               $num = 1;
-              foreach ($clientes as $data):
-                if(!empty($data['id_cliente'])):  
+              foreach ($clientes as $data){
+                if(!empty($data['id_cliente'])){
             ?>
                 <tr>
-                  <td style="width:5%">
+                  <td style="width:10%">
                     <span class="contenido2">
                       <?php echo $num++; ?>
                     </span>
@@ -75,20 +76,19 @@
                       <?php echo $data['id_cliente']; ?>
                     </span>
                   </td>
-                  <td style="width:10%">
+                  <td style="width:20%">
                     <span class="contenido2">
                       <?php echo $data['cedula']; ?>
                     </span>
                   </td>
-                  <td style="width:10%">
+                  <td style="width:20%">
                     <span class="contenido2">
-                    <?php echo $data['primer_nombre']." ".$data['segundo_nombre']; ?>
+                      <?php echo mb_strtoupper($data['cod_rif'].$data['rif']); ?>
                     </span>
                   </td>
-                  
-                  <td style="width:10%">
+                  <td style="width:40%;text-align:left;padding-left:15px;">
                     <span class="contenido2">
-                      <?php echo $data['primer_apellido']." ".$data['segundo_apellido']; ?>
+                    <?php echo mb_strtoupper($data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']); ?>
                     </span>
                   </td>
 
@@ -100,7 +100,7 @@
                         $diat = $datet['day'];
                         $mest = $meses[intval($datet['month'])-1];
                         $yeart = $datet['year'];
-                        echo $diat." de ".$mest." de ".$yeart;
+                        //echo $diat." de ".$mest." de ".$yeart;
                       ?>
                       <?php //echo $lider->formatFechaExtract($data['fecha_nacimiento']); ?>
                     </span>
@@ -109,28 +109,28 @@
                   <td style="width:10%">
                     <span class="contenido2">
                       <?php
-                        echo $data['telefono'];
+                        //echo $data['telefono'];
                         if(strlen($data['telefono2'])>5){
-                          echo " / ".$data['telefono2'];
+                          //echo " / ".$data['telefono2'];
                         }
                       ?>
                     </span>
                   </td>
                   <td style="width:40%">
                     <span class="contenido2">
-                      <?php echo $data['direccion']; ?>
+                      <?php //echo $data['direccion']; ?>
                     </span>
                   </td>
                   <td style="width:15%">
                     <span class="contenido2">
-                      <?php echo $data['correo']; ?>
+                      <?php //echo $data['correo']; ?>
                     </span>
                   </td> -->
                       
                 </tr>
             <?php 
-                endif; 
-              endforeach;
+                } 
+              }
             ?>
                 </tbody>
                 <tfoot>
@@ -138,8 +138,9 @@
                   <th>Nº</th>
                   <th>ID</th>
                   <th>Cedula</th>
-                  <th>Nombres</th>
-                  <th>Apellidos</th>
+                  <th>Rif</th>
+                  <th>Nombres y apellidos</th>
+                  <!-- <th>Apellidos</th> -->
                   <!-- <th>Fecha de Nacimiento</th>
                   <th>Telefono</th>
                   <th>Direccion</th>

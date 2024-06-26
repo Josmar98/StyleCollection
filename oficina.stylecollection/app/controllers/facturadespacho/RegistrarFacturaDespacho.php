@@ -51,6 +51,9 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			$fecha_emision = $_POST['fecha1'];
 			$fecha_vencimiento = $_POST['fecha2'];
 			$numero_factura = $_POST['num_factura'];
+
+			$control1 = $_POST['control1'];
+			$control2 = $_POST['control2'];
 			// $query = "SELECT MAX(numero_factura) FROM factura_despacho";
 			// $factNum = $lider->consultarQuery($query);
 			// $factNum = $factNum[0][0];
@@ -62,28 +65,41 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			// 	$numero_factura = $factNum+1;	
 			// }
 			// echo $numero_factura;
+
+			
 			$buscar = $lider->consultarQuery("SELECT * FROM factura_despacho WHERE id_pedido = {$id_pedido} AND estatus = 1");
 			if(count($buscar)>1){
 				$response = "9";
 			}else{
 
-				$query = "INSERT INTO factura_despacho (id_factura_despacho, id_pedido, numero_factura, tipo_factura, fecha_emision, fecha_vencimiento, estatus) VALUES (DEFAULT, $id_pedido, $numero_factura, '$forma_pago', '$fecha_emision', '$fecha_vencimiento', 1)";
+				$query = "INSERT INTO factura_despacho (id_factura_despacho, id_pedido, numero_factura, tipo_factura, fecha_emision, fecha_vencimiento, numero_control1, numero_control2, estatus) VALUES (DEFAULT, $id_pedido, $numero_factura, '$forma_pago', '$fecha_emision', '$fecha_vencimiento', {$control1}, {$control2}, 1)";
 				// echo $query;
 				$exec = $lider->registrar($query, "factura_despacho", "id_factura_despacho");
 				if($exec['ejecucion']==true){
 					$response = "1";
+					$pedido = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = {$id_pedido}");
+					if(count($pedido)>1){
+						$pedid=$pedido[0];
+						$id_factura_despacho = $exec['id'];
+						$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
+						$querys = "INSERT INTO factura_ventas (id_factura_ventas, id_factura_despacho, totalVenta, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$totalVenta}, 1)";
+						$exec = $lider->registrar($querys, "factura_ventas", "id_factura_ventas");
+						// print_r($exec);
+						// echo "asdasd";
+					}
 
 					if(!empty($modulo) && !empty($accion)){
-		              $fecha = date('Y-m-d');
-		              $hora = date('H:i:a');
-		              $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura De Despacho', 'Registrar', '{$fecha}', '{$hora}')";
-		              $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-		            }
+						$fecha = date('Y-m-d');
+						$hora = date('H:i:a');
+						$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura De Despacho', 'Registrar', '{$fecha}', '{$hora}')";
+						$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+					}
 				}else{
 					$response = "2"; //echo 'Error en SQL, no se guardaron los cambios';
 				}
 			}
 
+			// die();
 
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
@@ -117,6 +133,17 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 				$numero_factura = Count($facturasss);
 			}else{
 				$numero_factura = $factNum+1;	
+			}
+
+			$querys2 = "SELECT MAX(numero_control2) FROM factura_despacho WHERE estatus = 1";
+			$factControl = $lider->consultarQuery($querys2);
+			$factControl = $factControl[0][0];
+			if($factControl==""){
+				$query = "SELECT * FROM factura_despacho WHERE estatus = 1";
+				$facturasss = $lider->consultarQuery($query);
+				$numero_control2 = Count($facturasss);
+			}else{
+				$numero_control2 = $factControl+1;	
 			}
 			// $liderss = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo = liderazgos_campana.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 ORDER BY liderazgos_campana.id_liderazgo ASC");
 			$pedidosFull = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.cantidad_aprobado > 0 and pedidos.id_despacho = $id_despacho ORDER BY pedidos.id_pedido DESC");

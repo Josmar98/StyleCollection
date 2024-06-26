@@ -15,8 +15,8 @@
   $menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
   
   $despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho}");
-
-if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
+// echo "=>  ".$_POST['cantidad']."<br>";
+if(isset($_POST['cantidad']) && empty($_POST['validarData'])){
 
   // print_r($_POST);
   $promocion = $lider->consultarQuery("SELECT * FROM promociones WHERE promociones.id_promociones = {$id}");

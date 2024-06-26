@@ -11,7 +11,14 @@
 
   <!-- Left side column. contains the logo and sidebar -->
   <?php require_once 'public/views/assets/menu.php'; ?>
-
+  <script src="public/vendor/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="public/vendor/plugins/select2/js/select2.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      // $("body").hide("500");
+      $('.select2').select2();
+    });
+  </script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">

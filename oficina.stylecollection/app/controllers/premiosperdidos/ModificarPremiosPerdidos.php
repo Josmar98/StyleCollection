@@ -187,6 +187,15 @@ if($estado_campana=="1"){
 							}
 						}
 					}
+					$pagosRealizados[$pagosR['id']] = number_format($pagosRealizados[$pagosR['id']], 2,'.','');
+					$posDecimal = strpos($pagosRealizados[$pagosR['id']], ".");
+					if ($posDecimal != "") { 
+						$posDecimal++;
+						$decimales = substr($pagosRealizados[$pagosR['id']], $posDecimal); 
+					}
+					if($decimales > 98){
+						$pagosRealizados[$pagosR['id']] += 0.01;
+					}
 					$cantidadPremiosGanados[$pagosR['id']] = $pagosRealizados[$pagosR['id']] / $pagosR['precio'];
 					$cantidadPremiosGanadosEnteros[$pagosR['id']] = intval($cantidadPremiosGanados[$pagosR['id']]);
 					$totalPremiosGanados[$pagosR['id']] = $cantidadPremiosGanadosEnteros[$pagosR['id']] + $cantidadColeccionesContado;
@@ -532,6 +541,15 @@ if($estado_campana=="1"){
 								$pagosRealizados[$pagosR['id']] += $cantidadDistribucion[$pagosR['id']];
 							}
 						}
+					}
+					$pagosRealizados[$pagosR['id']] = number_format($pagosRealizados[$pagosR['id']], 2,'.','');
+					$posDecimal = strpos($pagosRealizados[$pagosR['id']], ".");
+					if ($posDecimal != "") { 
+						$posDecimal++;
+						$decimales = substr($pagosRealizados[$pagosR['id']], $posDecimal); 
+					}
+					if($decimales > 98){
+						$pagosRealizados[$pagosR['id']] += 0.01;
 					}
 					$cantidadPremiosGanados[$pagosR['id']] = $pagosRealizados[$pagosR['id']] / $pagosR['precio'];
 					$cantidadPremiosGanadosEnteros[$pagosR['id']] = intval($cantidadPremiosGanados[$pagosR['id']]);

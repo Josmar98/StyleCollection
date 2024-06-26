@@ -68,7 +68,10 @@
                             if($plan['id_plan_campana'] == $premios['id_plan_campana']){
                               if($premios['tipo_premio']==$tipo_pago_despacho){
                                 if($plan['cantidad_coleccion_plan']!=0){ ?>
-
+                                  <?php
+                                    // echo $plan['id_plan_campana']." | ";
+                                    // echo $plan['opcion_plan']." | ";
+                                  ?>
                                   <div class="row">
                                     <div class="col-xs-12">
                                       <label for="plan" style="font-size:1.3em;">Plan <?=$plan['nombre_plan']?> | <?=$plan['cantidad_coleccion_plan']?> Planes</label>
@@ -124,6 +127,7 @@
                                                 <?php 
                                                 $planesss[$j] = $plan['id_plan'].$premiosPlan['id_premio'];
                                                 $j++; 
+                                                // echo $j." | ";
                                               }
                                             }
                                           }
@@ -133,10 +137,83 @@
 
                                   </div>
                                   <hr>
+                                  <?php  
+                                    $planesss2[$i] = $plan['id_plan'];
+                                    $i++;
+                                  ?>
+                                  <?php if($plan['opcion_plan']==1){ 
+                                    ?>
+                                    <div class="row" style="background:#ecedef;width:100%;margin-left:.000005%;padding-top:5px;">
+                                      <div class="col-xs-12">
+                                        <label for="plan" style="font-size:1.3em;">(<?=$opcionesSecondTxt; ?>) Plan <?=$plan['nombre_plan']?> | <?=$plan['cantidad_coleccion_plan']?> Planes</label>
+                                        <input type="hidden" class="form-control" id="plan<?=$plan['opcion_plan'].$plan['id_plan']?>" name="plan<?=$plan['opcion_plan']; ?>[]" value="<?=$plan['nombre_plan'];?>" readonly style='font-size:1.3em'>
+                                        <span id="error_plan<?=$plan['id_plan']?>" class="errors"></span>
+                                        <br>
+                                        <label>Cantidad de Planes Disponibles</label>
+                                        <!-- <label for="cantidad_plan<?=$plan['id_plan']?>">Cantidad de planes</label> -->
+                                        <input type="number" style="background:non" step="1" min="0" class="form-control aprobado<?=$plan['opcion_plan'].$plan['id_plan']?>" id="<?=$plan['opcion_plan'].$plan['id_plan'];?>" name="cantidad_plan<?=$plan['opcion_plan']; ?>[]" readonly value="<?=$plan['cantidad_coleccion_plan']?>">
+                                        <input type="hidden" class="max<?=$plan['opcion_plan'].$plan['id_plan']?>" value="<?=$plan['cantidad_coleccion_plan']?>">
+                                        <span id="error_max<?=$plan['opcion_plan'].$plan['id_plan']?>" class="errors"></span>
+                                      </div>
+
+
+                                      <div class="col-xs-12">
+                                        <?php
+                                          foreach ($tipo_premios_planes as $premiosPlan) {
+                                            if(!empty($premiosPlan['id_plan_campana'])){
+                                              $stp = "";
+                                              if(strlen($premiosPlan['id_premio'])==1){ $stp="0"; }
+                                              $premiosPlan['id_premio'] = $stp.$premiosPlan['id_premio'];
+
+                                              if($plan['id_plan_campana'] == $premiosPlan['id_plan_campana']){
+                                                // if($premiosPlan['tipo_premio']==$tipo_pago_despacho){
+                                                if($premiosPlan['id_ppc']==$premios['id_ppc']){
+                                                  ?>
+                                                  <div class="col-xs-12">
+                                                    <div class="form-group col-xs-12">
+                                                      <!-- <label for="">Premio</label> -->
+                                                      <label for="<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio']?>">Cantidad del Premio | <span style="font-size:1.2em;">(<?=$premiosPlan['nombre_premio']?>)</span></label>
+                                                      <input type="hidden" class="form-control " id="" name="premios<?=$plan['opcion_plan']; ?>[]" value="<?=$premiosPlan['nombre_premio']?>" readonly>
+                                                      <span class="existenciaDisponible<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio']?> errors"></span>
+                                                      <?php foreach ($existencias as $exiss) {
+                                                        if(!empty($exiss['id_premio'])){
+                                                          if($exiss['id_premio'] == $premiosPlan['id_premio']){
+                                                            ?>
+                                                            <input type="hidden" name="id_existencia[]" value="<?=$exiss['id_existencia']?>">
+                                                            <input type="hidden" id="existencia<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio']?>" name="existenciaAct[]" value="<?=$exiss['cantidad_existencia']?>">
+                                                            <input type="hidden" id="newexistencia<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio']?>" name="existenciaNew[]" value="<?=$exiss['cantidad_existencia']?>">
+                                                            <?php
+                                                          }
+                                                        }
+                                                      } ?>
+                                                      <input type="hidden" name="id_tipo_coleccion<?=$plan['opcion_plan']; ?>[]" value="<?=$plan['id_tipo_coleccion']?>">
+                                                      <input type="hidden" name="id_tppc<?=$plan['opcion_plan']; ?>[]" value="<?=$premiosPlan['id_tppc']?>">
+
+                                                      <input type="number" step="1" min="0" class="form-control cantidades cant<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio']?>" id="<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio'];?>" name="cantidad_premios_plan<?=$plan['opcion_plan']; ?>[]" <?php if($plan['cantidad_coleccion_plan']==0){echo "readonly";}?> value="0">
+                                                      <input type="hidden" id="llenar<?=$plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio'];?>" value="0">
+                                                      <input type="hidden" name="id_plan_campana<?=$plan['opcion_plan']; ?>[]" value="<?=$plan['id_plan_campana']?>">
+                                                      <span id="error_cantidad_aprobado" class="errors"></span>
+                                                    </div>
+                                                  </div>
+                                                  <?php 
+                                                  $planesss[$j] = $plan['opcion_plan'].$plan['id_plan'].$premiosPlan['id_premio'];
+                                                  $j++; 
+                                                }
+                                              }
+                                            }
+                                          }
+                                        ?>
+                                      </div>
+
+                                    </div>
+                                    <hr>
+                                    <?php 
+                                    $planesss2[$i] = $plan['opcion_plan'].$plan['id_plan'];
+                                    $i++;
+                                    } 
+                                  ?>
 
                                   <?php
-                                  $planesss2[$i] = $plan['id_plan'];
-                                  $i++;
                                 }
                               }
                             } 
@@ -276,9 +353,7 @@ $(document).ready(function(){
 
   $(".cantidades").change(function(){
     var cantidad = parseInt($(this).val());
-      
     var pUNIC = $(this).attr('id');
-
     
     var planesss = $(".name_planes").html();
     var planesss2 = $(".name_planes2").html();

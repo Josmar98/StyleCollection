@@ -566,13 +566,15 @@ $(document).ready(function(){
     var operation = parseFloat(cantidad) * valor;
 
     if($(this).prop('checked')){
+      var newPrecioCol = parseFloat((precioactual+operation).toFixed(2));
       $(".cantidad"+id).attr("readonly","1");
       $(".preciosid"+id).attr("readonly","1");
-      $("#precio_coleccion").val(precioactual+operation);
+      $("#precio_coleccion").val(newPrecioCol);
     }else{
+      var newPrecioCol = parseFloat((precioactual-operation).toFixed(2));
       $(".cantidad"+id).removeAttr("readonly","0");
       $(".preciosid"+id).removeAttr("readonly","0");
-      $("#precio_coleccion").val(precioactual-operation);
+      $("#precio_coleccion").val(newPrecioCol);
     }
 
   });

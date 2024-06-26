@@ -7,7 +7,7 @@
 	// 	require_once'../app/models/indexModels.php';
 	// }
 	// $lider = new Models();
-
+$opcionesSecondTxt = "Segunda opción";
 
 $id_campana = $_GET['campaing'];
 $numero_campana = $_GET['n'];
@@ -58,6 +58,14 @@ if(!empty($_POST['validarData'])){
 }
 
 if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_tipo_coleccion'])){
+	// echo "<br><br>";
+	// foreach ($_POST as $key => $value) {
+	// 	echo $key."<br>";
+	// 	print_r($value);
+	// 	echo "<br><br>";
+	// }
+
+
 	$id_premio_col = $_POST['id_premio_coleccion'];
 	$id_tipo = $_POST['id_tipo_coleccion'];
 	$id_tppc = $_POST['id_tppc'];
@@ -76,6 +84,30 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 	if(isset($_POST['existenciaAnt'])){
 		$existenciaAnt = $_POST['existenciaAnt'];
 	}
+
+	$id_premio_col_opcion = $_POST['id_premio_coleccion1'];
+	$id_tipo_opcion = $_POST['id_tipo_coleccion1'];
+	$id_tppc_opcion = $_POST['id_tppc1'];
+	$cantidad_opcion = $_POST['cantidad_premios_plan1'];
+	
+	// echo "id_premio_col_opcion: ";
+	// print_r($id_premio_col_opcion);
+	// echo "<br>";
+
+	// echo "id_tipo_opcion: ";
+	// print_r($id_tipo_opcion);
+	// echo "<br>";
+
+	// echo "id_tppc_opcion: ";
+	// print_r($id_tppc_opcion);
+	// echo "<br>";
+
+	// echo "cantidad_opcion: ";
+	// print_r($cantidad_opcion);
+	// echo "<br>";
+
+	// die();
+
 
 	$h=0;
 	$valid = [];
@@ -167,6 +199,19 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 
 	}else{
 		$response="77";
+	}
+
+	$x=0;
+	foreach ($id_tppc_opcion as $id_t1) {
+		$query = "UPDATE premio_coleccion_opcion SET id_tipo_coleccion={$id_tipo_opcion[$x]}, id_tppc={$id_t1}, cantidad_premios_plan={$cantidad_opcion[$x]}, estatus=1 WHERE id_premio_coleccion_opcion = {$id_premio_col_opcion[$x]}";
+		$exec = $lider->modificar($query);
+		if($exec['ejecucion']==true){
+			$response = "1";
+		}else{
+			$response = "2"; //echo 'Error en SQL, no se guardaron los cambios';
+		}
+			// echo $query."<br><br>";
+		$x++;
 	}				
 
 	if($response=="1"){
@@ -183,7 +228,10 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 		}else{
 			$id = $_SESSION['id_cliente'];
 		}
-		$premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$_SESSION['id_cliente']} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
+		// $premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$_SESSION['id_cliente']} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
+		$premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
+		$premioscol_opcion = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion_opcion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion_opcion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
+
 		$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
 		$pedido = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = {$id}");
 		$pedido = $pedido[0];
@@ -218,6 +266,7 @@ if(empty($_POST)){
 	}
 
 	$premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
+	$premioscol_opcion = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion_opcion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion_opcion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
 	if(Count($premioscol)>1){
 		$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho}");
 		$pedido = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = {$id}");

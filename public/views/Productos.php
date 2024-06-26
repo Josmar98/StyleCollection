@@ -223,7 +223,7 @@
 								</div>
 							</h3>
 							<br>
-							<style> .clicLineas:hover{ background:#00000044; } .clicProducto:hover{ background:#00000044; } </style>
+							<style> .clicLineas:hover{ background:url('public/assets/img/resources/3.24/fondo3.24.png'); } .clicProducto:hover{ background:url('public/assets/img/resources/3.24/fondo3.24.png'); } </style>
 							<?php 
 							$n = 1;
 							foreach ($lineas as $data){

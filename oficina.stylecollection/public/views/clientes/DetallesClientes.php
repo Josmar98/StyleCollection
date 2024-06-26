@@ -193,7 +193,7 @@
                       <span style='color:#000'>Cedula</span>
                     </label>
                     <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputCedula" value="<?php echo number_format($cliente['cedula'],0,'','.'); ?>" placeholder="Cedula" readonly="">
+                      <input type="text" class="form-control" id="inputCedula" value="<?php echo $cliente['cedula']; ?>" placeholder="Cedula" readonly="">
                     </div>
 
                   </div>

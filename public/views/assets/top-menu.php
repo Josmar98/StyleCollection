@@ -1,4 +1,6 @@
-<div class="container-fluid navbar" style="background:#FFF;width:100%;border-radius:0px;position:fixed;z-index:10000 !important;border-bottom:1px solid #DDD;">
+<!-- <div class="container-fluid navbar" style="background:#FFF;width:100%;border-radius:0px;position:fixed;z-index:10000 !important;border-bottom:1px solid #DDD;"> -->
+<!-- <div class="container-fluid navbar" style="background:url('public/assets/img/resources/3.24/fondo3.24.png');background-size:100% 100%;width:100%;border-radius:0px;position:fixed;z-index:10000 !important;border-bottom:0px solid #DDD;opacity:1;"> -->
+<div class="container-fluid navbar" style="width:100%;min-width:100%;max-width:100%;border-radius:0px;background:url('public/assets/img/resources/3.24/fondo3.24.png');background-size:100% 100%;position:fixed;z-index:10000 !important;border-bottom:0px solid #FFF;">
     <!-- //rgba(247,247,247,0.5) -->
     <div class="row menu-top-bar" style="">
       <div class="col-xs-12 col-sm-12 col-md-4" style="margin-top:-0.8em;">
@@ -7,7 +9,7 @@
               <h2 class="logoicon">
                 <!-- <a href="<?=ROOTURL?>" style="font-family:arial;font-size:1.1em"> -->
                 <a href="/" style="font-family:arial;font-size:1.1em">
-                  <img src="public/assets/img/resources/logotipoFucsia.png" style="max-width:27.5%;margin:0;box-sizing:border-box;">
+                  <img src="public/assets/img/resources/logotipoGris2.png" style="max-width:27.5%;margin:0;box-sizing:border-box;">
                   <!-- <span style="color:#ED2A77"><b>Style</b></span><span style="color:#000"><b>Collection</b></span> -->
                 </a>
               </h2>  

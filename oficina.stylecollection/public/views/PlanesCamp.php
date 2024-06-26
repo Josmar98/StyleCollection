@@ -70,23 +70,30 @@
                       <?php echo $num++; ?>
                     </span>
                   </td>
-                  <?php if($amPlanesCampE==1 || $amPlanesCampB==1): ?>
+                  <?php if($amPlanesCampE==1 || $amPlanesCampB==1){ ?>
                   <td style="width:10%">
-                      <?php if($amPlanesCampE==1): ?>
+                      <?php if($amPlanesCampE==1){ ?>
                           <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_plan_campana'] ?>">
                             <span class="fa fa-wrench"></span>
                           </button>
-                      <?php endif; ?>
-                      <?php if($amPlanesCampB==1): ?>
+                      <?php } ?>
+                      <?php if($amPlanesCampB==1){ ?>
                           <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_plan_campana'] ?>&permission=1">
                             <span class="fa fa-trash"></span>
                           </button>
-                      <?php endif; ?>
+                      <?php } ?>
                   </td>
-                  <?php endif; ?>
+                  <?php } ?>
                   <td style="width:20%">
                     <span class="contenido2">
-                      <?php echo $data['nombre_plan']; ?>
+                      <?php 
+                        echo $data['nombre_plan']."<br>";
+                        foreach ($opcionesSeconds as $key) {
+                          if($data['opcion_plan']==$key['id'] && $data['opcion_plan']>0){
+                            echo "<small>(".$key['name'].")</small>";
+                          }
+                        }
+                      ?>
                     </span>
                   </td>
                   <td style="width:20%">

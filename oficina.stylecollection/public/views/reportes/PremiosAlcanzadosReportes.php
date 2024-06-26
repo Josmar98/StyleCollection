@@ -11,7 +11,14 @@
 
   <!-- Left side column. contains the logo and sidebar -->
   <?php require_once 'public/views/assets/menu.php'; ?>
-
+  <script src="public/vendor/bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="public/vendor/plugins/select2/js/select2.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      // $("body").hide("500");
+      $('.select2').select2();
+    });
+  </script>
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
@@ -517,8 +524,15 @@
                                                     if(!empty($dataperdidos['id_premio_perdido'])){
                                                       // if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
                                                       if($dataperdidos['id_pedido'] == $data['id_pedido']){
-                                                        $posOrigin = strpos($dataperdidos['valor'], "_pago");
-                                                        $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        // $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                        // $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        if(strtolower($pagosR['name'])=="inicial"){
+                                                          $posOrigin = strpos($dataperdidos['valor'], "cial");
+                                                          $posIDPago = strpos($dataperdidos['valor'], "cial") + strlen("cial");
+                                                        }else{
+                                                          $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                          $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                        }
                                                         $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
                                                         $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
                                                         // echo $dataNamePerdido." - ";

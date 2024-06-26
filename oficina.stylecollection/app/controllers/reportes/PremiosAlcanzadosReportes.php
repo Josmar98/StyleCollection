@@ -19,7 +19,20 @@ if($amReportesC == 1){
       $id_campana = $campana['id_campana'];
       
       $despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho}");
-      // print_r($campanas);
+
+        // $clientesss = [5, 2];
+        // $strClientes = "";
+        // $numeros = 1;
+        // foreach ($clientesss as $idClient) {
+        //   $strClientes.="".$idClient;
+        //   if(($numeros) < count($clientesss)){
+        //     $strClientes.=", ";
+        //   }
+        //   echo "Numero: ".$idClient."<br>";
+        //   $numeros++;
+        // }
+         // and clientes.id_cliente in ({$strClientes})
+        // echo $strClientes;
 
       if(!empty($_GET['admin']) && !empty($_GET['lider']) && ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista")){
         $id = $_GET['lider'];

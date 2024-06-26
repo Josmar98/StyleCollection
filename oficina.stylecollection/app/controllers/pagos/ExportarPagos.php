@@ -1,4 +1,6 @@
 <?php 
+	set_time_limit(320);
+	
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
     use PhpOffice\PhpSpreadsheet\IOFactory;
     use PhpOffice\PhpSpreadsheet\Writer;

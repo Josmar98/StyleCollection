@@ -220,6 +220,7 @@
                               $nameTPlanesTemp = $tempPlanes[0]['tipo_premio_producto'];
                               $namePlanesTemp = $data['nombre_plan'];
                               $sql1 = "";
+                              $sql2 = "";
                               $cantTxtPrem = 0;
                               $namecantTxtPrem = "";
                               $nameTxtPrem = "";
@@ -229,6 +230,9 @@
                               }
                               if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Premios")){
                                 $sql1 = "SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and pedidos.id_pedido = {$data['id_pedido']}";
+                                if($data['opcion_plan']==1){
+                                  $sql2 = "SELECT * FROM premio_coleccion_opcion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion_opcion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion_opcion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and pedidos.id_pedido = {$data['id_pedido']}";
+                                }
                                 $namecantTxtPrem = "cantidad_premios_plan";
                                 $nameTxtPrem = "nombre_premio";
                               }
@@ -246,6 +250,39 @@
                                     }
                                   }
                                 }
+                                      if($data['opcion_plan']==1){
+                                        if($sql2!=""){
+                                          $premios_planes_seleccionados_opcion = $lider->consultarQuery($sql2);
+                                        }
+                                      ?>
+                                      <button class="btn-modal-segunda btn" id="<?=$data['id_plan']; ?>" style="background:#a4c;color:#FFF;float:right;margin-top:-5%;"><span class="fa fa-file-text"></span></button>
+                                      <div 
+                                        class="modal-segunda-opciones d-none" 
+                                        id="modal-segunda-opcion<?=$data['id_plan']; ?>" 
+                                        style="background:#00000077;border-radius:10px;position:absolute;right:2%;margin-top:10px;max-width:50%;max-height:40vh;"
+                                        >
+                                        <div style="background:#DDD;box-shadow:0px 0px 5px #FFF;border:1px solid #ccc;border-radius:10px;width:100%;height:100%;padding:15px;">
+                                        <?php
+                                          // print_r($premios_planes_seleccionados_opcion);
+                                          echo "<center><b>Segunda opción del plan ".$data['nombre_plan']."</b></center><br>";
+                                          foreach ($premios_planes_seleccionados_opcion as $dataPremOp) {
+                                            if(!empty($dataPremOp['id_plan_campana'])){
+                                              if($namecantTxtPrem==""){
+                                                $cantTxtPrem = $colsss;
+                                              }else{
+                                                $cantTxtPrem = $dataPremOp[$namecantTxtPrem];
+                                              }
+                                              if($cantTxtPrem>0){
+                                                echo "-> (".$cantTxtPrem.") ".$dataPremOp[$nameTxtPrem]."<br>";
+                                              }
+                                            }
+                                          }
+
+                                        ?>
+                                        </div>
+                                      </div>
+                                      <?php
+                                      }
                               }
                             ?>
                           </td>
@@ -341,6 +378,12 @@ $(document).ready(function(){
     }
     
   }
+  $(".modal-segunda-opciones").hide();
+  $(".modal-segunda-opciones").removeClass("d-none");
+  $(".btn-modal-segunda").click(function(){
+    var id = $(this).attr("id");
+    $("#modal-segunda-opcion"+id).slideToggle();
+  });
 
   $(".modificarBtn").click(function(){
     swal.fire({ 

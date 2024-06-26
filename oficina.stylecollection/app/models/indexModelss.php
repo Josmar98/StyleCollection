@@ -8,7 +8,7 @@
 	}
 
 
-	class Models3 extends Conexion3{
+	class Modelss extends Conexion3{
 		private $id_liderazgo;
 		private $nombreLiderazgo;
 		private $minimaCantidad;

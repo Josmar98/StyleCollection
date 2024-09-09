@@ -568,13 +568,13 @@ $premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, c
                                                     $option = "";
                                                     foreach ($optNotas as $opt){
                                                       if(!empty($opt['id_opcion_entrega'])){
-                                                        if($opt['cod']=="P".$data3['id_premio']){
+                                                        if($opt['cod']=="P".$data3['id_plan'].$data3['id_premio']){
                                                           $option = $opt['val'];
                                                         }
                                                       }
                                                     }
                                                     if($catalag=="1"){
-                                                    	$condicion = $_GET['P'.$data3['id_premio']];	
+                                                    	$condicion = $_GET['P'.$data3['id_plan'].$data3['id_premio']];	
                                                     }
                                                     if($catalag=="0"){
                                                     	$condicion = $option;

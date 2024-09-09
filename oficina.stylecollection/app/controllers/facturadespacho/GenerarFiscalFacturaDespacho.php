@@ -60,10 +60,28 @@ $colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despach
 
 $conTotalResumen = false;
 $extrem = 15;
+$topEM=30;
+if(!empty($_GET['t'])){
+	$type=$_GET['t'];
+	if($type==1){
+		$extrem = 15;
+		$topEM=30;
+	}
+	if($type==2){
+		$extrem = 43;
+		$topEM=75;
+	}
+}else{
+	$type=1;
+}
+$classMayus="";
+if($type==2){
+	$classMayus="mayus";
+}
 if(!$conTotalResumen){ $extrem++; }
 $cifraMultiplo = 1;
 $sumPrecioFinal = 0;
-$nameFactura = "Factura N°"; 
+$nameFactura = "Factura N°";
 $info = "
 <!DOCTYPE html>
 <html>
@@ -77,6 +95,55 @@ $info = "
 body{
 	font-family:'arial';
 }
+.mayus{
+	text-transform:uppercase;
+}
+.box-content-final-CFL{
+	display:inline-block;
+	position:absolute;
+	left:1%;
+	top:".($topEM+1.5)."em;
+	width:37.5%; 
+}
+.box-content-final-L{
+	display:inline-block;
+	position:absolute;
+	left:2%;
+	top:{$topEM}em;
+	width:36%; 
+	padding-left:5px;
+}
+.box-content-final-FL{
+	display:inline-block;
+	position:absolute;
+	left:1%;
+	top:".($topEM+6.3)."em;
+	width:37.5%; 
+}
+
+
+.box-content-final-CFR{
+	display:inline-block;
+	position:absolute;
+	right:1.27%;
+	top:".($topEM+1.5)."em;
+	width:35%; 
+}
+.box-content-final-R{
+	display:inline-block;
+	position:absolute;
+	right:1.27%;
+	top:{$topEM}em;
+	width:35%; 
+	/*padding-right:5px;*/
+}
+.box-content-final-FR{
+	display:inline-block;
+	position:absolute;
+	right:1.27%;
+	top:".($topEM+6.3)."em;
+	width:35%; 
+}
 </style>
 <div class='row col-xs-12' style='padding:0;margin:0;'>
 	<div class='col-xs-12'  style='padding-left:50px;padding-right:20px;width:100%;'>
@@ -87,14 +154,34 @@ body{
 		// // $colecciones = [];
 		// $countNum = 1;
 		// foreach($coleccioness as $cols){
-		// 	if($countNum <= 11 ){ $colecciones[count($colecciones)] = $cols; }
+		// 	if($countNum <= 17 ){ $colecciones[count($colecciones)] = $cols; }
 		// 	$countNum++;
 		// }
-		// // // $countNum = 1;
-		// // // foreach($coleccioness as $cols){
-		// // // 	if($countNum <= 1 ){ $colecciones[count($colecciones)] = $cols; }
-		// // // 	$countNum++;
-		// // // }
+		// // $countNum = 1;
+		// // foreach($coleccioness as $cols){
+		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
+		// // 	$countNum++;
+		// // }
+		// // $countNum = 1;
+		// // foreach($coleccioness as $cols){
+		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
+		// // 	$countNum++;
+		// // }
+		// // $countNum = 1;
+		// // foreach($coleccioness as $cols){
+		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
+		// // 	$countNum++;
+		// // }
+		// // $countNum = 1;
+		// // foreach($coleccioness as $cols){
+		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
+		// // 	$countNum++;
+		// // }
+		// // $countNum = 1;
+		// // foreach($coleccioness as $cols){
+		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
+		// // 	$countNum++;
+		// // }
 		// $colecciones+=['estatus'=>true];
 		
 
@@ -137,13 +224,13 @@ body{
 			<div class='row'>
 				<div class='col-xs-12'>
 					";
-					if((count($colecciones)-1)>12){
+					if((count($colecciones)-1)>($extrem-3)){
 						$info.="<span style='font-size:1em;'><b>{$numPage}/{$countPage}</b></span>";
 					}
 					$info.="
-					<span class='numeroFactura'><b>{$nameFactura}</b> <span class='numFact'><b>".$num_factura."</b></span></span>			
+					<span class='numeroFactura {$classMayus}'><b>{$nameFactura}</b> <span class='numFact'><b>".$num_factura."</b></span></span>			
 					<span class='fecha'>
-						<table class=''>
+						<table class='{$classMayus}'>
 							<tr>
 								<td>
 									<b>Emision: </b> 
@@ -164,36 +251,52 @@ body{
 					</span>
 
 					<br><br>
-					<table class='table1'>
+					<table class='table1 {$classMayus}'>
 						<tr>
-							<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-							<td class='celcontent' colspan='3'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
+							<td class='celtitle2' style='width:15% !important;'><b class='titulo-table'>Cliente: </b></td>
+							<td class='celcontent' style='width:80% !important;' colspan='3'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td class='celtitle2'><b class='titulo-table'>Dirección: </b></td>
-							<td class='celcontent' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
+							<td class='celtitle2' style='width:15% !important;'><b class='titulo-table'>Dirección: </b></td>
+							<td class='celcontent' style='width:80% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 							
 						</tr>
 						<tr>
-							<td class='celtitle2'><b class='titulo-table'>Cédula o RIF: </b></td>
+							<td class='celtitle2 style='width:15% !important;'><b class='titulo-table'>Cédula o RIF: </b></td>
 							<!-- <td class='celcontent'><span class='content-table'>".$factura['cod_cedula']."-".number_format($factura['cedula'],0,'','.')."</span></td> -->
-							<td class='celcontent'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
+							<td class='celcontent' style='width:80% !important;'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
 							<td></td>
 							<td></td>
 						</tr>
 						<tr>
-							<td class='celtitle2'><b class='titulo-table'>Telefono: </b></td>
-							<td class='celcontent'><span class='content-table'>".$factura['telefono']."</span></td>
+							<td class='celtitle2' style='width:15% !important;'><b class='titulo-table'>Telefono: </b></td>
+							<td class='celcontent' style='width:80% !important;'><span class='content-table'>".$factura['telefono']."</span></td>
 							<td class='celtitle2R' style='width:30%;'><b class='titulo-table'>Forma de Pago: </b></td>
 							<td class='celcontent'><span class='content-table'>".$factura['tipo_factura']."</span></td>
 						</tr>
 					</table>
-					<br>
-					<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:11.9em;'></div>
-					<table class='table2' style='width:100%;'>
-						<tr>
+					";
+						if($type==1){
+						$info.="
+						<br>
+						<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:12.1em;'></div>
+						<table class='table2' style='width:100%;'>
+							<tr>
+						";
+						}
+						if($type==2){
+						$info.="
+						<br>
+						<br>
+						<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.35em;'></div>
+						<table class='table2' style='width:100%;font-size:1.02em;'>
+							<tr style='font-size:1.01em;'>
+						";
+						}
+					
+					$info.="
 							<td class='celtitleL'><b>Cantidad</b></td>
 							<td class='celtitleL'><b>Descripcion</b></td>
 							<td class='celtitleR'><b>Unid.</b></td>
@@ -246,7 +349,7 @@ body{
 								//font-size:0.98em;
 							$info.="
 							<tr style=''>
-								<td class='celcontent'><span class='content-table'>
+								<td style='' class='celcontent'><span class='content-table' style='padding-left:15px;'>
 									".$mostrarCantProduct."
 								</span></td>
 								<td class='celcontent'><span class='content-table'>
@@ -398,15 +501,15 @@ body{
 				<div class='row'>
 					<div class='col-xs-12'>
 						";
-						if((count($colecciones)-1)>12){
+						if((count($colecciones)-1)>($extrem-3)){
 							$info.="<span style='font-size:1em;'><b>{$numPage}/{$countPage}</b></span>";
 						}
 						$info.="
-						<span class='numeroFactura' style='position:absolute;right:36.5%;top:30%;'><br><b>{$nameFactura}</b> 
-							<span class='numFact'><b style='position:absolute;left:12%;'>".$num_factura."</b></span>
+						<span class='numeroFactura {$classMayus}' style='position:absolute;right:36.5%;top:30%;'><br><b>{$nameFactura}</b> 
+							<span class='numFact'><b style='position:absolute;left:14.5%;'>".$num_factura."</b></span>
 						</span>			
 						<span class='fecha'>
-							<table class=''>
+							<table class='{$classMayus}'>
 							<tr>
 								<td>
 									<b>Emision: </b> 
@@ -427,36 +530,51 @@ body{
 						</span>
 
 						<br><br>
-						<table class='table1'>
+						<table class='table1 {$classMayus}'>
 							<tr>
-								<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-								<td class='celcontent'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
+								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Cliente: </b></td>
+								<td class='celcontent' style='width:76% !important;'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
 								<td></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td class='celtitle2'><b class='titulo-table'>Dirección: </b></td>
-								<td class='celcontent' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
+								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: </b></td>
+								<td class='celcontent' style='width:76% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 								
 							</tr>
 							<tr>
-								<td class='celtitle2'><b class='titulo-table'>Cédula o RIF: </b></td>
 								<!-- <td class='celcontent'><span class='content-table'>".$factura['cod_cedula']."-".number_format($factura['cedula'],0,'','.')."</span></td> -->
-								<td class='celcontent'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
+								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Cédula o RIF: </b></td>
+								<td class='celcontent' style='width:76% !important;'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
 								<td></td>
 								<td></td>
 							</tr>
 							<tr>
-								<td class='celtitle2'><b class='titulo-table'>Telefono: </b></td>
-								<td class='celcontent'><span class='content-table'>".$factura['telefono']."</span></td>
+								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Telefono: </b></td>
+								<td class='celcontent' style='width:76% !important;'><span class='content-table'>".$factura['telefono']."</span></td>
 								<td class='celtitle2R' style='width:30%;'><b class='titulo-table'>Forma de Pago: </b></td>
 								<td class='celcontent'><span class='content-table'>".$factura['tipo_factura']."</span></td>
 							</tr>
 						</table>
-						<br>
-						<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.25em;'></div>
-						<table class='table2' style='width:100%;'>
-							<tr>
+						";
+							if($type==1){
+							$info.="
+							<br>
+							<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.25em;'></div>
+							<table class='table2' style='width:100%;'>
+								<tr>
+							";
+							}
+							if($type==2){
+							$info.="
+							<br>
+							<br>
+							<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:14.67em;'></div>
+							<table class='table2' style='width:100%;font-size:1.02em;'>
+								<tr style='font-size:1.01em;'>
+							";
+							}
+						$info.="
 								<td class='celtitleL'><b>Cantidad</b></td>
 								<td class='celtitleL'><b>Descripcion</b></td>
 								<td class='celtitleR'><b>Unid.</b></td>
@@ -666,15 +784,15 @@ body{
 					<div class='row'>
 						<div class='col-xs-12'>
 							";
-							if((count($colecciones)-1)>12){
+							if((count($colecciones)-1)>($extrem-3)){
 								$info.="<span style='font-size:1em;'><b>{$numPage}/{$countPage}</b></span>";
 							}
 							$info.="
-							<span class='numeroFactura' style='position:absolute;right:36.5%;top:30%;'><br><b>{$nameFactura}</b> 
-								<span class='numFact'><b style='position:absolute;left:12%;'>".$num_factura."</b></span>
+							<span class='numeroFactura {$classMayus}' style='position:absolute;right:36.5%;top:30%;'><br><b>{$nameFactura}</b> 
+								<span class='numFact'><b style='position:absolute;left:14.5%;'>".$num_factura."</b></span>
 							</span>				
 							<span class='fecha'>
-								<table class=''>
+								<table class='{$classMayus}'>
 								<tr>
 									<td>
 										<b>Emision: </b> 
@@ -695,36 +813,51 @@ body{
 							</span>
 
 							<br><br>
-							<table class='table1'>
+							<table class='table1 {$classMayus}'>
 								<tr>
-									<td class='celtitle2'><b class='titulo-table'>Cliente: </b></td>
-									<td class='celcontent'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
+									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Cliente: </b></td>
+									<td class='celcontent' style='width:86% !important;'><span class='content-table'>".$factura['primer_nombre']." ".$factura['segundo_nombre']." ".$factura['primer_apellido']." ".$factura['segundo_apellido']."</span></td>
 									<td></td>
 									<td></td>
 								</tr>
 								<tr>
-									<td class='celtitle2'><b class='titulo-table'>Dirección: </b></td>
-									<td class='celcontent' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
+									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: </b></td>
+									<td class='celcontent' style='width:86% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 									
 								</tr>
 								<tr>
-									<td class='celtitle2'><b class='titulo-table'>Cédula o RIF: </b></td>
 									<!-- <td class='celcontent'><span class='content-table'>".$factura['cod_cedula']."-".number_format($factura['cedula'],0,'','.')."</span></td> -->
-									<td class='celcontent'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
+									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Cédula o RIF: </b></td>
+									<td class='celcontent' style='width:86% !important;'><span class='content-table'>".$factura['cod_rif']."".$factura['rif']."</span></td>
 									<td></td>
 									<td></td>
 								</tr>
 								<tr>
-									<td class='celtitle2'><b class='titulo-table'>Telefono: </b></td>
-									<td class='celcontent'><span class='content-table'>".$factura['telefono']."</span></td>
+									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Telefono: </b></td>
+									<td class='celcontent' style='width:86% !important;'><span class='content-table'>".$factura['telefono']."</span></td>
 									<td class='celtitle2R' style='width:30%;'><b class='titulo-table'>Forma de Pago: </b></td>
 									<td class='celcontent'><span class='content-table'>".$factura['tipo_factura']."</span></td>
 								</tr>
 							</table>
-							<br>
-							<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.25em;'></div>
-							<table class='table2' style='width:100%;'>
-								<tr>
+							";
+								if($type==1){
+								$info.="
+								<br>
+								<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.25em;'></div>
+								<table class='table2' style='width:100%;'>
+									<tr>
+								";
+								}
+								if($type==2){
+								$info.="
+								<br>
+								<br>
+								<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:14.67em;'></div>
+								<table class='table2' style='width:100%;font-size:1.02em;'>
+									<tr style='font-size:1.01em;'>
+								";
+								}
+							$info.="
 									<td class='celtitleL'><b>Cantidad</b></td>
 									<td class='celtitleL'><b>Descripcion</b></td>
 									<td class='celtitleR'><b>Unid.</b></td>

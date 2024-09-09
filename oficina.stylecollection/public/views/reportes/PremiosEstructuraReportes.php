@@ -271,7 +271,7 @@
                                     $nameTxtPrem = "producto";
                                   }
                                   if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Premios")){
-                                    $sql1 = "SELECT planes_campana.id_plan, planes.nombre_plan, premios.id_premio, premios.nombre_premio FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, planes, despachos WHERE premios.id_premio = tipos_premios_planes_campana.id_premio and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and planes_campana.id_plan = planes.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.nombre_plan='{$plan['nombre_plan']}'";
+                                    $sql1 = "SELECT planes_campana.id_plan, planes.nombre_plan, premios.id_premio, premios.nombre_premio, planes_campana.opcion_plan FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, planes, despachos WHERE premios.id_premio = tipos_premios_planes_campana.id_premio and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and planes_campana.id_plan = planes.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.nombre_plan='{$plan['nombre_plan']}'";
                                     $nameTxtPrem = "nombre_premio";
                                   }
                                   $premios = $lider->consultarQuery($sql1);
@@ -284,6 +284,15 @@
                                           // $acumPremios[$nume]['premio'][$nume2]['nombre'] = $premio['nombre_premio'];
                                           $acumPremios[$nume]['premio'][$nume2]['nombre'] = $premio[$nameTxtPrem];
                                           $acumPremios[$nume]['premio'][$nume2]['cantidad'] = 0;
+                                          if(!empty($premio['opcion_plan']) && $premio['opcion_plan']==1){
+                                            $acumPremios[$nume]['premio'][$nume2]['opcion_plan'] = $premio['opcion_plan'];
+                                          }else{
+                                            $acumPremios[$nume]['premio'][$nume2]['opcion_plan'] = 0;
+                                          }
+                                          if(!empty($premio['opcion_plan']) && $premio['opcion_plan']==1){
+                                            $acumPremios[$nume]['premio_seg'][$nume2]['nombre'] = $premio[$nameTxtPrem];
+                                            $acumPremios[$nume]['premio_seg'][$nume2]['cantidad'] = 0;
+                                          }
                                           $nume2++;
                                         }
                                       }
@@ -359,7 +368,7 @@
 
                                                             <td style="width:50%;">
                                                               <?php //echo $data3['id_plan']." ".$data3['nombre_plan']."<br>"; ?>
-                                                                <table class='' style='background:none'> 
+                                                                <table class='' style='background:none;width:100%;'> 
                                                                   <?php
                                                                     $sql0 = "SELECT DISTINCT * FROM tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes.id_plan={$data3['id_plan']} and premios_planes_campana.tipo_premio='{$pagosR['name']}'";
                                                                     $tempPlanes = $lider->consultarQuery($sql0);
@@ -368,6 +377,7 @@
                                                                     $namePlanesTemp = $data3['nombre_plan'];
                                                                     //echo $pagosR['name']." ". $data3['id_plan']." - ".$namePlanesTemp." - (".$colsss.") ".$nameTPlanesTemp." - ".$data['id_pedido']."<br>";
                                                                     $sql1 = "";
+                                                                    $sql2 = "";
                                                                     $cantTxtPrem = 0;
                                                                     $namecantTxtPrem = "";
                                                                     $nameTxtPrem = "";
@@ -379,6 +389,9 @@
                                                                     }
                                                                     if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Premios")){
                                                                       $sql1 = "SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and pedidos.id_pedido = {$data['id_pedido']}";
+
+
+                                                                      $sql2 = "SELECT * FROM premio_coleccion_opcion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion_opcion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion_opcion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and planes.nombre_plan = '{$namePlanesTemp}' and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho} and pedidos.id_pedido = {$data['id_pedido']}";
                                                                       // $premioscol = $lider->consultarQuery($sql1);
                                                                       //echo "<br><br>";
                                                                       $namecantTxtPrem = "cantidad_premios_plan";
@@ -386,6 +399,22 @@
                                                                     }
                                                                     if($sql1!=""){
                                                                       $premios_planes_seleccionados = $lider->consultarQuery($sql1);
+                                                                      if($sql2!=""){
+                                                                        $premioscolSegunda = $lider->consultarQuery($sql2);
+                                                                        for ($x=0; $x < count($premios_planes_seleccionados)-1; $x++) { 
+                                                                          if($premios_planes_seleccionados[$x]['opcion_plan']){
+                                                                            foreach ($premioscolSegunda as $opciones) {
+                                                                              if( ($premios_planes_seleccionados[$x]['id_tipo_coleccion'] == $opciones['id_tipo_coleccion']) && ($premios_planes_seleccionados[$x]['id_tppc'] == $opciones['id_tppc']) && ($premios_planes_seleccionados[$x]['id_ppc'] == $opciones['id_ppc']) && ($premios_planes_seleccionados[$x]['id_tipo_coleccion'] == $opciones['id_tipo_coleccion']) && ($premios_planes_seleccionados[$x]['id_plan_campana'] == $opciones['id_plan_campana']) && ($premios_planes_seleccionados[$x]['id_premio'] == $opciones['id_premio']) ){
+                                                                                $premios_planes_seleccionados[$x]['segunda_'.'cantidad_premios_plan']=$opciones['cantidad_premios_plan'];
+                                                                                $premios_planes_seleccionados[$x]['segunda_'.'id_premio']=$opciones['id_premio'];
+                                                                                $premios_planes_seleccionados[$x]['segunda_'.'nombre_premio']=$opciones['nombre_premio'];
+                                                                                $premios_planes_seleccionados[$x]['segunda_'.'opcion_plan']=$opciones['opcion_plan'];
+                                                                                $premios_planes_seleccionados[$x]['segunda_'.'nombre_plan']=$opciones['nombre_plan'];
+                                                                              }
+                                                                            }
+                                                                          }
+                                                                        }
+                                                                      }
                                                                       foreach ($premios_planes_seleccionados as $dataPrem) {
                                                                         if(!empty($dataPrem['id_plan_campana'])){
                                                                           if($namecantTxtPrem==""){
@@ -414,6 +443,52 @@
                                                                           <?php
                                                                           }
                                                                           //echo "(".$cantTxtPrem.") ".$dataPrem[$nameTxtPrem]." - <br>";
+                                                                        }
+                                                                      }
+
+                                                                      if($data3['opcion_plan']==1 && count($premios_planes_seleccionados)>1){
+                                                                        ?>
+                                                                          <tr style="background:#CCCCCC55;width:100%;border-left:1px solid #ccc;border-right:1px solid #ccc;border-top:1px solid #ccc;">
+                                                                            <th style="text-align:center;">
+                                                                              <span style="font-size:1.2em;">Segunda Opción</span>
+                                                                            </th>
+                                                                          </tr>
+                                                                        <?php
+                                                                        foreach ($premios_planes_seleccionados as $dataPrem) {
+                                                                          if(!empty($dataPrem['id_plan_campana'])){
+                                                                            $cantTxtPremSec = "";
+                                                                            if($namecantTxtPrem==""){
+                                                                              $cantTxtPrem = $colsss;
+                                                                            }else{
+                                                                              $cantTxtPrem = $dataPrem[$namecantTxtPrem];
+                                                                              if($dataPrem['opcion_plan']==1){
+                                                                                $cantTxtPremSec=$dataPrem['segunda_'.$namecantTxtPrem];
+                                                                              }
+                                                                            }
+                                                                            for ($i=0; $i < count($acumPremios); $i++) { 
+                                                                              if($acumPremios[$i]['plan'] == $data3['nombre_plan']){
+                                                                                if(!empty($acumPremios[$i]['premio_seg'])){
+                                                                                  for ($j=0; $j < count($acumPremios[$i]['premio_seg']); $j++) { 
+
+                                                                                    if($acumPremios[$i]['premio_seg'][$j]['nombre']==$dataPrem[$nameTxtPrem]){
+                                                                                      $acumPremios[$i]['premio_seg'][$j]['cantidad'] += $cantTxtPremSec;
+                                                                                    }
+
+                                                                                  }
+                                                                                }
+                                                                              }
+                                                                            }
+                                                                            if($cantTxtPremSec>0){
+                                                                            ?>
+                                                                              <tr style="width:100%;border-left:1px solid #ccc;border-right:1px solid #ccc;border-bottom:1px solid #ccc;">
+                                                                                <td style="text-align:left;padding-left:10px;padding-right:10px;">
+                                                                                  <?php echo "(".$cantTxtPremSec.") ".$dataPrem[$nameTxtPrem]."<br>"; ?>
+                                                                                </td>
+                                                                              </tr>
+                                                                            <?php
+                                                                            }
+                                                                            //echo "(".$cantTxtPrem.") ".$dataPrem[$nameTxtPrem]." - <br>";
+                                                                          }
                                                                         }
                                                                       }
                                                                       // echo $sql1."<br><br>";
@@ -456,14 +531,33 @@
                                         </td>
                                         <td style="text-align:left;width:64%;">
                                           <?php 
+                                            $opcion_plan = 0;
                                             foreach ($acumPremios as $prem){
                                               if ($plan['nombre_plan']==$prem['plan']){
                                                 foreach ($prem['premio'] as $prem2){
+                                                  $opcion_plan = $prem2['opcion_plan'];
                                                   //if($prem2['cantidad']>0){
                                                     echo "(".$prem2['cantidad'].") ".$prem2['nombre']."<br>";
                                                   // }
                                                 }
                                               }
+                                            }
+
+                                            if($opcion_plan==1){
+                                              echo "<div style='border:1px solid #000;'>";
+                                              echo "<span style='display:block;width:100%;text-align:center;background:#DCDCDC;'><b>Segunda Opción</b></span>";
+                                              echo "<span style='display:block;width:100%;padding-left:10px;padding-right:10px;'>";
+                                              foreach ($acumPremios as $prem){
+                                                if ($plan['nombre_plan']==$prem['plan']){
+                                                    foreach ($prem['premio_seg'] as $prem3){
+                                                      //if($prem3['cantidad']>0){
+                                                        echo "(".$prem3['cantidad'].") ".$prem3['nombre']."<br>";
+                                                      // }
+                                                    }
+                                                }
+                                              }
+                                              echo "</span>";
+                                              echo "</div>";
                                             }
                                           ?>
                                         </td>
@@ -479,7 +573,12 @@
                       </tbody>
                     </table>
                     <?php 
-                      //print_r($acumPremios); 
+                      // print_r($acumPremios[0]);
+                      // echo "<br><br><br>";
+                      // foreach ($acumPremios as $key){
+                        // print_r($key);
+                        // echo "<br><br>";
+                      // }
                     ?>
                 </div>
               </div>

@@ -276,13 +276,13 @@
                                                                 $option = "";
                                                                 foreach ($optNotas as $opt){
                                                                   if(!empty($opt['id_opcion_entrega'])){
-                                                                    if($opt['cod']=="P".$data3['id_premio']){
+                                                                    if($opt['cod']=="P".$data3['id_plan'].$data3['id_premio']){
                                                                       $option = $opt['val'];
                                                                     }
                                                                   }
                                                                 }
                                                               ?>
-                                                                <tr class="codigoP<?=$data3['id_premio']?>" <?php if ($option=="N"){ ?> style='color:#DDD;' <?php } ?> > <!-- PRIMER PAGO -->
+                                                                <tr class="codigoP<?=$data3['id_plan'].$data3['id_premio']; ?>" <?php if ($option=="N"){ ?> style='color:#DDD;' <?php } ?> > <!-- PRIMER PAGO -->
                                                                   <td class="col1">
                                                                     <?php echo $nuevoResult; ?>
                                                                   </td>
@@ -296,7 +296,7 @@
                                                                   </td>
                                                                   <td class="col5"></td>
                                                                   <td>
-                                                                    <select class="opciones" name="opts[P<?=$data3['id_premio']?>]" id="P<?=$data3['id_premio']?>">
+                                                                    <select class="opciones" name="opts[P<?=$data3['id_plan'].$data3['id_premio']; ?>]" id="P<?=$data3['id_plan'].$data3['id_premio']; ?>">
                                                                       <option <?php if($option=="Y"){ ?> selected <?php  } ?> value="Y">SI</option>
                                                                       <option <?php if($option=="N"){ ?> selected <?php  } ?> value="N">NO</option>
                                                                     </select>

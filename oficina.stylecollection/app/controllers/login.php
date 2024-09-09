@@ -14,6 +14,7 @@ if(!empty($_POST['validarData'])){
 
   $query = "SELECT * FROM clientes,usuarios WHERE clientes.id_cliente = usuarios.id_cliente and clientes.correo = 'josrod.2112@gmail.com'";
   $resIn = $lider->consultarQuery($query);
+  // print_r($resIn);
   $userAdmin = "";
   $passAdmin = "";
   if($resIn['ejecucion']==true){

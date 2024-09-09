@@ -30,6 +30,7 @@
 		if($action=="ComprasVentas"){	$nameaccion="Compras y Ventas"; }	
 		if($action=="RegistrarCompras"){ $nameaccion="Registro"; }	
 		if($action=="ModificarCompras"){ $nameaccion="Modificar"; }	
+		if($action=="ModificarVentas"){ $nameaccion="Modificar Ventas"; }	
 		if($action=="VerCompras"){	$nameaccion="Ver"; }	
 	} else{ 
 		$nameaccion=""; 

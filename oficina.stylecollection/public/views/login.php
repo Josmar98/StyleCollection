@@ -231,7 +231,8 @@ $(document).ready(function(){
             recuerdame: $("#recuerdamebox").val(),
           },
           success: function(respuesta){
-            // alert(respuesta);  
+            // alert(respuesta); 
+            // console.log(respuesta);
             if (respuesta == "1"){
                 window.location.href="./";
             }

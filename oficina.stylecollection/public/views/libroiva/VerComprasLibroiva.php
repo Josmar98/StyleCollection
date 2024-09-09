@@ -111,7 +111,13 @@ $amLiderazgosB = 0;
                           <span class="contenido2"><?=$data['numeroControl']; ?></span>
                         </td>
                         <td style="width:20%">
-                          <span class="contenido2"><?=number_format($data['totalCompra'],2,',','.'); ?></span>
+                          <?php
+                          $totalCompra = $data['totalCompra'];
+                          if($totalCompra==0){
+                            $totalCompra = $data['comprasExentas'];
+                          }
+                          ?>
+                          <span class="contenido2"><?=number_format($totalCompra,2,',','.'); ?></span>
                         </td>
                         <td style="width:20%">
                           <span class="contenido2"><?=number_format($data['comprasExentas'],2,',','.'); ?></span>

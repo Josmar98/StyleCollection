@@ -253,31 +253,32 @@
                         <br>
                         <div class="col-xs-12">
                           <div class="table-responsive" style="max-height:80vh;overflow:auto;">
-                            <table class="table">
+                            <table class="table table-hover">
                               <tr style="font-size:1.05em;">
                                 <td colspan="10" style="border-right:1px solid #000;border-bottom:1px solid #000;"></td>
                                 <td colspan="8" class="text-center" style="background:#ddd;border:1px solid #000;"><b>VENTAS GRAVADAS</b></td>
                               </tr>
                               <tr class="text-center" style="white-space:nowrap;background:#ddd;font-size:1.05em;">
+                                <td class="bd-black">Cols. </td>
                                 <td class="bd-black">Oper. <br>Nro</td>
                                 <td class="bd-black">Fecha <br>Factura <br>/NC/ND/</td>
                                 <td class="bd-black">Nro. R.I.F</td>
                                 <td class="bd-black">Nombre o Razón Social del Cliente</td>
                                 <td class="bd-black">Tipo de <br>Transacción</td>
-                                <td class="bd-black">Número de Factura</td>
-                                <td class="bd-black">Número de Control</td>
-                                <td class="bd-black">Número <br>Nota Débito</td>
-                                <td class="bd-black">Número <br>Nota Crédito</td>
-                                <td class="bd-black">Número de <br>Factura Afectada</td>
+                                <td class="bd-black">Número de <br>Factura</td>
+                                <td class="bd-black">Número de <br>Control</td>
+                                <td class="bd-black">Número <br>Nota <br>Débito</td>
+                                <td class="bd-black">Número <br>Nota <br>Crédito</td>
+                                <td class="bd-black">Número <br>de <br>Factura <br>Afectada</td>
                                 
                                 <td class="bd-black">Total Ventas <br>Incluyendo <br>el IVA</td>
                                 <td class="bd-black">Ventas <br>Exentas <br>Exoneradas o <br>No Sujetas</td>
                                 <td class="bd-black">Auto consumo, <br>Retiro, <br>Desincorporación <br>de Inventario</td>
                                 <td class="bd-black">Base Imponible</td>
                                 <td class="bd-black">% Alicuota</td>
-                                <td class="bd-black">Impuesto IVA <br>Alicuota General</td>
-                                <td class="bd-black">IVA Retenido <br>(Por Comprador)</td>
-                                <td class="bd-black">Numero de <br>Comprobante <br>(Ret IVA)</td>
+                                <td class="bd-black">Impuesto <br>IVA <br>Alicuota <br>General</td>
+                                <td class="bd-black">IVA <br>Retenido <br>(Por <br>Comprador)</td>
+                                <td class="bd-black">Numero de <br>Comprobante <br>(Ret. IVA)</td>
                               </tr>
                                 <?php  
                                   $cuotaSinIVA=0;
@@ -294,6 +295,7 @@
                                   $totalAutoConsumo=0;
                                   $totalRetencionIVa=0;
                                   $num=1;
+                                  $totalCols = 0;
                                 ?>
                                 <?php if(count($facturasFiscales)>1){ foreach ($facturasFiscales as $fiscal){ if(!empty($fiscal['fecha_emision'])){ ?>
                                   <?php  
@@ -314,6 +316,7 @@
                                     $numero_control1 .= "".$fiscal['numero_control1'];
 
                                     // $fiscal['numero_control2']=222;
+
                                     $cantidadControl2 = $digitosParaCodigo-strlen($fiscal['numero_control2']);
                                     $numero_control2 = "";
                                     if($cantidadControl2>0){ $numero_control2 .= "00-"; }
@@ -340,15 +343,61 @@
                                       $totalAutoConsumo+=$autoConsumo;
                                       $totalRetencionIVa+=$retencionIVa;
                                     }
+
+                                    $classElement = "";
+                                    $classElementItem = "";
+                                    if($fiscal['estado_ventas']==0){
+                                      $classElement="color:#CCC !important;";
+                                      $classElementItem = "restaurarVenta";
+                                    }else{
+                                      $classElementItem = "estadoVenta";
+                                    }
+                                    $cols = ($cuotaSinIVA/$precio_coleccion);
+                                    // if($cols)
+
+                                    // if(is_float($cols)){
+                                    // }
+                                    // if(!$estat){
+                                    //   $cols = 39.439975698663;
+                                    //   echo $cols%2;
+                                    // }
+                                    $opcionDecimal = strpos($cols, '.');
+                                    $coleccionMostrar=0;
+                                    if($opcionDecimal!=""){
+                                      $cols = number_format($cols,2,'.',',');
+                                    }
+                                    $coleccionMostrar=$cols;
+                                    // if(pos($cols, '.')){
+
+                                    // }
+                                    if($estat){
+                                      $totalCols += $cols;
+                                    }
                                   ?>
-                                  <tr style="white-space:nowrap;">
-                                    <td class="text-center bdl-black"><?php if($estat){ echo "<span style='color:".$fucsia." !important;'>".$num++."</span>";  } else { echo $num++; } ?></td>
+                                  <tr style="white-space:nowrap;<?=$classElement; ?>">
+                                    <td class="text-center bdl-black bdr-black" style="background:#ddd;">
+                                      <?php 
+                                        if($estat){ echo $coleccionMostrar; echo " Cols."; } 
+                                        else{ echo "---"; }
+                                        // else { echo "<span style='text-decoration:line-through;'>".$coleccionMostrar." Cols.</span>"; } 
+                                      ?>
+                                    </td>
+                                    <td class="text-center">
+                                      <?php 
+                                        if($estat){ 
+                                          echo "<a class='".$classElementItem."' min='".$fiscal['id_factura_ventas']."' style='color:".$fucsia." !important;'>".$num."</a>";  
+                                        } else { 
+                                          echo $num; 
+                                        } 
+                                        if($fiscal['estado_ventas']==1){ $num++; }
+                                      ?>
+                                    </td>
                                     <td class="text-center"><?=str_replace("-","/",$lider->formatFecha($fiscal['fecha_emision'])); ?></td>
                                     <td><?php if($estat){ echo $fiscal['cod_rif'].$fiscal['rif']; } ?></td>
                                     <td style="text-transform:uppercase;"><?php if($estat){ echo $fiscal['primer_nombre']." ".$fiscal['segundo_nombre']." ".$fiscal['primer_apellido']." ".$fiscal['segundo_apellido']; } else { echo "***ANULADO***"; } ?></td>
                                     <td class="text-center"><?php if($estat){ echo "01"; } ?></td>
                                     <td><?php if($estat){ echo $numero_factura; } ?></td>
-                                    <td><?php if($numero_control1==$numero_control2){ echo $numero_control1; } else { echo $numero_control1." / ".$numero_control2; } ?></td>
+                                    <td><?php if( ($numero_control1==$numero_control2) || (($fiscal['numero_control1']>0) && ($fiscal['numero_control2']==0)) ){ echo $numero_control1; } else { echo $numero_control1." / ".$numero_control2; } ?></td>
                                     <td></td>
                                     <td></td>
                                     <td></td>
@@ -364,7 +413,8 @@
                                   </tr>
                                 <?php } } } else{ ?>
                                   <tr style="white-space:nowrap;">
-                                    <td class="bdl-black"><?=$num++; ?></td>
+                                    <td class="bdl-black bdr-black" style="background:#ddd;"></td>
+                                    <td class=""><?=$num++; ?></td>
                                     <td></td>
                                     <td></td>
                                     <td style="text-transform:uppercase;"><?php echo "***NO HUBO VENTAS***"; ?></td>
@@ -385,8 +435,9 @@
                                     <td class="bdr-black textR"></td>
                                   </tr>
                                 <?php } ?>
-                                <tr class="text-center" style="font-size:1.10em;">
-                                  <td colspan="10" class="bdl-black bdt-black bdb-black"><b>TOTALES</b></td>
+                                <tr class="text-center" style="background:#ddd;white-space:nowrap;font-size:1.10em;">
+                                  <td class="bdt-black bdb-black bdl-black bdr-black"><?=$totalCols." Cols."; ?></td>
+                                  <td colspan="10" class="bdt-black bdb-black"><b>TOTALES</b></td>
                                   <td class="bdt-black bdb-black textR"><b><?=number_format($totalCuotaConIva,2,',','.'); ?></b></td>
                                   <td class="bdt-black bdb-black textR"><b><?=number_format($totalCoutasExentasIva,2,',','.'); ?></b></td>
                                   <td class="bdt-black bdb-black textR"><b><?=number_format($totalAutoConsumo,2,',','.'); ?></b></td>
@@ -601,7 +652,7 @@
                         <br>
                         <div class="col-xs-12">
                           <div class="table-responsive" style="max-height:80vh;overflow:auto;">
-                            <table class="table">
+                            <table class="table table-hover">
                               <tr class="text-center" style="white-space:nowrap;background:#ddd;font-size:1.05em;">
                                 <td class="bd-black">Oper. <br>Nro</td>
                                 <td class="bd-black">Fecha <br>Factura <br>/NC/ND/</td>
@@ -610,18 +661,18 @@
                                 <td class="bd-black">Número de <br>Factura</td>
                                 <td class="bd-black">Número de <br>Control</td>
                                 <td class="bd-black">Tipo de <br>Transacción</td>
-                                <td class="bd-black">Número <br>Nota Débito</td>
-                                <td class="bd-black">Número <br>Nota Crédito</td>
-                                <td class="bd-black">Número <br>Factura <br>Afectada</td>
+                                <td class="bd-black">Número <br>Nota <br>Débito</td>
+                                <td class="bd-black">Número <br>Nota <br>Crédito</td>
+                                <td class="bd-black">Número <br> de<br>Factura <br>Afectada</td>
                                 
                                 <td class="bd-black">Total Compras <br>de Bienes y <br>Servicios <br>Incluyendo <br>IVA</td>
                                 <td class="bd-black">Compras <br>Exentas <br>Exoneradas o <br>No Sujetas</td>
                                 <td class="bd-black">Compras <br>Internas <br>Gravadas</td>
                                 <td class="bd-black">% Alicuota</td>
                                 <td class="bd-black">IVA <br>Alicuota <br>General</td>
-                                <td class="bd-black">RET IVA <br>Alicuota <br>General</td>
-                                <td class="bd-black">Comprobante de <br>Retención de IVA</td>
-                                <td class="bd-black">Fecha del <br>Comprobante <br>de Retentecíón</td>
+                                <td class="bd-black">RET. IVA <br>Alicuota <br>General</td>
+                                <td class="bd-black">Número de <br>Comprobante de <br>(Ret. IVA)</td>
+                                <td class="bd-black">Fecha del <br>Comprobante <br>de <br>Retentecíón</td>
                               </tr>
                                 <?php  
                                   $totalCompra=0;
@@ -657,6 +708,9 @@
 
                                     $totalCompra = $compra['totalCompra'];
                                     $compraExentas = $compra['comprasExentas'];
+                                    if($totalCompra==0){
+                                      $totalCompra=$compraExentas;
+                                    }
                                     $comprasInternasGravadas = $compra['comprasInternasGravadas'];
                                     $precioIVA = $compra['iva'];
                                     $ivaGeneral = $compra['ivaGeneral'];
@@ -1164,8 +1218,8 @@
                           <div class="table-responsive">
                             <table class="table-simple" style="width:100%;">
                               <tr style="white-space:nowrap;font-size:1.10em;">
-                                <td class="col-xs-1 text-center bd-black"><b></b></td>
-                                <td class="col-xs-7 text-center bdt-black bdb-black" colspan="3"><b>Cálculo del Crédito deducible </b></td>
+                                <td class="col-xs-1 text-center bdt-black bdb-black bdl-black"><b></b></td>
+                                <td class="col-xs-8 text-center bdt-black bdb-black" colspan="3"><b>Cálculo del Crédito deducible </b></td>
                                 <td class="col-xs-2 text-center bdt-black bdb-black"><b></b></td>
                                 <td class="col-xs-2 text-center bdt-black bdb-black bdr-black"><b></b></td>
                               </tr>
@@ -1336,8 +1390,8 @@
                   <!-- <button class="btn-enviar d-none" disabled="">enviar</button> -->
                 </div>
 
-                <input type="hidden" id="route" value="<?=$_GET['route']; ?>">
-                <input type="hidden" id="action" value="<?=$_GET['action']; ?>">
+                <!-- <input type="hidden" id="route" value="<?=$_GET['route']; ?>"> -->
+                <!-- <input type="hidden" id="action" value="<?=$_GET['action']; ?>"> -->
                 <input type="hidden" id="tipo" value="<?=$_GET['tipo']; ?>">
                 <input type="hidden" id="anio" value="<?=$_GET['anio']; ?>">
                 <input type="hidden" id="mes" value="<?=$_GET['mes']; ?>">
@@ -1375,6 +1429,7 @@
 .d-none{
   display:none;
 }
+.restaurarVenta:hover, .estadoVenta:hover{ cursor:pointer;  }
 </style>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -1402,6 +1457,238 @@ $(document).ready(function(){
       });
     }
   }
+
+  $(".restaurarVenta").click(function(){
+    var id = $(this).attr("min");
+    swal.fire({ 
+      title: "¿Desea restaurar el registro?",
+      text: "Se restaurara el registro , ¿desea continuar?",
+      type: "question",
+      showCancelButton: true,
+      confirmButtonColor: "#5CB85C",
+      confirmButtonText: "¡Continuar!",
+      cancelButtonText: "Cancelar", 
+      closeOnConfirm: false,
+      closeOnCancel: false 
+    }).then((isConfirm) => {
+      if (isConfirm.value){
+        swal.fire({ 
+          title: "¿Seguro de restaurar el registro?",
+          text: "Volver a estar Disponible en el libro, ¿desea continuar?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#5CB85C",
+          confirmButtonText: "¡Restaurar!",
+          cancelButtonText: "Cancelar", 
+          closeOnConfirm: false,
+          closeOnCancel: false 
+        }).then((isConfirm) => {
+          if (isConfirm.value){
+            var route=$("#route").val();
+            var action=$("#action").val();
+            var tipo=$("#tipo").val();
+            var anio=$("#anio").val();
+            var rutaAjax = "";
+            if(tipo==1){
+              rutaAjax = "route="+route+"&action="+action+"&tipo="+tipo+"&anio="+anio;
+            }
+            if(tipo==2){
+              var mes=$("#mes").val();
+              rutaAjax = "route="+route+"&action="+action+"&tipo="+tipo+"&anio="+anio+"&mes="+mes;
+            }
+            $.ajax({
+              url: `?${rutaAjax}`,
+              type: 'POST',
+              data: {
+                RestaurarData: true,
+                id: id,
+              },
+              success: function(respuesta){
+                if (respuesta == "1"){
+                  swal.fire({
+                    type: 'success',
+                    title: '¡Registro Restaurado Correctamente!',
+                    confirmButtonText: "¡Guardar!",
+                    confirmButtonColor: "#ED2A77"
+                  }).then(function(){
+                    window.location.href="?"+rutaAjax;
+                  });
+                }
+                if (respuesta == "2"){
+                  swal.fire({
+                    type: 'error',
+                    title: '¡Error al Restaurar el registro!',
+                    confirmButtonColor: "#ED2A77",
+                  });
+                }
+                if (respuesta == "5"){ 
+                  swal.fire({
+                    type: 'error',
+                    title: '¡Error de conexion con la base de datos, contacte con el soporte!',
+                    confirmButtonColor: "#ED2A77",
+                  });
+                }
+              }
+            });
+          }else { 
+            swal.fire({
+              type: 'error',
+              title: '¡Proceso cancelado!',
+              confirmButtonColor: "#ED2A77",
+            });
+          } 
+        });
+      }else { 
+        swal.fire({
+          type: 'error',
+          title: '¡Proceso cancelado!',
+          confirmButtonColor: "#ED2A77",
+        });
+      } 
+    });
+    // alert("asd12312asd");
+  });
+  $(".estadoVenta").click(function(){
+    var id = $(this).attr("min");
+    swal.fire({ 
+      title: "Actualizar el registro para <br>Editar o Borrar",
+      text: "Seleeccione una opción para continuar",
+      type: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#5CB85C",
+      confirmButtonText: "¡Editar!",
+      cancelButtonColor: "#D9534F",
+      cancelButtonText: "¡Borrar!", 
+      closeOnConfirm: false,
+      closeOnCancel: false 
+    }).then((isConfirm) => {
+      if (isConfirm.value){
+        swal.fire({ 
+          title: "¿Desea Editar los datos?",
+          text: "Será llevado al formulario de editar, ¿desea continuar?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#5CB85C",
+          confirmButtonText: "¡Continuar!",
+          cancelButtonText: "Cancelar", 
+          closeOnConfirm: false,
+          closeOnCancel: false 
+        }).then((isConfirm) => {
+          if (isConfirm.value){
+            var route=$("#route").val();
+            var action=$("#action").val();
+            var tipo=$("#tipo").val();
+            var anio=$("#anio").val();
+            var rutaAjax = "";
+            if(tipo==1){
+              rutaAjax = "&tipo="+tipo+"&anio="+anio;
+            }
+            if(tipo==2){
+              var mes=$("#mes").val();
+              rutaAjax = "&tipo="+tipo+"&anio="+anio+"&mes="+mes;
+            }
+            window.location.href="?route=Libroiva&action=ModificarVentas&id="+id+rutaAjax;
+            // alert("Editar "+id);
+          }else { 
+            swal.fire({
+              type: 'error',
+              title: '¡Proceso cancelado!',
+              confirmButtonColor: "#ED2A77",
+            });
+          } 
+        });
+      }else { 
+        swal.fire({ 
+          title: "¿Desea borrar el registro?",
+          text: "Se borrara el registro , ¿desea continuar?",
+          type: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#D9534F",
+          confirmButtonText: "¡Continuar!",
+          cancelButtonText: "Cancelar", 
+          closeOnConfirm: false,
+          closeOnCancel: false 
+        }).then((isConfirm) => {
+          if (isConfirm.value){
+            swal.fire({ 
+              title: "¿Seguro de borrar el registro?",
+              text: "Está acción no podrá anularse, ¿desea continuar?",
+              type: "question",
+              showCancelButton: true,
+              confirmButtonColor: "#D9534F",
+              confirmButtonText: "¡Continuar!",
+              cancelButtonText: "Cancelar", 
+              closeOnConfirm: false,
+              closeOnCancel: false 
+            }).then((isConfirm) => {
+              if (isConfirm.value){
+                // alert("Borrar "+id);
+                var route=$("#route").val();
+                var action=$("#action").val();
+                var tipo=$("#tipo").val();
+                var anio=$("#anio").val();
+                var rutaAjax = "";
+                if(tipo==1){
+                  rutaAjax = "route="+route+"&action="+action+"&tipo="+tipo+"&anio="+anio;
+                }
+                if(tipo==2){
+                  var mes=$("#mes").val();
+                  rutaAjax = "route="+route+"&action="+action+"&tipo="+tipo+"&anio="+anio+"&mes="+mes;
+                }
+                $.ajax({
+                  url: `?${rutaAjax}`,
+                  type: 'POST',
+                  data: {
+                    BorrarData: true,
+                    id: id,
+                  },
+                  success: function(respuesta){
+                    if (respuesta == "1"){
+                      swal.fire({
+                        type: 'success',
+                        title: '¡Registro Borrado Correctamente!',
+                        confirmButtonText: "¡Guardar!",
+                        confirmButtonColor: "#ED2A77"
+                      }).then(function(){
+                        window.location.href="?"+rutaAjax;
+                      });
+                    }
+                    if (respuesta == "2"){
+                      swal.fire({
+                        type: 'error',
+                        title: '¡Error al Restaurar el registro!',
+                        confirmButtonColor: "#ED2A77",
+                      });
+                    }
+                    if (respuesta == "5"){ 
+                      swal.fire({
+                        type: 'error',
+                        title: '¡Error de conexion con la base de datos, contacte con el soporte!',
+                        confirmButtonColor: "#ED2A77",
+                      });
+                    }
+                  }
+                });
+              }else { 
+                swal.fire({
+                  type: 'error',
+                  title: '¡Proceso cancelado!',
+                  confirmButtonColor: "#ED2A77",
+                });
+              } 
+            });
+          }else { 
+            swal.fire({
+              type: 'error',
+              title: '¡Proceso cancelado!',
+              confirmButtonColor: "#ED2A77",
+            });
+          } 
+        });
+      } 
+    });
+    // alert("asd12312asd");
+  });
   
   $(".btnExpandFiscal").click(function(){
     var estat = $(".etiq").hasClass("fa-sort-down");

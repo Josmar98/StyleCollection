@@ -199,7 +199,8 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 	// ======================== Registro de segunda opcion ======================== ========================
 	$x = 0;
 	foreach ($id_tppc_opcion as $id_t1) {
-		$buscar = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion WHERE id_tipo_coleccion = {$id_tipo_opcion[$x]} and id_tppc = {$id_t1} and cantidad_premios_plan = {$cantidad_opcion[$x]}");
+		$buscar = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion WHERE id_tipo_coleccion = {$id_tipo_opcion[$x]} and id_tppc = {$id_t1}");
+		// $buscar = $lider->consultarQuery("SELECT * FROM premio_coleccion_opcion WHERE id_tipo_coleccion = {$id_tipo_opcion[$x]} and id_tppc = {$id_t1} and cantidad_premios_plan = {$cantidad_opcion[$x]}");
 		if($buscar['ejecucion'] == 1 && Count($buscar)>1){
 			$response = "1";
 		}else{

@@ -45,8 +45,19 @@
               <h3 class="box-title">Editar <?php echo "Lideres"; ?></h3>
             </div>
             <!-- /.box-header -->
+            <?php
+              $editarFotos=0;
+              $configuraciones = $lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+              foreach ($configuraciones as $config) {
+                if(!empty($config['id_configuracion'])){
+                  if($config['clausula']=="Editar Fotos"){
+                    $editarFotos = $config['valor'];
+                  }
+                }
+              }
+            ?>
             <!-- form start -->
-            <form action="" method="post" role="form" class="form_register">
+            <form action="" method="post" role="form" class="form_register" <?php if($editarFotos==1){ ?> enctype="multipart/form-data" <?php } ?> >
               <div class="box-body">
                     
                   <div class="row">
@@ -208,6 +219,28 @@
                       <span id="error_direccion" class="errors"></span>
                     </div> 
                   </div>
+
+
+                  <?php if($editarFotos==1){ ?>
+                  <hr>
+                  
+                  <div class="row">
+                    <div class="form-group col-xs-12">
+                      <label for="fotos">Foto de perfil</label>
+                      <input type="file" class="form-control" id="fotos" name="fotos">
+                      <span id="error_fotos" class="errors"><b>Nota: </b> Si desea dejar la misma foto de perfil, <b>No</b> seleccione una foto nueva</span>
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-xs-12 col-sm-4 col-md-3">
+                      <img style="width:100%;" src="<?=$usuario['fotoPerfil']; ?>">
+                    </div>
+                  </div>
+                  
+                  <hr>
+
+                  <?php } ?>
                 
               </div>
               <!-- /.box-body -->
@@ -525,20 +558,8 @@ function validar(){
     rsexo = true;
     $("#error_sexo").html("");
   }
-  // alert(rsexo);
-  // if(sexo == ""){
-  //     if(sexoM == "off"){ sexo = "";  }
-  //     if(sexoM == "on"){  sexo = "Masculino"; }
-  // }
-  // if(sexo == ""){
-  //     if(sexoF == "off"){ sexo = "";  }
-  //     if(sexoF == "on"){  sexo = "Femenino";  }
-  // }
+  
 
-  // if(sexo == ""){
-  //   rsexo = false;
-  // }else{
-  // }
   /*===================================================================*/
 
   /*===================================================================*/
@@ -566,6 +587,19 @@ function validar(){
   }else{
     $("#error_direccion").html("");
   }
+  /*===================================================================*/
+
+  /*===================================================================*/
+  var fotos = $("#fotos").val();
+  // var rfotos = checkInput(direccion, alfanumericPattern2);
+  // if( rdireccion == false ){
+  //   if(direccion.length != 0){
+  //     $("#error_direccion").html("No debe contener caracteres especiales. Unicamente puede utilizar { . , ! ¡ ¿ ? }");      
+  //   }else{
+  //     $("#error_direccion").html("Debe llenar la direccion de vivienda - misma direccion del documento RIF");      
+  //   }
+  // }else{
+  // }
   /*===================================================================*/
 
   /*===================================================================*/

@@ -298,7 +298,7 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
+        if( comprasExentas > totalCompra ){
           $("#comprasExentas").val(totalCompra-1);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
@@ -331,7 +331,7 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
+        if( comprasExentas > totalCompra ){
           $("#comprasExentas").val(totalCompra-1);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
@@ -365,8 +365,8 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
-          $("#comprasExentas").val(totalCompra-1);
+        if( comprasExentas > totalCompra ){
+          $("#comprasExentas").val(totalCompra);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
         }
@@ -414,7 +414,7 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
+        if( comprasExentas > totalCompra ){
           $("#comprasExentas").val(totalCompra-1);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());

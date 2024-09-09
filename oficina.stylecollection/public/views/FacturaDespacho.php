@@ -221,8 +221,12 @@
                                 // if(count($fiscal)>1){
 
                               ?>
-                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>">
-                                  Generar Factura Fiscal.
+                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>&t=1">
+                                  Generar Factura Fiscal<br>Media Carta
+                                </a>
+
+                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>&t=2">
+                                  Generar Factura Fiscal<br>Carta Completa
                                 </a>
                               <?php //} else { ?>
                                 <!-- <a class="btn" style="border:1px solid #fff;border-radius:5px;background:#aaa;color:#FFF"> -->

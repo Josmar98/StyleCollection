@@ -167,7 +167,18 @@
                   <button style="margin-left:-10px;" class="btn buttonEditCuentaUp"><span class="fa fa-caret-square-o-up"></span></button>
                   <span style="font-size:1.4em;position:relative;top:4px;left:5%;"><u>Editar Perfil</u></span>
                 </div>
-                <form action="" method="POST" class="form-horizontal formCuenta">
+                <?php
+                  $editarFotos=0;
+                  $configuraciones = $lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
+                  foreach ($configuraciones as $config) {
+                    if(!empty($config['id_configuracion'])){
+                      if($config['clausula']=="Editar Fotos"){
+                        $editarFotos = $config['valor'];
+                      }
+                    }
+                  }
+                ?>
+                <form action="" method="POST" class="form-horizontal formCuenta"  <?php if($editarFotos==1){ ?> enctype="multipart/form-data" <?php } ?>  >
                     <div class="form-group">
                       <label for="nombre1" class="col-sm-2 control-label">
                         <span style='color:#000'>Primer Nombre</span>
@@ -316,6 +327,28 @@
                       <span id="error_direccion" class="errors"></span>
                       </div>
                     </div>
+
+                    <?php if($editarFotos==1){ ?>
+                    <div class="form-group">
+                      <label for="fotos" class="col-sm-2 control-label">
+                        <span style='color:#000'>Foto de perfil</span>
+                      </label>
+                      <div class="col-sm-10">
+                        <input type="file" class="form-control" id="fotos" name="fotos">
+                        <span id="error_fotos" class="errors"><b>Nota: </b> Si desea dejar la misma foto de perfil, <b>No</b> seleccione una foto nueva</span>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="fotos" class="col-sm-2 control-label">
+                        <span style='color:#000'></span>
+                      </label>
+                      <div class="col-xs-10 col-sm-4 col-md-3">
+                        <img style="width:100%;" src="<?=$usuario['fotoPerfil']; ?>">
+                      </div>
+                    </div>
+                    <?php } ?>
+
 
                     <div class="box-footer">                    
                       <label class="col-sm-2 control-label"></label>

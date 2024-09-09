@@ -11,6 +11,40 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 		if( ($_GET['anio']%4)==0 ){ $range['02']=29; }
 	}
 
+	if( !empty($_POST['RestaurarData']) && !empty($_POST['id']) ){
+		$idss = $_POST['id'];
+		$query = "UPDATE factura_ventas SET estatus=1 WHERE id_factura_ventas = {$idss}";
+		$res1 = $lider->eliminar($query);
+		if($res1['ejecucion']==true){
+			$response = "1";
+			if(!empty($modulo) && !empty($accion)){
+				$fecha = date('Y-m-d');
+				$hora = date('H:i:a');
+				$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura de Ventas', 'Restaruar', '{$fecha}', '{$hora}')";
+				$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+			}
+		}else{
+			$response = "2"; // echo 'Error en la conexion con la bd';
+		}
+		echo $response;
+	}
+	if( !empty($_POST['BorrarData']) && !empty($_POST['id']) ){
+		$idss = $_POST['id'];
+		$query = "UPDATE factura_ventas SET estatus=0 WHERE id_factura_ventas = {$idss}";
+		$res1 = $lider->eliminar($query);
+		if($res1['ejecucion']==true){
+			$response = "1";
+			if(!empty($modulo) && !empty($accion)){
+				$fecha = date('Y-m-d');
+				$hora = date('H:i:a');
+				$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura de Ventas', 'Borrar', '{$fecha}', '{$hora}')";
+				$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+			}
+		}else{
+			$response = "2"; // echo 'Error en la conexion con la bd';
+		}
+		echo $response;
+	}
 	// if(!empty($_POST['validarData'])){
 	// 	$nombre_liderazgo = mb_strtoupper($_POST['nombre_liderazgo']);
 	// 	$query = "SELECT * FROM liderazgos WHERE nombre_liderazgo = '$nombre_liderazgo'";
@@ -89,7 +123,8 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 				}
 			}
 		}
-		$query="SELECT *, factura_despacho.estatus as estado_factura FROM factura_ventas, factura_despacho, pedidos, despachos, clientes WHERE factura_ventas.id_factura_despacho = factura_despacho.id_factura_despacho and factura_despacho.id_pedido=pedidos.id_pedido and pedidos.id_despacho=despachos.id_despacho and pedidos.id_cliente=clientes.id_cliente and factura_despacho.fecha_emision BETWEEN '{$inicioFecha}' AND '{$finFecha}' ORDER BY factura_despacho.fecha_emision, factura_despacho.numero_factura ASC;";
+		$query="SELECT *, factura_ventas.estatus as estado_ventas, factura_despacho.estatus as estado_factura FROM factura_ventas, factura_despacho, pedidos, despachos, clientes WHERE factura_ventas.id_factura_despacho = factura_despacho.id_factura_despacho and factura_despacho.id_pedido=pedidos.id_pedido and pedidos.id_despacho=despachos.id_despacho and pedidos.id_cliente=clientes.id_cliente and factura_despacho.fecha_emision BETWEEN '{$inicioFecha}' AND '{$finFecha}'  ORDER BY factura_despacho.fecha_emision, factura_despacho.numero_factura, factura_despacho.numero_control1 ASC;";
+		//
 		$facturasFiscales = $lider->consultarQuery($query);
 
 	}

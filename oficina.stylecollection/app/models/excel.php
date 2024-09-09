@@ -18,6 +18,8 @@ use PhpOffice\PhpSpreadsheet\Style\Style;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer;
 use PhpOffice\PhpSpreadsheet\Reader;
+use PhpOffice\PhpSpreadsheet\Settings;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 
 class Excel{
 	private $file;
@@ -27,6 +29,7 @@ class Excel{
 	public function __construct($ruta, $format){
 		$this->file = $ruta;
 		$this->format = $format;
+
 	}
 
 	public function exportarPagosExcel($dat, $lider){
@@ -729,7 +732,7 @@ class Excel{
 	}
 
 	public function exportarReporteExcelLibroIva($dat, $lider){
-
+		Settings::setLocale('es');
 		$meses = $dat['meses'];
 		$range = $dat['range'];
 		$operacionMostrarInformacion = $dat['operacionMostrarInformacion'];
@@ -765,9 +768,17 @@ class Excel{
 		$spreadsheet = new Spreadsheet();
 		$spreadsheet->setActiveSheetIndex(0);
 		$spreadsheet->getActiveSheet()->setTitle($nameLibro1);
+		$sheet = $spreadsheet->getActiveSheet();
+		$letra11L1 = "H"; //B=H
+		$letra12L1 = "L"; //F=L
+		$letra21L1 = "M"; //G=M
+		$letra22L1 = "N"; //H=N
+		$letra31L1 = "O"; //I=O
+		$letra32L1 = "P"; //J=P
+		$letra41L1 = "Q"; //K=Q
+		$letra42L1 = "R"; //L=R
 
 		// CABECERA PRINCIPAL  LIBRO 1
-			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->getColumnDimension('A')->setAutoSize(true);
 			$sheet->getColumnDimension('B')->setAutoSize(true);
 			$sheet->getColumnDimension('C')->setAutoSize(true);
@@ -787,6 +798,7 @@ class Excel{
 			$sheet->getColumnDimension('Q')->setAutoSize(true);
 			$sheet->getColumnDimension('R')->setAutoSize(true);
 			$sheet->getColumnDimension('S')->setAutoSize(true);
+			$sheet->getColumnDimension('T')->setAutoSize(true);
 			$sheet->getStyle('A1:Z1000')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
 
 			$num2L2 = 1;
@@ -817,7 +829,7 @@ class Excel{
 
 		// CUADRO PRINCIPAL - TITULO  LIBRO 1
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':S'.$numL1)->getFont()->setSize(11);
+			$sheet->getStyle('B'.$numL1.':S'.$numL1)->getFont()->setSize(12);
 			$sheet->getStyle('B'.$numL1.':S'.$numL1)->getAlignment()->setHorizontal('center')->setWrapText(true);
 			$sheet->getStyle('B'.$numL1.':S'.$numL1)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
 			$sheet->getStyle('B'.$numL1.':S'.$numL1)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
@@ -827,18 +839,19 @@ class Excel{
 			$sheet->setCellValue('E'.$numL1, "Nombre o Razón Social del Cliente");
 			$sheet->setCellValue('F'.$numL1, "Tipo de \nTransacción");
 			$sheet->setCellValue('G'.$numL1, "Número de \nFactura");
-			$sheet->setCellValue('H'.$numL1, "Número de Control");
-			$sheet->setCellValue('I'.$numL1, "Número \nNota Débito");
-			$sheet->setCellValue('J'.$numL1, "Número \nNota Crédito");
-			$sheet->setCellValue('K'.$numL1, "Número de \nFactura \nAfectada");
+			$sheet->setCellValue('H'.$numL1, "   Número de Control   ");
+			$sheet->setCellValue('I'.$numL1, "Número \nNota \nDébito");
+			$sheet->setCellValue('J'.$numL1, "Número \nNota \nCrédito");
+			$sheet->setCellValue('K'.$numL1, "Número \nde \nFactura \nAfectada");
+
 			$sheet->setCellValue('L'.$numL1, "Total Ventas \nIncluyendo \nel IVA");
 			$sheet->setCellValue('M'.$numL1, "Ventas \n Exentas \n Exoneradas o \n No Sujetas");
 			$sheet->setCellValue('N'.$numL1, "Auto consumo, \n Retiro, \n Desincorporación \n de Inventario");
-			$sheet->setCellValue('O'.$numL1, "Base Imponible");
+			$sheet->setCellValue('O'.$numL1, "Base \nImponible");
 			$sheet->setCellValue('P'.$numL1, "% "."Alicuota");
-			$sheet->setCellValue('Q'.$numL1, "Impuesto IVA \n Alicuota General");
-			$sheet->setCellValue('R'.$numL1, "IVA \n Retenido \n (por Comprador)");
-			$sheet->setCellValue('S'.$numL1, "Número de \n Comprobante \n (Ret iva)");
+			$sheet->setCellValue('Q'.$numL1, "Impuesto \nIVA \n Alicuota \nGeneral");
+			$sheet->setCellValue('R'.$numL1, "IVA \n Retenido \n (por \nComprador)");
+			$sheet->setCellValue('S'.$numL1, "Número de \n Comprobante \n (Ret. iva)");
 		// CUADRO PRINCIPAL - TITULO  LIBRO 1
 		
 		// CUADRO PRINCIPAL - CONTENIDO  LIBRO 1
@@ -905,7 +918,7 @@ class Excel{
 				$sheet->getStyle('B'.$numL1.':S'.$numL1)->getFont()->setSize(12);
 				$sheet->getStyle('B'.$numL1.':S'.$numL1)->getAlignment()->setHorizontal('center');
 				$sheet->getStyle('E'.$numL1)->getAlignment()->setHorizontal('left');
-				$sheet->getStyle('G'.$numL1)->getAlignment()->setHorizontal('right');
+				// $sheet->getStyle('G'.$numL1)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL1.':R'.$numL1)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL1.':O'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 				$sheet->getStyle('P'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
@@ -919,7 +932,7 @@ class Excel{
 				else{ $sheet->setCellValue('E'.$numL1, "***ANULADO***"); }
 				if($estat){ $sheet->setCellValue('F'.$numL1, "01"); }
 				if($estat){ $sheet->setCellValue('G'.$numL1, $numero_facturaL1); }
-				if($numero_control1L1==$numero_control2L1){ $sheet->setCellValue('H'.$numL1, $numero_control1L1); }
+				if( ($numero_control1L1==$numero_control2L1) || (($fiscal['numero_control1']>0) && ($fiscal['numero_control2']==0)) ){ $sheet->setCellValue('H'.$numL1, $numero_control1L1); }
 				else{ $sheet->setCellValue('H'.$numL1, $numero_control1L1." / ".$numero_control2L1);}
 				$sheet->setCellValue('I'.$numL1, "");
 				$sheet->setCellValue('J'.$numL1, "");
@@ -942,7 +955,7 @@ class Excel{
 				$sheet->getStyle('B'.$numL1.':S'.$numL1)->getFont()->setSize(12);
 				$sheet->getStyle('B'.$numL1.':S'.$numL1)->getAlignment()->setHorizontal('center');
 				$sheet->getStyle('E'.$numL1)->getAlignment()->setHorizontal('left');
-				$sheet->getStyle('G'.$numL1)->getAlignment()->setHorizontal('right');
+				// $sheet->getStyle('G'.$numL1)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL1.':R'.$numL1)->getAlignment()->setHorizontal('right');
 
 				$sheet->setCellValue('B'.$numL1, $indx);
@@ -969,7 +982,6 @@ class Excel{
 			}
 			$sheet->getStyle('B'.$numInicialL1.':S'.($numL1-1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 		// CUADRO PRINCIPAL - CONTENIDO  LIBRO 1
-
 
 		// CUADRO PRINCIPAL - TOTALIZADOR  LIBRO 1
 			$sheet->getStyle('B'.$numInicialL1.':S'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
@@ -998,105 +1010,106 @@ class Excel{
 		// CUADRO PRINCIPAL - TOTALIZADOR  LIBRO 1
 		
 		// CUADRO RESUMEN DE DEBITO  LIBRO 1
+
 			$vAlicuotaGeneralDBaseImponible="=O".$numTotalizadorL1;
 			$vAlicuotaGeneralDDebitoFiscal="=Q".$numTotalizadorL1;
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(13);
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(13);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('center');
 			if(isset($_GET['mes'])){ $msjTemp = "Mes"; }else{ $msjTemp = "Año"; }
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Resumen del {$msjTemp} Base Imponible y Débitos Fiscales");
-			$sheet->getStyle('B'.$numL1.':F'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, "Base Imponible");
-			$sheet->getStyle('G'.$numL1.':H'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, "Débito Fiscal");
-			$sheet->getStyle('I'.$numL1.':J'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, "Retenciones de IVA");
-			$sheet->getStyle('K'.$numL1.':L'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Resumen del {$msjTemp} Base Imponible y Débitos Fiscales");
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, "Base Imponible");
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra22L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, "Débito Fiscal");
+			$sheet->getStyle($letra31L1.$numL1.':'.$letra32L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, "Retenciones de IVA");
+			$sheet->getStyle($letra41L1.$numL1.':'.$letra42L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL1++;
 			$numInicialL1=$numL1;
 			$vtotalDBaseImponible="=0";
 			$vtotalDDebitoFiscal="=0";
 			$vtotalDRetencion="=0";
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Ventas Internas No Gravadas");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, 0);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalDBaseImponible.="+G".$numL1;
-			$vtotalDDebitoFiscal.="+I".$numL1;
-			$vtotalDRetencion.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Ventas Internas No Gravadas");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, 0);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalDBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalDDebitoFiscal.="+".$letra31L1.$numL1;
+			$vtotalDRetencion.="+".$letra41L1.$numL1;
 
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Ventas Internas Afectas solo Alicuota General");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, $vAlicuotaGeneralDBaseImponible);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, $vAlicuotaGeneralDDebitoFiscal);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalDBaseImponible.="+G".$numL1;
-			$vtotalDDebitoFiscal.="+I".$numL1;
-			$vtotalDRetencion.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Ventas Internas Afectas solo Alicuota General");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, $vAlicuotaGeneralDBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, $vAlicuotaGeneralDDebitoFiscal);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalDBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalDDebitoFiscal.="+".$letra31L1.$numL1;
+			$vtotalDRetencion.="+".$letra41L1.$numL1;
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Ventas Internas Afectas Alicuota General + Adicional");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, 0);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalDBaseImponible.="+G".$numL1;
-			$vtotalDDebitoFiscal.="+I".$numL1;
-			$vtotalDRetencion.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Ventas Internas Afectas Alicuota General + Adicional");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, 0);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalDBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalDDebitoFiscal.="+".$letra31L1.$numL1;
+			$vtotalDRetencion.="+".$letra41L1.$numL1;
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, 0);
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Ventas Internas Afectas en Alicuota Reducida");
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalDBaseImponible.="+G".$numL1;
-			$vtotalDDebitoFiscal.="+I".$numL1;
-			$vtotalDRetencion.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Ventas Internas Afectas en Alicuota Reducida");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, 0);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalDBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalDDebitoFiscal.="+".$letra31L1.$numL1;
+			$vtotalDRetencion.="+".$letra41L1.$numL1;
 
-			$sheet->getStyle('B'.$numInicialL1.':F'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numInicialL1.':H'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('I'.$numInicialL1.':J'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('K'.$numInicialL1.':L'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra11L1.$numInicialL1.':'.$letra12L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numInicialL1.':'.$letra22L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra31L1.$numInicialL1.':'.$letra32L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra41L1.$numInicialL1.':'.$letra42L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setBold(true)->setSize(13);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('center');
-			$sheet->getStyle('B'.$numL1.':L'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setBold(true)->setSize(13);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Total Ventas y Débitos Fiscales");
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Total Ventas y Débitos Fiscales");
 
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL1.':H'.$numL1)->setCellValue('G'.$numL1, $vtotalDBaseImponible);
-			$sheet->mergeCells('I'.$numL1.':J'.$numL1)->setCellValue('I'.$numL1, $vtotalDDebitoFiscal);
-			$sheet->mergeCells('K'.$numL1.':L'.$numL1)->setCellValue('K'.$numL1, $vtotalDRetencion);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.$numL1)->setCellValue($letra21L1.$numL1, $vtotalDBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.$numL1)->setCellValue($letra31L1.$numL1, $vtotalDDebitoFiscal);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.$numL1)->setCellValue($letra41L1.$numL1, $vtotalDRetencion);
 		// CUADRO RESUMEN DE DEBITO  LIBRO 1
 
 
 		$spreadsheet->createSheet(1);
 		$spreadsheet->setActiveSheetIndex(1);
 		$spreadsheet->getActiveSheet()->setTitle($nameLibro2);
-		
+		$sheet = $spreadsheet->getActiveSheet();
+		$letra11L1 = "G"; //B=H
 		// CABECERA PRINCIPAL  LIBRO 2
-			$sheet = $spreadsheet->getActiveSheet();
 			$sheet->getColumnDimension('A')->setAutoSize(true);
 			$sheet->getColumnDimension('B')->setAutoSize(true);
 			$sheet->getColumnDimension('C')->setAutoSize(true);
@@ -1116,6 +1129,7 @@ class Excel{
 			$sheet->getColumnDimension('Q')->setAutoSize(true);
 			$sheet->getColumnDimension('R')->setAutoSize(true);
 			$sheet->getColumnDimension('S')->setAutoSize(true);
+			$sheet->getColumnDimension('T')->setAutoSize(true);
 			$sheet->getStyle('A1:Z1000')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
 
 			$num2L2 = 1;
@@ -1139,7 +1153,7 @@ class Excel{
 
 		// CUADRO PRINCIPAL - TITULO  LIBRO 2
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':S'.$numL2)->getFont()->setSize(11);
+			$sheet->getStyle('B'.$numL2.':S'.$numL2)->getFont()->setSize(12);
 			$sheet->getStyle('B'.$numL2.':S'.$numL2)->getAlignment()->setHorizontal('center')->setWrapText(true);
 			$sheet->getStyle('B'.$numL2.':S'.$numL2)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
 			$sheet->getStyle('B'.$numL2.':S'.$numL2)->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
@@ -1148,19 +1162,20 @@ class Excel{
 			$sheet->setCellValue('D'.$numL2, "Nro.  R.I.F");
 			$sheet->setCellValue('E'.$numL2, "Nombre o Razón Social del Cliente");
 			$sheet->setCellValue('F'.$numL2, "Número de \nFactura");
-			$sheet->setCellValue('G'.$numL2, "Número de Control");
+			$sheet->setCellValue('G'.$numL2, "Número de \nControl");
 			$sheet->setCellValue('H'.$numL2, "Tipo de \nTransacción");
-			$sheet->setCellValue('I'.$numL2, "Número \nNota Débito");
-			$sheet->setCellValue('J'.$numL2, "Número \nNota Crédito");
-			$sheet->setCellValue('K'.$numL2, "Número de \nFactura \nAfectada");
+			$sheet->setCellValue('I'.$numL2, "Número \nNota \nDébito");
+			$sheet->setCellValue('J'.$numL2, "Número \nNota \nCrédito");
+			$sheet->setCellValue('K'.$numL2, "Número \nde \nFactura \nAfectada");
+
 			$sheet->setCellValue('L'.$numL2, "Total Compras\nde Bienes y\nServicios\nIncluyendo \nIVA");
 			$sheet->setCellValue('M'.$numL2, "Compras \n Exentas \n Exoneradas o \n No Sujetas");
 			$sheet->setCellValue('N'.$numL2, "Compras \nInternas \nGravadas");
 			$sheet->setCellValue('O'.$numL2, "% "."Alicuota");
 			$sheet->setCellValue('P'.$numL2, "IVA\nAlicuota\nGeneral");
-			$sheet->setCellValue('Q'.$numL2, "RET IVA\nAlicuota\nGeneral");
-			$sheet->setCellValue('R'.$numL2, "Comprobante de\n Retención de IVA");
-			$sheet->setCellValue('S'.$numL2, "Fecha del \n Comprobante de\n Retención");
+			$sheet->setCellValue('Q'.$numL2, "RET. IVA\nAlicuota\nGeneral");
+			$sheet->setCellValue('R'.$numL2, "Número de \nComprobante de\n (Ret. IVA)");
+			$sheet->setCellValue('S'.$numL2, "Fecha del \n Comprobante \nde\n Retención");
 		// CUADRO PRINCIPAL - TITULO  LIBRO 2
 
 		// CUADRO PRINCIPAL - CONTENIDO  LIBRO 2
@@ -1188,7 +1203,10 @@ class Excel{
 				$totalCompra = $compra['totalCompra'];
 				$compraExentas = $compra['comprasExentas'];
 				// $comprasInternasGravadas = $compra['comprasInternasGravadas'];
-				$comprasInternasGravadas = "=L".$numL2."/".(($cantidadIVA/100)+1);
+				if($totalCompra==0){
+					$totalCompra=$compraExentas;
+				}
+				$comprasInternasGravadas = "=(L".$numL2."-M".$numL2.")/".(($cantidadIVA/100)+1);
 				// $precioIVA = $cantidadIVA;
 				$precioIVA = $compra['iva'];
 				// $ivaGeneral = "=N".$numL2."*O".$numL2;
@@ -1217,7 +1235,7 @@ class Excel{
 				$sheet->getStyle('B'.$numL2.':S'.$numL2)->getFont()->setSize(12);
 				$sheet->getStyle('B'.$numL2.':S'.$numL2)->getAlignment()->setHorizontal('center');
 				$sheet->getStyle('E'.$numL2)->getAlignment()->setHorizontal('left');
-				$sheet->getStyle('G'.$numL2)->getAlignment()->setHorizontal('right');
+				// $sheet->getStyle('G'.$numL2)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL2.':R'.$numL2)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL2.':N'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 				$sheet->getStyle('O'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
@@ -1254,7 +1272,7 @@ class Excel{
 				$sheet->getStyle('B'.$numL2.':S'.$numL2)->getFont()->setSize(12);
 				$sheet->getStyle('B'.$numL2.':S'.$numL2)->getAlignment()->setHorizontal('center');
 				$sheet->getStyle('E'.$numL2)->getAlignment()->setHorizontal('left');
-				$sheet->getStyle('G'.$numL2)->getAlignment()->setHorizontal('right');
+				// $sheet->getStyle('G'.$numL2)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('L'.$numL2.':N'.$numL2)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('P'.$numL2.':Q'.$numL2)->getAlignment()->setHorizontal('right');
 				$sheet->getStyle('R'.$numL2.':S'.$numL2)->getAlignment()->setHorizontal('center');
@@ -1319,94 +1337,94 @@ class Excel{
 			$ctotalCCreditoFiscal = "=0";
 			$ctotalCRetencionesIVA="=0";
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(13);
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(13);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('center');
 			if(isset($_GET['mes'])){ $msjTemp = "Mes"; }else{ $msjTemp = "Año"; }
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Resumen del {$msjTemp} Base Imponible y Créditos Fiscales");
-			$sheet->getStyle('B'.$numL2.':F'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, "Base Imponible");
-			$sheet->getStyle('G'.$numL2.':H'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, "Crédito Fiscal");
-			$sheet->getStyle('I'.$numL2.':J'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, "Retenciones de IVA");
-			$sheet->getStyle('K'.$numL2.':L'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Resumen del {$msjTemp} Base Imponible y Créditos Fiscales");
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, "Base Imponible");
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, "Crédito Fiscal");
+			$sheet->getStyle($letra31L1.$numL2.':'.$letra32L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, "Retenciones de IVA");
+			$sheet->getStyle($letra41L1.$numL2.':'.$letra42L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL2++;
 			$numInicialL2=$numL2;
 
 
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Total: Compras no gravadas y/o sin derecho a crédito fiscal");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, $cComprasNoGravadasCBaseImponible);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalCBaseImponible.="+G".$numL2;
-			$ctotalCCreditoFiscal.="+I".$numL2;
-			$ctotalCRetencionesIVA.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Total: Compras no gravadas y/o sin derecho a crédito fiscal");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, $cComprasNoGravadasCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalCBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalCCreditoFiscal.="+".$letra31L1.$numL2;
+			$ctotalCRetencionesIVA.="+".$letra41L1.$numL2;
 
 
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Σ de las: Compras Internas gravadas sólo por Alícuota General");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, $cAlicuotaGeneralCBaseImponible);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, $cAlicuotaGeneralCCreditoFiscal);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, $cAlicuotaGeneralCRetencion);
-			$ctotalCBaseImponible.="+G".$numL2;
-			$ctotalCCreditoFiscal.="+I".$numL2;
-			$ctotalCRetencionesIVA.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Σ de las: Compras Internas gravadas sólo por Alícuota General");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, $cAlicuotaGeneralCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, $cAlicuotaGeneralCCreditoFiscal);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, $cAlicuotaGeneralCRetencion);
+			$ctotalCBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalCCreditoFiscal.="+".$letra31L1.$numL2;
+			$ctotalCRetencionesIVA.="+".$letra41L1.$numL2;
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Σ de las: Compras Internas gravadas por Alícuota General + Adicional");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, 0);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalCBaseImponible.="+G".$numL2;
-			$ctotalCCreditoFiscal.="+I".$numL2;
-			$ctotalCRetencionesIVA.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Σ de las: Compras Internas gravadas por Alícuota General + Adicional");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, 0);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalCBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalCCreditoFiscal.="+".$letra31L1.$numL2;
+			$ctotalCRetencionesIVA.="+".$letra41L1.$numL2;
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, 0);
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Σ de las: Compras Internas gravadas por Alícuota Reducida");
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalCBaseImponible.="+G".$numL2;
-			$ctotalCCreditoFiscal.="+I".$numL2;
-			$ctotalCRetencionesIVA.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Σ de las: Compras Internas gravadas por Alícuota Reducida");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, 0);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalCBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalCCreditoFiscal.="+".$letra31L1.$numL2;
+			$ctotalCRetencionesIVA.="+".$letra41L1.$numL2;
 
 
-			$sheet->getStyle('B'.$numInicialL2.':F'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numInicialL2.':H'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('I'.$numInicialL2.':J'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('K'.$numInicialL2.':L'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra11L1.$numInicialL2.':'.$letra12L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numInicialL2.':'.$letra22L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra31L1.$numInicialL2.':'.$letra32L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra41L1.$numInicialL2.':'.$letra42L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setBold(true)->setSize(13);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('center');
-			$sheet->getStyle('B'.$numL2.':L'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setBold(true)->setSize(13);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Total Compras y Créditos Fiscales del Período");
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Total Compras y Créditos Fiscales del Período");
 
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL2.':H'.$numL2)->setCellValue('G'.$numL2, $ctotalCBaseImponible);
-			$sheet->mergeCells('I'.$numL2.':J'.$numL2)->setCellValue('I'.$numL2, $ctotalCCreditoFiscal);
-			$sheet->mergeCells('K'.$numL2.':L'.$numL2)->setCellValue('K'.$numL2, $ctotalCRetencionesIVA);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.$numL2)->setCellValue($letra21L1.$numL2, $ctotalCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.$numL2)->setCellValue($letra31L1.$numL2, $ctotalCCreditoFiscal);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.$numL2)->setCellValue($letra41L1.$numL2, $ctotalCRetencionesIVA);
 		// CUADRO RESUMEN DE CREDITO  LIBRO 2
 
 		// CUADRO RESUMEN DE DEBITO  LIBRO 2
@@ -1414,100 +1432,100 @@ class Excel{
 			$cAlicuotaGeneralDDebitoFiscal="='".$nameLibro1."'!Q".$numTotalizadorL1;
 			$numL2++;
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(13);
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(13);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('center');
 			if(isset($_GET['mes'])){ $msjTemp = "Mes"; }else{ $msjTemp = "Año"; }
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Resumen del {$msjTemp} Base Imponible y Débitos Fiscales");
-			$sheet->getStyle('B'.$numL2.':F'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, "Base Imponible");
-			$sheet->getStyle('G'.$numL2.':H'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, "Débito Fiscal");
-			$sheet->getStyle('I'.$numL2.':J'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, "Retenciones de IVA");
-			$sheet->getStyle('K'.$numL2.':L'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Resumen del {$msjTemp} Base Imponible y Débitos Fiscales");
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, "Base Imponible");
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, "Débito Fiscal");
+			$sheet->getStyle($letra31L1.$numL2.':'.$letra32L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, "Retenciones de IVA");
+			$sheet->getStyle($letra41L1.$numL2.':'.$letra42L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL2++;
 			$numInicialL1=$numL2;
 			$ctotalDBaseImponible="=0";
 			$ctotalDDebitoFiscal="=0";
 			$ctotalDRetencion="=0";
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Ventas Internas No Gravadas");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, 0);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalDBaseImponible.="+G".$numL2;
-			$ctotalDDebitoFiscal.="+I".$numL2;
-			$ctotalDRetencion.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Ventas Internas No Gravadas");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, 0);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalDBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalDDebitoFiscal.="+".$letra31L1.$numL2;
+			$ctotalDRetencion.="+".$letra41L1.$numL2;
 
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Ventas Internas Afectas solo Alicuota General");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, $cAlicuotaGeneralDBaseImponible);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, $cAlicuotaGeneralDDebitoFiscal);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalDBaseImponible.="+G".$numL2;
-			$ctotalDDebitoFiscal.="+I".$numL2;
-			$ctotalDRetencion.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Ventas Internas Afectas solo Alicuota General");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, $cAlicuotaGeneralDBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, $cAlicuotaGeneralDDebitoFiscal);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalDBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalDDebitoFiscal.="+".$letra31L1.$numL2;
+			$ctotalDRetencion.="+".$letra41L1.$numL2;
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Ventas Internas Afectas Alicuota General + Adicional");
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, 0);
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalDBaseImponible.="+G".$numL2;
-			$ctotalDDebitoFiscal.="+I".$numL2;
-			$ctotalDRetencion.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Ventas Internas Afectas Alicuota General + Adicional");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, 0);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalDBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalDDebitoFiscal.="+".$letra31L1.$numL2;
+			$ctotalDRetencion.="+".$letra41L1.$numL2;
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL2.':H'.($numL2))->setCellValue('G'.$numL2, 0);
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Ventas Internas Afectas en Alicuota Reducida");
-			$sheet->mergeCells('I'.$numL2.':J'.($numL2))->setCellValue('I'.$numL2, 0);
-			$sheet->mergeCells('K'.$numL2.':L'.($numL2))->setCellValue('K'.$numL2, 0);
-			$ctotalDBaseImponible.="+G".$numL2;
-			$ctotalDDebitoFiscal.="+I".$numL2;
-			$ctotalDRetencion.="+K".$numL2;
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra22L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Ventas Internas Afectas en Alicuota Reducida");
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.($numL2))->setCellValue($letra21L1.$numL2, 0);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.($numL2))->setCellValue($letra31L1.$numL2, 0);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.($numL2))->setCellValue($letra41L1.$numL2, 0);
+			$ctotalDBaseImponible.="+".$letra21L1.$numL2;
+			$ctotalDDebitoFiscal.="+".$letra31L1.$numL2;
+			$ctotalDRetencion.="+".$letra41L1.$numL2;
 
-			$sheet->getStyle('B'.$numInicialL1.':F'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numInicialL1.':H'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('I'.$numInicialL1.':J'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('K'.$numInicialL1.':L'.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra11L1.$numInicialL1.':'.$letra12L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numInicialL1.':'.$letra22L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra31L1.$numInicialL1.':'.$letra32L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra41L1.$numInicialL1.':'.$letra42L1.($numL2))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL2++;
-			$sheet->getStyle('B'.$numL2.':L'.$numL2)->getFont()->setBold(true)->setSize(13);
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('center');
-			$sheet->getStyle('B'.$numL2.':L'.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.$numL2)->getFont()->setBold(true)->setSize(13);
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra42L1.($numL2))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 
-			$sheet->getStyle('B'.$numL2.':F'.$numL2)->getAlignment()->setHorizontal('left');
-			$sheet->mergeCells('B'.$numL2.':F'.($numL2))->setCellValue('B'.$numL2, "Total Ventas y Débitos Fiscales");
+			$sheet->getStyle($letra11L1.$numL2.':'.$letra12L1.$numL2)->getAlignment()->setHorizontal('left');
+			$sheet->mergeCells($letra11L1.$numL2.':'.$letra12L1.($numL2))->setCellValue($letra11L1.$numL2, "Total Ventas y Débitos Fiscales");
 
-			$sheet->getStyle('G'.$numL2.':L'.$numL2)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL2.':H'.$numL2)->setCellValue('G'.$numL2, $ctotalDBaseImponible);
-			$sheet->mergeCells('I'.$numL2.':J'.$numL2)->setCellValue('I'.$numL2, $ctotalDDebitoFiscal);
-			$sheet->mergeCells('K'.$numL2.':L'.$numL2)->setCellValue('K'.$numL2, $ctotalDRetencion);
+			$sheet->getStyle($letra21L1.$numL2.':'.$letra42L1.$numL2)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra21L1.$numL2.':'.$letra22L1.$numL2)->setCellValue($letra21L1.$numL2, $ctotalDBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL2.':'.$letra32L1.$numL2)->setCellValue($letra31L1.$numL2, $ctotalDDebitoFiscal);
+			$sheet->mergeCells($letra41L1.$numL2.':'.$letra42L1.$numL2)->setCellValue($letra41L1.$numL2, $ctotalDRetencion);
 		// CUADRO RESUMEN DE DEBITO  LIBRO 2
 
 
 		$spreadsheet->setActiveSheetIndex(0);
 		$spreadsheet->getActiveSheet();
 		$sheet = $spreadsheet->getActiveSheet();
-
+		$letra11L1 = "H"; //B=H
 		// CUADRO RESUMEN DE CREDITO  LIBRO 1
 			$vComprasNoGravadasCBaseImponible="='".$nameLibro2."'!M".$numTotalizadorL2;
 			$vAlicuotaGeneralCBaseImponible="='".$nameLibro2."'!N".$numTotalizadorL2;
@@ -1518,111 +1536,705 @@ class Excel{
 			$vtotalCRetencionesIVA="=0";
 			$numL1++;
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(13);
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(13);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('center');
 			if(isset($_GET['mes'])){ $msjTemp = "Mes"; }else{ $msjTemp = "Año"; }
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Resumen del {$msjTemp} Base Imponible y Créditos Fiscales");
-			$sheet->getStyle('B'.$numL1.':F'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, "Base Imponible");
-			$sheet->getStyle('G'.$numL1.':H'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, "Crédito Fiscal");
-			$sheet->getStyle('I'.$numL1.':J'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, "Retenciones de IVA");
-			$sheet->getStyle('K'.$numL1.':L'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Resumen del {$msjTemp} Base Imponible y Créditos Fiscales");
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, "Base Imponible");
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra22L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, "Crédito Fiscal");
+			$sheet->getStyle($letra31L1.$numL1.':'.$letra32L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, "Retenciones de IVA");
+			$sheet->getStyle($letra41L1.$numL1.':'.$letra42L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL1++;
 			$numInicialL2=$numL1;
 
 
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Total: Compras no gravadas y/o sin derecho a crédito fiscal");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, $vComprasNoGravadasCBaseImponible);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalCBaseImponible.="+G".$numL1;
-			$vtotalCCreditoFiscal.="+I".$numL1;
-			$vtotalCRetencionesIVA.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra41L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Total: Compras no gravadas y/o sin derecho a crédito fiscal");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, $vComprasNoGravadasCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalCBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalCCreditoFiscal.="+".$letra31L1.$numL1;
+			$vtotalCRetencionesIVA.="+".$letra41L1.$numL1;
 
 
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Σ de las: Compras Internas gravadas sólo por Alícuota General");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, $vAlicuotaGeneralCBaseImponible);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, $vAlicuotaGeneralCCreditoFiscal);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, $vAlicuotaGeneralCRetencion);
-			$vtotalCBaseImponible.="+G".$numL1;
-			$vtotalCCreditoFiscal.="+I".$numL1;
-			$vtotalCRetencionesIVA.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra22L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Σ de las: Compras Internas gravadas sólo por Alícuota General");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, $vAlicuotaGeneralCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, $vAlicuotaGeneralCCreditoFiscal);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, $vAlicuotaGeneralCRetencion);
+			$vtotalCBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalCCreditoFiscal.="+".$letra31L1.$numL1;
+			$vtotalCRetencionesIVA.="+".$letra41L1.$numL1;
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Σ de las: Compras Internas gravadas por Alícuota General + Adicional");
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, 0);
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalCBaseImponible.="+G".$numL1;
-			$vtotalCCreditoFiscal.="+I".$numL1;
-			$vtotalCRetencionesIVA.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra22L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Σ de las: Compras Internas gravadas por Alícuota General + Adicional");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, 0);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalCBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalCCreditoFiscal.="+".$letra31L1.$numL1;
+			$vtotalCRetencionesIVA.="+".$letra41L1.$numL1;
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setSize(12);
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL1.':H'.($numL1))->setCellValue('G'.$numL1, 0);
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Σ de las: Compras Internas gravadas por Alícuota Reducida");
-			$sheet->mergeCells('I'.$numL1.':J'.($numL1))->setCellValue('I'.$numL1, 0);
-			$sheet->mergeCells('K'.$numL1.':L'.($numL1))->setCellValue('K'.$numL1, 0);
-			$vtotalCBaseImponible.="+G".$numL1;
-			$vtotalCCreditoFiscal.="+I".$numL1;
-			$vtotalCRetencionesIVA.="+K".$numL1;
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setSize(12);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra22L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Σ de las: Compras Internas gravadas por Alícuota Reducida");
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.($numL1))->setCellValue($letra21L1.$numL1, 0);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.($numL1))->setCellValue($letra31L1.$numL1, 0);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.($numL1))->setCellValue($letra41L1.$numL1, 0);
+			$vtotalCBaseImponible.="+".$letra21L1.$numL1;
+			$vtotalCCreditoFiscal.="+".$letra31L1.$numL1;
+			$vtotalCRetencionesIVA.="+".$letra41L1.$numL1;
 
 
-			$sheet->getStyle('B'.$numInicialL2.':F'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numInicialL2.':H'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('I'.$numInicialL2.':J'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('K'.$numInicialL2.':L'.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra11L1.$numInicialL2.':'.$letra12L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numInicialL2.':'.$letra22L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra31L1.$numInicialL2.':'.$letra32L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra41L1.$numInicialL2.':'.$letra42L1.($numL1))->getBorders()->getOutline()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
 
 			$numL1++;
-			$sheet->getStyle('B'.$numL1.':L'.$numL1)->getFont()->setBold(true)->setSize(13);
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('center');
-			$sheet->getStyle('B'.$numL1.':L'.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.$numL1)->getFont()->setBold(true)->setSize(13);
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra42L1.($numL1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
 
-			$sheet->getStyle('B'.$numL1.':F'.$numL1)->getAlignment()->setHorizontal('left');
-			$sheet->mergeCells('B'.$numL1.':F'.($numL1))->setCellValue('B'.$numL1, "Total Compras y Créditos Fiscales del Período");
+			$sheet->getStyle($letra11L1.$numL1.':'.$letra12L1.$numL1)->getAlignment()->setHorizontal('left');
+			$sheet->mergeCells($letra11L1.$numL1.':'.$letra12L1.($numL1))->setCellValue($letra11L1.$numL1, "Total Compras y Créditos Fiscales del Período");
 
-			$sheet->getStyle('G'.$numL1.':L'.$numL1)->getAlignment()->setHorizontal('right');
-			$sheet->mergeCells('G'.$numL1.':H'.$numL1)->setCellValue('G'.$numL1, $vtotalCBaseImponible);
-			$sheet->mergeCells('I'.$numL1.':J'.$numL1)->setCellValue('I'.$numL1, $vtotalCCreditoFiscal);
-			$sheet->mergeCells('K'.$numL1.':L'.$numL1)->setCellValue('K'.$numL1, $vtotalCRetencionesIVA);
+			$sheet->getStyle($letra21L1.$numL1.':'.$letra42L1.$numL1)->getAlignment()->setHorizontal('right');
+			$sheet->mergeCells($letra21L1.$numL1.':'.$letra22L1.$numL1)->setCellValue($letra21L1.$numL1, $vtotalCBaseImponible);
+			$sheet->mergeCells($letra31L1.$numL1.':'.$letra32L1.$numL1)->setCellValue($letra31L1.$numL1, $vtotalCCreditoFiscal);
+			$sheet->mergeCells($letra41L1.$numL1.':'.$letra42L1.$numL1)->setCellValue($letra41L1.$numL1, $vtotalCRetencionesIVA);
 		// CUADRO RESUMEN DE CREDITO  LIBRO 1
 
 
 
 
-		// $spreadsheet->createSheet(2);
-		// $spreadsheet->setActiveSheetIndex(2);
-		// $spreadsheet->getActiveSheet()->setTitle($nameLibro3);
-		// $sheet2 = $spreadsheet->getActiveSheet();
-		// $sheet2->getColumnDimension('A')->setAutoSize(true);
-		// $sheet2->getColumnDimension('B')->setAutoSize(true);
-		// $sheet2->getColumnDimension('C')->setAutoSize(true);
-		// $sheet2->getColumnDimension('D')->setAutoSize(true);
-		// $sheet2->getColumnDimension('E')->setAutoSize(true);
-		// $sheet2->getColumnDimension('F')->setAutoSize(true);
 
 
+		$spreadsheet->createSheet(2);
+		$spreadsheet->setActiveSheetIndex(2);
+		$spreadsheet->getActiveSheet()->setTitle($nameLibro3);
+		$sheet = $spreadsheet->getActiveSheet();
+
+		// CABECERA PRINCIPAL  LIBRO 3
+			$sheet->getColumnDimension('A')->setAutoSize(true);
+			$sheet->getColumnDimension('B')->setAutoSize(true);
+			$sheet->getColumnDimension('C')->setAutoSize(true);
+			$sheet->getColumnDimension('D')->setAutoSize(true);
+			$sheet->getColumnDimension('E')->setAutoSize(true);
+			$sheet->getColumnDimension('F')->setAutoSize(true);
+			// $sheet->getColumnDimension('G')->setAutoSize(true);
+			// $sheet->getColumnDimension('H')->setAutoSize(true);
+			// $sheet->getColumnDimension('I')->setAutoSize(true);
+			// $sheet->getColumnDimension('J')->setAutoSize(true);
+			// $sheet->getColumnDimension('K')->setAutoSize(true);
+			// $sheet->getColumnDimension('L')->setAutoSize(true);
+			// $sheet->getColumnDimension('M')->setAutoSize(true);
+			// $sheet->getColumnDimension('N')->setAutoSize(true);
+			// $sheet->getColumnDimension('O')->setAutoSize(true);
+			// $sheet->getColumnDimension('P')->setAutoSize(true);
+			// $sheet->getColumnDimension('Q')->setAutoSize(true);
+			// $sheet->getColumnDimension('R')->setAutoSize(true);
+			// $sheet->getColumnDimension('S')->setAutoSize(true);
+			// $sheet->getColumnDimension('T')->setAutoSize(true);
+			$sheet->getStyle('A1:Z1000')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
+
+			$indexL3 = 1;
+			$numL3 = 1;
+			$numL3++;
+			// $sheet->getStyle('B'.$numL3.':E'.$numL3)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(13);
+			$sheet->mergeCells('B'.$numL3.':C'.$numL3)->setCellValue('B'.$numL3, 'INVERSIONES STYLE COLLECTION, C.A.');
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':C'.$numL3)->getFont()->setBold(true)->setSize(13);
+			$sheet->mergeCells('B'.$numL3.':C'.$numL3)->setCellValue('B'.$numL3, 'RIF: J-408497786');
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':C'.$numL3)->getFont()->setBold(true)->setSize(13)->getUnderline(true);
+			// $sheet->mergeCells('C'.$numL3.':F'.$numL3)->setCellValue('C'.$numL3, 'RESUMEN DE LOS DÉBITOS Y CRÉDITOS DESDE EL '.str_replace("-","/",$lider->formatFecha($inicioFecha)).' HASTA EL '.str_replace("-","/",$lider->formatFecha($finFecha)));
+			$sheet->mergeCells('B'.$numL3.':E'.$numL3)->setCellValue('B'.$numL3, 'RESUMEN DE LOS DÉBITOS Y CRÉDITOS DESDE EL '.str_replace("-","/",$lider->formatFecha($inicioFecha)).' HASTA EL '.str_replace("-","/",$lider->formatFecha($finFecha)));
+
+			$numL3++;
+			$numL3++;
+		// CABECERA PRINCIPAL  LIBRO 3
+
+		// CUADRO RESUMEN DE DEBITOS DEL PERIODO  LIBRO 3
+			$dpBaseImponibleVentasInternasNoGravadas="=0";
+			$dpBaseImponibleVentasExportacion="=0";
+			$dpBaseImponibleVentasAlicuotaGeneral="='".$nameLibro1."'!O".$numTotalizadorL1;
+			$dpDebitoVentasAlicuotaGeneral="='".$nameLibro1."'!Q".$numTotalizadorL1;
+			$dpBaseImponibleVentasAlicuotaGeneralAdicional="=0";
+			$dpDebitoVentasAlicuotaGeneralAdicional="=0";
+			$dpBaseImponibleVentasAlicuotaReducida="=0";
+			$dpDebitoVentasAlicuotaReducida="=0";
+			$dpBaseImponibleTotalVentasYDebitos="=0";
+			$dpDebitoTotalVentasYDebitos="=0";
+			$dpDebitoDebitosFiscalPeriodoAnterior = "=".$debitosFiscalesPendienteAnterior;
+			$dpDebitoDebitosFiscalExonerados = "=0";
+			$dpDebitoTotalDebidosFiscales="=0";
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, "");
+			$sheet->setCellValue('C'.$numL3, "Débitos del periodo");
+			$sheet->setCellValue('D'.$numL3, "Base Imponible");
+			$sheet->setCellValue('E'.$numL3, "Débito");
+			// $indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('E'.$numL3.':E'.$numL3)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Ventas Internas no gravadas");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleVentasInternasNoGravadas);
+			$sheet->setCellValue('E'.$numL3, "");
+			$dpBaseImponibleTotalVentasYDebitos.="+D".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('E'.$numL3.':E'.$numL3)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Ventas de exportacion");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleVentasExportacion);
+			$sheet->setCellValue('E'.$numL3, "");
+			$dpBaseImponibleTotalVentasYDebitos.="+D".$numL3;
+			// $dpDebitoTotalVentasYDebitos="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Ventas internas gravadas alícuota general");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleVentasAlicuotaGeneral);
+			$sheet->setCellValue('E'.$numL3, $dpDebitoVentasAlicuotaGeneral);
+			$dpBaseImponibleTotalVentasYDebitos.="+D".$numL3;
+			$dpDebitoTotalVentasYDebitos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Ventas internas gravadas por alícuota general mas adicional");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleVentasAlicuotaGeneralAdicional);
+			$sheet->setCellValue('E'.$numL3, $dpDebitoVentasAlicuotaGeneralAdicional);
+			$dpBaseImponibleTotalVentasYDebitos.="+D".$numL3;
+			$dpDebitoTotalVentasYDebitos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Ventas internas gravadas alícuota reducida");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleVentasAlicuotaReducida);
+			$sheet->setCellValue('E'.$numL3, $dpDebitoVentasAlicuotaReducida);
+			$dpBaseImponibleTotalVentasYDebitos.="+D".$numL3;
+			$dpDebitoTotalVentasYDebitos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Total ventas y débitos fiscales para efectos de determinación");
+			$sheet->setCellValue('D'.$numL3, $dpBaseImponibleTotalVentasYDebitos);
+			$sheet->setCellValue('E'.$numL3, $dpDebitoTotalVentasYDebitos);
+			$dpDebitoTotalDebidosFiscales.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Ajuste a los débitos fiscales de períodos anteriores");
+			$sheet->setCellValue('E'.$numL3, $dpDebitoDebitosFiscalPeriodoAnterior);
+			$dpDebitoTotalDebidosFiscales.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Certificado de Débitos Fiscales Exonerados (recibidos)");
+			$sheet->setCellValue('E'.$numL3, $dpDebitoDebitosFiscalExonerados);
+			$dpDebitoTotalDebidosFiscales.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('C'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Total Débitos Fiscales");
+			$sheet->setCellValue('E'.$numL3, $dpDebitoTotalDebidosFiscales);
+			$numTotalDebitosPeriodo = $numL3;
+			$indexL3++;
+
+			$numL3++;
+		// CUADRO RESUMEN DE DEBITOS DEL PERIODO  LIBRO 3
+
+		// CUADRO RESUMEN DE CREDITOS DEL PERIODO  LIBRO 3
+			$cpBaseImponibleComprasNoGravadas="='".$nameLibro2."'!M".$numTotalizadorL2;
+			$cpBaseImponibleImportAlicuotaGeneral="=0";
+			$cpCreditoImportAlicuotaGeneral="=0";
+			$cpBaseImponibleImportAlicuotaGeneralAdicional="=0";
+			$cpCreditoImportAlicuotaGeneralAdicional="=0";
+			$cpBaseImponibleImportAlicuotaReducida="=0";
+			$cpCreditoImportAlicuotaReducida="=0";
+
+			$cpBaseImponibleCompraInternaAlicuotaGeneral="='".$nameLibro2."'!N".$numTotalizadorL2;
+			$cpCreditoCompraInternaAlicuotaGeneral="='".$nameLibro2."'!P".$numTotalizadorL2;
+			$cpBaseImponibleCompraInternaAlicuotaGeneralAdicional="=0";
+			$cpCreditoCompraInternaAlicuotaGeneralAdicional="=0";
+			$cpBaseImponibleCompraInternaAlicuotaReducida="=0";
+			$cpCreditoCompraInternaAlicuotaReducida="=0";
+
+			$cpBaseImponibleTotalComprasYCreditos="=0";
+			$cpDebitoTotalComprasYCreditos="=0";
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, "");
+			$sheet->setCellValue('C'.$numL3, "Créditos del periodo");
+			$sheet->setCellValue('D'.$numL3, "Base Imponible");
+			$sheet->setCellValue('E'.$numL3, "Crédito");
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('E'.$numL3.':E'.$numL3)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Compras no gravadas y/o sin derecho a crédito fiscal");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleComprasNoGravadas);
+			$sheet->setCellValue('E'.$numL3, "");
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Importaciones gravadas por alícuota general");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleImportAlicuotaGeneral);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoImportAlicuotaGeneral);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Importaciones gravadas por alícuota general mas adicional");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleImportAlicuotaGeneralAdicional);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoImportAlicuotaGeneralAdicional);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Importaciones gravadas por alícuota reducida");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleImportAlicuotaReducida);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoImportAlicuotaReducida);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Compras Internas gravadas solo por alícuota general");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleCompraInternaAlicuotaGeneral);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoCompraInternaAlicuotaGeneral);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Compras Internas gravadas por alícuota general mas adicional");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleCompraInternaAlicuotaGeneralAdicional);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoCompraInternaAlicuotaGeneralAdicional);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Compras Internas gravadas por alícuota reducida");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleCompraInternaAlicuotaReducida);
+			$sheet->setCellValue('E'.$numL3, $cpCreditoCompraInternaAlicuotaReducida);
+			$cpBaseImponibleTotalComprasYCreditos.="+D".$numL3;
+			$cpDebitoTotalComprasYCreditos.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('C'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Total Compras y Créditos Fiscales del Periodo");
+			$sheet->setCellValue('D'.$numL3, $cpBaseImponibleTotalComprasYCreditos);
+			$sheet->setCellValue('E'.$numL3, $cpDebitoTotalComprasYCreditos);
+			$numTotalCreditosPeriodo = $numL3;
+			$indexL3++;
+
+			$numL3++;
+		// CUADRO RESUMEN DE CREDITOS DEL PERIODO  LIBRO 3
+
+		// CUADRO RESUMEN DE CALCULOS DE CREDITOS DEDUCIBLES  LIBRO 3
+			$ccdCreditoFiscalTotalmenteDeducible="=E".$numTotalCreditosPeriodo;
+			$ccdCreditoFiscalProdAplicProrrata="=0";
+			$ccdExcedenteCreditoFiscalMesAnterior="=".$excedenteCreditosFiscalesPendienteAnterior;
+			$ccdAjustesCreditosFiscalesPeriodosAnt="=0";
+			$ccdCertificadoDBExoneradosEmitidos="=E".($numTotalDebitosPeriodo-1);
+			$ccdTotalCreditosFiscalesDeducibles="=0";
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, "");
+			$sheet->mergeCells('B'.$numL3.':E'.$numL3)->setCellValue('B'.$numL3, "Cálculo del Crédito deducible");
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Créditos fiscales totalmente deducibles");
+			$sheet->setCellValue('E'.$numL3, $ccdCreditoFiscalTotalmenteDeducible);
+			$ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Créditos fiscales totalmente deducibles");
+			$sheet->setCellValue('E'.$numL3, $ccdCreditoFiscalProdAplicProrrata);
+			$ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Total créditos fiscales deducibles");
+			$sheet->setCellValue('E'.$numL3, $ccdTotalCreditosFiscalesDeducibles);
+			// $ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Excedente créditos fiscales del mes anterior");
+			$sheet->setCellValue('E'.$numL3, $ccdExcedenteCreditoFiscalMesAnterior);
+			$ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Ajuste a los créditos fiscales de periodos anteriores");
+			$sheet->setCellValue('E'.$numL3, $ccdAjustesCreditosFiscalesPeriodosAnt);
+			$ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Certificados de Débitos Fiscales Exonerados (emitidos)");
+			$sheet->setCellValue('E'.$numL3, $ccdCertificadoDBExoneradosEmitidos);
+			$ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('C'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Total Créditos Fiscales");
+			$sheet->setCellValue('E'.$numL3, $ccdTotalCreditosFiscalesDeducibles);
+			$numTotalCreditosFiscales = $numL3;
+			$indexL3++;
+			$numL3++;
+		// CUADRO RESUMEN DE CALCULOS DE CREDITOS DEDUCIBLES  LIBRO 3
+
+		// CUADRO RESUMEN DE AUTOLIQUIDACION  LIBRO 3
+			$autoTotalCuotaTributaria="=MAX(0,E".$numTotalDebitosPeriodo."-E".$numTotalCreditosFiscales.")";
+			$autoExcedentesDeCreditoSigMes="=MAX(0,E".$numTotalCreditosFiscales."-E".$numTotalDebitosPeriodo.")";
+			$autoRetencionesAcumuladas="=0";
+			$autoRetencionPeriodo="='".$nameLibro2."'!Q".$numTotalizadorL2;
+			$autoTotalRetenciones = "=0";
+
+			$autoRetencionesSoportadaDescont1="=0";
+			$autoRetencionesSoportadaDescont2="=0";
+
+			$autoSaldoRetencionesIvaNoAplic = "=0";
+			
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, "");
+			$sheet->mergeCells('B'.$numL3.':E'.$numL3)->setCellValue('B'.$numL3, "Autoliquidación");
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('C'.$numL3.':F'.$numL3)->getFont()->setBold(true)->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Total Cuota tributaria");
+			$sheet->setCellValue('E'.$numL3, $autoTotalCuotaTributaria);
+			$numPosTotalCuotaTributaria = $numL3;
+			// $ccdTotalCreditosFiscalesDeducibles.="+E".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->mergeCells('C'.$numL3.':D'.$numL3)->setCellValue('C'.$numL3, "Excedente de crédito fiscal para el mes siguiente");
+			$sheet->setCellValue('E'.$numL3, $autoExcedentesDeCreditoSigMes);
+			$numPosExcedenteCreditoFiscalParaSigMes = $numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Retenciones acumuladas por descontar");
+			$sheet->setCellValue('D'.$numL3, $autoRetencionesAcumuladas);
+			$sheet->setCellValue('E'.$numL3, "");
+			$autoTotalRetenciones.="+D".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Retención del periodo");
+			$sheet->setCellValue('D'.$numL3, $autoRetencionPeriodo);
+			$sheet->setCellValue('E'.$numL3, "");
+			$autoTotalRetenciones.="+D".$numL3;
+			$indexL3++;
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Total retenciones");
+			$sheet->setCellValue('D'.$numL3, $autoTotalRetenciones);
+			$sheet->setCellValue('E'.$numL3, "");
+			$numPosTotalRetenciones = $numL3;
+			$indexL3++;
+
+			$condicionSoportada1="E{$numPosTotalCuotaTributaria}";
+			$condicionSoportada2="D{$numPosTotalRetenciones}";
+			$contentAutoSoportada="{$condicionSoportada1} > {$condicionSoportada2}";
+			$autoRetencionesSoportadaDescont2="SI({$contentAutoSoportada};{$condicionSoportada2};{$condicionSoportada1})";
+			// $autoRetencionesSoportadaDescont2="=SI({$contentAutoSoportada};{$condicionSoportada2};{$condicionSoportada1})";
+
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Retenciones soportadas descontadas en esta declaración");
+			$sheet->setCellValue('D'.$numL3, $autoRetencionesSoportadaDescont1);
+			$sheet->setCellValue('E'.$numL3, $autoRetencionesSoportadaDescont2);
+			// $sheet->getCell('E'.$numL3)->setValueExplicit($autoRetencionesSoportadaDescont2, DataType::TYPE_FORMULA);
+			$numPosTotalRetencionesSoportadas = $numL3;
+			$indexL3++;
+
+			$autoSaldoRetencionesIvaNoAplic="=D".$numPosTotalRetenciones."-E".$numPosTotalRetencionesSoportadas;
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Saldo de retenciones de IVA no aplicado");
+			$sheet->setCellValue('D'.$numL3, $autoSaldoRetencionesIvaNoAplic);
+			$sheet->setCellValue('E'.$numL3, "");
+			$indexL3++;
+
+			$autoTotalAPagar="=E".$numPosTotalCuotaTributaria."-E".$numPosTotalRetencionesSoportadas;
+			$numL3++;
+			$sheet->getStyle('B'.$numL3.':F'.$numL3)->getFont()->setSize(12);
+			$sheet->getStyle('B'.$numL3)->getAlignment()->setHorizontal('center');
+			$sheet->getStyle('C'.$numL3)->getAlignment()->setHorizontal('left');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getAlignment()->setHorizontal('right');
+			$sheet->getStyle('D'.$numL3.':E'.$numL3)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheet->getStyle('B'.$numL3.':E'.($numL3))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN)->setColor(new Color('000000'));
+			$sheet->setCellValue('B'.$numL3, $indexL3);
+			$sheet->setCellValue('C'.$numL3, "Total a pagar");
+			$sheet->setCellValue('D'.$numL3, "");
+			$sheet->setCellValue('E'.$numL3, $autoTotalAPagar);
+			$indexL3++;
+		// CUADRO RESUMEN DE AUTOLIQUIDACION  LIBRO 3
 
 		// die();
 		$spreadsheet->setActiveSheetIndex(0);
@@ -1630,6 +2242,7 @@ class Excel{
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="Libros de IVA'.$nameLibrosComplement.'.xlsx"');
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->setPreCalculateFormulas(true);
 		$writer->save('php://output');
 	}
 

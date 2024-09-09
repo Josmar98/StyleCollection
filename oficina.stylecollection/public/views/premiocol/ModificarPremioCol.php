@@ -235,9 +235,9 @@
               </div>
               <input type="hidden" name="id_pedido" value="<?=$pedido['id_pedido']?>">
               <!-- /.box-body --> 
-              <span class="name_planes d-non"><?php echo json_encode($planesss)?></span>
+              <span class="name_planes d-none"><?php echo json_encode($planesss)?></span>
               <br>
-              <span class="name_planes2 d-non"><?php echo json_encode($planesss2)?></span>
+              <span class="name_planes2 d-none"><?php echo json_encode($planesss2)?></span>
               <br>
               <span class="name_planes3 d-none"><?php echo json_encode($planesss3)?></span>
 

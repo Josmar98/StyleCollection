@@ -83,6 +83,58 @@ if($amClientesE == 1){
       $correolen1 = strlen($correo) - 4;
       $correolen2 = strlen($correo);
       $correoterminator = substr($correo, $correolen1, $correolen2);
+
+      $dirCatalogo = "public/assets/img/profile/";
+      $actualizarFoto = false;
+      if(!empty($_FILES['fotos'])){
+        $imgCatalogo = $_FILES['fotos'];
+
+        $nameImg = $imgCatalogo['name'];
+        if(isset($nameImg) && $nameImg!=""){
+          $actualizarFoto = true;
+
+          $usuario = [];
+          $usuarios = $lider->consultarQuery("SELECT * FROM usuarios WHERE estatus=1 and usuarios.id_cliente={$id}");
+          $usuario = $usuarios[0];
+
+
+          $tipoImg = $imgCatalogo['type'];
+          $extPos = strpos($tipoImg, "/");
+          $extImg = substr($tipoImg, $extPos+1);
+          $sizeImg = $imgCatalogo['size'];
+          $tempImg = $imgCatalogo['tmp_name'];
+          $errorImg = $imgCatalogo['error'];
+          // echo "<br><br>";
+          // echo "Tipo IMG: ".$tipoImg."<br>";
+          // echo "Extension IMG: ".$extImg."<br>";
+          // echo "Tamanio IMG: ".($sizeImg/1000000)." MB<br>";
+          // echo "archivo temp IMG: ".$tempImg."<br>";
+          // echo "Error IMG: ".$errorImg."<br>";
+
+          if(!( strpos($tipoImg, 'jpeg') || strpos($tipoImg, 'jpg') || strpos($tipoImg, 'png') || strpos($tipoImg, 'JPEG') || strpos($tipoImg, 'JPG') || strpos($tipoImg, 'PNG') )){
+            $responseImg = "73";  // Formato error
+          }else{
+            if(!( $sizeImg < 10000000 )){ // 10 MB - 10000 KB - 10000000 Bytes
+              $responseImg = "74";   // tam limite Superado error
+            }else{
+              if($extImg=="jpeg"||$extImg=="jpg"||$extImg=="JPEG"||$extImg=="JPG"){$extImg = "jpg";}
+              if($extImg=="png"||$extImg=="PNG"){ $extImg = "png";}
+              $final = $dirCatalogo."perfil".$id.'.'.$extImg;
+              if($errorImg=="0"){
+                if(move_uploaded_file($tempImg, $final)){
+                  $responseImg = "1";
+                  $imagen = $final;
+                }else{
+                  $responseImg = "72";  // Error al cargar
+                }
+              }else{
+                $responseImg = "75"; // Error error
+              }
+            }
+          }
+        }
+      }
+
       $campAnt = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente = $id");
       $query = "UPDATE clientes SET primer_nombre = '$nombre1', segundo_nombre = '$nombre2', primer_apellido = '$apellido1', segundo_apellido = '$apellido2', cedula = '$cedula', sexo = '$sexo', fecha_nacimiento = '$fechaNacimiento', telefono = '$telefono', telefono2 = '$telefono2', correo = '$correo', cod_rif = '$cod_rif', rif = '$rif', direccion = '$direccion', id_lider = $id_lider, estatus = 1 WHERE id_cliente = $id";
 
@@ -90,7 +142,9 @@ if($amClientesE == 1){
       $exec = $lider->modificar($query);
       if($exec['ejecucion']==true){
         $response = "1";
-
+          if($actualizarFoto==true){
+            $query2 = $lider->modificar("UPDATE usuarios SET fotoPerfil='{$imagen}' WHERE usuarios.id_cliente={$id}");
+          }
           if(!empty($modulo) && !empty($accion)){
             $campAnt = $campAnt[0];
             $elementos = array(
@@ -140,6 +194,10 @@ if($amClientesE == 1){
       $lideress = $lider->consultar("clientes");
       if(Count($clientes)>1){
           $datas = $clientes[0];
+          $usuario = [];
+          $usuarios = $lider->consultarQuery("SELECT * FROM usuarios WHERE estatus=1 and usuarios.id_cliente={$datas['id_cliente']}");
+          $usuario = $usuarios[0];
+
           $cod_tlfn = substr($datas['telefono'], 0, 4);
           $numtelefono = substr($datas['telefono'], 4, strlen($datas['telefono']) );
           $cod_tlfn2 = substr($datas['telefono2'], 0, 4);

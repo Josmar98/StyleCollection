@@ -291,8 +291,8 @@ $(document).ready(function(){
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       var iva = parseInt($("#iva").val());
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
-          $("#comprasExentas").val(totalCompra-1);
+        if( comprasExentas > totalCompra ){
+          $("#comprasExentas").val(totalCompra);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
         }
@@ -323,8 +323,8 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
-          $("#comprasExentas").val(totalCompra-1);
+        if( comprasExentas > totalCompra ){
+          $("#comprasExentas").val(totalCompra);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
         }
@@ -357,8 +357,8 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
-          $("#comprasExentas").val(totalCompra-1);
+        if( comprasExentas > totalCompra ){
+          $("#comprasExentas").val(totalCompra);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
         }
@@ -404,8 +404,8 @@ $(document).ready(function(){
     var ivaGeneral = 0;
     if($("#totalCompra").val()!="" && $("#comprasExentas").val()!=""){
       if((totalCompra>0)){
-        if( comprasExentas >= totalCompra ){
-          $("#comprasExentas").val(totalCompra-1);
+        if( comprasExentas > totalCompra ){
+          $("#comprasExentas").val(totalCompra);
           totalCompra = parseFloat($("#totalCompra").val());
           comprasExentas = parseFloat($("#comprasExentas").val());
         }

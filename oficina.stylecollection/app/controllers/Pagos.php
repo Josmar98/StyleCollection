@@ -173,7 +173,7 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 					}
 				}
 				$equivalente_pago = $pago['monto_pago']/$tasa;
-				$equivalente_pago = number_format($equivalente_pago,2);
+				$equivalente_pago = (float) number_format($equivalente_pago,2, '.','');
 
 				if($pago['estado']=="Abonado"){
 					$exec = $lider->modificar("UPDATE pagos SET id_pedido={$id_pedido_temp}, fecha_pago = '{$fecha}', tasa_pago='{$tasa}', tipo_pago='{$tipo_pago}', equivalente_pago='{$equivalente_pago}' WHERE id_pago='$id_pago'");

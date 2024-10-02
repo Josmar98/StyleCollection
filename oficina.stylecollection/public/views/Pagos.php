@@ -2528,7 +2528,7 @@
                         </div>
                         <input type="hidden" id="id_pago_modal" class="id_pago_modal" name="id_pago_modal">
                         <div class="form-group col-xs-12 col-sm-6 col-md-6">
-                           <label for="tasa">Tasa del dolar</label>
+                           <label for="tasa">Tasa del dolar asdasdassd</label>
                            <input type="number" class="form-control tasaModal" value="" step="0.01" min="<?=$limiteFechaMinimo?>" name="tasa" id="tasa" max="<?=date('Y-m-d')?>">
                            <span id="error_tasaModal" class="errors"></span>
                         </div>
@@ -4132,7 +4132,8 @@ $(document).ready(function(){
       var rol = $("#rol").val(); 
       var tipo_pago = $("#tipo_pago").val(); 
       var id_pago_modal = $("#id_pago_modal").val(); 
-      var tasa = $("#tasa").val(); 
+      var tasa = $("#tasa").val();
+      
         $.ajax({
           url:'',
           type:"POST",
@@ -4145,7 +4146,7 @@ $(document).ready(function(){
             tasa: tasa,
           },
           success: function(respuesta){
-            // alert(respuesta);
+            alert(respuesta);
             // console.log(respuesta);
             var data = JSON.parse(respuesta);
             if(data['exec']=="1"){

@@ -161,7 +161,7 @@ if($estado_campana=="1"){
 				$eqv = "";
 			}
 			if($tasa!="" && $monto!=""){
-				$eqv = (float) $monto/$tasa;
+				$eqv = (float) number_format(($monto/$tasa),2,'.','');
 			}
 			if(!empty($_GET['admin']) && !empty($_GET['select']) && !empty($_GET['lider'])){				
 				$id_cliente = $_GET['lider'];

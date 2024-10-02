@@ -749,7 +749,11 @@ class Excel{
 		$nameLibro1="Libro de Ventas".$nameLibrosComplement;
 		$nameLibro2="Libro de Compras".$nameLibrosComplement;
 		$nameLibro3="Resumen";
-		
+		// echo $nameLibro1."<br>";
+		// echo $nameLibro2."<br>";
+		// echo $nameLibro3."<br>";
+
+
 		$digitosParaCodigo = $dat['digitosParaCodigo'];
 		$digitosParaCodigo2 = $dat['digitosParaCodigo2'];
 		$cantidadIVA = $dat['cantidadIVA'];
@@ -2236,7 +2240,7 @@ class Excel{
 			$indexL3++;
 		// CUADRO RESUMEN DE AUTOLIQUIDACION  LIBRO 3
 
-		// die();
+		// // die();
 		$spreadsheet->setActiveSheetIndex(0);
 
 		header('Content-Type: application/vnd.ms-excel');

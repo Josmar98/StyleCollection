@@ -54,6 +54,32 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 
 			$control1 = $_POST['control1'];
 			$control2 = $_POST['control2'];
+
+			$proceder = false;
+			if(count($_POST['pedidoss'])>0){
+				if( count($_POST['pedidoss'])==1 and $_POST['pedidoss']==$_GET['dpid'] ){
+					$proceder = false;
+				}else if(count($_POST['pedidoss'])>1){
+					$proceder = true;
+				}
+			}
+			if($proceder){
+				$despachoss = $_POST['pedidoss'];
+				$infoPedido = $lider->consultarQuery("SELECT id_cliente FROM pedidos WHERE id_pedido={$id_pedido} ");
+				$id_cliente = 0;
+				foreach ($infoPedido as $key) {
+					if(!empty($key['id_cliente'])){
+						$id_cliente = $key['id_cliente'];
+					}
+				}
+				$pedidosVariados = [];
+				foreach ($despachoss as $keys) {
+					$buscarPedidos = $lider->consultarQuery("SELECT id_pedido FROM pedidos WHERE pedidos.estatus=1 and pedidos.id_cliente = {$id_cliente} and pedidos.id_despacho={$keys}");
+					$pedidosVariados[count($pedidosVariados)] = $buscarPedidos[0]['id_pedido'];
+				}
+				// echo "Cliente = ".$id_cliente."<br>";
+				// print_r($pedidosVariados);
+			}
 			// $query = "SELECT MAX(numero_factura) FROM factura_despacho";
 			// $factNum = $lider->consultarQuery($query);
 			// $factNum = $factNum[0][0];
@@ -65,8 +91,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			// 	$numero_factura = $factNum+1;	
 			// }
 			// echo $numero_factura;
-
 			
+			// die();
 			$buscar = $lider->consultarQuery("SELECT * FROM factura_despacho WHERE id_pedido = {$id_pedido} AND estatus = 1");
 			if(count($buscar)>1){
 				$response = "9";
@@ -81,12 +107,39 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 					if(count($pedido)>1){
 						$pedid=$pedido[0];
 						$id_factura_despacho = $exec['id'];
-						$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
+						$precioTotalDeuda = 0;
+						if($proceder){
+							foreach ($pedidosVariados as $pedidoVariado) {
+								foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = $pedidoVariado") as $key){
+									if(!empty($key['id_pedido'])){
+										$precioDeuda = (float) number_format($key['cantidad_aprobado'] * $key['precio_coleccion'],2,'.','');
+										$precioTotalDeuda += $precioDeuda;
+									}
+								}
+							}
+						}
+						if($precioTotalDeuda==0){
+							$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
+						}else{
+							$totalVenta=$precioTotalDeuda;
+						}
 						$querys = "INSERT INTO factura_ventas (id_factura_ventas, id_factura_despacho, totalVenta, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$totalVenta}, 1)";
 						$exec = $lider->registrar($querys, "factura_ventas", "id_factura_ventas");
 						// print_r($exec);
 						// echo "asdasd";
+
+						if($proceder){
+							foreach ($pedidosVariados as $pedidoVariado) {
+								$query = "INSERT INTO factura_despacho_variadas (id_factura_despacho_variada, id_factura_despacho, id_pedido_factura, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$pedidoVariado}, 1);";
+								$exec = $lider->registrar($query, "factura_despacho_variadas", "id_factura_despacho_variada");
+								if($exec['ejecucion']==true){
+									
+								}
+							}
+						}
 					}
+
+
 
 					if(!empty($modulo) && !empty($accion)){
 						$fecha = date('Y-m-d');

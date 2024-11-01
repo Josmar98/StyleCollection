@@ -72,6 +72,7 @@
                       <a href="?<?php echo $menu ?>&dpid=<?php echo $data['id_despacho'] ?>&dp=<?php echo $data['numero_despacho'] ?>&route=Homing2">
                       <?php
                         $ndp = "";
+                        
                         if($data['numero_despacho']=="1"){ $ndp = "1er"; }
                         if($data['numero_despacho']=="2"){ $ndp = "2do"; }
                         if($data['numero_despacho']=="3"){ $ndp = "3er"; }
@@ -83,12 +84,17 @@
                         if($data['numero_despacho']=="9"){ $ndp = "9no"; }
                       ?>
                       <?php 
-                          if($data['numero_despacho']!="1"){
-                            // echo $data['numero_despacho'];
-                            echo $ndp;
-                          }
+                          echo $ndp;
+                          // if($data['numero_despacho']!="1"){
+                          //   // echo $data['numero_despacho'];
+                          //   echo $ndp;
+                          // }
                           echo " Pedido ";
-                          echo " - Campaña ".$numero_campana."/".$anio_campana;
+                          if( $data['nombre_despacho']!="" ){
+                            echo " - ".$data['nombre_despacho'];
+                          }else{
+                            echo " - Campaña ".$numero_campana."/".$anio_campana;
+                          }
                       ?>
                       </a>
                     </span>

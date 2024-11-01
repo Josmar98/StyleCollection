@@ -260,8 +260,8 @@
                     if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista"){
                       ?>
                       <div style="text-align:right;padding-right:30px;">
-                        <b><u><a href="?<?=$menu?>&route=EstadoCuentasGlobal&id=<?=$id; ?>">
-                          Ver estado de cuentas global
+                        <b><u><a href="?<?=$menu?>&route=Pedidos&id=<?=$id; ?>">
+                          Ver estado de cuentas individual
                         </a></u></b>
                       </div>
                       <br>
@@ -477,10 +477,10 @@
                                   }
                                 ?>
                                 <?php if ($opcionBonosContado == 1): ?>
-                                  <b><u>
+                                  <!-- <b><u>
                                     <a class="asignarDescuentoContado" style="cursor:pointer"><span style="font-size:1.4em">+</span> Descuentos Por Colección de Contado</a>
                                   </u></b> 
-                                  <br>
+                                  <br> -->
                                 <?php endif ?>
                                       
 
@@ -503,11 +503,11 @@
                                   }
                                 ?>
                                 <?php if ($opcionBonosPagosPuntuales == 1): ?>
-                                  <br>
+                                  <!-- <br>
                                   <b><u>
                                       <a class="asignarBonosPagosPuntuales" style="cursor:pointer"><span style="font-size:1.4em">+</span> Descuentos Por Pagos Puntuales</a>
                                   </u></b> 
-                                  <br>
+                                  <br> -->
                                 <?php endif; ?>
 
                               <?php } ?>
@@ -540,12 +540,12 @@
                                         if($total>0){
                                           if($configbonoCierreEstructura=="1"):
                                             if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ ?>
-                                              <div class="col-xs-12 col-sm-6" style="text-align:right;">
+                                              <!-- <div class="col-xs-12 col-sm-6" style="text-align:right;">
                                                 <br>
                                                 <b><u>
                                                     <a class="asignarDescuentoCierreEstructura" style="cursor:pointer"><span style="font-size:1.4em">+</span> Descuentos por cierre de estructura</a>
                                                 </u></b>                              
-                                              </div>
+                                              </div> -->
                                           <?php 
                                             }
                                           endif; 

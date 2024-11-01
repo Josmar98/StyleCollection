@@ -54,6 +54,32 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 
 			$control1 = $_POST['control1'];
 			$control2 = $_POST['control2'];
+
+			$proceder = false;
+			if(count($_POST['pedidoss'])>0){
+				if( count($_POST['pedidoss'])==1 and $_POST['pedidoss']==$_GET['dpid'] ){
+					$proceder = false;
+				}else if(count($_POST['pedidoss'])>1){
+					$proceder = true;
+				}
+			}
+			if($proceder){
+				$despachoss = $_POST['pedidoss'];
+				$infoPedido = $lider->consultarQuery("SELECT id_cliente FROM pedidos WHERE id_pedido={$id_pedido} ");
+				$id_cliente = 0;
+				foreach ($infoPedido as $key) {
+					if(!empty($key['id_cliente'])){
+						$id_cliente = $key['id_cliente'];
+					}
+				}
+				$pedidosVariados = [];
+				foreach ($despachoss as $keys) {
+					$buscarPedidos = $lider->consultarQuery("SELECT id_pedido FROM pedidos WHERE pedidos.estatus=1 and pedidos.id_cliente = {$id_cliente} and pedidos.id_despacho={$keys}");
+					$pedidosVariados[count($pedidosVariados)] = $buscarPedidos[0]['id_pedido'];
+				}
+				// echo "Cliente = ".$id_cliente."<br>";
+				// print_r($pedidosVariados);
+			}
 			// $query = "SELECT MAX(numero_factura) FROM factura_despacho";
 			// $factNum = $lider->consultarQuery($query);
 			// $factNum = $factNum[0][0];
@@ -72,6 +98,18 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 				$exec = $lider->modificar($query);
 				if($exec['ejecucion']==true){
 					$response = "1";
+
+
+					$limpiarVariadas = $lider->consultarQuery("DELETE FROM factura_despacho_variadas WHERE id_factura_despacho={$id}");
+					if($proceder){
+						foreach ($pedidosVariados as $pedidoVariado) {
+							$query = "INSERT INTO factura_despacho_variadas (id_factura_despacho_variada, id_factura_despacho, id_pedido_factura, estatus) VALUES (DEFAULT, {$id}, {$pedidoVariado}, 1);";
+							$exec = $lider->registrar($query, "factura_despacho_variadas", "id_factura_despacho_variada");
+							if($exec['ejecucion']==true){
+								
+							}
+						}
+					}
 
 					if(!empty($modulo) && !empty($accion)){
 						$fecha = date('Y-m-d');

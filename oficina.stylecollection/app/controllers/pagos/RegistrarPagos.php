@@ -348,7 +348,7 @@ if($estado_campana=="1"){
 					// echo "No encontro Resultados";
 					$continuar = true;
 				}
-				echo $continuar;
+				// echo $continuar;
 				if($continuar==true){
 
 

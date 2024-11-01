@@ -1156,7 +1156,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
         <li class="treeview">
                             <?php } ?>
           <a href="#">
-            <i class="fa fa-file-text"></i> <span>Facturacion de Pedidos</span>
+            <i class="fa fa-file-text"></i> <span>Facturación de Pedidos</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
@@ -1214,6 +1214,75 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
         <?php } ?>
 
 <!-- ======================================================================================================================= -->
+
+
+<!-- ======================================================================================================================= -->
+              <!--  Reportes   -->
+<!-- ======================================================================================================================= -->
+        <?php 
+              $amReportes = 0;
+              $amReportesR = 0;
+              $amReportesC = 0;
+              $amReportesE = 0;
+              $amReportesB = 0;
+              foreach ($accesos as $access) {
+                if(!empty($access['id_acceso'])){
+                  if($access['nombre_modulo'] == "Reportes"){
+                    $amReportes = 1;
+                    if($access['nombre_permiso'] == "Registrar"){
+                      $amReportesR = 1;
+                    }
+                    if($access['nombre_permiso'] == "Ver"){
+                      $amReportesC = 1;
+                    }
+                    if($access['nombre_permiso'] == "Editar"){
+                      $amReportesE = 1;
+                    }
+                    if($access['nombre_permiso'] == "Borrar"){
+                      $amReportesB = 1;
+                    }
+                  }
+                }
+              }
+              if($amReportes == 1){
+          ?>
+
+                            <?php if($url=="FacturaPersonalizada" || $url=="FacturaPersonalizadaConfiguracion" || $url=="NotaDespacho"){ ?>
+        <li class="active treeview">
+                            <?php }else{ ?>
+        <li class="treeview">
+                            <?php } ?>
+          <a href="#">
+            <i class="fa fa-file-text"></i> <span>Facturación personalizada</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
+                            <?php if($url=="FacturaPersonalizada" && !empty($action) && $action == "Registrar"){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=FacturaPersonalizada&action=Registrar"><i class="fa fa-file-text-o"></i> Crear Factura personalizada</a></li>
+                            <?php }else{ ?>
+            <li class=""><a href="?<?php echo $menu ?>&route=FacturaPersonalizada&action=Registrar"><i class="fa fa-file-text-o"></i> Crear Factura personalizada</a></li>
+                            <?php } ?>
+                      <?php } ?>
+
+                      <?php  //if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista"){ ?>
+                      <?php  if($_SESSION['nombre_rol']!="Vendedor"){ ?>
+                            <?php if($url=="FacturaPersonalizada" && empty($action)){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=FacturaPersonalizada"><i class="fa fa-file-text-o"></i> Ver Facturas</a></li>
+                            <?php }else{ ?>
+            <li><a href="?<?php echo $menu ?>&route=FacturaPersonalizada"><i class="fa fa-file-text-o"></i> Ver Facturas</a></li>
+                            <?php } ?>
+                      <?php } ?>
+
+
+          </ul>
+        </li>
+        <?php } ?>
+
+<!-- ======================================================================================================================= -->
+
 
 
 

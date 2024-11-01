@@ -131,15 +131,19 @@
                     <div class="box-body">
                         <div class="row">
                           <div class="form-group col-xs-12 col-sm-6">
-                             <label for="numero_despacho">Numero de Pedido</label>
-                             <input type="number" class="form-control" id="numero_despacho" name="numero_despacho" min="1" max="10" maxlength="2" placeholder="Ingresar numero de despacho" readonly="" value="<?php echo ($despachosActual+1) ?>">
-                             <span id="error_numero_despacho" class="errors"></span>
+                            <label for="numero_despacho">Numero de Pedido</label>
+                            <input type="number" class="form-control" id="numero_despacho" name="numero_despacho" min="1" max="10" maxlength="2" placeholder="Ingresar numero de despacho" readonly="" value="<?php echo ($despachosActual+1) ?>">
+                            <span id="error_numero_despacho" class="errors"></span>
+                          </div>
+                          <div class="form-group col-xs-12 col-sm-6">
+                            <label for="nombre_despacho">Nombre de Despacho</label>
+                            <input type="text" class="form-control" id="nombre_despacho" name="nombre_despacho" >
                           </div>
 
                           <div class="form-group col-xs-12 col-sm-6">
-                             <label for="limite_pedido">Fecha Limite de Pedido</label>
-                              <input type="date" class="form-control" id="limite_pedido" name="limite_pedido" >
-                             <span id="error_limite_pedido" class="errors"></span>
+                            <label for="limite_pedido">Fecha Limite de Pedido</label>
+                            <input type="date" class="form-control" id="limite_pedido" name="limite_pedido" >
+                            <span id="error_limite_pedido" class="errors"></span>
                           </div>
 
                           <div class="form-group col-xs-12 col-sm-6">
@@ -153,11 +157,7 @@
                              <input type="date" class="form-control" id="limite_seleccion_plan" name="limite_seleccion_plan"  >
                              <span id="error_limite_seleccion_plan" class="errors"></span>
                           </div>
-                        </div>
-                        
-                        <hr>
-                        <div class="row">
-                          <div class="form-group col-xs-12">
+                          <div class="form-group col-xs-12 col-sm-6">
                             <label for="plan_seleccion">Plan de Seleccion de premios</label>
                             <select class="form-control select2" id="plan_seleccion" name="plan_seleccion" style="width:100%;">
                               <?php foreach ($cantidadPagosDespachosFild as $cvPagos): ?>
@@ -166,6 +166,7 @@
                             </select>
                           </div>
                         </div>
+                        
                         <hr>
 
                         

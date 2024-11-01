@@ -162,12 +162,17 @@
                           if($data['numero_despacho']=="9"){ $ndp = "9no"; }
                         ?>
                         <?php 
-                          if($data['numero_despacho']!="1"){
-                            // echo $data['numero_despacho'];
-                            echo $ndp;
-                          }
+                          echo $ndp;
+                          // if($data['numero_despacho']!="1"){
+                          //   // echo $data['numero_despacho'];
+                          //   echo $ndp;
+                          // }
                           echo " Pedido ";
-                          echo " - Campaña ".$numero_campana."/".$anio_campana;
+                          if( $data['nombre_despacho']!="" ){
+                            echo " - ".$data['nombre_despacho'];
+                          }else{
+                            echo " - Campaña ".$numero_campana."/".$anio_campana;
+                          }
                         ?>
                       </a>
                     </span>

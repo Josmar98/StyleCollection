@@ -329,6 +329,8 @@
                     foreach ($cantidadPagosDespachosFild as $key) {
                       foreach ($pagos_despacho as $pagosD){ if(!empty($pagosD['id_despacho'])){
                         if($pagosD['tipo_pago_despacho']==$key['name']){
+                          // print_r($pagosD['pago_precio_coleccion']);
+
                           if($nIndx < $despacho['cantidad_pagos']-1){
                           ?>                        
                     <div class="col-xs-12 col-md-6">
@@ -346,12 +348,20 @@
                         </thead>
                         <tbody>
                           <?php
+                            // echo "Precio de Coleccion: ".$despacho['precio_coleccion']."<br>";
+                            // echo "Colecciones: ".$pedido['cantidad_aprobado']."<br>";
+                            // echo "Precio de ".$key['name'].": ".$pagosD['pago_precio_coleccion']."<br>";
                             $acumTotalPrimerPago = 0;
                             $acumuladosTotales[$key['id']] = 0;
+                            // echo $key['id'];
+                            // print_r($acumuladosTotales);
+                            // print_r($planes);
                           ?>
-                          <?php foreach ($planes as $plans): ?>
-                              <?php if (!empty($plans['id_pedido'])): ?>
-                                <?php if ($plans['cantidad_coleccion_plan']>0): ?>
+                          <?php 
+                            foreach ($planes as $plans){
+                              if (!empty($plans['id_pedido'])){
+                                if ($plans['cantidad_coleccion_plan']>0){
+                                  ?>
                                   <tr>
                                     <td>Plan <?=$plans['nombre_plan']?></td>
                                     <td>
@@ -364,9 +374,14 @@
                                     <td>$<?=$costoTotal; ?></td>
                                     <?php $acumuladosTotales[$key['id']]+=$costoTotal; ?>
                                   </tr>
-                                <?php endif ?>
-                              <?php endif ?>
-                          <?php endforeach ?>
+                                  <?php 
+                                }
+                              } else {
+                                $acumuladosTotales[$key['id']] = $pagosD['pago_precio_coleccion']*$pedido['cantidad_aprobado'];
+                              }
+                            }
+                            // print_r($acumuladosTotales);
+                          ?>
                           <tr style="border-top:1.02px solid #AAA;border-bottom:1.02px solid #AAA">
                             <td></td>
                             <td></td>
@@ -388,7 +403,6 @@
                           </tr>
                           <?php
                             // $totalPagarPrimerPago = $acumuladosTotales[$key['id']]-$varCont;
-
                             $totalesPagosPagar[$key['id']] = $acumuladosTotales[$key['id']]-$varCont;
                           ?>
                           <tr style="border-top:1.02px solid #AAA;border-bottom:1.02px solid #AAA">
@@ -408,7 +422,6 @@
                     }
                   ?>
                   </div>
-
                 <?php } ?>
 
                 <div class="row">
@@ -1166,7 +1179,7 @@
                               // print_r($abonadosPagosPuntuales);
                               if($pagosR['name']!="Contado" && $pagosR['name']!="Inicial"){
                                 if(!empty($_GET['lider'])){
-                                  if(empty($acumuladosTotales[$pagosR['id']])){
+                                  if(!isset($acumuladosTotales[$pagosR['id']])){
                                     if($opcionOpcionalInicial=="Y"){
                                       echo "<br>"; 
                                       echo " + ";
@@ -1210,7 +1223,7 @@
                               echo "$".number_format($equivalenciasPagos[$pagosR['id']],2, ",",".");
                               if($pagosR['name']!="Contado" && $pagosR['name']!="Inicial"){
                                 if(!empty($_GET['lider'])){
-                                  if(empty($acumuladosTotales[$pagosR['id']])){
+                                  if(!isset($acumuladosTotales[$pagosR['id']])){
                                     if($opcionOpcionalInicial=="Y"){
                                       if(!empty($abonadosPagos['inicial'])){
                                         echo "<br>";

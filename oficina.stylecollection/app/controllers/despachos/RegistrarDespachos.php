@@ -84,6 +84,7 @@ if($amDespachosR == 1){
     $opOpcional = $_GET['opOpt'];
     $inObligatorio = $_GET['opOblig'];
 
+    $nombre_despacho = ucwords(mb_strtolower($_POST['nombre_despacho']));
     $numero_despacho = $_POST['numero_despacho'];
     $limite_pedido = $_POST['limite_pedido'];
     $apertura_seleccion_plan = $_POST['apertura_seleccion_plan'];
@@ -176,8 +177,7 @@ if($amDespachosR == 1){
 
     // $query = "INSERT INTO despachos (id_despacho, id_campana, numero_despacho, fecha_inicial, fecha_primera, fecha_segunda, limite_pedido, apertura_seleccion_plan, limite_seleccion_plan, precio_coleccion, primer_precio_coleccion, segundo_precio_coleccion, inicial_precio_coleccion, fecha_inicial_senior, fecha_primera_senior, fecha_segunda_senior, contado_precio_coleccion, cantidad_minima_pedido, estatus) VALUES (DEFAULT, $id_campana, $numero_despacho, '$fecha_inicial', '$primer_pago', '$segundo_pago', '$limite_pedido', '$apertura_seleccion_plan', '$limite_seleccion_plan', '$precio_coleccion', '$primer_precio', '$segundo_precio', '$inicial_precio', '$fecha_inicial_senior', '$primer_pago_senior', '$segundo_pago_senior', '$precio_contado', $cantidad_minima_pedido, 1)";
 
-
-    $query = "INSERT INTO despachos (id_despacho, id_campana, numero_despacho, limite_pedido, apertura_seleccion_plan, limite_seleccion_plan, precio_coleccion, contado_precio_coleccion, cantidad_minima_pedido, opcion_inicial, cantidad_pagos, opcionOpcionalInicial, opcionInicialObligatorio, estatus) VALUES (DEFAULT, $id_campana, $numero_despacho, '$limite_pedido', '$apertura_seleccion_plan', '$limite_seleccion_plan', '$precio_coleccion', '$precio_contado', $cantidad_minima_pedido, '{$opInicial}', {$cantidad_pagos}, '{$opOpcional}', '{$inObligatorio}', 1)";
+    $query = "INSERT INTO despachos (id_despacho, id_campana, numero_despacho, nombre_despacho, limite_pedido, apertura_seleccion_plan, limite_seleccion_plan, precio_coleccion, contado_precio_coleccion, cantidad_minima_pedido, opcion_inicial, cantidad_pagos, opcionOpcionalInicial, opcionInicialObligatorio, estatus) VALUES (DEFAULT, $id_campana, $numero_despacho, '{$nombre_despacho}', '$limite_pedido', '$apertura_seleccion_plan', '$limite_seleccion_plan', '$precio_coleccion', '$precio_contado', $cantidad_minima_pedido, '{$opInicial}', {$cantidad_pagos}, '{$opOpcional}', '{$inObligatorio}', 1)";
     $exec = $lider->registrar($query, "despachos", "id_despacho");
     if($exec['ejecucion']==true){
       $response = "1";

@@ -69,6 +69,7 @@ if($amDespachosE == 1){
       $opOpcional = $_GET['opOpt'];
       $inObligatorio = $_GET['opOblig'];
 
+      $nombre_despacho = ucwords(mb_strtolower($_POST['nombre_despacho']));
       $numero_despacho = $_POST['numero_despacho'];
       $limite_pedido = $_POST['limite_pedido'];
       $apertura_seleccion_plan = $_POST['apertura_seleccion_plan'];
@@ -189,7 +190,7 @@ if($amDespachosE == 1){
       /*-----------------------------------------------------------*/
 
       // $query = "UPDATE despachos SET numero_despacho=$numero_despacho, fecha_inicial='$fecha_inicial', fecha_primera='$primer_pago', fecha_segunda='$segundo_pago', limite_pedido = '$limite_pedido', apertura_seleccion_plan = '$apertura_seleccion_plan',  limite_seleccion_plan = '$limite_seleccion_plan',  precio_coleccion='$precio_coleccion',  primer_precio_coleccion='$primer_precio', segundo_precio_coleccion='$segundo_precio', inicial_precio_coleccion='$inicial_precio', fecha_inicial_senior = '{$fecha_inicial_senior}', fecha_primera_senior='{$primer_pago_senior}', fecha_segunda_senior='{$segundo_pago_senior}', contado_precio_coleccion='{$precio_contado}', cantidad_minima_pedido={$cantidad_minima_pedido}, estatus = 1 WHERE id_despacho = $id";
-      $query = "UPDATE despachos SET numero_despacho=$numero_despacho, limite_pedido = '$limite_pedido', apertura_seleccion_plan = '$apertura_seleccion_plan',  limite_seleccion_plan = '$limite_seleccion_plan',  precio_coleccion='$precio_coleccion', contado_precio_coleccion='{$precio_contado}', cantidad_minima_pedido={$cantidad_minima_pedido}, opcion_inicial='{$opInicial}', cantidad_pagos={$cantidad_pagos}, opcionOpcionalInicial='{$opOpcional}', opcionInicialObligatorio='{$inObligatorio}', estatus = 1 WHERE id_despacho = $id";
+      $query = "UPDATE despachos SET numero_despacho={$numero_despacho}, nombre_despacho='{$nombre_despacho}', limite_pedido = '{$limite_pedido}', apertura_seleccion_plan = '{$apertura_seleccion_plan}',  limite_seleccion_plan = '{$limite_seleccion_plan}',  precio_coleccion='{$precio_coleccion}', contado_precio_coleccion='{$precio_contado}', cantidad_minima_pedido={$cantidad_minima_pedido}, opcion_inicial='{$opInicial}', cantidad_pagos={$cantidad_pagos}, opcionOpcionalInicial='{$opOpcional}', opcionInicialObligatorio='{$inObligatorio}', estatus = 1 WHERE id_despacho = $id";
 
       $exec = $lider->modificar($query);
       if($exec['ejecucion'] == true){

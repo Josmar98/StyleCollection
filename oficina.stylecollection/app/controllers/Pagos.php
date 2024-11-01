@@ -604,11 +604,13 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 				}
 				$busquedaDist = $lider->consultarQuery("SELECT * FROM distribucion_pagos WHERE id_pedido = {$pedido['id_pedido']} and tipo_distribucion = '{$conceptoDist}'");
 			}
-			$excedentes = $lider->consultarQuery("SELECT * FROM excedentes WHERE excedentes.estatus = 1 and excedentes.id_pedido = {$pedido['id_pedido']}");
-			$totalExcedentesPagados = 0;
-			foreach ($excedentes as $excedent) {
-				if(!empty($excedent['id_excedente'])){
-					$totalExcedentesPagados += $excedent['cantidad_excedente'];
+			if(!empty($pedido['id_pedido'])){
+				$excedentes = $lider->consultarQuery("SELECT * FROM excedentes WHERE excedentes.estatus = 1 and excedentes.id_pedido = {$pedido['id_pedido']}");
+				$totalExcedentesPagados = 0;
+				foreach ($excedentes as $excedent) {
+					if(!empty($excedent['id_excedente'])){
+						$totalExcedentesPagados += $excedent['cantidad_excedente'];
+					}
 				}
 			}
 			$opcionOpcionalInicial = $despacho['opcionOpcionalInicial'];

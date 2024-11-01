@@ -76,18 +76,45 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
+            <?php 
+              $despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE despachos.id_campana = campanas.id_campana and campanas.estatus =1 and despachos.estatus=1 and campanas.id_campana={$_GET['campaing']}");
+            ?>
             <form action="" method="post" role="form" class="form_register">
               <div class="box-body">
                   <div class="row">
-                      <div class="form-group col-sm-6">
-                       <label for="">Numero de Factura</label>
-                       <input type="number" class="form-control" name="num_factura" value="<?php echo $numero_factura; ?>">
-                       <span id="error_fecha1" class="errors"></span>
+                    <div class="form-group col-sm-6">
+                      <label for="">Numero de Factura</label>
+                      <input type="number" class="form-control" name="num_factura" value="<?php echo $numero_factura; ?>">
+                      <span id="error_fecha1" class="errors"></span>
+                    </div>
+                    <div class="form-group col-sm-6">
+                       <label for="pedidoss">Pedidos</label>
+                       <select class="form-control select2" id="pedidoss" name="pedidoss[]" multiple="multiple">
+                          <option value="" disabled>Seleccione al menos un pedido</option>
+                          <?php foreach ($despachos as $desp){ if(!empty($desp['id_despacho'])){ ?>
+                            <option value="<?=$desp['id_despacho']; ?>" <?php if($desp['id_despacho']==$_GET['dpid']){ echo "selected"; } ?> >
+                              <?php
+                                echo "Pedido N° ".$desp['numero_despacho']; 
+                                if(!empty($desp['nombre_despacho'])){
+                                  if($desp['nombre_despacho']!=""){
+                                    echo " - ".$desp['nombre_despacho'];
+                                  }else{
+                                    echo " - Campaña ".$desp['numero_campana']."/".$desp['anio_campana'];
+                                  }
+                                }else{
+                                  echo " - Campaña ".$desp['numero_campana']."/".$desp['anio_campana'];
+                                }
+
+                              ?>
+                            </option>
+                          <?php } } ?>
+                       </select>
+                       <span id="error_forma" class="errors"></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="form-group col-sm-6">
-                       <label for="pedido">Líder y Pedido</label>
+                       <label for="pedido">Líder y Pedido <?=$_GET['dp']; ?></label>
                        <select class="form-control select2" id="pedido" name="pedido">
                           <option value=""></option>
                         <?php  foreach ($pedidosFull as $data) { if(!empty($data['id_pedido'])){  ?>

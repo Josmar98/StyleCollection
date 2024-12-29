@@ -40,16 +40,16 @@ if($amPremioscampC == 1){
 			$ppc = $lider->consultarQuery("SELECT * FROM premios_planes_campana WHERE id_plan_campana = $plan");
 			$exec = $lider->eliminar("DELETE FROM premios_planes_campana WHERE id_plan_campana = $plan");
 			if($exec['ejecucion']==true){
-			  foreach ($ppc as $id_ppc) {
-			    if(!empty($id_ppc['id_ppc'])){
-			          $exec = $lider->eliminar("DELETE FROM tipos_premios_planes_campana WHERE id_ppc = ".$id_ppc['id_ppc']);
-			          if($exec['ejecucion']==true){
-			            $response = "1";                
-			          }else{
-			            $response = "2";
-			          }
-			    }
-			  }
+				foreach ($ppc as $id_ppc) {
+					if(!empty($id_ppc['id_ppc'])){
+						$exec = $lider->eliminar("DELETE FROM tipos_premios_planes_campana WHERE id_ppc = ".$id_ppc['id_ppc']);
+						if($exec['ejecucion']==true){
+							$response = "1";
+						}else{
+							$response = "2";
+						}
+					}
+				}
 
 				if(!empty($modulo) && !empty($accion)){
 					$fecha = date('Y-m-d');
@@ -71,14 +71,21 @@ if($amPremioscampC == 1){
 		//$despachos = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
 		$planes=$lider->consultarQuery("SELECT * FROM planes, planes_campana, campanas WHERE planes.id_plan = planes_campana.id_plan and campanas.id_campana = planes_campana.id_campana and campanas.estatus = 1 and planes.estatus = 1 and campanas.id_campana = $id_campana and planes_campana.estatus = 1 and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC;");
 
-		$tipos_planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1 and planes_campana.id_despacho = {$id_despacho}");
+		$tipos_planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1 and planes_campana.id_despacho = {$id_despacho} ORDER BY premios_planes_campana.id_ppc ASC;");
 
 		$tipos_premios = $lider->consultarQuery("SELECT DISTINCT nombre_plan, tipo_premio, tipo_premio_producto FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana and planes_campana.id_despacho = {$id_despacho}");
 		
-		$tpremios = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1 and planes_campana.id_despacho = {$id_despacho}");
+		$tpremios = $lider->consultarQuery("SELECT * FROM planes, planes_campana, premios_planes_campana, tipos_premios_planes_campana WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_campana = $id_campana and planes_campana.estatus = 1 and planes_campana.id_despacho = {$id_despacho} ORDER BY id_tppc ASC;");
 
-		$productos = $lider->consultar("productos");
-		$premios = $lider->consultar("premios");
+		$productos = $lider->consultarQuery("SELECT * FROM productos");
+		$premios = $lider->consultarQuery("SELECT * FROM premios");
+
+		// print_r($tipos_planes);
+		// foreach($tipos_planes as $tp){
+		// 	print_r($tp);
+		// 	echo "<br><br><br><br>";
+		// }
+
 		// print_r($tipos_premios);
 		if($planes['ejecucion']==1){
 			if(!empty($action)){

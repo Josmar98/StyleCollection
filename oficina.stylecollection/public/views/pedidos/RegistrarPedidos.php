@@ -74,12 +74,13 @@
             <!-- form start -->
             <form action="" method="post" role="form" class="form_register">
               <div class="box-body">
-                    
+                  <?php $optAdmin = !empty($_GET['admin']) ? $_GET['admin'] : ""; ?>
+                  <input type="hidden" id="optAdmin" value="<?=$optAdmin; ?>">
                   <div class="row">
                       <?php 
                         if(!empty($_GET['admin']) && ($_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista")){
                       ?>
-                    <div class="form-group col-xs-12 col-md-6">
+                    <div class="form-group col-xs-12">
                       <label for="Cliente">Cliente</label>
                       <select class="form-control select2" name="cliente" id="cliente" required="" style="width:100%">
                         <option value="">Seleccione</option>
@@ -109,27 +110,26 @@
                               <?php
                             }
                           ?>
-
-
-
-
-
-
-
-
                         <?php  } } ?>
                       </select>
                       <span id="error_clientes" class="errors"></span>
                     </div>
-                    <div class="form-group col-xs-12 col-md-6">
-                      <?php }else{ ?>
-                    <div class="form-group col-xs-12">
                       <?php } ?>
-                      <label for="cantidad">Cantidad de Colecciones</label>
-                      <input type="number" class="form-control" id="cantidad" step="1" name="cantidad">
-                      <span id="error_cantidad" class="errors"></span>
+                    <div class="form-group col-xs-12">
+                      <label for="cantidad">Cantidad (Coleccion: Productos)</label>
+                      <input type="number" class="form-control cantidadesT" data-val="0" id="cantidad" step="1" name="cantidad">
+                        <!-- <input type="hidden" name="id[]" value="0"> -->
+                      <!-- <input type="hidden" name="id[]" value="0"> -->
                     </div>
+                    <?php foreach ($despachosSec as $despSec){ if(!empty($despSec['id_despacho_sec'])){ ?>
+                      <div class="form-group col-xs-12">
+                        <label for="cantidad_sec">Cantidad (Coleccion: <?=$despSec['nombre_coleccion_sec']; ?>)</label>
+                        <input type="number" class="form-control cantidad_sec cantidadesT" data-val="<?=$despSec['id_despacho_sec']; ?>" id="cantidad_sec<?=$despSec['id_despacho_sec']; ?>" step="1" name="cantidadSec[]" min="0" value="0">
+                        <input type="hidden" name="idColSec[]" value="<?=$despSec['id_despacho_sec']; ?>">
+                      </div>
+                    <?php } } ?>
                 
+                      <span id="error_cantidad" class="errors"></span>
                   </div>
                   <!-- <div class="row">
                     <div class="form-group">
@@ -247,29 +247,55 @@ $(document).ready(function(){
       });
     }
   }
+  
 
   // alert("asd");
-  $("#cantidad").val($("#cantidad_minima").val());
-  $("#cantidad").change(function(){
-    var minima = parseInt($("#cantidad_minima").val());
-    var x = parseInt($(this).val());
+  $("#cantidad").attr('value', $("#cantidad_minima").val());
 
-    if(x<minima){
-      $(this).val(minima);
-    }else{
-      $(this).val(x);
+  // $("#cantidad").change(function(){
+  //   var minima = parseInt($("#cantidad_minima").val());
+  //   var x = parseInt($(this).val());
+  //   if(x<minima){
+  //     $(this).val(minima);
+  //   }else{
+  //     $(this).val(x);
+  //   }
+  // });
+  // $("#cantidad").focusout(function(){
+  //   var minima = parseInt($("#cantidad_minima").val());
+  //   var x = parseInt($(this).val());
+  //   if(x<minima){
+  //     $(this).val(minima);
+  //   }else{
+  //     $(this).val(x);
+  //   }
+  // });
+  // $(".cantidadesT").each(function(index, element){
+  //   // console.log($(element).val());
+  // })
+  // console.log();
+  $(".cantidadesT").on("change focusout keyup",function(){
+    var cant = parseInt($(this).val());
+    if(cant < 0){
+      $(this).val(0);
     }
-  });
-  $("#cantidad").focusout(function(){
-    var minima = parseInt($("#cantidad_minima").val());
-    var x = parseInt($(this).val());
-    if(x<minima){
-      $(this).val(minima);
-    }else{
-      $(this).val(x);
+    var minimaCol = $("#cantidad_minima").val();
+    let totalcant = [];
+    $(".cantidadesT").each(function(index, element){
+      // console.log($(element).val());
+      totalcant.push(parseInt($(element).val()));
+    });
+    let sumatoriaCant = 0;
+    for (var i = 0; i < totalcant.length; i++) {
+      sumatoriaCant+=totalcant[i]
     }
+    if(sumatoriaCant>=minimaCol){
+      $("#error_cantidad").html("");
+    }else{
+      $("#error_cantidad").html(`Debe hacer un pedido con al menos ${minimaCol} colecciones`);
+    }
+
   });
-  
     
   $(".enviar").click(function(){
     var response = validar();
@@ -342,17 +368,61 @@ $(document).ready(function(){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var cantidad = $("#cantidad").val();
-  var rcantidad = checkInput(cantidad, numberPattern);
-  if( rcantidad == false ){
-    if(cantidad.length != 0){
-      $("#error_cantidad").html("La cantidad de colecciones solo debe contener numeros");
-    }else{
-      $("#error_cantidad").html("Debe llenar una cantidad de colecciones");
+  var minimaCol = $("#cantidad_minima").val();
+  // var cantidad = $("#cantidad").val();
+  // var rcantidad = checkInput(cantidad, numberPattern);
+  // if( rcantidad == false ){
+  //   if(cantidad.length != 0){
+  //     $("#error_cantidad").html("La cantidad de colecciones solo debe contener numeros");
+  //   }else{
+  //     $("#error_cantidad").html("Debe llenar una cantidad de colecciones");
+  //   }
+  // }else{
+  //   $("#error_cantidad").html("");
+  // }
+    let totalcant = [];
+    let rcantidades = [];
+    $(".cantidadesT").each(function(index, element){
+      totalcant.push(parseInt($(element).val()));
+      rcantidades.push(checkInput($(element).val(), numberPattern));
+    });
+    let sumatoriaCant = 0;
+    for (var i = 0; i < totalcant.length; i++) {
+      sumatoriaCant+=totalcant[i]
     }
-  }else{
-    $("#error_cantidad").html("");
-  }
+    rerrores = 0;
+    for (var i = 0; i < rcantidades.length; i++) {
+      if(!rcantidades[i]){
+        rerrores++;
+      }
+    }
+    rcantidad = false;
+    if(rerrores==0){
+      if(sumatoriaCant>=minimaCol){
+        rcantidad = true;
+        $("#error_cantidad").html("");
+      }else{
+        rcantidad = false;
+        $("#error_cantidad").html(`Debe hacer un pedido con al menos ${minimaCol} colecciones`);
+      }
+    }
+
+    let rcliente = true;
+    let optAdmin = $("#optAdmin").val();
+    if(optAdmin!=""){
+      rcliente = false;
+      var cliente = $("#cliente").val();
+      if(cliente.length>0){
+        rcliente = true;
+        $("#error_clientes").html("");
+      }else{
+        rcliente = false;
+        $("#error_clientes").html("Debe Seleccionar al Líder");
+      }
+    }
+    // console.log(minimaCol);
+    // console.log(sumatoriaCant);
+    // console.log(rerrores);
   /*===================================================================*/
 
   /*===================================================================*/
@@ -372,7 +442,7 @@ function validar(){
   /*===================================================================*/
   var result = false;
 
-  if( rcantidad==true){
+  if( rcliente==true && rcantidad==true ){
     result = true;
   }else{
     result = false;

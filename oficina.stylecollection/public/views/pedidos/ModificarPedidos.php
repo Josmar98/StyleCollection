@@ -52,37 +52,58 @@
             <!-- form start -->
             <form action="" method="post" role="form" class="form_register">
               <div class="box-body">
-                 <?php if($pedido['cantidad_aprobado']==0){ 
+                 <?php 
+                  $pedidoOrAprob = "";
+                  $cantidadDelPedido = 0;
+                  if($pedido['cantidad_aprobado']==0){ 
+                    $pedidoOrAprob = "1";
+                    $cantidadDelPedido = $pedido['cantidad_pedido'];
                     $numMax = $pedido['cantidad_pedido']*$vecesVal;
+                  }
+                  if($pedido['cantidad_aprobado']>0){ 
+                    $pedidoOrAprob = "2";
+                    $cantidadDelPedido = $pedido['cantidad_aprobado_individual'];
+                    $numMax = $pedido['cantidad_pedido']*$vecesVal;
+                  }
                   ?>
                   <div class="row">
                     <div class="form-group col-xs-12">
-                      <label for="cantidad">Cantidad de Colecciones</label>
                       <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                      <input type="number" class="form-control" step="1" id="cantidad" value="<?php echo $pedido['cantidad_pedido'] ?>" name="cantidad" maxlength="30" placeholder="Ingresar cantidad de colecciones para el despacho">
-                      <span id="error_cantidad" class="errors"></span>
+                      <label for="cantidad">Cantidad (Coleccion: Productos)</label>
+                      <input type="number" class="form-control cantidadesT" step="1" data-val="0" id="cantidad" value="<?php echo $cantidadDelPedido; ?>" name="cantidad" maxlength="30" placeholder="Ingresar cantidad de colecciones para el despacho">
+                      <!-- <span id="error_cantidad" class="errors"></span> -->
                     </div>
+
+                    <?php 
+                      if(count($despachosSec)>1){
+                      foreach ($despachosSec as $despSec){ if(!empty($despSec['id_despacho_sec'])){
+                        $valorColeccionSec = 0;
+                        if(count($pedidos_secundarios)>1){
+                          foreach ($pedidos_secundarios as $colss) {
+                            if($despSec['id_despacho_sec']==$colss['id_despacho_sec']){
+                              if($pedidoOrAprob=="1"){
+                                $valorColeccionSec=$colss['cantidad_pedido_sec'];
+                              }
+                              if($pedidoOrAprob=="2"){
+                                $valorColeccionSec=$colss['cantidad_aprobado_sec'];
+                              }
+                            }
+                          }
+                        }
+                        ?>
+                      <div class="form-group col-xs-12">
+                        <label for="cantidad_sec">Cantidad (Coleccion: <?=$despSec['nombre_coleccion_sec']; ?>)</label>
+                        <input type="number" class="form-control cantidad_sec cantidadesT" data-val="<?=$despSec['id_despacho_sec']; ?>" id="cantidad_sec<?=$despSec['id_despacho_sec']; ?>" step="1" name="cantidadSec[]" min="0" value="<?=$valorColeccionSec; ?>">
+                        <input type="hidden" name="idColSec[]" value="<?=$despSec['id_despacho_sec']; ?>">
+                      </div>
+                        <?php 
+                      } }
+                      }
+                    ?>
                 
-                  </div>
-              <?php }
-                    if($pedido['cantidad_aprobado']>0){ 
-                        $numMax = $pedido['cantidad_pedido']*$vecesVal;
-                      ?>
-                  <div class="row">
-                    <div class="form-group col-xs-12">
-                      <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                      <label for="cantidad">Cantidad de Colecciones</label>
-                      <input type="number" class="form-control" step="1" id="cantidad" value="<?php echo $pedido['cantidad_aprobado'] ?>" name="cantidad" maxlength="30" placeholder="Ingresar cantidad de colecciones para el despacho">
                       <span id="error_cantidad" class="errors"></span>
-                    </div>
-                
                   </div>
-              <?php } ?>
-                  <!-- <div class="row">
-                    <div class="form-group">
-                      
-                    </div>
-                  </div> -->
+                
 
               </div>
               <!-- /.box-body -->
@@ -193,32 +214,55 @@ $(document).ready(function(){
   //     $(this).val(pedido*<?php echo $vecesVal; ?>);
   //   }
   // });
-  $("#cantidad").change(function(){
-    var minima = parseInt($("#cantidad_minima").val());
-    var x = parseInt($(this).val());
-    if(x<minima){
-      $(this).val(minima);
-    }else{
-      $(this).val(x);
-    }
+  // $("#cantidad").change(function(){
+  //   var minima = parseInt($("#cantidad_minima").val());
+  //   var x = parseInt($(this).val());
+  //   if(x<minima){
+  //     $(this).val(minima);
+  //   }else{
+  //     $(this).val(x);
+  //   }
 
-    // var pedido = parseInt($("#pedido").val());
-    // if(x>=(pedido*<?php echo $vecesVal; ?>)){      
-    //   $(this).val(pedido*<?php echo $vecesVal; ?>);
-    // }
-  });
-  $("#cantidad").focusout(function(){
-    var minima = parseInt($("#cantidad_minima").val());
-    var x = parseInt($(this).val());
-    if(x<minima){
-      $(this).val(minima);
-    }else{
-      $(this).val(x);
+  //   // var pedido = parseInt($("#pedido").val());
+  //   // if(x>=(pedido*<?php echo $vecesVal; ?>)){      
+  //   //   $(this).val(pedido*<?php echo $vecesVal; ?>);
+  //   // }
+  // });
+  // $("#cantidad").focusout(function(){
+  //   var minima = parseInt($("#cantidad_minima").val());
+  //   var x = parseInt($(this).val());
+  //   if(x<minima){
+  //     $(this).val(minima);
+  //   }else{
+  //     $(this).val(x);
+  //   }
+  //   // var pedido = parseInt($("#pedido").val());
+  //   // if(x>=(pedido*<?php echo $vecesVal; ?>)){    
+  //   //   $(this).val(pedido*<?php echo $vecesVal; ?>);
+  //   // }
+
+  // });
+
+  $(".cantidadesT").on("change focusout keyup",function(){
+    var cant = parseInt($(this).val());
+    if(cant < 0){
+      $(this).val(0);
     }
-    // var pedido = parseInt($("#pedido").val());
-    // if(x>=(pedido*<?php echo $vecesVal; ?>)){    
-    //   $(this).val(pedido*<?php echo $vecesVal; ?>);
-    // }
+    var minimaCol = $("#cantidad_minima").val();
+    let totalcant = [];
+    $(".cantidadesT").each(function(index, element){
+      // console.log($(element).val());
+      totalcant.push(parseInt($(element).val()));
+    });
+    let sumatoriaCant = 0;
+    for (var i = 0; i < totalcant.length; i++) {
+      sumatoriaCant+=totalcant[i]
+    }
+    if(sumatoriaCant>=minimaCol){
+      $("#error_cantidad").html("");
+    }else{
+      $("#error_cantidad").html(`Debe hacer un pedido con al menos ${minimaCol} colecciones`);
+    }
 
   });
     
@@ -292,24 +336,52 @@ $(document).ready(function(){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var cantidad = $("#cantidad").val();
-  var max = parseInt($(".maxOculto").val());
-  var rcantidad = checkInput(cantidad, numberPattern);
-  if( rcantidad == false ){
-    if(cantidad.length != 0){
-      $("#error_cantidad").html("La cantidad de colecciones solo debe contener numeros");
-    }else{
-      $("#error_cantidad").html("Debe llenar una cantidad de colecciones");
+  // var cantidad = $("#cantidad").val();
+  // var max = parseInt($(".maxOculto").val());
+  // var rcantidad = checkInput(cantidad, numberPattern);
+  // if( rcantidad == false ){
+  //   if(cantidad.length != 0){
+  //     $("#error_cantidad").html("La cantidad de colecciones solo debe contener numeros");
+  //   }else{
+  //     $("#error_cantidad").html("Debe llenar una cantidad de colecciones");
+  //   }
+  // }else{
+  //   if(cantidad <= max){
+  //     $("#error_cantidad").html("");
+  //     rcantidad = true;
+  //   }else{
+  //     $("#error_cantidad").html("Debe seleccionar maximo "+max+" colecciones");
+  //     rcantidad = false;
+  //   }
+  // }
+  var minimaCol = $("#cantidad_minima").val();
+
+  let totalcant = [];
+    let rcantidades = [];
+    $(".cantidadesT").each(function(index, element){
+      totalcant.push(parseInt($(element).val()));
+      rcantidades.push(checkInput($(element).val(), numberPattern));
+    });
+    let sumatoriaCant = 0;
+    for (var i = 0; i < totalcant.length; i++) {
+      sumatoriaCant+=totalcant[i]
     }
-  }else{
-    if(cantidad <= max){
-      $("#error_cantidad").html("");
-      rcantidad = true;
-    }else{
-      $("#error_cantidad").html("Debe seleccionar maximo "+max+" colecciones");
-      rcantidad = false;
+    rerrores = 0;
+    for (var i = 0; i < rcantidades.length; i++) {
+      if(!rcantidades[i]){
+        rerrores++;
+      }
     }
-  }
+    rcantidad = false;
+    if(rerrores==0){
+      if(sumatoriaCant>=minimaCol){
+        rcantidad = true;
+        $("#error_cantidad").html("");
+      }else{
+        rcantidad = false;
+        $("#error_cantidad").html(`Debe hacer un pedido con al menos ${minimaCol} colecciones`);
+      }
+    }
   /*===================================================================*/
 
   /*===================================================================*/

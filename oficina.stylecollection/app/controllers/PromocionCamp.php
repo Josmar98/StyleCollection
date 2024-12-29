@@ -23,8 +23,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 		$promocion = $lider->consultarQuery("SELECT * FROM promocion WHERE promocion.id_campana = {$id_campana} and promocion.estatus = 1");
 		$promocion_productos = $lider->consultarQuery("SELECT * FROM productos_promocion WHERE productos_promocion.id_campana = {$id_campana} and productos_promocion.estatus = 1");
 		$promocion_premios = $lider->consultarQuery("SELECT * FROM premios_promocion WHERE premios_promocion.id_campana = {$id_campana} and premios_promocion.estatus = 1");
-		$productos=$lider->consultar("productos");
-		$premios=$lider->consultar("premios");
+		$productos=$lider->consultarQuery("SELECT * FROM productos");
+    	$premios=$lider->consultarQuery("SELECT * FROM premios");
 		// print_r($promocion_productos);
 		// $retos_campana = $lider->consultarQuery("SELECT * FROM premios, retos_campana WHERE premios.id_premio = retos_campana.id_premio and retos_campana.estatus = 1 and retos_campana.id_campana = {$id_campana}");
 		

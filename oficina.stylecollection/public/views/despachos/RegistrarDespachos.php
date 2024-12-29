@@ -210,7 +210,8 @@
                               <thead>
                                 <tr>
                                   <th>Nº</th>
-                                  <th>Producto</th>
+                                  <th>Inventario</th>
+                                  <th>Elemento</th>
                                   <!-- <th>Descripcion</th> -->
                                   <th>Cantidad</th>
                                   <th>Precio</th>
@@ -221,55 +222,101 @@
                               <tbody>
                                 <?php 
                                   $num = 1;
-                                  // print_r($clientes);
-                                  foreach ($productos as $data):
-                                    if(!empty($data['id_producto'])):  
-                                ?>
-                                  <tr class="elementTR">
-                                    <td style="width:5%">
-                                      <span class="contenido2">
-                                        <?php echo $num++; ?>
-                                      </span>
-                                    </td>
-                                    <td style="width:20%">
-                                      <span class="contenido2">
-                                        <?php echo $data['producto']; ?>
-                                      </span>
-                                    </td>
-                                    
-                                    
-                                    <!-- <td style="width:20%">
-                                      <span class="contenido2">
-                                        <?php echo $data['descripcion']; ?>
-                                      </span>
-                                    </td> -->
-                                    <td style="width:20%">
-                                      <span class="contenido2">
-                                        <?php echo $data['cantidad']; ?>
-                                      </span>
-                                    </td>
-                                    <td style="width:20%">
-                                      <input type="number" step="0.10" min="0" name="precios[]" value="0" class="precio_productos preciosid<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
-                                      <input type="hidden" name="precioid[]" value="<?php echo $data['id_producto'] ?>">
-                                    </td>
-                                    <td style="width:20%">
-                                      <input type="number" min="0" name="cantidad_productos[]" value="0" class="cantidad_productos cantidad<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
-                                      <input type="hidden" name="elementosid[]" value="<?php echo $data['id_producto'] ?>">
-                                    </td>
-                                    <td style="width:10%">
-                                      <input type="checkbox" class="cheking check<?php echo $data['id_producto'] ?>" value="<?php echo $data['id_producto'] ?>" name="cheking[]">
-                                      <!-- <input type="" class="preciosid<?php echo $data['id_producto'] ?>" name="precios[]" value="<?php echo $data['precio'] ?>"> -->
-                                    </td>
-                                  </tr>
-                                <?php
-                                    endif;
-                                  endforeach;
+                                  foreach ($productos as $data){
+                                    if(!empty($data['id_producto'])){  
+                                      ?>
+                                      <tr class="elementTR">
+                                        <td style="width:5%">
+                                          <span class="contenido2">
+                                            <?php echo $num++; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:10%">
+                                          <span class="contenido2">
+                                            Productos Terminados 
+                                            <input type="hidden" name="inventario[]" value="Productos">
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['producto']; ?>
+                                          </span>
+                                        </td>
+                                        
+                                        
+                                        <!-- <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['descripcion']; ?>
+                                          </span>
+                                        </td> -->
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['cantidad']; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <input type="number" step="0.10" min="0" name="precios[]" value="0" class="precio_productos preciosid<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
+                                          <input type="hidden" name="precioid[]" value="<?php echo $data['id_producto'] ?>">
+                                        </td>
+                                        <td style="width:20%">
+                                          <input type="number" min="0" name="cantidad_productos[]" value="0" class="cantidad_productos cantidad<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
+                                          <input type="hidden" name="elementosid[]" value="<?php echo $data['id_producto'] ?>">
+                                        </td>
+                                        <td style="width:10%">
+                                          <input type="checkbox" class="cheking check<?php echo $data['id_producto'] ?>" value="<?php echo $data['id_producto'] ?>" name="cheking[]">
+                                          <!-- <input type="" class="preciosid<?php echo $data['id_producto'] ?>" name="precios[]" value="<?php echo $data['precio'] ?>"> -->
+                                        </td>
+                                      </tr>
+                                      <?php
+                                    }
+                                  }
+                                  foreach ($mercancia as $data){
+                                    if(!empty($data['id_mercancia'])){  
+                                      ?>
+                                      <tr class="elementTR">
+                                        <td style="width:5%">
+                                          <span class="contenido2">
+                                            <?php echo $num++; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:10%">
+                                          <span class="contenido2">
+                                            Mercancia 
+                                            <input type="hidden" name="inventario[]" value="Mercancia">
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['mercancia']; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <span class="contenido2">
+                                            <?php echo $data['medidas_mercancia']; ?>
+                                          </span>
+                                        </td>
+                                        <td style="width:20%">
+                                          <input type="number" step="0.10" min="0" name="precios[]" value="0" class="precio_productos preciosidm<?=$data['id_mercancia'] ?> form-control" style="width:50%;padding:0px 5px">
+                                          <input type="hidden" name="precioid[]" value="m<?=$data['id_mercancia'] ?>">
+                                        </td>
+                                        <td style="width:20%">
+                                          <input type="number" min="0" name="cantidad_productos[]" value="0" class="cantidad_productos cantidadm<?=$data['id_mercancia'] ?> form-control" style="width:50%;padding:0px 5px">
+                                          <input type="hidden" name="elementosid[]" value="m<?=$data['id_mercancia'] ?>">
+                                        </td>
+                                        <td style="width:10%">
+                                          <input type="checkbox" class="cheking check<?=$data['id_mercancia'] ?>" value="m<?=$data['id_mercancia'] ?>" name="cheking[]">
+                                        </td>
+                                      </tr>
+                                      <?php
+                                    }
+                                  }
                                 ?>
                               </tbody>
                               <tfoot>
                                 <tr>
                                   <th>Nº</th>
-                                  <th>Producto</th>
+                                  <th>Inventario</th>
+                                  <th>Elemento</th>
                                   <!-- <th>Descripcion</th> -->
                                   <th>Cantidad</th>
                                   <th>Precio</th>
@@ -761,7 +808,7 @@ function validar(){
 
   if(parseInt(cantPagos) > 0 && parseInt(cantPagos) <= parseInt(cantPagosMax)){
     var clavePrecios = $(".json_pagos").html();
-    var jsonPrecios = JSON.parse(clavePagos);
+    var jsonPrecios = JSON.parse(clavePrecios);
     /*===================================================================*/
     var precios = Array();
     var rpreciosArr = Array();

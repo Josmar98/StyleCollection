@@ -56,7 +56,7 @@ if($estado_campana=="1"){
 
 
 		$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC;");
-		$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1 ORDER BY premios.nombre_premio");
+		$premios = $lider->consultarQuery("SELECT * FROM premios ORDER BY premios.nombre_premio");
 		if(Count($lideres)>1){
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
@@ -81,7 +81,7 @@ if($estado_campana=="1"){
 	if(empty($_POST)){
 
 		$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC;");
-		$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1 ORDER BY premios.nombre_premio");
+		$premios = $lider->consultarQuery("SELECT * FROM premios ORDER BY premios.nombre_premio");
 		// if(Count($lideres)>1){
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

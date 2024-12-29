@@ -58,7 +58,7 @@ ini_set('date.timezone', 'america/caracas');			//se establece la zona horaria
 date_default_timezone_set('america/caracas');
 	
 
-$buscarFacturasVariadas = $lider->consultarQuery("SELECT * FROM factura_despacho_variadas WHERE id_factura_despacho={$factura['id_factura_despacho']} and estatus=1");
+$buscarFacturasVariadas = $lider->consultarQuery("SELECT * FROM factura_despacho_variadas WHERE id_factura_despacho={$factura['id_factura_despacho']} and estatus=1 ORDER BY factura_despacho_variadas.id_pedido_factura ASC");
 $procederVariado = false;
 $colecciones = [];
 $cantAprobadaTotal = 0;
@@ -67,9 +67,10 @@ if(count($buscarFacturasVariadas)>1){
 	foreach ($buscarFacturasVariadas as $variadas) {
 		if(!empty($variadas['id_factura_despacho'])){
 			//Buscar despacho
-			$buscarDespacho = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido={$variadas['id_pedido_factura']}");
+			$idPedidoFactura=$variadas['id_pedido_factura'];
+			$buscarDespacho = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido={$idPedidoFactura}");
 			$idDespachoFactura = $buscarDespacho[0]['id_despacho'];
-			$cantidadAprobadoFactura = $buscarDespacho[0]['cantidad_aprobado'];
+			$cantidadAprobadoFactura = $buscarDespacho[0]['cantidad_aprobado_individual'];
 			$cantAprobadaTotal+=$cantidadAprobadoFactura;
 
 			$coleccionesss=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = {$id_campana} and despachos.id_despacho={$idDespachoFactura}");
@@ -79,20 +80,53 @@ if(count($buscarFacturasVariadas)>1){
 					$colecciones[count($colecciones)]=$key;
 				}
 			}
+			// echo "SELECT colecciones_secundarios.id_coleccion_sec as id_coleccion, colecciones_secundarios.id_producto, despachos.numero_despacho, colecciones_secundarios.cantidad_productos, productos.producto, productos.descripcion, productos.cantidad as cantidad, colecciones_secundarios.precio_producto, colecciones_secundarios.estatus, pedidos_secundarios.cantidad_aprobado_sec as cantidad_aprobado FROM despachos, pedidos_secundarios, despachos_secundarios, colecciones_secundarios, productos WHERE despachos.id_despacho and despachos_secundarios.id_despacho and despachos.id_despacho=pedidos_secundarios.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and despachos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and pedidos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and productos.id_producto = colecciones_secundarios.id_producto and pedidos_secundarios.id_pedido={$idPedidoFactura} and despachos_secundarios.id_despacho={$idDespachoFactura}";
+			$coleccionesSec = $lider->consultarQuery("SELECT colecciones_secundarios.id_coleccion_sec as id_coleccion, colecciones_secundarios.id_producto, despachos.numero_despacho, colecciones_secundarios.cantidad_productos, productos.producto, productos.descripcion, productos.cantidad as cantidad, colecciones_secundarios.precio_producto, colecciones_secundarios.estatus, pedidos_secundarios.cantidad_aprobado_sec as cantidad_aprobado FROM despachos, pedidos_secundarios, despachos_secundarios, colecciones_secundarios, productos WHERE despachos.id_despacho and despachos_secundarios.id_despacho and despachos.id_despacho=pedidos_secundarios.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and despachos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and pedidos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and productos.id_producto = colecciones_secundarios.id_producto and pedidos_secundarios.id_pedido={$idPedidoFactura} and despachos_secundarios.id_despacho={$idDespachoFactura}");
+			foreach ($coleccionesSec as $key) {
+				if(!empty($key['id_coleccion'])){
+					$colecciones[count($colecciones)]=$key;
+				}
+			}
+
 		}
 	}
+	// echo "<br><br>";
 	// echo "APROBADOS: ".$cantAprobadaTotal;
+	// foreach ($colecciones as $key) {
+	// 	print_r($key);
+	// 	echo "<br><br>";
+	// }
 	$colecciones[count($colecciones)]=['estatus'=>true];
 }else{
 	$procederVariado = false;
-	$cantAprobadaTotal = $factura['cantidad_aprobado'];
+	$cantAprobadaTotal = $factura['cantidad_aprobado_individual'];
 	$colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = {$id_campana} and despachos.id_despacho={$id_despacho}");
+
+	for ($i=0; $i < count($colecciones); $i++) {
+		if(!empty($colecciones[$i]['id_coleccion'])){
+			$colecciones[$i]['cantidad_aprobado']=$cantAprobadaTotal;
+		}
+	}
+	$idPedidoFactura=$factura['id_pedido'];
+	$idDespachoFactura = $factura['id_despacho'];
+	// echo "Despacho: ".$idPedidoFactura."<br>";
+	// echo "Pedido: ".$idDespachoFactura."<br>";
+
+	$coleccionesSec = $lider->consultarQuery("SELECT colecciones_secundarios.id_coleccion_sec as id_coleccion, colecciones_secundarios.id_producto, despachos.numero_despacho, colecciones_secundarios.cantidad_productos, productos.producto, productos.descripcion, productos.cantidad as cantidad, colecciones_secundarios.precio_producto, colecciones_secundarios.estatus, pedidos_secundarios.cantidad_aprobado_sec as cantidad_aprobado FROM despachos, pedidos_secundarios, despachos_secundarios, colecciones_secundarios, productos WHERE despachos.id_despacho and despachos_secundarios.id_despacho and despachos.id_despacho=pedidos_secundarios.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and despachos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and pedidos_secundarios.id_despacho_sec=colecciones_secundarios.id_despacho_sec and productos.id_producto = colecciones_secundarios.id_producto and pedidos_secundarios.id_pedido={$idPedidoFactura} and despachos_secundarios.id_despacho={$idDespachoFactura}");
+	$coleccioness = array_pop($colecciones);
+	foreach ($coleccionesSec as $key) {
+		if(!empty($key['id_coleccion'])){
+			$colecciones[count($colecciones)]=$key;
+		}
+	}
+	$colecciones[count($colecciones)]=['estatus'=>true];
 }
 // print_r($colecciones);
 // foreach ($colecciones as $key) {
 // 	print_r($key);
 // 	echo "<br><br>";
 // }
+// echo "CANTIDAD ELEMENTOS : ".count($colecciones);
 
 $conTotalResumen = false;
 $extrem = 15;
@@ -188,39 +222,14 @@ body{
 		// $coleccioness = array_pop($colecciones);
 		// $coleccioness = $colecciones;
 		// // $colecciones = [];
-		// $countNum = 1;
-		// foreach($coleccioness as $cols){
-		// 	if($countNum <= 17 ){ $colecciones[count($colecciones)] = $cols; }
-		// 	$countNum++;
+		// for ($i=0; $i < 7; $i++) { 
+		// 	$countNum = 1;
+		// 	foreach($coleccioness as $cols){
+		// 		if($countNum <= 12 ){ $colecciones[count($colecciones)] = $cols; }
+		// 		$countNum++;
+		// 	}
 		// }
-		// // $countNum = 1;
-		// // foreach($coleccioness as $cols){
-		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
-		// // 	$countNum++;
-		// // }
-		// // $countNum = 1;
-		// // foreach($coleccioness as $cols){
-		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
-		// // 	$countNum++;
-		// // }
-		// // $countNum = 1;
-		// // foreach($coleccioness as $cols){
-		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
-		// // 	$countNum++;
-		// // }
-		// // $countNum = 1;
-		// // foreach($coleccioness as $cols){
-		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
-		// // 	$countNum++;
-		// // }
-		// // $countNum = 1;
-		// // foreach($coleccioness as $cols){
-		// // 	if($countNum <= 23 ){ $colecciones[count($colecciones)] = $cols; }
-		// // 	$countNum++;
-		// // }
 		// $colecciones+=['estatus'=>true];
-		
-
 		$countProducts = count($colecciones)-1;
 		$countPage = 0;
 		if($countProducts <= ($extrem-4)){
@@ -295,9 +304,8 @@ body{
 							<td></td>
 						</tr>
 						<tr>
-							<td class='celtitle2' style='width:15% !important;'><b class='titulo-table'>Dirección: </b></td>
+							<td class='celtitle2' style='width:15% !important;'><b class='titulo-table'>Dirección: <br><br></b></td>
 							<td class='celcontent' style='width:80% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
-							
 						</tr>
 						<tr>
 							<td class='celtitle2 style='width:15% !important;'><b class='titulo-table'>Cédula o RIF: </b></td>
@@ -324,7 +332,6 @@ body{
 						}
 						if($type==2){
 						$info.="
-						<br>
 						<br>
 						<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:13.35em;'></div>
 						<table class='table2' style='width:100%;font-size:1.02em;'>
@@ -362,7 +369,7 @@ body{
 								if($procederVariado){
 									$cantAprobada = $cols['cantidad_aprobado'];
 								}else{
-									$cantAprobada = $factura['cantidad_aprobado'];
+									$cantAprobada = $cols['cantidad_aprobado'];
 								}
 								// echo "numeroLimite: ".$numLim."<br>";
 								// if( $numerosCols  
@@ -389,24 +396,26 @@ body{
 									$sumPrecioProductos += $precioUnidProduct;
 									$sumPrecioFinal += ($precioUnidProduct*$cifraMultiplo)*$cols['cantidad_productos'];
 									//font-size:0.98em;
+									if($mostrarCantProduct>0){
 									$info.="
-									<tr style=''>
-										<td style='' class='celcontent'><span class='content-table' style='padding-left:15px;'>
-											".$mostrarCantProduct." 
-										</span></td>
-										<td class='celcontent'><span class='content-table'>
-											 ".$cols['producto']."
-										</span></td>
-										<td class='celcontentR'><span class='content-table'>01</span></td>
-										<td class='celcontentR'><span class='content-table'>
-											".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
-										</span></td>
-										<td class='celcontentR'><span class='content-table'>16%</span></td>
-										<td class='celcontentR'><span class='content-table'>
-											".$simbolo."".number_format($total,2,',','.')."
-										</span></td>
-									</tr>
-									";
+										<tr style=''>
+											<td style='' class='celcontent'><span class='content-table' style='padding-left:15px;'>
+												".$mostrarCantProduct." 
+											</span></td>
+											<td class='celcontent'><span class='content-table'>
+												 ".$cols['producto']."
+											</span></td>
+											<td class='celcontentR'><span class='content-table'>01</span></td>
+											<td class='celcontentR'><span class='content-table'>
+												".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
+											</span></td>
+											<td class='celcontentR'><span class='content-table'>16%</span></td>
+											<td class='celcontentR'><span class='content-table'>
+												".$simbolo."".number_format($total,2,',','.')."
+											</span></td>
+										</tr>
+										";
+									}
 									$numeroReal++;
 								}
 							$numero++;
@@ -581,7 +590,7 @@ body{
 								<td></td>
 							</tr>
 							<tr>
-								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: </b></td>
+								<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: <br><br></b></td>
 								<td class='celcontent' style='width:76% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 								
 							</tr>
@@ -610,7 +619,6 @@ body{
 							}
 							if($type==2){
 							$info.="
-							<br>
 							<br>
 							<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:14.67em;'></div>
 							<table class='table2' style='width:100%;font-size:1.02em;'>
@@ -649,7 +657,7 @@ body{
 									if($procederVariado){
 										$cantAprobada = $cols['cantidad_aprobado'];
 									}else{
-										$cantAprobada = $factura['cantidad_aprobado'];
+										$cantAprobada = $cols['cantidad_aprobado'];
 									}
 									if($numero>$numLim2 && $numero<=$numLim){
 										$cantProduct = $cols['cantidad_productos']*$cantAprobada;
@@ -674,24 +682,26 @@ body{
 										$sumPrecioProductos += $precioUnidProduct;
 										$sumPrecioFinal += ($precioUnidProduct*$cifraMultiplo)*$cols['cantidad_productos'];
 										//font-size:0.98em;
+										if($mostrarCantProduct>0){
 										$info.="
-										<tr style=''>
-											<td class='celcontent'><span class='content-table'>
-												".$mostrarCantProduct."
-											</span></td>
-											<td class='celcontent'><span class='content-table'>
-												".$cols['producto']."
-											</span></td>
-											<td class='celcontentR'><span class='content-table'>01</span></td>
-											<td class='celcontentR'><span class='content-table'>
-												".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
-											</span></td>
-											<td class='celcontentR'><span class='content-table'>16%</span></td>
-											<td class='celcontentR'><span class='content-table'>
-												".$simbolo."".number_format($total,2,',','.')."
-											</span></td>
-										</tr>
-										";
+											<tr style=''>
+												<td class='celcontent'><span class='content-table'>
+													".$mostrarCantProduct."
+												</span></td>
+												<td class='celcontent'><span class='content-table'>
+													".$cols['producto']."
+												</span></td>
+												<td class='celcontentR'><span class='content-table'>01</span></td>
+												<td class='celcontentR'><span class='content-table'>
+													".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
+												</span></td>
+												<td class='celcontentR'><span class='content-table'>16%</span></td>
+												<td class='celcontentR'><span class='content-table'>
+													".$simbolo."".number_format($total,2,',','.')."
+												</span></td>
+											</tr>
+											";
+										}
 										$numeroReal++;
 									}
 									$numero++;
@@ -869,7 +879,7 @@ body{
 									<td></td>
 								</tr>
 								<tr>
-									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: </b></td>
+									<td class='celtitle2' style='width:24% !important;'><b class='titulo-table'>Dirección: <br><br></b></td>
 									<td class='celcontent' style='width:86% !important;' colspan='3'><span class='content-table'>".$factura['direccion']."</span></td>
 									
 								</tr>
@@ -898,7 +908,6 @@ body{
 								}
 								if($type==2){
 								$info.="
-								<br>
 								<br>
 								<div class='box-content-final-CFT' style='border-bottom:1px solid #434343;top:14.67em;'></div>
 								<table class='table2' style='width:100%;font-size:1.02em;'>
@@ -932,7 +941,7 @@ body{
 										if($procederVariado){
 											$cantAprobada = $cols['cantidad_aprobado'];
 										}else{
-											$cantAprobada = $factura['cantidad_aprobado'];
+											$cantAprobada = $cols['cantidad_aprobado'];
 										}
 										if($numero>$numLim2 && $numero<=$numLim){
 											$cantProduct = $cols['cantidad_productos']*$cantAprobada;
@@ -957,24 +966,26 @@ body{
 											$sumPrecioProductos += $precioUnidProduct;
 											$sumPrecioFinal += ($precioUnidProduct*$cifraMultiplo)*$cols['cantidad_productos'];
 											//font-size:0.98em;
-											$info.="
-											<tr style=''>
-												<td class='celcontent'><span class='content-table'>
-													".$mostrarCantProduct."
-												</span></td>
-												<td class='celcontent'><span class='content-table'>
-													".$cols['producto']."
-												</span></td>
-												<td class='celcontentR'><span class='content-table'>01</span></td>
-												<td class='celcontentR'><span class='content-table'>
-													".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
-												</span></td>
-												<td class='celcontentR'><span class='content-table'>16%</span></td>
-												<td class='celcontentR'><span class='content-table'>
-													".$simbolo."".number_format($total,2,',','.')."
-												</span></td>
-											</tr>
-											";
+											if($mostrarCantProduct>0){
+												$info.="
+												<tr style=''>
+													<td class='celcontent'><span class='content-table'>
+														".$mostrarCantProduct."
+													</span></td>
+													<td class='celcontent'><span class='content-table'>
+														".$cols['producto']."
+													</span></td>
+													<td class='celcontentR'><span class='content-table'>01</span></td>
+													<td class='celcontentR'><span class='content-table'>
+														".$simbolo."".number_format($precioUnidProduct*$cifraMultiplo,2,',','.')."
+													</span></td>
+													<td class='celcontentR'><span class='content-table'>16%</span></td>
+													<td class='celcontentR'><span class='content-table'>
+														".$simbolo."".number_format($total,2,',','.')."
+													</span></td>
+												</tr>
+												";
+											}
 											$numeroReal++;
 										}
 										$numero++;
@@ -1098,13 +1109,13 @@ body{
 		//$alto = 842.292;
 
 		// $dompdf->setPaper(array(0,0,619.56,842.292)); // para contenido en pagina de lado
+// $pgl1 = 96.001;
+// $ancho = 528.00;
+// $alto = 816.009;
+// $altoMedio = $alto / 2;
+// // $dompdf->setPaper(array(0,0,$ancho,$altoMedio)); // tamaño carta original
 // echo $info;
 $dompdf->loadHtml($info);
-$pgl1 = 96.001;
-$ancho = 528.00;
-$alto = 816.009;
-$altoMedio = $alto / 2;
-// $dompdf->setPaper(array(0,0,$ancho,$altoMedio)); // tamaño carta original
 $dompdf->render();
 $dompdf->stream("StyleCollection Fact ".$num_factura." - ".$factura['primer_nombre'], array("Attachment" => false));
 

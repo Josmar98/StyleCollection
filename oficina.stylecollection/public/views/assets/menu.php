@@ -139,6 +139,82 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
 
 
 <!-- ======================================================================================================================= -->
+              <!--  COLECCIONES   -->
+<!-- ======================================================================================================================= -->
+
+        <?php 
+              $amColecciones = 0;
+              $amColeccionesR = 0;
+              $amColeccionesC = 0;
+              $amColeccionesE = 0;
+              $amColeccionesB = 0;
+              foreach ($accesos as $access) {
+                if(!empty($access['id_acceso'])){
+                  if($access['nombre_modulo'] == "Despachos"){
+                    $amColecciones = 1;
+                    if($access['nombre_permiso'] == "Registrar"){
+                      $amColeccionesR = 1;
+                    }
+                    if($access['nombre_permiso'] == "Ver"){
+                      $amColeccionesC = 1;
+                    }
+                    if($access['nombre_permiso'] == "Editar"){
+                      $amColeccionesE = 1;
+                    }
+                    if($access['nombre_permiso'] == "Borrar"){
+                      $amColeccionesB = 1;
+                    }
+                  }
+                }
+              }
+              if($amColecciones == 1){
+          ?>
+                            <?php if($url=="Colecciones"){ ?>
+        <li class="active treeview">
+                            <?php }else{ ?>
+        <li class="treeview">
+                            <?php } ?>
+          <a href="?<?php echo $menu ?>&route=Colecciones">
+            <i class="fa fa-folder"></i> <span>Colecciones Adicionales
+             <!-- <?=$n?><br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <?=$ndp;?> Pedido -->
+           </span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+                
+                <?php  if($amColeccionesR == 1){ ?>
+                
+                            <?php if($url=="Colecciones" && !empty($action) && $action == "Registrar"){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=Colecciones&action=Registrar"><i class="fa fa-folder-o"></i> Registrar Colección</a></li>
+                            <?php }else{ ?>
+            <li class=""><a href="?<?php echo $menu ?>&route=Colecciones&action=Registrar"><i class="fa fa-folder-o"></i> Registrar Colección</a></li>
+                            <?php } ?>
+
+                <?php } ?>
+                <?php  if($amColeccionesC == 1){ ?>
+
+
+                            <?php if($url=="Colecciones" && empty($action)){ ?>
+            <li class="active"><a href="?<?php echo $menu ?>&route=Colecciones"><i class="fa fa-folder-o"></i> Ver Colecciones</a></li>
+                            <?php }else{ ?>
+            <li><a href="?<?php echo $menu ?>&route=Colecciones"><i class="fa fa-folder-o"></i> Ver Colecciones</a></li>
+                            <?php } ?>
+                
+                <?php } ?>
+
+          </ul>
+        </li>
+          <?php } ?>
+
+<!-- ======================================================================================================================= -->
+
+
+
+
+
+<!-- ======================================================================================================================= -->
               <!--  PROMOCIONES   -->
 <!-- ======================================================================================================================= -->
     <?php 
@@ -1076,7 +1152,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="Nota" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=Nota&action=Registrar"><i class="fa fa-file-text-o"></i> Realizar Nota de entrega</a></li>
                             <?php }else{ ?>
@@ -1094,7 +1170,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                       <?php } ?>
 
 
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Administrativo2"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo2"){ ?>
                             <?php if($url=="NotaPersonalizada" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=NotaPersonalizada&action=Registrar"><i class="fa fa-file-text-o"></i> Realizar Nota de entrega<br>&nbsp&nbsp&nbsp&nbsp Personalizadas </a></li>
                             <?php }else{ ?>
@@ -1102,7 +1178,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                             <?php } ?>
                       <?php } ?>
 
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2" || $_SESSION['nombre_rol']=="Administrativo2"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo2"){ ?>
                             <?php if($url=="NotaPersonalizada" && empty($action)){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=NotaPersonalizada"><i class="fa fa-file-text-o"></i> Ver Notas de entrega<br>&nbsp&nbsp&nbsp&nbsp Personalizadas </a></li>
                             <?php }else{ ?>
@@ -1190,7 +1266,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
                       <?php } ?>
 
 
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="NotaDespacho" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=NotaDespacho&action=Registrar"><i class="fa fa-file-text-o"></i> Realizar Nota de Despacho</a></li>
                             <?php }else{ ?>
@@ -1259,7 +1335,7 @@ if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) && !emp
             </span>
           </a>
           <ul class="treeview-menu">
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
+                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                             <?php if($url=="FacturaPersonalizada" && !empty($action) && $action == "Registrar"){ ?>
             <li class="active"><a href="?<?php echo $menu ?>&route=FacturaPersonalizada&action=Registrar"><i class="fa fa-file-text-o"></i> Crear Factura personalizada</a></li>
                             <?php }else{ ?>
@@ -1364,7 +1440,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 
 
 <!-- ======================================================================================================================= -->
-    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Contable"){ ?>
       <?php if($url == "EstadoCuentas"){ ?>
         <li class="active">
       <?php }else{ ?>
@@ -1850,129 +1926,141 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 <!-- ======================================================================================================================= -->
               <!--  CLIENTES   -->
 <!-- ======================================================================================================================= -->
-        <?php 
-              $amClientes = 0;
-              $amClientesR = 0;
-              $amClientesC = 0;
-              $amClientesE = 0;
-              $amClientesB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Clientes"){
-                    $amClientes = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amClientesR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amClientesC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amClientesE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amClientesB = 1;
-                    }
-
-                  }
+        <?php
+          $amClientes = 0;
+          $amClientesR = 0;
+          $amClientesC = 0;
+          $amClientesE = 0;
+          $amClientesB = 0;
+          foreach ($accesos as $access) {
+            if(!empty($access['id_acceso'])){
+              if($access['nombre_modulo'] == "Clientes"){
+                $amClientes = 1;
+                if($access['nombre_permiso'] == "Registrar"){
+                  $amClientesR = 1;
+                }
+                if($access['nombre_permiso'] == "Ver"){
+                  $amClientesC = 1;
+                }
+                if($access['nombre_permiso'] == "Editar"){
+                  $amClientesE = 1;
+                }
+                if($access['nombre_permiso'] == "Borrar"){
+                  $amClientesB = 1;
                 }
               }
-              if($amClientes == 1){
-          ?>
-
-                            <?php if($url=="Clientes" || $url=="ClientesBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-users"></i> <span>Líderes</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
+            }
+          }
+          if($amClientes == 1){
+            ?>
+            <li class="<?php if($url=="Clientes" || $url=="ClientesBorrados"){ echo "active"; } ?> treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>Líderes</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
                 <?php if($amClientesR==1){ ?>
-                            <?php if($url=="Clientes" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Líder</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Líder</a></li>
-                            <?php } ?>
-
-                <?php } ?>
-                <?php if($amClientesC==1){ ?>
-
-                            <?php if($url=="Clientes" && empty($action)){ ?>
-            <li class="active"><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Líderes</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Líderes</a></li>
-                            <?php } ?>
-
-                    <?php 
-                      // if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ 
-                      if($_SESSION['nombre_rol']=="Superusuario"){
-                    ?>
-                            <?php if($url=="ClientesBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Líderes Suspendidos</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Líderes Suspendidos</a></li>
-                            <?php } ?>
-                    <?php } ?>
+                  <li class="<?php if($url=="Clientes" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Clientes&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Líder</a></li>
+                  <?php } ?>
+                  <?php if($amClientesC==1){ ?>
+                    <li class="<?php if($url=="Clientes" && empty($action)){ echo "active"; } ?>"><a href="?route=Clientes"><i class="fa fa-user"></i> Ver Líderes</a></li>
+                  <?php } ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                    <li class="<?php if($url=="ClientesBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=ClientesBorrados"><i class="fa fa-user"></i> Ver Líderes Suspendidos</a></li>
+                  <?php } ?>
+              </ul>
+            </li>
+          <?php } ?>
+<!-- ======================================================================================================================= -->
 
 
-                <?php } ?>
-          </ul>
-        </li>
-
-            <?php } ?>
-
-
-          <?php 
-              if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){
-          ?>
-
-                            <?php if($url=="Estructuras"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-users"></i> <span>Estructuras de Líderes</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-                            <?php if($url=="Estructuras" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Estructuras&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Estructuras</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Estructuras&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Estructuras</a></li>
-                            <?php } ?>
+<!-- ======================================================================================================================= -->
+              <!--  ESTRUCTURAS   -->
+<!-- ======================================================================================================================= -->
+          <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+            <li class="<?php if($url=="Estructuras"){ echo "active"; } ?> treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>Estructuras de Líderes</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <li class="<?php if($url=="Estructuras" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Estructuras&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Estructuras</a></li>
+                <li class="<?php if($url=="Estructuras" && empty($action)){ echo "active"; } ?>"><a href="?route=Estructuras"><i class="fa fa-user"></i> Ver Estructuras</a></li>
+              </ul>
+            </li>
+          <?php } ?>
+<!-- ======================================================================================================================= -->
 
 
-                            <?php if($url=="Estructuras" && empty($action)){ ?>
-            <li class="active"><a href="?route=Estructuras"><i class="fa fa-user"></i> Ver Estructuras</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Estructuras"><i class="fa fa-user"></i> Ver Estructuras</a></li>
-                            <?php } ?>
-          </ul>
-        </li>
-
-
-            <?php } ?>
+<!-- ======================================================================================================================= -->
+              <!--  EMPLEADOS   -->
+<!-- ======================================================================================================================= -->
+<?php
+          $amEmpleados = 0;
+          $amEmpleadosR = 0;
+          $amEmpleadosC = 0;
+          $amEmpleadosE = 0;
+          $amEmpleadosB = 0;
+          foreach ($accesos as $access) {
+            if(!empty($access['id_acceso'])){
+              if($access['nombre_modulo'] == "Empleados"){
+                $amEmpleados = 1;
+                if($access['nombre_permiso'] == "Registrar"){
+                  $amEmpleadosR = 1;
+                }
+                if($access['nombre_permiso'] == "Ver"){
+                  $amEmpleadosC = 1;
+                }
+                if($access['nombre_permiso'] == "Editar"){
+                  $amEmpleadosE = 1;
+                }
+                if($access['nombre_permiso'] == "Borrar"){
+                  $amEmpleadosB = 1;
+                }
+              }
+            }
+          }
+          if($amEmpleados == 1){
+            ?>
+            <li class="<?php if($url=="Empleados" || $url=="EmpleadosBorrados"){ echo "active"; } ?> treeview">
+              <a href="#">
+                <i class="fa fa-users"></i> <span>Empleados</span>
+                <span class="pull-right-container">
+                  <i class="fa fa-angle-left pull-right"></i>
+                </span>
+              </a>
+              <ul class="treeview-menu">
+                <?php if($amEmpleadosR==1){ ?>
+                  <li class="<?php if($url=="Empleados" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Empleados&action=Registrar"><i class="fa fa-user-plus"></i> Registrar Empleado</a></li>
+                  <?php } ?>
+                  <?php if($amEmpleadosC==1){ ?>
+                    <li class="<?php if($url=="Empleados" && empty($action)){ echo "active"; } ?>"><a href="?route=Empleados"><i class="fa fa-user"></i> Ver Empleados</a></li>
+                  <?php } ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                    <li class="<?php if($url=="EmpleadosBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=EmpleadosBorrados"><i class="fa fa-user"></i> Ver Empleados Suspendidos</a></li>
+                  <?php } ?>
+              </ul>
+            </li>
+          <?php } ?>
+<!-- ======================================================================================================================= -->
 
 
 
 
 <!-- ======================================================================================================================= -->
+              <!--  NOMBRAMIENTOS   -->
+<!-- ======================================================================================================================= -->
+
+
         <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
         <?php //if($_SESSION['nombre_rol']=="Superusuario"){ ?>
 
-                            <?php if($url=="Nombramientos" || $url=="NombramientosBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
+                            
+        <li class="<?php if($url=="Nombramientos" || $url=="NombramientosBorrados"){ echo "active"; } ?> treeview">
           <a href="#">
             <i class="fa fa-graduation-cap"></i> <span>Nombramientos</span>
             <span class="pull-right-container">
@@ -2017,6 +2105,7 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
         <?php } ?>
 
 
+<!-- ======================================================================================================================= -->
 
 
 
@@ -2137,7 +2226,6 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
             </span>
           </a>
           <ul class="treeview-menu">
-<!-- ======================================================================================================================= -->
                  <?php if($amMovimientosR==1){ ?>
 
 
@@ -2175,7 +2263,417 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 <!-- ======================================================================================================================= -->
 
 
-        <?php if($url=="Proveedores" || $url=="Libroiva"){ ?>
+<!-- ======================================================================================================================= -->
+              <!--  INVENTARIO   -->
+<!-- ======================================================================================================================= -->
+
+
+        <li class="<?php if($url=="Entradas" || $url=="Salidas" || $url=="Traslados" || $url=="Almacenes" || $url=="Proveedoresinv" || $url=="Productos" || $url=="ProductosBorrados" || $url=="Mercancia" || $url=="MercanciaBorrada" || $url=="Catalogos"){ echo "active"; } ?> treeview">
+          <a href="#">
+            <i class="fa fa-folder-open"></i> <span>Inventarios</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu treeview-menu2">
+            <!-- ========================================================================================== -->
+                    <!--  OPERACIONES   -->
+            <!-- ========================================================================================== -->
+              <li class="<?php if($url=="Entradas" || $url=="Salidas" || $url=="Traslados"){ echo "active"; } ?> treeview">
+                <a href="#">
+                  <i class="fa fa-book"></i> <span>Operaciones</span>
+                  <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                  </span>
+                </a>
+                <ul class="treeview-menu">
+                  <!-- ========================================================================================== -->
+                          <!--  INVENTARIO   -->
+                  <!-- ========================================================================================== -->
+                    <?php 
+                      $amInventario = 0;
+                      $amInventarioR = 0;
+                      $amInventarioC = 0;
+                      $amInventarioE = 0;
+                      $amInventarioB = 0;
+                      foreach ($accesos as $access) {
+                        if(!empty($access['id_acceso'])){
+                          if($access['nombre_modulo'] == "Inventarios"){
+                            $amInventario = 1;
+                            if($access['nombre_permiso'] == "Registrar"){
+                              $amInventarioR = 1;
+                            }
+                            if($access['nombre_permiso'] == "Ver"){
+                              $amInventarioC = 1;
+                            }
+                            if($access['nombre_permiso'] == "Editar"){
+                              $amInventarioE = 1;
+                            }
+                            if($access['nombre_permiso'] == "Borrar"){
+                              $amInventarioB = 1;
+                            }
+                          }
+                        }
+                      }
+                    ?>
+                    <?php if($amInventario == 1){ ?>
+                    
+                    <!-- ========================================================================================== -->
+                          <!--  ENTRADAS   -->
+                    <!-- ========================================================================================== -->
+                    <?php if($amInventarioC==1){ ?>
+                      <li class="<?php if($url=="Operaciones" && !empty($action) && $action == "Ver"){ echo "active"; } ?>"><a href="?route=Operaciones&action=Ver"><i class="fa fa-book"></i>Ver Operaciones</a></li>
+                    <?php } ?>  
+                    <!-- ========================================================================================== -->
+
+                    <!-- ========================================================================================== -->
+                          <!--  ENTRADAS   -->
+                    <!-- ========================================================================================== -->
+                      <?php if($amInventarioR==1){ ?>
+                        <li class="<?php if($url=="Entradas" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Entradas&action=Registrar"><i class="fa fa-book"></i>Registrar Entradas</a></li>
+                      <?php } ?>
+                      
+                      
+                      <!-- <li class="<?php if($url=="Entradas"){ echo "active"; } ?> treeview">
+                        <a href="#">
+                          <i class="fa fa-book"></i> <span>Entradas</span>
+                          <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                        </a>
+                        <ul class="treeview-menu">
+      
+                          <?php if($amInventarioC==1){ ?>
+                            <li class="<?php if($url=="Entradas" && empty($action)){ echo "active"; } ?>"><a href="?route=Entradas"><i class="fa fa-book"></i> Ver Entradas</a></li>
+                          <?php } ?>
+                        
+                        </ul>
+                      </li> -->
+                    <!-- ========================================================================================== -->
+      
+                    <!-- ========================================================================================== -->
+                          <!--  SALIDAS   -->
+                    <!-- ========================================================================================== -->
+                      <?php if($amInventarioR==1){ ?>
+                        <li class="<?php if($url=="Salidas" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Salidas&action=Registrar"><i class="fa fa-book"></i>Registrar Salidas</a></li>
+                      <?php } ?>
+                      <?php if($amInventarioR==1){ ?>
+                        <!-- <li class="<?php if($url=="Desincorporacion" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Desincorporacion&action=Registrar"><i class="fa fa-book"></i>Realizar Desincorporacion</a></li> -->
+                      <?php } ?>
+                      <!-- <li class="<?php if($url=="Salidas"){ echo "active"; } ?> treeview">
+                        <a href="#">
+                          <i class="fa fa-book"></i> <span>Salidas</span>
+                          <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                        </a>
+                        <ul class="treeview-menu">
+                          <?php if($amInventarioR==1){ ?>
+                            <li class="<?php if($url=="Salidas" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Salidas&action=Registrar"><i class="fa fa-book"></i> Registrar Salidas</a></li>
+                          <?php } ?>
+      
+                          <?php if($amInventarioC==1){ ?>
+                            <li class="<?php if($url=="Salidas" && empty($action)){ echo "active"; } ?>"><a href="?route=Salidas"><i class="fa fa-book"></i> Ver Salidas</a></li>
+                          <?php } ?>
+                        
+                        </ul>
+                      </li> -->
+                    <!-- ========================================================================================== -->
+      
+                    <!-- ========================================================================================== -->
+                          <!--  TRASLADOS   -->
+                    <!-- ========================================================================================== -->
+                      <?php if($amInventarioR==1){ ?>
+                        <li class="<?php if($url=="Traslados" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Traslados&action=Registrar"><i class="fa fa-book"></i>Realizar Traslados</a></li>
+                      <?php } ?>
+                      <!-- <li class="<?php if($url=="Traslados"){ echo "active"; } ?> treeview">
+                        <a href="#">
+                          <i class="fa fa-book"></i> <span>Traslados</span>
+                          <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                          </span>
+                        </a>
+                        <ul class="treeview-menu">
+                          <?php if($amInventarioR==1){ ?>
+                            <li class="<?php if($url=="Traslados" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Traslados&action=Registrar"><i class="fa fa-book"></i> Registrar Traslados</a></li>
+                          <?php } ?>
+      
+                          <?php if($amInventarioC==1){ ?>
+                            <li class="<?php if($url=="Traslados" && empty($action)){ echo "active"; } ?>"><a href="?route=Traslados"><i class="fa fa-book"></i> Ver Traslados</a></li>
+                          <?php } ?>
+                        
+                        </ul>
+                      </li> -->
+                    <!-- ========================================================================================== -->
+                    <?php } ?>
+                  <!-- ========================================================================================== -->
+                </ul>
+              </li> 
+            <!-- ========================================================================================== -->
+
+            
+            <!-- ========================================================================================== -->
+                    <!--  ALMACENES   -->
+            <!-- ========================================================================================== -->
+              <?php 
+                if($amInventario == 1){
+                  ?>
+                  <li class="<?php if($url=="Almacenes"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-book"></i> <span>Almacenes</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amInventarioR==1){ ?>
+                        <li class="<?php if($url=="Almacenes" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Almacenes&action=Registrar"><i class="fa fa-book"></i> Registrar Almacenes</a></li>
+                      <?php } ?>
+  
+                      <?php if($amInventarioC==1){ ?>
+                        <li class="<?php if($url=="Almacenes" && empty($action)){ echo "active"; } ?>"><a href="?route=Almacenes"><i class="fa fa-book"></i> Ver Almacenes</a></li>
+                      <?php } ?>
+                    
+                    </ul>
+                  </li>
+                  <?php
+                }
+              ?>
+            <!-- ========================================================================================== -->
+
+            <!-- ========================================================================================== -->
+                  <!--  PROVEEDORES DE INVENTARIO  -->
+            <!-- ========================================================================================== -->
+              <?php 
+                if($amInventario == 1){
+                  ?>
+                  <li class="<?php if($url=="Proveedoresinv"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-book"></i> <span>Proveedores</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amInventarioR==1){ ?>
+                        <li class="<?php if($url=="Proveedoresinv" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Proveedoresinv&action=Registrar"><i class="fa fa-book"></i> Registrar Proveedores</a></li>
+                      <?php } ?>
+                      
+                      <?php if($amInventarioC==1){ ?>
+                        <li class="<?php if($url=="Proveedoresinv" && empty($action)){ echo "active"; } ?>"><a href="?route=Proveedoresinv"><i class="fa fa-book"></i> Ver Proveedores</a></li>
+                      <?php } ?>
+                    
+                    </ul>
+                  </li> 
+                  <?php
+                }
+              ?>
+            <!-- ========================================================================================== -->
+
+            <!-- ============================================================================= -->
+                          <!--  PRODUCTOS   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amProductos = 0;
+                $amProductosR = 0;
+                $amProductosC = 0;
+                $amProductosE = 0;
+                $amProductosB = 0;
+                $amFragancias = 0;
+                $amFraganciasR = 0;
+                $amFraganciasC = 0;
+                $amFraganciasE = 0;
+                $amFraganciasB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Productos"){
+                      $amProductos = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amProductosR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amProductosC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amProductosE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amProductosB = 1;
+                      }
+                    }
+                    if($access['nombre_modulo'] == "Fragancias"){
+                      $amFragancias = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amFraganciasR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amFraganciasC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amFraganciasE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amFraganciasB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amProductos == 1){
+                  ?>
+                  <li class="<?php if($url=="Productos" || $url=="ProductosBorrados" || $url=="Fragancias"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-inbox"></i> <span>Inventario de Productos</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amProductosR==1){ ?>
+                        <li class="<?php if($url=="Productos" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Productos&action=Registrar"><i class="fa fa-archive"></i> Registrar Producto</a></li>
+                      <?php } ?>
+                      
+                      <?php if($amProductosC==1){ ?>
+                        <li class="<?php if($url=="Productos" && empty($action)){ echo "active"; }?>"><a href="?route=Productos"><i class="fa fa-archive"></i> Ver Productos</a></li>
+                      <?php } ?>
+          
+                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                        <li class="<?php if($url=="ProductosBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=ProductosBorrados"><i class="fa fa-archive"></i> Ver Productos Borrados</a></li>
+                      <?php } ?>
+                                      
+                      <?php if($amFraganciasC==1){ ?>
+                        <!-- <li class="<?php if($url=="Fragancias" && empty($action)){ echo "active"; } ?>"><a href="?route=Fragancias"><i class="fa fa-eyedropper"></i> Fragancias</a></li> -->
+                      <?php } ?>
+          
+                    </ul>
+                  </li>
+                  <?php
+                }
+              ?>
+            <!-- ============================================================================= -->
+            
+            <!-- ============================================================================= -->
+                          <!--  Premios   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amPremios = 0;
+                $amPremiosR = 0;
+                $amPremiosC = 0;
+                $amPremiosE = 0;
+                $amPremiosB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Premios"){
+                      $amPremios = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amPremiosR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amPremiosC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amPremiosE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amPremiosB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amPremios == 1){
+                  ?>
+                  <li class="<?php if($url=="Mercancia" || $url=="MercanciaBorrada"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-rocket"></i> <span>Inventario de Mercancia</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amPremiosR==1){ ?>
+                        <li class="<?php if($url=="Mercancia" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Mercancia&action=Registrar"><i class="fa fa-fighter-jet"></i> Registrar Mercancia</a></li>
+                      <?php } ?>
+                      <?php if($amPremiosC==1){ ?>
+                        <li class="<?php if($url=="Mercancia" && empty($action)){ echo "active"; } ?>"><a href="?route=Mercancia"><i class="fa fa-fighter-jet"></i> Ver Mercancia</a></li>
+                      <?php } ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                        <li class="<?php if($url=="MercanciaBorrada" && empty($action)){ echo "active"; } ?>"><a href="?route=MercanciaBorrada"><i class="fa fa-fighter-jet"></i> Ver Mercancia Borrada</a></li>
+                      <?php } ?>
+                    </ul>
+                  </li>
+                  <?php 
+                }
+              ?>
+            <!-- ============================================================================= -->
+            
+            <!-- ============================================================================= -->
+                          <!--  Catalogos   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amCatalogos = 0;
+                $amCatalogosR = 0;
+                $amCatalogosC = 0;
+                $amCatalogosE = 0;
+                $amCatalogosB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Catalogos"){
+                      $amCatalogos = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amCatalogosR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amCatalogosC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amCatalogosE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amCatalogosB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amCatalogos == 1){
+                  ?>
+                  <li class="<?php if($url=="Catalogos" || $url=="CatalogosBorrados"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-object-group"></i> <span>Catalogo de Gemas</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amCatalogosR==1){ ?>
+                        <li class="<?php if($url=="Catalogos" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Catalogos&action=Registrar"><i class="fa fa-object-ungroup"></i> Registrar Premio</a></li>
+                      <?php } ?>
+                      <?php if($amCatalogosC==1){ ?>
+                        <li class="<?php if($url=="Catalogos" && empty($action)){ echo "active"; } ?>"><a href="?route=Catalogos"><i class="fa fa-object-ungroup"></i> Ver Catalogo</a></li>
+                      <?php } ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                        <li class="<?php if($url=="CatalogosBorrados" && empty($action)){ echo "action"; } ?>"><a href="?route=CatalogosBorrados"><i class="fa fa-object-ungroup"></i> Ver Catalogo Deshabilitado</a></li>
+                      <?php } ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                        <li class="<?php if($url=="Catalogos" && !empty($action) && $action == "RegistrarFechas"){ echo "active"; } ?>"><a href="?route=Catalogos&action=RegistrarFechas"><i class="fa fa-object-ungroup"></i> Configurar fechas<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp del Catálogo</a></li>
+                      <?php } ?>
+                    </ul>
+                  </li>
+                  <?php 
+                }
+              ?>
+            <!-- ============================================================================= -->
+            
+          </ul>  
+        </li>  
+        
+<!-- ======================================================================================================================= -->        
+        
+
+        
+<!-- ======================================================================================================================= -->
+              <!--  CONTABILIDAD   -->
+<!-- ======================================================================================================================= -->
+
+        <?php if($url=="Proveedores" || $url=="Libroiva" || $url=="ReporteReusmenGemas"){ ?>
           <li class="active treeview">
         <?php }else{ ?>
           <li class="treeview">
@@ -2187,540 +2685,463 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
             </span>
           </a>
           <ul class="treeview-menu treeview-menu2">
-
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Contable"){ ?>
-              <?php if($url=="Proveedores"){ ?>
-                <li class="active treeview">
-              <?php }else{ ?>
-                <li class="treeview">
-              <?php } ?>
-                <a href="#">
-                  <i class="fa fa-book"></i> <span>Proveedores</span>
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <?php 
-                    $class="";
-                    if($url=="Proveedores" && !empty($action) && $action == "Registrar"){
-                      $class="active";
-                    } 
+            <!-- ======================================================================================================================= -->
+                          <!--  Contabilidad   -->
+            <!-- ======================================================================================================================= -->
+              <?php 
+                $amContable = 0;
+                $amContableR = 0;
+                $amContableC = 0;
+                $amContableE = 0;
+                $amContableB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Contabilidad"){
+                      $amContable = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amContableR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amContableC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amContableE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amContableB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amContable == 1){
                   ?>
-                  <li class="<?=$class; ?>"><a href="?route=Proveedores&action=Registrar"><i class="fa fa-book"></i> Registrar Proveedores</a></li>
-
-                  <?php 
-                    $class="";
-                    if($url=="Proveedores" && empty($action)){
-                      $class="active";
-                    } 
-                  ?>
-                  <li class="<?=$class; ?>"><a href="?route=Proveedores"><i class="fa fa-book"></i> Ver Proveedores</a></li>
-
-                </ul>
-              </li>
-            <?php } ?>
-
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Contable"){ ?>
-              <?php if($url=="Libroiva"){ ?>
-                <li class="active treeview">
-              <?php }else{ ?>
-                <li class="treeview">
-              <?php } ?>
-                <a href="#">
-                  <i class="fa fa-book"></i> <span>Libros de IVA</span>
-                  <span class="pull-right-container">
-                    <i class="fa fa-angle-left pull-right"></i>
-                  </span>
-                </a>
-                <ul class="treeview-menu">
-                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo2" || $_SESSION['nombre_rol']=="Contable"){  ?>
-                  <?php 
-                    $class="";
-                    if($url=="Libroiva" && !empty($action) && $action == "RegistrarCompras"){
-                      $class="active";
-                    } 
-                  ?>
-                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=RegistrarCompras"><i class="fa fa-book"></i> Registrar Compras</a></li>
-                  <?php }  ?>
                   
-                  <?php 
-                    $class="";
-                    if($url=="Libroiva" && !empty($action) && $action == "VerCompras"){
-                      $class="active";
-                    } 
-                  ?>
-                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=VerCompras"><i class="fa fa-book"></i> Ver Compras</a></li>
-
-                  <?php 
-                    $class="";
-                    if($url=="Libroiva" && !empty($action) && $action == "ComprasVentas"){
-                      $class="active";
-                    } 
-                  ?>
-                  <li class="<?=$class; ?>"><a href="?route=Libroiva&action=ComprasVentas"><i class="fa fa-book"></i> Ver Libros de IVA <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp de Compras y Ventas</a></li>
-
-                </ul>
-              </li>
-            <?php } ?>
-
-
-
-          </ul>
-        </li>
-
-
-
-
-<!-- ======================================================================================================================= -->
-              <!--  CAMPANAS   -->
-<!-- ======================================================================================================================= -->
-          <?php 
-              $amCampanas = 0;
-              $amCampanasR = 0;
-              $amCampanasC = 0;
-              $amCampanasE = 0;
-              $amCampanasB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Campañas"){
-                    $amCampanas = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amCampanasR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amCampanasC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amCampanasE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amCampanasB = 1;
-                    }
-                  }
-                }
-              }
-              if($amCampanas == 1){
-          ?>
-
-                            <?php if($url=="Campanas" || $url=="CampanasBorradas"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-object-group"></i> <span>Campañas</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-                <?php if($amCampanasR==1){ ?>
-
-                            <?php if($url=="Campanas" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Campanas&action=Registrar"><i class="fa fa-puzzle-piece"></i> Registrar Campaña</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Campanas&action=Registrar"><i class="fa fa-puzzle-piece"></i> Registrar Campaña</a></li>
-                            <?php } ?>
-
-                <?php } ?>
-                <?php if($amCampanasC==1){ ?>
-
-
-                            <?php if($url=="Campanas" && empty($action)){ ?>
-            <li class="active"><a href="?route=Campanas"><i class="fa fa-puzzle-piece"></i> Ver Campañas</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Campanas"><i class="fa fa-puzzle-piece"></i> Ver Campañas</a></li>
-                            <?php } ?>
-
-                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
-                            <?php if($url=="CampanasBorradas" && empty($action)){ ?>
-            <li class="active"><a href="?route=CampanasBorradas"><i class="fa fa-puzzle-piece"></i> Ver Campañas Borradas</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=CampanasBorradas"><i class="fa fa-puzzle-piece"></i> Ver Campañas Borradas</a></li>
-                            <?php } ?>
-
+                  
+                  <!-- ========================================================================================== -->
+                        <!--  PROVEEDORES   -->
+                  <!-- ========================================================================================== -->
+                  <li class="<?php if($url=="Proveedores"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-book"></i> <span>Proveedores</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php 
+                        $class="";
+                        if($url=="Proveedores" && !empty($action) && $action == "Registrar"){
+                          $class="active";
+                        } 
+                      ?>
+                      <?php if($amContableR==1){ ?>
+                        <li class="<?=$class; ?>"><a href="?route=Proveedores&action=Registrar"><i class="fa fa-book"></i> Registrar Proveedores</a></li>
                       <?php } ?>
 
-                <?php } ?>
-          </ul>
-        </li> 
-
-            <?php } ?>
-
-
-<!-- ======================================================================================================================= -->
-
-
-
-
-
-<!-- ======================================================================================================================= -->
-              <!--  PRODUCTOS   -->
-<!-- ======================================================================================================================= -->
-          <?php 
-              $amProductos = 0;
-              $amProductosR = 0;
-              $amProductosC = 0;
-              $amProductosE = 0;
-              $amProductosB = 0;
-              $amFragancias = 0;
-              $amFraganciasR = 0;
-              $amFraganciasC = 0;
-              $amFraganciasE = 0;
-              $amFraganciasB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Productos"){
-                    $amProductos = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amProductosR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amProductosC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amProductosE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amProductosB = 1;
-                    }
-                  }
-                  if($access['nombre_modulo'] == "Fragancias"){
-                    $amFragancias = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amFraganciasR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amFraganciasC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amFraganciasE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amFraganciasB = 1;
-                    }
-                  }
-                }
-              }
-              if($amProductos == 1){
-          ?>
-                            <?php if($url=="Productos" || $url=="ProductosBorrados" || $url=="Fragancias"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-inbox"></i> <span>Productos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-                <?php if($amProductosR==1){ ?>
-
-                            <?php if($url=="Productos" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Productos&action=Registrar"><i class="fa fa-archive"></i> Registrar Producto</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Productos&action=Registrar"><i class="fa fa-archive"></i> Registrar Producto</a></li>
-                            <?php } ?>
-
-                <?php } ?>
-                <?php if($amProductosC==1){ ?>
-
-                            <?php if($url=="Productos" && empty($action)){ ?>
-            <li class="active"><a href="?route=Productos"><i class="fa fa-archive"></i> Ver Productos</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Productos"><i class="fa fa-archive"></i> Ver Productos</a></li>
-                            <?php } ?>
-
-                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
-                            <?php if($url=="ProductosBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=ProductosBorrados"><i class="fa fa-archive"></i> Ver Productos Borrados</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=ProductosBorrados"><i class="fa fa-archive"></i> Ver Productos Borrados</a></li>
-                            <?php } ?>
+                      <?php 
+                        $class="";
+                        if($url=="Proveedores" && empty($action)){
+                          $class="active";
+                        } 
+                      ?>
+                      <?php if($amContableC==1){ ?>
+                        <li class="<?=$class; ?>"><a href="?route=Proveedores"><i class="fa fa-book"></i> Ver Proveedores</a></li>
                       <?php } ?>
+                    
+                    </ul>
+                  </li> 
+                  <!-- ========================================================================================== -->
+                  
+                  <!-- ========================================================================================== -->
+                        <!--  LIBRO IVA   -->
+                  <!-- ========================================================================================== -->
+                  <li class="<?php if($url=="Libroiva"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-book"></i> <span>Libros de IVA</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php
+                        if($amContableR==1){
+                          $class="";
+                          if($url=="Libroiva" && !empty($action) && $action == "RegistrarCompras"){ $class="active"; } 
+                          ?>
+                          <li class="<?=$class; ?>"><a href="?route=Libroiva&action=RegistrarCompras"><i class="fa fa-book"></i> Registrar Compras</a></li>
+                          <?php
+                        }
+                      ?>
 
-                <?php } ?>
-                <?php if($amFraganciasC==1){ ?>
+                      <?php 
+                        if($amContableC==1){
+                          $class="";
+                          if($url=="Libroiva" && empty($action)){ $class="active"; } 
+                          ?>
+                          <li class="<?=$class; ?>"><a href="?route=Libroiva&action=VerCompras"><i class="fa fa-book"></i> Ver Compras</a></li>
+                          <?php
+                        }
+                      ?>
 
-                            <?php if($url=="Fragancias" && empty($action)){ ?>
-            <li class="active"><a href="?route=Fragancias"><i class="fa fa-eyedropper"></i> Fragancias</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Fragancias"><i class="fa fa-eyedropper"></i> Ver Fragancias</a></li>
-                            <?php } ?>
-                <?php } ?>
+
+                      <?php
+                        if($amContableC==1 && $amContableR==1 && $amContableE==1){
+                          $class="";
+                          if($url=="Libroiva" && !empty($action) && $action == "ComprasVentas"){ $class="active"; } 
+                          ?>
+                            <li class="<?=$class; ?>"><a href="?route=Libroiva&action=ComprasVentas"><i class="fa fa-book"></i> Ver Libros de IVA <br> &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp de Compras y Ventas</a></li>
+                          <?php
+                        } 
+                      ?>
+                    
+                    </ul>
+                  </li> 
+                  <!-- ========================================================================================== -->
+                  <?php
+                }
+              ?>
+            <!-- ======================================================================================================================= -->
+
+
+            <!-- ========================================================================================== -->
+                  <!--  Reporte de Gemás   -->
+            <!-- ========================================================================================== -->
+              <?php
+                if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Contable"){
+                  ?>
+                  <li class="<?php if($url=="ReporteReusmenGemas"){ echo "active"; } ?>">
+                    <a href="?route=ReporteReusmenGemas">
+                      <i class="fa fa-diamond"></i> <span>Reporte de Gemas</span>
+                    </a>
+                  </li>
+                  <?php
+                }
+              ?>
+            <!-- ========================================================================================== -->
+            
+            
+            
           </ul>
         </li>
-            <?php } ?>
-
+        
 <!-- ======================================================================================================================= -->
 
 
-
-
-
 <!-- ======================================================================================================================= -->
-              <!--  PLANES   -->
+              <!--  COMPONENTES DE CAMPAÑAS   -->
 <!-- ======================================================================================================================= -->
-          <?php 
-              $amPlanes = 0;
-              $amPlanesR = 0;
-              $amPlanesC = 0;
-              $amPlanesE = 0;
-              $amPlanesB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Planes"){
-                    $amPlanes = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amPlanesR = 1;
-                    }
-                    if
-                      ($access['nombre_permiso'] == "Ver"){
-                      $amPlanesC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amPlanesE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amPlanesB = 1;
-                    }
-                  }
-                }
-              }
-              if($amPlanes == 1){
-          ?>
-                            <?php if($url=="Planes" || $url=="PlanesBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
+
+        <?php
+          $claseComponenteCamp = "";
+          if($url=="Campana" || $url=="Liderazgos" || $url=="Planes" || $url=="Retosinv" || $url=="RetosinvBorrados" || $url=="Promocionesinv" || $url=="PromocionesinvBorradas"){
+            $claseComponenteCamp = "active";
+          }
+        ?>
+        <li class="<?=$claseComponenteCamp; ?> treeview">
           <a href="#">
-            <i class="fa fa-star"></i> <span>Planes</span>
+            <i class="fa fa-folder-open"></i> <span>Componentes de Campaña</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
-          <ul class="treeview-menu">
+          <ul class="treeview-menu treeview-menu2">
+            <!-- ============================================================================= -->
+                          <!--  CAMPANAS   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amCampanas = 0;
+                $amCampanasR = 0;
+                $amCampanasC = 0;
+                $amCampanasE = 0;
+                $amCampanasB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Campañas"){
+                      $amCampanas = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amCampanasR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amCampanasC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amCampanasE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amCampanasB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amCampanas == 1){
+              ?>
+                <li class="<?php if($url=="Campanas" || $url=="CampanasBorradas"){ echo "active"; } ?> treeview">
+                  <a href="#">
+                    <i class="fa fa-object-group"></i> <span>Campañas</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <?php if($amCampanasR==1){ ?>
+                      <li class="<?php if($url=="Campanas" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Campanas&action=Registrar"><i class="fa fa-puzzle-piece"></i> Registrar Campaña</a></li>
+                    <?php } ?>
+                    
+                    <?php if($amCampanasC==1){ ?>
+                      <li class="<?php if($url=="Campanas" && empty($action)){ echo "active"; } ?>"><a href="?route=Campanas"><i class="fa fa-puzzle-piece"></i> Ver Campañas</a></li>
+                    <?php } ?>
+                    <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                      <li class="<?php if($url=="CampanasBorradas" && empty($action)){ echo "active"; } ?>"><a href="?route=CampanasBorradas"><i class="fa fa-puzzle-piece"></i> Ver Campañas Borradas</a></li>
+                    <?php } ?>
+                  </ul>
+                </li>
+              <?php } ?>
+            <!-- ============================================================================= -->
+                    
+            <!-- ========================================================================================== -->
+                          <!--  LIDERAZGOS   -->
+            <!-- ========================================================================================== -->
+              <?php 
+                  $amLiderazgos = 0;
+                  $amLiderazgosR = 0;
+                  $amLiderazgosC = 0;
+                  $amLiderazgosE = 0;
+                  $amLiderazgosB = 0;
+                  foreach ($accesos as $access) {
+                    if(!empty($access['id_acceso'])){
+                      if($access['nombre_modulo'] == "Liderazgos"){
+                        $amLiderazgos = 1;
+                        if($access['nombre_permiso'] == "Registrar"){
+                          $amLiderazgosR = 1;
+                        }
+                        if($access['nombre_permiso'] == "Ver"){
+                          $amLiderazgosC = 1;
+                        }
+                        if($access['nombre_permiso'] == "Editar"){
+                          $amLiderazgosE = 1;
+                        }
+                        if($access['nombre_permiso'] == "Borrar"){
+                          $amLiderazgosB = 1;
+                        }
+                      }
+                    }
+                  }
+                  if($amLiderazgos == 1){
+              ?>
+                <li class="<?php if($url=="Liderazgos" || $url=="LiderazgosBorrados"){ echo "active"; } ?> treeview">
+                  <a href="#">
+                    <i class="fa fa-bookmark"></i> <span>Liderazgos</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <?php if($amLiderazgosR==1){ ?>
+                      <li class="<?php if($url=="Liderazgos" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Liderazgos&action=Registrar"><i class="fa fa-bookmark-o"></i> Registrar Liderazgo</a></li>
+                    <?php } ?>
+                    
+                    <?php if($amLiderazgosC==1){ ?>
+                      <li class="<?php if($url=="Liderazgos" && empty($action)){ echo "active"; } ?>"><a href="?route=Liderazgos"><i class="fa fa-bookmark-o"></i> Ver Liderazgos</a></li>
+                    <?php } ?>
+            
+                    <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                      <li class="<?php if($url=="LiderazgosBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=LiderazgosBorrados"><i class="fa fa-bookmark-o"></i> Ver Liderazgos Borrados</a></li>
+                    <?php } ?>
+                                    
+                  </ul>
+                </li>
+              <?php } ?>
+            <!-- ========================================================================================== -->
+            
+            <!-- ========================================================================================== -->
+                          <!--  PLANES   -->
+            <!-- ========================================================================================== -->
+              <?php 
+                  $amPlanes = 0;
+                  $amPlanesR = 0;
+                  $amPlanesC = 0;
+                  $amPlanesE = 0;
+                  $amPlanesB = 0;
+                  foreach ($accesos as $access) {
+                    if(!empty($access['id_acceso'])){
+                      if($access['nombre_modulo'] == "Planes"){
+                        $amPlanes = 1;
+                        if($access['nombre_permiso'] == "Registrar"){
+                          $amPlanesR = 1;
+                        }
+                        if
+                          ($access['nombre_permiso'] == "Ver"){
+                          $amPlanesC = 1;
+                        }
+                        if($access['nombre_permiso'] == "Editar"){
+                          $amPlanesE = 1;
+                        }
+                        if($access['nombre_permiso'] == "Borrar"){
+                          $amPlanesB = 1;
+                        }
+                      }
+                    }
+                  }
+                  if($amPlanes == 1){
+              ?>
+                <li class="<?php if($url=="Planes" || $url=="PlanesBorrados"){ echo "active"; } ?> treeview">
+                  <a href="#">
+                    <i class="fa fa-star"></i> <span>Planes</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <?php if($amProductosR==1){ ?>
+                      <li class="<?php if($url=="Planes" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Planes&action=Registrar"><i class="fa fa-star-o"></i> Registrar Plan</a></li>
+                    <?php } ?>
+            
+                    <?php if($amProductosC==1){ ?>
+                      <li class="<?php if($url=="Planes" && empty($action)){ echo "active"; } ?>"><a href="?route=Planes"><i class="fa fa-star-o"></i> Ver Planes</a></li>
+                    <?php } ?>
+                    
+                    <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                      <li class="<?php if($url=="PlanesBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=PlanesBorrados"><i class="fa fa-star-o"></i> Ver Planes Borrados</a></li>
+                    <?php } ?>
+                                    
+                  </ul>
+                </li>
+              <?php } ?>
+            
+            <!-- ========================================================================================== -->
+                    
+            <!-- ============================================================================= -->
+                          <!--  RETOS   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amPromociones = 0;
+                $amRetosR = 0;
+                $amRetosC = 0;
+                $amRetosE = 0;
+                $amRetosB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Retos"){
+                      $amRetos = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amRetosR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amRetosC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amRetosE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amRetosB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amRetos == 1){
+                  ?>
+                  <li class="<?php if($url=="Retosinv" || $url=="RetosinvBorrados"){ echo "active"; } ?> treeview">
+                    <a href="#">
+                      <i class="fa fa-object-group"></i> <span>Retos</span>
+                      <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                    </a>
+                    <ul class="treeview-menu">
+                      <?php if($amRetosR==1){ ?>
+                        <li class="<?php if($url=="Retosinv" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Retosinv&action=Registrar"><i class="fa fa-puzzle-piece"></i> Registrar Retos</a></li>
+                      <?php } ?>
+          
+                      <?php if($amRetosC==1){ ?>
+                        <li class="<?php if($url=="Retosinv" && empty($action)){ echo "active"; } ?>"><a href="?route=Retosinv"><i class="fa fa-puzzle-piece"></i> Ver Retos</a></li>
+                      <?php } ?>
 
-                <?php if($amProductosR==1){ ?>
+                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
+                        <li class="<?php if($url=="RetosinvBorrados" && empty($action)){ echo "active"; } ?>"><a href="?route=RetosinvBorrados"><i class="fa fa-puzzle-piece"></i> Ver Retos Borradas</a></li>
+                      <?php } ?>
+                                      
+                    </ul>
+                  </li>
+                  <?php
+                }
+              ?>
+            <!-- ============================================================================= -->
 
-
-                            <?php if($url=="Planes" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Planes&action=Registrar"><i class="fa fa-star-o"></i> Registrar Plan</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Planes&action=Registrar"><i class="fa fa-star-o"></i> Registrar Plan</a></li>
-                            <?php } ?>
-
-                <?php } ?>
-                <?php if($amProductosC==1){ ?>
-
-
-                              <?php if($url=="Planes" && empty($action)){ ?>
-            <li class="active"><a href="?route=Planes"><i class="fa fa-star-o"></i> Ver Planes</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Planes"><i class="fa fa-star-o"></i> Ver Planes</a></li>
-                            <?php } ?>
+            <!-- ============================================================================= -->
+                          <!--  PROMOCIONES   -->
+            <!-- ============================================================================= -->
+              <?php 
+                $amPromociones = 0;
+                $amPromocionesR = 0;
+                $amPromocionesC = 0;
+                $amPromocionesE = 0;
+                $amPromocionesB = 0;
+                foreach ($accesos as $access) {
+                  if(!empty($access['id_acceso'])){
+                    if($access['nombre_modulo'] == "Promociones"){
+                      $amPromociones = 1;
+                      if($access['nombre_permiso'] == "Registrar"){
+                        $amPromocionesR = 1;
+                      }
+                      if($access['nombre_permiso'] == "Ver"){
+                        $amPromocionesC = 1;
+                      }
+                      if($access['nombre_permiso'] == "Editar"){
+                        $amPromocionesE = 1;
+                      }
+                      if($access['nombre_permiso'] == "Borrar"){
+                        $amPromocionesB = 1;
+                      }
+                    }
+                  }
+                }
+                if($amPromociones == 1){
+              ?>
+                <li class="<?php if($url=="Promocionesinv" || $url=="PromocionesinvBorradas"){ echo "active"; } ?> treeview">
+                  <a href="#">
+                    <i class="fa fa-object-group"></i> <span>Promociones</span>
+                    <span class="pull-right-container">
+                      <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                  </a>
+                  <ul class="treeview-menu">
+                    <?php if($amPromocionesR==1){ ?>
+                      <li class="<?php if($url=="Promocionesinv" && !empty($action) && $action == "Registrar"){ echo "active"; } ?>"><a href="?route=Promocionesinv&action=Registrar"><i class="fa fa-puzzle-piece"></i> Registrar Promociones</a></li>
+                    <?php } ?>
+        
+                    <?php if($amPromocionesC==1){ ?>
+                      <li class="<?php if($url=="Promocionesinv" && empty($action)){ echo "active"; } ?>"><a href="?route=Promocionesinv"><i class="fa fa-puzzle-piece"></i> Ver Promociones</a></li>
+                    <?php } ?>
 
                     <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
-                            <?php if($url=="PlanesBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=PlanesBorrados"><i class="fa fa-star-o"></i> Ver Planes Borrados</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=PlanesBorrados"><i class="fa fa-star-o"></i> Ver Planes Borrados</a></li>
-                            <?php } ?>
+                      <li class="<?php if($url=="PromocionesinvBorradas" && empty($action)){ echo "active"; } ?>"><a href="?route=PromocionesinvBorradas"><i class="fa fa-puzzle-piece"></i> Ver Promociones Borradas</a></li>
                     <?php } ?>
-                <?php } ?>
-                            
-          </ul>
-        </li>
-            <?php } ?>
+                                    
+                  </ul>
+                </li>
+              <?php } ?>
+            <!-- ============================================================================= -->
+
+          </ul>  
+        </li>  
+
+<!-- ======================================================================================================================= -->        
+
+
+
+
+
+
+
 
 <!-- ======================================================================================================================= -->
-
-
-
-
-
+              <!--  ACCESO A PAGOS   -->
 <!-- ======================================================================================================================= -->
-              <!--  Premios   -->
-<!-- ======================================================================================================================= -->
-          <?php 
-              $amPremios = 0;
-              $amPremiosR = 0;
-              $amPremiosC = 0;
-              $amPremiosE = 0;
-              $amPremiosB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Premios"){
-                    $amPremios = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amPremiosR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amPremiosC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amPremiosE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amPremiosB = 1;
-                    }
-                  }
-                }
-              }
-              if($amPremios == 1){
-          ?>
 
-                            <?php if($url=="Premios" || $url=="PremiosBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-rocket"></i> <span>Premios</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-                <?php if($amPremiosR==1){ ?>
-            
-
-                            <?php if($url=="Premios" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Premios&action=Registrar"><i class="fa fa-fighter-jet"></i> Registrar Premio</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Premios&action=Registrar"><i class="fa fa-fighter-jet"></i> Registrar Premio</a></li>
-                            <?php } ?>
-                
-                <?php } ?>
-                <?php if($amPremiosC==1){ ?>
-
-
-                              <?php if($url=="Premios" && empty($action)){ ?>
-            <li class="active"><a href="?route=Premios"><i class="fa fa-fighter-jet"></i> Ver Premios</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Premios"><i class="fa fa-fighter-jet"></i> Ver Premios</a></li>
-                            <?php } ?>
-
-                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
-                            <?php if($url=="PremiosBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=PremiosBorrados"><i class="fa fa-fighter-jet"></i> Ver Premios Borrados</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=PremiosBorrados"><i class="fa fa-fighter-jet"></i> Ver Premios Borrados</a></li>
-                            <?php } ?>
-                      <?php } ?>
+      <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
 
                             
-               <?php } ?>
-          </ul>
-        </li>
-            <?php } ?>
-
-<!-- ======================================================================================================================= -->
-
-
-
-
-
-
-
-<!-- ======================================================================================================================= -->
-              <!--  LIDERAZGOS   -->
-<!-- ======================================================================================================================= -->
-          <?php 
-              $amLiderazgos = 0;
-              $amLiderazgosR = 0;
-              $amLiderazgosC = 0;
-              $amLiderazgosE = 0;
-              $amLiderazgosB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Liderazgos"){
-                    $amLiderazgos = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amLiderazgosR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amLiderazgosC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amLiderazgosE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amLiderazgosB = 1;
-                    }
-                  }
-                }
-              }
-              if($amLiderazgos == 1){
-          ?>
-
-                            <?php if($url=="Liderazgos" || $url=="LiderazgosBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-bookmark"></i> <span>Liderazgos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-                <?php if($amLiderazgosR==1){ ?>
-            
-
-                            <?php if($url=="Liderazgos" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Liderazgos&action=Registrar"><i class="fa fa-bookmark-o"></i> Registrar Liderazgo</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Liderazgos&action=Registrar"><i class="fa fa-bookmark-o"></i> Registrar Liderazgo</a></li>
-                            <?php } ?>
-                
-                <?php } ?>
-                <?php if($amLiderazgosC==1){ ?>
-
-
-                              <?php if($url=="Liderazgos" && empty($action)){ ?>
-            <li class="active"><a href="?route=Liderazgos"><i class="fa fa-bookmark-o"></i> Ver Liderazgos</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Liderazgos"><i class="fa fa-bookmark-o"></i> Ver Liderazgos</a></li>
-                            <?php } ?>
-                      <?php if($_SESSION['nombre_rol']=="Superusuario"){ ?>
-                            <?php if($url=="LiderazgosBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=LiderazgosBorrados"><i class="fa fa-bookmark-o"></i> Ver Liderazgos Borrados</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=LiderazgosBorrados"><i class="fa fa-bookmark-o"></i> Ver Liderazgos Borrados</a></li>
-                            <?php } ?>
-                      <?php } ?>
-
-                            
-               <?php } ?>
-          </ul>
-        </li>
-            <?php } ?>
-
-
-
-
-
-
-
-
-<!-- ======================================================================================================================= -->
-  
-<?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Conciliador"){ ?>
-
-                            <?php if($url=="Pagos" || $url=="PagosBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
+        <li class="<?php if($url=="Pagos" || $url=="PagosBorrados"){ echo "active"; } ?> treeview">
           <a href="#">
             <i class="fa fa-dollar"></i> <span>Pagos</span>
             <span class="pull-right-container">
@@ -2736,69 +3157,66 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
                             <?php } ?>
           </ul>
         </li>
-            <?php } ?>
+      <?php } ?>
 
+<!-- ======================================================================================================================= -->
 
 
 <!-- ======================================================================================================================= -->
               <!--  BANCOS   -->
 <!-- ======================================================================================================================= -->
-        <?php 
-              $amBancos = 0;
-              $amBancosR = 0;
-              $amBancosC = 0;
-              $amBancosE = 0;
-              $amBancosB = 0;
-              foreach ($accesos as $access) {
-                if(!empty($access['id_acceso'])){
-                  if($access['nombre_modulo'] == "Bancos"){
-                    $amBancos = 1;
-                    if($access['nombre_permiso'] == "Registrar"){
-                      $amBancosR = 1;
-                    }
-                    if($access['nombre_permiso'] == "Ver"){
-                      $amBancosC = 1;
-                    }
-                    if($access['nombre_permiso'] == "Editar"){
-                      $amBancosE = 1;
-                    }
-                    if($access['nombre_permiso'] == "Borrar"){
-                      $amBancosB = 1;
-                    }
-                  }
-                }
+      <?php 
+        $amBancos = 0;
+        $amBancosR = 0;
+        $amBancosC = 0;
+        $amBancosE = 0;
+        $amBancosB = 0;
+        foreach ($accesos as $access) {
+          if(!empty($access['id_acceso'])){
+            if($access['nombre_modulo'] == "Bancos"){
+              $amBancos = 1;
+              if($access['nombre_permiso'] == "Registrar"){
+                $amBancosR = 1;
               }
-              if($amBancosC == 1){
-          ?>
-                            <?php if($url=="Bancos"){ ?>
-        <li class="active">
-                            <?php }else{ ?>
-        <li class="">
-                            <?php } ?>
+              if($access['nombre_permiso'] == "Ver"){
+                $amBancosC = 1;
+              }
+              if($access['nombre_permiso'] == "Editar"){
+                $amBancosE = 1;
+              }
+              if($access['nombre_permiso'] == "Borrar"){
+                $amBancosB = 1;
+              }
+            }
+          }
+        }
+        if($amBancosC == 1){
+      ?>
+        <li class="<?php if($url=="Bancos"){ echo "active"; } ?>">
           <a href="?route=Bancos">
             <i class="fa fa-bank"></i> <span>Bancos</span>
           </a>
         </li>
-                 
-            <?php } ?>
+      <?php } ?>
+<!-- ======================================================================================================================= -->
 
 
-
-                          <?php if($url=="Calendario"){ ?>
-        <li class="active">
-                            <?php }else{ ?>
-        <li class="">
-                            <?php } ?>
+<!-- ======================================================================================================================= -->
+              <!--  CALENDARIO   -->
+<!-- ======================================================================================================================= -->
+        <li class="<?php if($url=="Calendario"){ echo "active"; } ?>">
           <a href="?route=Calendario">
             <i class="fa fa-calendar"></i> <span>Calendario</span>
           </a>
         </li>
-
-<!--  ================================================================================================================x -->
-        <!-- RUTAS -->
 <!--  ================================================================================================================x -->
 
-<?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+
+<!--  ================================================================================================================x -->
+        <!-- RUTAS   PROBABLEMENTE SE VA A BORRAR ESTA SECCION -->
+<!--  ================================================================================================================x -->
+
+  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
                             <?php if($url=="Rutas" || $url=="RutasLideres" || $url=="RutasBorradas"){ ?>
         <li class="active treeview">
                             <?php }else{ ?>
@@ -2863,113 +3281,22 @@ else if(!empty($_GET['campaing']) && !empty($_GET['n']) && !empty($_GET['y']) &&
 
 
 <!--  ================================================================================================================x -->
-        <!-- RUTAS -->
+      <!-- PREMIOS CANJEADOS -->
 <!--  ================================================================================================================x -->
-
-<?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
-                            <?php if($url=="Canjeados" || $url=="" || $url==""){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-truck"></i> <span>Premios Canjeados</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-  <!--                           <?php if($url=="Canjeados" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Canjeados&action=Registrar"><i class="fa fa-truck"></i> Asignar Premios Canjeados</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Canjeados&action=Registrar"><i class="fa fa-truck"></i> Asignar Premios Canjeados</a></li>
-                            <?php } ?>
-                 -->
-
-                              <?php if($url=="Canjeados" && empty($action)){ ?>
-            <li class="active"><a href="?route=Canjeados"><i class="fa fa-truck"></i> Ver Premios Canjeados</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Canjeados"><i class="fa fa-truck"></i> Ver Premios Canjeados</a></li>
-                            <?php } ?>
-                            
-          </ul>
-        </li>
-            <?php } ?>
+  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+    <li class="<?php if($url=="Canjeados" || $url==""){ echo "active"; } ?> treeview">
+      <a href="#">
+        <i class="fa fa-truck"></i> <span>Premios Canjeados</span>
+        <span class="pull-right-container">
+          <i class="fa fa-angle-left pull-right"></i>
+        </span>
+      </a>
+      <ul class="treeview-menu">
+        <li class="<?php if($url=="Canjeados" && empty($action)){ echo "active"; } ?>"><a href="?route=Canjeados"><i class="fa fa-truck"></i> Ver Premios Canjeados</a></li>
+      </ul>
+    </li>
+  <?php } ?>
 <!--  ================================================================================================================x -->
-
-
-
-
-
-
-
-<!-- ======================================================================================================================= -->
-          <?php 
-            if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){
-          ?>
-
-                            <?php if($url=="Catalogos" || $url=="CatalogosBorrados"){ ?>
-        <li class="active treeview">
-                            <?php }else{ ?>
-        <li class="treeview">
-                            <?php } ?>
-          <a href="#">
-            <i class="fa fa-object-group"></i> <span>Catalogos</span>
-            <span class="pull-right-container">
-              <i class="fa fa-angle-left pull-right"></i>
-            </span>
-          </a>
-          <ul class="treeview-menu">
-
-            
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
-
-                            <?php if($url=="Catalogos" && !empty($action) && $action == "Registrar"){ ?>
-            <li class="active"><a href="?route=Catalogos&action=Registrar"><i class="fa fa-object-ungroup"></i> Registrar Catalogo</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Catalogos&action=Registrar"><i class="fa fa-object-ungroup"></i> Registrar Catalogo</a></li>
-                            <?php } ?>
-                
-            <?php } ?>
-
-
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
-                              <?php if($url=="Catalogos" && empty($action)){ ?>
-            <li class="active"><a href="?route=Catalogos"><i class="fa fa-object-ungroup"></i> Ver Catalogos</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=Catalogos"><i class="fa fa-object-ungroup"></i> Ver Catalogos</a></li>
-                            <?php } ?>
-            <?php } ?>
-
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                            <?php if($url=="CatalogosBorrados" && empty($action)){ ?>
-            <li class="active"><a href="?route=CatalogosBorrados"><i class="fa fa-object-ungroup"></i> Ver Catalogos Deshabilitado</a></li>
-                            <?php }else{ ?>
-            <li><a href="?route=CatalogosBorrados"><i class="fa fa-object-ungroup"></i> Ver Catalogos Deshabilitado</a></li>
-                            <?php } ?>
-            <?php } ?>
-
-
-            <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor2"){ ?>
-                          <?php if($url=="Catalogos" && !empty($action) && $action == "RegistrarFechas"){ ?>
-            <li class="active"><a href="?route=Catalogos&action=RegistrarFechas"><i class="fa fa-object-ungroup"></i> Configurar fechas<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp del Catálogo</a></li>
-                            <?php }else{ ?>
-            <li class=""><a href="?route=Catalogos&action=RegistrarFechas"><i class="fa fa-object-ungroup"></i> Configurar fechas<br>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp del Catálogo</a></li>
-                            <?php } ?>
-                
-            <?php } ?>
-
-
-                            
-          </ul>
-        </li>
-            <?php } ?>
-
-<!-- ======================================================================================================================= -->
-
-
-
 
 
 

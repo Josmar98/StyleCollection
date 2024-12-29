@@ -1,4 +1,4 @@
-s<?php 
+<?php 
 			if(is_file('app/models/indexModels.php')){
 				 	require_once'app/models/indexModels.php';
 				 }
@@ -88,8 +88,8 @@ $notaP = $notaP[0];
 			}
 			$nombreanalista = $notaP['nombreanalista'];
 			$nume = $notaP['numero_nota_entrega'];
-			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE productos.estatus = 1");
-			$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1");
+			$productos = $lider->consultarQuery("SELECT * FROM productos");
+			$premios = $lider->consultarQuery("SELECT * FROM premios");
 
 			$opcionesEntregas = $lider->consultarQuery("SELECT * FROM opcionesentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 

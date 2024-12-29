@@ -128,7 +128,9 @@
                 $canjeosPersonalesCliente = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and id_cliente = {$id_cliente_personal_cliente} and canjeos.estatus = 1");
                 foreach ($canjeosPersonalesCliente as $canje) {
                   if(!empty($canje['cantidad_gemas'])){
-                    $gemasCanjeadasCliente += $canje['cantidad_gemas'];
+                    // $gemasCanjeadasCliente += $canje['cantidad_gemas'];
+                    $gemasCanjeadasCliente += ($canje['unidades'] * $canje['cantidad_gemas']);
+
                   }
                 }
 
@@ -257,6 +259,7 @@
                 <div class="post" style="padding:10px">
                   <br>
                   <?php
+                    if($pedido['cantidad_aprobado']>1){
                     if ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista"){
                       ?>
                       <div style="text-align:right;padding-right:30px;">
@@ -266,6 +269,7 @@
                       </div>
                       <br>
                       <?php                      
+                    } 
                     }
                   ?>
                   <div class="user-block">
@@ -572,9 +576,24 @@
                   <!-- /.user-block -->
                     <?php if($pedido['cantidad_aprobado']==0){ ?>
                       <?php if($_SESSION['nombre_rol']!="Vendedor"){ ?>
+                        <?php
+                          $cantidadTotalDelPedido = 0;
+                          if(count($despachosSec)>1){
+                            $cantidadTotalDelPedido += $pedido['cantidad_pedido'];
+                            foreach ($despachosSec as $despSec){ if(!empty($despSec['id_despacho_sec'])){
+                              foreach ($pedidos_secundarios as $colss) {
+                                if($despSec['id_despacho_sec']==$colss['id_despacho_sec']){
+                                  $cantidadTotalDelPedido += $colss['cantidad_pedido_sec'];
+                                }
+                              }
+                            }}
+                          }
 
+
+
+                        ?>
                   <span style="color:#000;margin-left:15px;font-size:1.1em">
-                    Ha solicitado un pedido con una cantidad de <b style="color:<?php echo $color_btn_sweetalert ?>"><?php echo $pedido['cantidad_pedido'] ?></b> colecciones para esta campaña <?=$numero_campana."/".$anio_campana?>
+                    Ha solicitado un pedido con una cantidad de <b style="color:<?php echo $color_btn_sweetalert ?>"><?php echo $cantidadTotalDelPedido; ?></b> colecciones para esta campaña <?=$numero_campana."/".$anio_campana?>
 
                   </span>
                     <?php   // echo ;
@@ -591,17 +610,66 @@
                           }
                         }
                       }
+                      $pedidoOrAprob = "";
+                  $cantidadDelPedido = 0;
+                  if($pedido['cantidad_aprobado']==0){ 
+                    $pedidoOrAprob = "1";
+                    $cantidadDelPedido = $pedido['cantidad_pedido'];
+                    $numMax = $pedido['cantidad_pedido']*$vecesVal;
+                  }
+                  if($pedido['cantidad_aprobado']>0){ 
+                    $pedidoOrAprob = "2";
+                    $cantidadDelPedido = $pedido['cantidad_aprobado'];
+                    $numMax = $pedido['cantidad_pedido']*$vecesVal;
+                  }
                     ?>
                   <br><br>
-
+                  <?php 
+                    $despachoMinimaCantidad = 0;
+                    if(!empty($despachos[0]['cantidad_minima_pedido'])){
+                      $despachoMinimaCantidad = $despachos[0]['cantidad_minima_pedido'];
+                    }
+                  ?>
+                  <?php if ($despachoMinimaCantidad > 0){ ?>
+                  <input type="hidden" id="cantidad_minima" value="<?=$despachoMinimaCantidad; ?>">
+                  <?php } else{ ?>
+                  <input type="hidden" id="cantidad_minima" value="<?=$liderazgo['minima_cantidad']; ?>">
+                  <?php } ?>
+                  <input type="hidden" id="pedido" value="<?=$pedido['cantidad_pedido']; ?>">
                   <form action="" method="POST" role="form" class="form_register">
                     <div class="row">
                       <div class="col-xs-12">
-
+                        <label for="cantidad"><span style="color:#000;">Cantidad (Colección: Productos)</span></label>
                         <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                        <input class="form-control" id="cantidad" step="1" name="cantidad" min="<?=$liderazgoTempxd['minima_cantidad']; ?>" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
-                        <span id="error_cantidad" class="errors"></span>
+                        <input class="form-control cantidadesT" id="cantidad" step="1" name="cantidad" min="<?=$liderazgoTempxd['minima_cantidad']; ?>" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
                       </div>
+                      <?php
+                      if(count($despachosSec)>1){
+                        foreach ($despachosSec as $despSec){ if(!empty($despSec['id_despacho_sec'])){
+                          $valorColeccionSec = 0;
+                          if(count($pedidos_secundarios)>1){
+                            foreach ($pedidos_secundarios as $colss) {
+                              if($despSec['id_despacho_sec']==$colss['id_despacho_sec']){
+                                if($pedidoOrAprob=="1"){
+                                  $valorColeccionSec=$colss['cantidad_pedido_sec'];
+                                }
+                                if($pedidoOrAprob=="2"){
+                                  $valorColeccionSec=$colss['cantidad_aprobado_sec'];
+                                }
+                              }
+                            }
+                          }
+                          ?>
+                          <div class="col-xs-12">
+                          <br>
+                          <label for="cantidad_sec"><span style="color:#000;">Cantidad (Colección: <?=$despSec['nombre_coleccion_sec']; ?>)</span></label>
+                          <input type="number" class="form-control cantidad_sec cantidadesT" data-val="<?=$despSec['id_despacho_sec']; ?>" id="cantidad_sec<?=$despSec['id_despacho_sec']; ?>" step="1" name="cantidadSec[]" min="0" value="<?=$valorColeccionSec; ?>">
+                          <input type="hidden" name="idColSec[]" value="<?=$despSec['id_despacho_sec']; ?>">
+                        </div>
+                        <?php } }
+                      }
+                      ?>
+                      <span id="error_cantidad" class="errors"></span>
                     </div>
                     <br>
                     <div class="row">
@@ -690,8 +758,57 @@
                         <div class="row">
                             <div class="col-md-4 text-left">
                               <br>
-                              <span style="font-size:1.2em;color:#000;"><b>Precio Coleccion: </b></span>
-                              <span style="font-size:1.4em;color:#0C0;"><b><?php if(!empty($precio_coleccion)){ echo number_format($precio_coleccion,2,',','.'); } ?>$</b></span>
+                              <table>
+                              <?php
+                                // $query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE clientes.id_cliente = $id_cliente and campanas.id_campana = {$id_campana} and pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 ORDER BY pedidos.id_pedido ASC";
+                                $query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE clientes.id_cliente = $id_cliente and campanas.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 ORDER BY pedidos.id_pedido ASC";
+                                $clientesPedidosS = $lider->consultarQuery($query); 
+                                $total_costo = 0;
+                                foreach ($clientesPedidosS as $pedidoCol) {
+                                  if(!empty($pedidoCol['id_pedido'])){
+                                    $precioColeccion = $pedidoCol['precio_coleccion'];
+                                    $cantColeccion = $pedidoCol['cantidad_aprobado_individual'];
+                                    $precioColGen = ($precioColeccion*$cantColeccion);
+                                    $total_costo+=$precioColGen;
+                                    ?>
+                                    <tr>
+                                      <td colspan="2">
+                                        <span style="font-size:1.1em;color:#000;"><b>Precio Coleccion: </b></span><br>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <b>Productos: </b>
+                                      </td>
+                                      <td>
+                                        <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccion)){ echo "$".number_format($precioColeccion,2,',','.'); } ?></span> * <?php echo "(".$cantColeccion.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                      </td>
+                                    </tr>
+                                    <?php
+                                    $pedidosSecund = $lider->consultarQuery("SELECT * FROM pedidos_secundarios as pedSec, despachos_secundarios as desSec WHERE pedSec.id_despacho_sec=desSec.id_despacho_sec and pedSec.estatus=1 and pedSec.id_pedido = {$pedidoCol['id_pedido']}");
+                                    foreach ($pedidosSecund as $pedSec) {
+                                      if(!empty($pedSec['id_pedido_sec'])){
+                                        $precioColeccionSec = $pedSec['precio_coleccion_sec'];
+                                        $cantColeccionSec = $pedSec['cantidad_aprobado_sec'];
+                                        $precioColGen = ($precioColeccionSec*$cantColeccionSec);
+                                        $total_costo+=$precioColGen;
+                                        ?>
+                                        <tr>
+                                          <td>
+                                            <b><?=$pedSec['nombre_coleccion_sec'] ?>: </b>
+                                          </td>
+                                          <td>
+                                            <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                          </td>
+                                        </tr>
+                                      <?php
+                                      }
+                                    }
+                                  }
+                                }
+
+                              ?>
+                              </table>
                             </div>
 
                             <div class="col-md-4 text-left">
@@ -1578,7 +1695,15 @@
                             <br>
                             <br>
                           <?php
-                            $porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$total_responsabilidad;
+                            // $porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$total_responsabilidad;
+                            if($total_responsabilidad>0){
+                              $porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$total_responsabilidad;
+                            }else{
+                              $porcentajeAbonadoPuntual = 100;
+                            }
+                            if($porcentajeAbonadoPuntual>100){
+                              $porcentajeAbonadoPuntual=100;
+                            }
                             // echo $abonado_lider_gemas;
                             // echo $porcentajeAbonadoPuntual;
                             $coleccionesPuntuales = ($pedido['cantidad_aprobado']/100)*$porcentajeAbonadoPuntual;
@@ -2687,7 +2812,28 @@ $(document).ready(function(){
   });
 
 
+$(".cantidadesT").on("change focusout keyup",function(){
+    var cant = parseInt($(this).val());
+    if(cant < 0){
+      $(this).val(0);
+    }
+    var minimaCol = $("#cantidad_minima").val();
+    let totalcant = [];
+    $(".cantidadesT").each(function(index, element){
+      // console.log($(element).val());
+      totalcant.push(parseInt($(element).val()));
+    });
+    let sumatoriaCant = 0;
+    for (var i = 0; i < totalcant.length; i++) {
+      sumatoriaCant+=totalcant[i]
+    }
+    if(sumatoriaCant>=minimaCol){
+      $("#error_cantidad").html("");
+    }else{
+      $("#error_cantidad").html(`Debe hacer un pedido con al menos ${minimaCol} colecciones`);
+    }
 
+  });
 
 
   $(".modalDescripcionExcedente").click(function(){

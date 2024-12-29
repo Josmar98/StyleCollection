@@ -122,6 +122,45 @@
                     </div>
                   </div>
 
+                  <hr>
+
+                  <input type="hidden" id="limiteElementos" value="<?=$limiteElementos; ?>">
+                  <div class="row" style="padding:0px 17px;">
+                    <div style="width:20%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario">
+                      <label>Cantidad</label>
+                    </div>
+                    <div style="width:80%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario">
+                      <label>Descripcion</label>
+                    </div>
+                  </div>
+                  <?php for($z=1; $z<=$limiteElementos; $z++){ ?>
+                    <div class="row" style="padding:0px 15px;">
+                      <div style="width:20%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>1){ echo "d-none"; } ?>">
+                        <input type="number" class="form-control" id="stock<?=$z; ?>" min="0" name="stock[]" step="1" placeholder="Cantidad (150)">
+                        <span id="error_stock<?=$z; ?>" class="errors"></span>
+                      </div>
+                      <div style="width:80%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>1){ echo "d-none"; } ?>">
+                        <select class="form-control select2 inventarios" id="inventario<?=$z; ?>" min="<?=$z;?>" name="inventario[]"  style="width:100%">
+                          <option value=""></option>
+                          <?php foreach($productos as $inv){ if(!empty($inv['id_producto'])){ ?>
+                            <option value="<?php echo $inv['id_producto']; ?>"><?php echo "(".$inv['codigo_producto'].") ".$inv['producto']."(".$inv['cantidad'].") ".$inv['marca_producto']; ?></option>
+                          <?php } } ?>
+                          <?php foreach($mercancia as $inv){ if(!empty($inv['id_mercancia'])){ ?>
+                            <option value="m<?php echo $inv['id_mercancia']; ?>"><?php echo "(".$inv['codigo_mercancia'].") ".$inv['mercancia']."(".$inv['medidas_mercancia'].") ".$inv['marca_mercancia']; ?></option>
+                          <?php } } ?>
+                        </select>
+                        <input type="hidden" id="tipo<?=$z; ?>" name="tipos[]">
+                        <span id="error_inventario<?=$z; ?>" class="errors"></span>
+                      </div>
+                    </div>
+                    <div style='width:100%;'>
+                      <span style='float:left' id="addMore<?=$z; ?>" min="<?=$z; ?>" class="addMore btn btn-success box-inventarios<?=$z; ?> box-inventario <?php if($z>1){ echo "d-none"; } ?>"><b>+</b></span>
+                      <span style='float:right' id="addMenos<?=$z; ?>" min="<?=$z; ?>" class="addMenos btn btn-danger box-inventarios<?=$z; ?> box-inventario d-none"><b>-</b></span>
+                    </div>
+                  <?php } ?>
+                  <input type="hidden" id="cantidad_elementos" name="cantidad_elementos" value="1">
+                  <hr>
+
               </div>
 
               <div class="box-footer">
@@ -162,6 +201,10 @@
 .d-none{
   display:none;
 }
+.addMore, .addMenos{
+  border-radius:40px;
+  border:1px solid #CCC;
+}
 </style>
 <script>
 $(document).ready(function(){
@@ -187,6 +230,58 @@ $(document).ready(function(){
       });
     }
   }
+
+  $(".box-inventarios").hide();
+  $(".box-inventarios").removeClass("d-none");
+  $(".addMore").click(function(){
+    // var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    alimentarFormInventario();
+  });
+  $(".addMenos").click(function(){
+    // var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    retroalimentarFormInventario();
+  });
+  function alimentarFormInventario(){
+    var limite = parseInt($("#limiteElementos").val());
+    var cant = parseInt($("#cantidad_elementos").val());
+    $("#addMore"+cant).hide();
+    $("#addMenos"+cant).hide();
+    cant++;
+    $(`.box-inventarios${cant}`).show();
+    if(cant == limite){
+      $("#addMore"+cant).hide();
+    }
+    $("#cantidad_elementos").val(cant);
+  }
+  function retroalimentarFormInventario(){
+    var cant = parseInt($("#cantidad_elementos").val());
+    $(`.box-inventarios${cant}`).hide();
+    $("#addMore"+cant).hide();
+    $("#addMenos"+cant).hide();
+    cant--;
+    $("#addMore"+cant).show();
+    $("#addMenos"+cant).show();
+    if(cant<2){
+      $("#addMenos"+cant).hide();
+    }
+    $("#cantidad_elementos").val(cant);
+  }
+  $(".inventarios").on('change', function(){
+    var value = $(this).val();
+    var index = $(this).attr("min");
+    if(value!=""){
+      var pos = value.indexOf('m');
+      if(pos>=0){ //Mercancia
+        $("#tipo"+index).val('Mercancia');
+      }else if(pos < 0){ //Productos
+        $("#tipo"+index).val('Productos');
+      }
+    }else{
+      $("#tipo"+index).val('');
+    }
+  });
     
   $(".enviar").click(function(){
     var response = validar();
@@ -305,9 +400,54 @@ function validar(){
   /*===================================================================*/
 
   /*===================================================================*/
+  var cantidad_elementos = $("#cantidad_elementos").val();
+  var rstocks = false;
+  var rinventarios = false;
+  if(cantidad_elementos==0){
+    var rstocks = false;
+    var rinventarios = false;
+  }else{
+    var erroresStock=0;
+    var erroresInventario=0;
+    for (let i=1; i<=cantidad_elementos;i++) {
+      /*===================================================================*/
+        var stock = $("#stock"+i).val();
+        var rstock = checkInput(stock, numberPattern);
+        if( rstock == false ){
+          if(stock.length != 0){
+            $("#error_stock"+i).html("La cantidad de unidades #"+i+" no debe contener letras o caracteres especiales");
+          }else{
+            $("#error_stock"+i).html("Debe llenar una cantidad de unidades #"+i);      
+          }
+        }else{
+          $("#error_stock"+i).html("");
+        }
+        if(rstock==false){ erroresStock++; }
+      /*===================================================================*/
+      
+      /*===================================================================*/
+        var inventario = $("#inventario"+i).val();
+        var rinventario = false;
+        if(inventario==""){
+          rinventario=false;
+          $("#error_inventario"+i).html("Debe seleccionar un elemento del inventario #"+i);
+        }else{
+          rinventario=true;
+          $("#error_inventario"+i).html("");
+        }
+        if(rinventario==false){ erroresInventario++; }
+      /*===================================================================*/
+    }
+    
+    if(erroresStock==0){ rstocks=true; }
+    if(erroresInventario==0){ rinventarios=true; }
+  }
+  /*===================================================================*/
+  
+  /*===================================================================*/
   var result = false;
   // if( rnombre==true && rcodigo==true && rcantidad==true){
-  if( rnombre==true && rcantidad==true){
+  if( rnombre==true && rcantidad==true && rstocks==true && rinventarios==true){
     result = true;
   }else{
     result = false;

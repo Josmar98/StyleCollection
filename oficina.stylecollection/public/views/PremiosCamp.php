@@ -72,84 +72,112 @@
                 <thead>
                 <tr>
                   <th>Tipo de premio</th>
-                  <th>Tipo premio producto</th>
                   <th>Premios</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php 
                   $num = 1;
-                  foreach ($tipos_planes as $data):
-                    if(!empty($data['tipo_premio'])):  
-                      if($dataPlanes['nombre_plan'] == $data['nombre_plan']):
-                ?>
-                <tr>
-                  <td style="width:20%">
-                    <span class="contenido2">
-                        <?php echo $data['tipo_premio']; ?>
-                    </span>
-                  </td>
-                  <td style="width:20%">
-                    <?php 
-                    foreach ($tipos_premios as $data2): if(!empty($data2['tipo_premio_producto'])):
-                    if($data2['nombre_plan']==$dataPlanes['nombre_plan']):
-                    if($data['tipo_premio'] == $data2['tipo_premio']){ ?>
-                    <span class="contenido2">
-                        <?php echo $data2['tipo_premio_producto']; ?>
-                    </span>
-                    <?php } 
-                    endif;
-                    endif; endforeach; 
-                    ?>
-                  </td>
-                  <td style="width:20%;text-align:left;">
-                    <?php $numPremio = 1; ?>
-                    <?php foreach ($tpremios as $data2): if(!empty($data2['tipo_premio_producto'])):
-                      if($data2['nombre_plan']==$dataPlanes['nombre_plan']):
-                      //======================================================================================================                  //==================== PRODUCTOS ==========================================================                  //======================================================================================================
-                      if($data['tipo_premio'] == $data2['tipo_premio'] && $data2['tipo_premio_producto'] == "Productos"):
-                        foreach ($productos as $dataProductos): if(!empty($dataProductos['id_producto'])):
-                            if($dataProductos['id_producto'] == $data2['id_premio']):
-                      ?>
-                          
-                      <span class="contenido2">
-                          <?php echo "• ".$dataProductos['producto']."<br>"; ?>
-                      </span>
-                        
-                      <?php $numPremio++;
-                            endif;
-                        endif; endforeach; 
-                      endif;
-                     //====================================================================================================== 
-                    
-                      //======================================================================================================                  //==================== PREMIOS ==========================================================                  //======================================================================================================
-                      if($data['tipo_premio'] == $data2['tipo_premio'] && $data2['tipo_premio_producto'] == "Premios"):
-                        foreach ($premios as $dataPremios): if(!empty($dataPremios['id_premio'])):
-                           if($dataPremios['id_premio'] == $data2['id_premio']):
+                  foreach ($tipos_planes as $data){
+                    if(!empty($data['tipo_premio'])){
+                      if($dataPlanes['nombre_plan'] == $data['nombre_plan']){
+                        // print_r($data);
+                        // echo "<br><br><br>";
                         ?>
-                        
-                    <span class="contenido2">
-                        <?php echo $numPremio."- ".$dataPremios['nombre_premio']."<br>"; ?>
-                    </span>
-                        <?php $numPremio++;
-                            endif; 
-                        endif; endforeach; 
-                      endif;
-                    //====================================================================================================== 
-
-                    endif;endif; endforeach; 
-                    ?>
-                  </td>
-                     
-                </tr>
-                 <?php
-                    endif; endif; endforeach;
-                  ?>
-                  </tbody>
+                        <tr>
+                          <td style="width:25%">
+                            <span class="contenido2">
+                                <?php echo $data['tipo_premio']; ?>
+                            </span>
+                          </td>
+                          <!-- <td style="width:20%">
+                            <?php 
+                              foreach ($tipos_premios as $data2){ if(!empty($data2['tipo_premio_producto'])){
+                                if($data2['nombre_plan']==$dataPlanes['nombre_plan']){
+                                  if($data['tipo_premio'] == $data2['tipo_premio']){
+                                    ?>
+                                    <span class="contenido2">
+                                      <?=$data2['tipo_premio_producto']; ?>
+                                    </span>
+                                    <?php
+                                  }
+                                }
+                              } }
+                            ?>
+                          </td> -->
+                          <td colspan="2" style="width:75%;text-align:left;">
+                            <?php 
+                              $numPremio = 1;
+                              foreach ($tpremios as $data2){ if(!empty($data2['tipo_premio_producto'])){
+                                if($data2['nombre_plan']==$dataPlanes['nombre_plan']){
+                                  //==================== PRODUCTOS ==========================================================                  
+                                    if($data['tipo_premio'] == $data2['tipo_premio'] && $data2['tipo_premio_producto'] == "Productos"){
+                                      foreach ($productos as $dataProductos){ if(!empty($dataProductos['id_producto'])){
+                                        if($dataProductos['id_producto'] == $data2['id_premio']){
+                                          ?>
+                                          <span class="contenido2">
+                                            <?php echo "• ".$dataProductos['producto']."<br>"; ?>
+                                          </span>
+                                          <?php
+                                          $numPremio++;
+                                        }
+                                      } }
+                                    }
+                                  //====================================================================================================== 
+                                
+                                  //==================== PREMIOS ==========================================================                  
+                                    if($data['tipo_premio'] == $data2['tipo_premio'] && $data2['tipo_premio_producto'] == "Premios"){
+                                      foreach ($premios as $dataPremios){ if(!empty($dataPremios['id_premio'])){
+                                        if($dataPremios['id_premio'] == $data2['id_premio']){
+                                          ?>
+                                          <span class="contenido2">
+                                            <?php echo $numPremio."- ".$dataPremios['nombre_premio'].": "; ?>
+                                            <?php 
+                                              $id_premios_busqueda = $dataPremios['id_premio'];
+                                              $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                              echo "<small>( ";
+                                              foreach($premiosinv as $pinv){
+                                                // print_r($pinv);
+                                                // echo "<br><br>";
+                                                if(!empty($pinv['id_premio_inventario'])){
+                                                  if($pinv['tipo_inventario']=="Productos"){
+                                                    $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                  }
+                                                  if($pinv['tipo_inventario']=="Mercancia"){
+                                                    $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                  }
+                                                  // echo "<br>".$queryMosInv."<br>";
+                                                  $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                                  foreach ($inventariosMos as $invm) {
+                                                    if(!empty($invm[0])){
+                                                      echo "•".$invm['unidades_inventario']." ".$invm['elemento']."&nbsp&nbsp&nbsp";
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                              echo ")</small><br>";
+                                            ?>
+                                          </span>
+                                          <?php
+                                          $numPremio++;
+                                        } 
+                                      } }
+                                    }
+                                  //====================================================================================================== 
+                                }
+                              } }
+                            ?>
+                          </td>
+                        </tr>
+                        <?php
+                      }
+                    }
+                  }
+                ?>
+                </tbody>
                 <tfoot>
                 <tr>
                   <th>Tipo de premio</th>
-                  <th>Tipo premio producto</th>
                   <th>Premios</th>
                   </tr>
                 </tfoot>

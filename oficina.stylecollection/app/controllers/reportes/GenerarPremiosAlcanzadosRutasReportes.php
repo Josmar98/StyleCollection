@@ -328,6 +328,16 @@ if($amReportesC == 1){
 								$numbPAOBS++;
 							}
 						}
+
+            $arrayt2 = [];
+            $numCC = 0;
+            foreach ($canjeosUnic as $canUnic) {
+              if(!empty($canUnic['nombre_catalogo'])){
+                $arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+                $arrayt2[$numCC]['cantidad'] = 0;
+                $numCC++;
+              }
+            }
                 
 							$num = 1;
 							foreach ($clientess as $data){ if(!empty($data['id_pedido'])){
@@ -545,45 +555,161 @@ if($amReportesC == 1){
 					                        <table class='' style='width:100%;background:none'> 
 				                            <tr>
 				                            	<td style='text-align:left;'>";
-																					foreach ($premios_perdidos as $dataperdidos) {
-																						if(!empty($dataperdidos['id_premio_perdido'])){
-																							if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
-																								$alcanzados = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
-																								// ========================== // =============================== // ============================== //
-																								if($maxDisponiblePremiosSeleccion>0){
-																									if($alcanzados>$maxDisponiblePremiosSeleccion){
-																										$alcanzados = $maxDisponiblePremiosSeleccion;
-																									}
-																								}
-																								// ========================== // =============================== // ============================== //
-																								foreach ($premios_planes as $planstandard){
-																									if (!empty($planstandard['id_plan_campana'])){
-																										if ($planstandard['tipo_premio']==$pagosR['name']){
-																											$info .= "<table style='width:100%;'>
-																												<tr>
-																													<td style='text-align:left;'>".
-																														"(".$alcanzados.") ".$planstandard['producto']."
-																													</td>
-																													<td style='text-align:right;'>";
-																														$porcentSelected = $data['cantidad_aprobado'];
-																														$porcentAlcanzados = $alcanzados;
-																														$porcentResul = ($porcentAlcanzados/$porcentSelected)*100;
-																														if(!empty($totalesPremios[$pagosR['name']][$planstandard['producto']])){
-																															$totalesPremios[$pagosR['name']][$planstandard['producto']]['cantidad'] += $alcanzados;
-																														}else{
-																															$totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
-																															$totalesPremios[$pagosR['name']][$planstandard['producto']] = ['id'=>$pagosR['id'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
-																														}
-																														$info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
-																													</td>
-																												</tr>
-																											</table>";
-																										}
-																									}
-																								}
-																							}
-																						}
-																					}
+																					// foreach ($premios_perdidos as $dataperdidos) {
+																					// 	if(!empty($dataperdidos['id_premio_perdido'])){
+																					// 		if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+																					// 			$alcanzados = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
+																					// 			// ========================== // =============================== // ============================== //
+																					// 			if($maxDisponiblePremiosSeleccion>0){
+																					// 				if($alcanzados>$maxDisponiblePremiosSeleccion){
+																					// 					$alcanzados = $maxDisponiblePremiosSeleccion;
+																					// 				}
+																					// 			}
+																					// 			// ========================== // =============================== // ============================== //
+																					// 			foreach ($premios_planes as $planstandard){
+																					// 				if (!empty($planstandard['id_plan_campana'])){
+																					// 					if ($planstandard['tipo_premio']==$pagosR['name']){
+																					// 						$info .= "<table style='width:100%;'>
+																					// 							<tr>
+																					// 								<td style='text-align:left;'>".
+																					// 									"(".$alcanzados.") ".$planstandard['producto']."
+																					// 								</td>
+																					// 								<td style='text-align:right;'>";
+																					// 									$porcentSelected = $data['cantidad_aprobado'];
+																					// 									$porcentAlcanzados = $alcanzados;
+																					// 									$porcentResul = ($porcentAlcanzados/$porcentSelected)*100;
+																					// 									if(!empty($totalesPremios[$pagosR['name']][$planstandard['producto']])){
+																					// 										$totalesPremios[$pagosR['name']][$planstandard['producto']]['cantidad'] += $alcanzados;
+																					// 									}else{
+																					// 										$totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
+																					// 										$totalesPremios[$pagosR['name']][$planstandard['producto']] = ['id'=>$pagosR['id'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
+																					// 									}
+																					// 									$info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
+																					// 								</td>
+																					// 							</tr>
+																					// 						</table>";
+																					// 					}
+																					// 				}
+																					// 			}
+																					// 		}
+																					// 	}
+																					// }
+                                          foreach ($premios_perdidos as $dataperdidos) {
+                                            if(!empty($dataperdidos['id_premio_perdido'])){
+                                              // if(($dataperdidos['valor'] == $pagosR['id']) && ($dataperdidos['id_pedido'] == $data['id_pedido'])){
+                                              if($dataperdidos['id_pedido'] == $data['id_pedido']){
+                                                // $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                // $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                if(strtolower($pagosR['name'])=="inicial"){
+                                                  $posOrigin = strpos($dataperdidos['valor'], "cial");
+                                                  $posIDPago = strpos($dataperdidos['valor'], "cial") + strlen("cial");
+                                                }else{
+                                                  $posOrigin = strpos($dataperdidos['valor'], "_pago");
+                                                  $posIDPago = strpos($dataperdidos['valor'], "_pago") + strlen("_pago");
+                                                }
+                                                $dataNamePerdido = substr($dataperdidos['valor'], 0, $posIDPago);
+                                                $dataNamePerdidoIdPlan = substr($dataperdidos['valor'], $posIDPago);
+                                                $dataComparar = "";
+                                                if($posOrigin==""){
+                                                  $dataComparar = $dataperdidos['valor'];
+                                                }else{
+                                                  $dataComparar = $dataNamePerdido;
+                                                }
+                                                if(($dataComparar == $pagosR['id'])){
+                                                  if($dataNamePerdidoIdPlan==""){
+                                                    $alcanzados = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                    // ========================== // =============================== // ============================== //
+                                                    if($maxDisponiblePremiosSeleccion>0){
+                                                      if($alcanzados>$maxDisponiblePremiosSeleccion){
+                                                        $alcanzados = $maxDisponiblePremiosSeleccion;
+                                                      }
+                                                    }
+                                                    // ========================== // =============================== // ============================== //
+                                                    foreach ($premios_planes as $planstandard){
+                                                      if (!empty($planstandard['id_plan_campana'])){
+                                                        if ($planstandard['tipo_premio']==$pagosR['name']){
+                                                          $info .= "<table style='width:100%;'>
+                                                            <tr>
+                                                              <td style='text-align:left;'>".
+                                                                "(".$alcanzados.") ".$planstandard['producto']."
+                                                              </td>
+                                                              <td style='text-align:right;'>";
+                                                                $porcentSelected = $data['cantidad_aprobado'];
+                                                                $porcentAlcanzados = $alcanzados;
+                                                                $porcentResul = ($porcentAlcanzados/$porcentSelected)*100;
+                                                                if(!empty($totalesPremios[$pagosR['name']][$planstandard['producto']])){
+                                                                  $totalesPremios[$pagosR['name']][$planstandard['producto']]['cantidad'] += $alcanzados;
+                                                                }else{
+                                                                  $totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
+                                                                  $totalesPremios[$pagosR['name']][$planstandard['producto']] = ['id'=>$pagosR['id'], 'plan'=>$planstandard['nombre_plan'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
+                                                                }
+                                                                $info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
+                                                              </td>
+                                                            </tr>
+                                                          </table>";
+                                                        }
+                                                      }
+                                                    }
+                                                  } else {
+
+                                                    foreach ($planesCol as $data2){ if(!empty($data2['id_cliente'])){
+                                                      if ($data['id_pedido'] == $data2['id_pedido']){
+                                                        if ($data2['cantidad_coleccion_plan']>0){
+                                                          if($dataNamePerdidoIdPlan==$data2['id_plan']){
+                                                            if(!empty($dataperdidos['id_premio_perdido'])){
+                                                              
+                                                              $alcanzados = ($data2['cantidad_coleccion_plan']*$data2['cantidad_coleccion']) - $dataperdidos['cantidad_premios_perdidos'];
+                                                              // ========================== // =============================== // ============================== //
+                                                              if($maxDisponiblePremiosSeleccion>0){
+                                                                if($alcanzados>$maxDisponiblePremiosSeleccion){
+                                                                  $alcanzados = $maxDisponiblePremiosSeleccion;
+                                                                }
+                                                              }
+                                                              // ========================== // =============================== // ============================== //
+                                                              foreach ($premios_planes3 as $premiosP) { if(!empty($premiosP['nombre_plan'])){
+                                                                if($data2['nombre_plan']==$premiosP['nombre_plan']){
+                                                                  if($pagosR['name']==$premiosP['tipo_premio']){
+                                                                    $info .= "<table style='width:100%;'>
+                                                                      <tr>
+                                                                        <td style='width:60%;text-align:left;'>".
+                                                                          "(".$alcanzados.") ".$premiosP['producto']."
+                                                                        </td>
+                                                                        <td style='width:25%;text-align:left;'>".
+                                                                          "(".$data2['nombre_plan'].")
+                                                                        </td>
+                                                                        <td style='width:15%;text-align:right;'>";
+                                                                          $porcentSelected = $data['cantidad_aprobado'];
+                                                                          $porcentPerdido = $alcanzados;
+                                                                          $porcentResul = ($porcentPerdido/$porcentSelected)*100;
+                                                                          if(!empty($totalesPremios[$pagosR['name']][$premiosP['producto']])){
+                                                                            $totalesPremios[$pagosR['name']][$premiosP['producto']]['cantidad'] += $alcanzados;
+                                                                          }else{
+                                                                            $totalesPremios[$pagosR['name']]['name'] = $pagosR['name'];
+                                                                            $totalesPremios[$pagosR['name']][$premiosP['producto']] = ['id'=>$pagosR['id'], 'plan'=>$data2['nombre_plan'], 'name'=>$pagosR['name'], 'cantidad'=>$alcanzados];
+                                                                          }
+                                                                          $info .= "<b>".number_format($porcentResul,2,',','.')."%</b>
+                                                                        </td>
+                                                                      </tr>
+                                                                    </table>";
+                                                                  }
+                                                                }
+                                                              } }
+
+                                                            }
+                                                          }
+                                                        }
+                                                      }
+                                                    } }
+
+
+                                                  }
+                                                }
+
+
+                                              }
+                                            }
+                                          }
+
 																			$info .= "</td>
 				                            </tr>
 					                        </table>
@@ -741,6 +867,7 @@ if($amReportesC == 1){
                           						for ($i=0; $i < count($arrayt); $i++) { 
                           							if($canje['nombre_catalogo']==$arrayt[$i]['nombre']){
                           								$arrayt[$i]['cantidad']++;
+                                          $arrayt2[$i]['cantidad']++;
                           							}
                           						}
                           					}
@@ -943,41 +1070,41 @@ if($amReportesC == 1){
 									$info .=" <tr>
 										<td style='text-align:left;'>Premios Canjeados</td>
 										<td style='text-align:left;'>";
-											$arrayt2 = [];
-											$numCC = 0;
-											foreach ($canjeosUnic as $canUnic) {
-												if(!empty($canUnic['nombre_catalogo'])){
-													$arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
-													$arrayt2[$numCC]['cantidad'] = 0;
-													$numCC++;
-												}
-											}
-											foreach ($canjeos as $canje){
-												if (!empty($canje['id_cliente'])){
-													$permitido2 = "0";
-													if($accesoBloqueo=="1"){
-														if(!empty($accesosEstructuras)){
-															foreach ($accesosEstructuras as $struct) {
-																if(!empty($struct['id_cliente'])){
-																	if($struct['id_cliente']==$canje['id_cliente']){
-																		$permitido2 = "1";
-																	}
-																}
-															}
-														}
-													}else if($accesoBloqueo=="0"){
-														$permitido2 = "1";
-													}
+											// $arrayt2 = [];
+											// $numCC = 0;
+											// foreach ($canjeosUnic as $canUnic) {
+											// 	if(!empty($canUnic['nombre_catalogo'])){
+											// 		$arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+											// 		$arrayt2[$numCC]['cantidad'] = 0;
+											// 		$numCC++;
+											// 	}
+											// }
+											// foreach ($canjeos as $canje){
+											// 	if (!empty($canje['id_cliente'])){
+											// 		$permitido2 = "0";
+											// 		if($accesoBloqueo=="1"){
+											// 			if(!empty($accesosEstructuras)){
+											// 				foreach ($accesosEstructuras as $struct) {
+											// 					if(!empty($struct['id_cliente'])){
+											// 						if($struct['id_cliente']==$canje['id_cliente']){
+											// 							$permitido2 = "1";
+											// 						}
+											// 					}
+											// 				}
+											// 			}
+											// 		}else if($accesoBloqueo=="0"){
+											// 			$permitido2 = "1";
+											// 		}
 
-													if($permitido2=="1"){
-														for ($i=0; $i < count($arrayt2); $i++) { 
-															if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
-																$arrayt2[$i]['cantidad']++;
-															}
-														}
-													}
-												}
-											}
+											// 		if($permitido2=="1"){
+											// 			for ($i=0; $i < count($arrayt2); $i++) { 
+											// 				if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
+											// 					$arrayt2[$i]['cantidad']++;
+											// 				}
+											// 			}
+											// 		}
+											// 	}
+											// }
 
 											foreach ($arrayt2 as $arr) {
 												if($arr['cantidad']>0){

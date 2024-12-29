@@ -40,7 +40,7 @@ $amLiderazgosB = 0;
           <!-- /.box -->
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><?php echo "Niveles de ".$url.""; ?></h3>
+              <h3 class="box-title"><?php echo "".$url.""; ?></h3>
             </div>
             <!-- /.box-header -->
 

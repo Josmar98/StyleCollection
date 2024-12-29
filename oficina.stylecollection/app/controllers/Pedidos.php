@@ -410,18 +410,78 @@ if($permitir=="1"){
 
 	if(!empty($_POST['cantidad'])){
 		// print_r($_POST);  // APROBAR PEDIDOS
-
 		$cantidad = $_POST['cantidad'];
+		if(!empty($_POST['cantidadSec'])){
+			$cantidadSec = $_POST['cantidadSec'];
+		}else{
+			$cantidadSec = [];
+		}
+		if(!empty($_POST['idColSec'])){
+			$ids = $_POST['idColSec'];
+		}else{
+			$ids = [];
+		}
+		$totalCantidadColecciones = $cantidad;
+		foreach ($cantidadSec as $cantidad_sec) {
+			$totalCantidadColecciones += $cantidad_sec;
+		}
+		// echo "<br>";
+		// echo $cantidad;
+		// echo "<br>";
+		// echo $totalCantidadColecciones;
+		// die();
+
 		$pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido = $id");
 		$pedido = $pedidos[0];
 		
 		$fecha_aprobado = date('d-m-Y');
 		$hora_aprobado = date('g:ia');
 
-		$query = "UPDATE pedidos SET cantidad_aprobado = $cantidad, fecha_aprobado = '$fecha_aprobado', hora_aprobado = '$hora_aprobado', visto_admin = 1, visto_cliente = 2, estatus = 1 WHERE id_pedido = $id";
+		$query = "UPDATE pedidos SET cantidad_aprobado = {$totalCantidadColecciones}, cantidad_aprobado_individual = {$cantidad}, fecha_aprobado = '{$fecha_aprobado}', hora_aprobado = '{$hora_aprobado}', visto_admin = 1, visto_cliente = 2, estatus = 1 WHERE id_pedido = {$id}";
 		$exec = $lider->modificar($query);
 		if($exec['ejecucion']==true){
+			$cantidad=$totalCantidadColecciones;
 			$response = "1";
+
+			$indexOf = 0;
+			$erroresSec = 0;
+			$busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
+			// print_r($busquedaPedidoSecundario);
+			if(count($busquedaPedidoSecundario)>1){
+				foreach ($cantidadSec as $cantidad_sec) {
+					$querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, fecha_aprobado_sec = '{$fecha_aprobado}', hora_aprobado_sec = '{$hora_aprobado}', estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+					// $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+					$indexOf++;
+
+					$execSec = $lider->modificar($querySec);
+					if($exec['ejecucion']==true){}else{
+						$erroresSec++;
+					}
+				}
+			}else{
+				// echo "No se encontro para UPDATE se debe hacer INSERT INTO";
+				// echo "No hay pedido Secundario";
+				// print_r($_POST);
+			// die();
+				$id_user = $pedidos[0]['id_cliente'];
+				$fecha_pedido = date('d-m-Y');
+				$hora_pedido = date('g:ia');
+				$id_pedido = $id;
+				$indexOf = 0;
+				$erroresSec = 0;
+				foreach ($cantidadSec as $cantidad_sec) {
+					$idColeccionSec = $ids[$indexOf];
+					$querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, 0, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+					// echo "<br><br>".$querySec;
+					$execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+					if($execSec['ejecucion']==true){
+					}else{
+						$erroresSec++;
+					}
+					$indexOf++;
+			      }
+			}
+			if($erroresSec==0){
 
 				$query2 = "INSERT INTO pedidos_historicos (id_pedidos_historicos, id_despacho, id_pedido, id_usuario, cantidad_aprobado, fecha_aprobado, hora_aprobado, estatus) VALUES (DEFAULT, {$id_despacho}, {$id}, {$_SESSION['id_usuario']}, {$cantidad}, '{$fecha_aprobado}', '{$hora_aprobado}', 1)";
 				$exec2 = $lider->registrar($query2, "pedidos_historicos", "id_pedidos_historicos");
@@ -431,173 +491,178 @@ if($permitir=="1"){
 					$execHist = "2";
 				}
 		
-			$id_cliente = $pedido['id_cliente'];
-			/* PARA APLICAR LIDERAZGO SEGUN LAS PROPIAS MONTAR AQUI*/
+				$id_cliente = $pedido['id_cliente'];
+				/* PARA APLICAR LIDERAZGO SEGUN LAS PROPIAS MONTAR AQUI*/
 
-			/* PARA APLICAR LIDERAZGO SEGUN LAS PROPIAS MONTAR AQUI*/
-			$clientesBajas = $lider->consultarQuery("SELECT * FROM clientes WHERE id_lider = $id_cliente");
+				/* PARA APLICAR LIDERAZGO SEGUN LAS PROPIAS MONTAR AQUI*/
+				$clientesBajas = $lider->consultarQuery("SELECT * FROM clientes WHERE id_lider = $id_cliente");
 
-			$cantidadClientesBajos = Count($clientesBajas)-1;
-			$cantidad_total = 0;
-			$cantidad_total_alcanzada = 0;
-			$pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
-		    $cantidad_acumulada = 0;
-		    foreach ($pedidosAcumulados as $keyss) {
-		      if(!empty($keyss['id_pedido'])){
-		        $cantidad_acumulada += $keyss['cantidad_aprobado'];
-		      }
-		    }
-			if($cantidadClientesBajos > 0){
-				$tot = comprobarVendedoras($clientesBajas, $id_despacho, $lider);
-				// $cantidad_total = $tot;
-				$cantidad_total = $cantidad+$tot;
+				$cantidadClientesBajos = Count($clientesBajas)-1;
+				$cantidad_total = 0;
+				$cantidad_total_alcanzada = 0;
+				$pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
+			    $cantidad_acumulada = 0;
+			    foreach ($pedidosAcumulados as $keyss) {
+			      if(!empty($keyss['id_pedido'])){
+			        $cantidad_acumulada += $keyss['cantidad_aprobado'];
+			      }
+			    }
+				if($cantidadClientesBajos > 0){
+					$tot = comprobarVendedoras($clientesBajas, $id_despacho, $lider);
+					// $cantidad_total = $tot;
+					$cantidad_total = $cantidad+$tot;
 
-				$totAlcanzadas = comprobarAlcanzadas($clientesBajas, $id_campana, $id_despacho, $lider);
-				$cantidad_total_alcanzada = $cantidad_acumulada+$totAlcanzadas;
-			}else{
-				$cantidad_total = $cantidad;
-				$cantidad_total_alcanzada = $cantidad_acumulada;
-			}
-			// echo "Cantidad Conseguida con mis colecciones y con mis hij@ss En esta CAMPAÑA: ".$cantidad_total." <br><br>";
-			// echo "Cantidad Conseguida con mis colecciones y con mis hij@ss En TODOS LOS DESPACHOS de ESTA CAMPAÑA: ".$cantidad_total_alcanzada." <br><br>";
-
-
-			
-			/* PARA APLICAR LIDERAZGO SEGUN LAS VENDEDORAS MONTAR AQUI*/
-
-			$query = "UPDATE pedidos SET cantidad_total = $cantidad_total WHERE id_pedido = $id";
-			$exec = $lider->modificar($query);
-			$res = aplicarLiderazgo($id_cliente, $id_despacho, $lider);
-
-			$busqueda = $lider->consultarQuery("SELECT * FROM colecciones_alcanzadas_campana WHERE id_campana = {$id_campana} and id_cliente = {$id_cliente}");
-			if(count($busqueda)>1){
-				$queryXD = "UPDATE colecciones_alcanzadas_campana SET cantidad_total_alcanzada = {$cantidad_total_alcanzada} WHERE id_campana = {$id_campana} and id_cliente = {$id_cliente}";
-				$execXD = $lider->modificar($queryXD);
-			}else{
-				$queryXD = "INSERT INTO colecciones_alcanzadas_campana (id_CAC, id_campana, id_cliente, cantidad_total_alcanzada, estatus) VALUES (DEFAULT, {$id_campana}, {$id_cliente}, {$cantidad_total_alcanzada}, 1)";
-				$execXD = $lider->modificar($queryXD);
-			}
-			// echo $queryXD;
-
-
-
-
-
-
-			/* PARA APLICAR LIDERAZGO SEGUN LAS VENDEDORAS MONTAR AQUI*/
-
-			$clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente = $id_cliente");
-			$cliente = $clientes[0];
-			$totalActual = $pedido['cantidad_total'];
-			$id_lider = $cliente['id_lider'];
-			if($id_lider > 0 ){
-				$request = comprobarLider($cantidad_total, $id_lider, $id_despacho, $lider);
-				$requestXD = comprobarLiderAlcanzadas($cantidad_total, $id_lider, $id_campana, $id_despacho, $lider);
-
-			}
-			
-
-			// //Esto Nooo se Descomentara
-			$request = "1";
-
-
-				if(!empty($modulo) && !empty($accion)){
-					$fecha = date('Y-m-d');
-					$hora = date('H:i:a');
-					$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Pedidos', '
-					Aprobar', '{$fecha}', '{$hora}')";
-					$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+					$totAlcanzadas = comprobarAlcanzadas($clientesBajas, $id_campana, $id_despacho, $lider);
+					$cantidad_total_alcanzada = $cantidad_acumulada+$totAlcanzadas;
+				}else{
+					$cantidad_total = $cantidad;
+					$cantidad_total_alcanzada = $cantidad_acumulada;
 				}
-
-			$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
-			$configgema = $configgemas[0];
-			$id_configgema = $configgema['id_configgema'];
-			$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
-			$cantidad_gemas = 0;
-			// if($configgema['condicion']=="Dividir"){
-			// }
-			// if($configgema['condicion']=="Multiplicar"){
-			//   $cantidad_gemas = $cantidad * $cantidad_gemas_correspondientes;
-			// }
-			$cantidad_gemas = $cantidad / $cantidad_gemas_correspondientes;
+				// echo "Cantidad Conseguida con mis colecciones y con mis hij@ss En esta CAMPAÑA: ".$cantidad_total." <br><br>";
+				// echo "Cantidad Conseguida con mis colecciones y con mis hij@ss En TODOS LOS DESPACHOS de ESTA CAMPAÑA: ".$cantidad_total_alcanzada." <br><br>";
 
 
-			$pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
-			$cantidad_acumulada = 0;
-			foreach ($pedidosAcumulados as $keyss) {
-				if(!empty($keyss['id_pedido'])){
-					$cantidad_acumulada += $keyss['cantidad_aprobado'];
+				
+				/* PARA APLICAR LIDERAZGO SEGUN LAS VENDEDORAS MONTAR AQUI*/
+
+				$query = "UPDATE pedidos SET cantidad_total = $cantidad_total WHERE id_pedido = $id";
+				$exec = $lider->modificar($query);
+				$res = aplicarLiderazgo($id_cliente, $id_despacho, $lider);
+
+				$busqueda = $lider->consultarQuery("SELECT * FROM colecciones_alcanzadas_campana WHERE id_campana = {$id_campana} and id_cliente = {$id_cliente}");
+				if(count($busqueda)>1){
+					$queryXD = "UPDATE colecciones_alcanzadas_campana SET cantidad_total_alcanzada = {$cantidad_total_alcanzada} WHERE id_campana = {$id_campana} and id_cliente = {$id_cliente}";
+					$execXD = $lider->modificar($queryXD);
+				}else{
+					$queryXD = "INSERT INTO colecciones_alcanzadas_campana (id_CAC, id_campana, id_cliente, cantidad_total_alcanzada, estatus) VALUES (DEFAULT, {$id_campana}, {$id_cliente}, {$cantidad_total_alcanzada}, 1)";
+					$execXD = $lider->modificar($queryXD);
 				}
-			}
-			// echo "Cantidad: ".$cantidad."<br>";
-			// echo "Cantidad Acumulada: ".$cantidad_acumulada."<br><br>";
+				// echo $queryXD;
 
-			$cantidad_acumulada_separado = 0;
-			foreach ($pedidosAcumulados as $keyss) {
-				if(!empty($keyss['id_pedido'])){
-					$cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
-					if($cantidad_acumulada >= $varMinimaColeccionesParaGemas){
-						// echo "Mayor a 30 Colecciones <br><br>";
-						$cantidad_gemas_separado = $cantidad_acumulada_separado / $cantidad_gemas_correspondientes;
-					}else{
-						// echo "Menos a 30 Colecciones <br>";
-						$cantidad_gemas_separado = 0;
+
+
+
+
+
+				/* PARA APLICAR LIDERAZGO SEGUN LAS VENDEDORAS MONTAR AQUI*/
+
+				$clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente = $id_cliente");
+				$cliente = $clientes[0];
+				$totalActual = $pedido['cantidad_total'];
+				$id_lider = $cliente['id_lider'];
+				if($id_lider > 0 ){
+					$request = comprobarLider($cantidad_total, $id_lider, $id_despacho, $lider);
+					$requestXD = comprobarLiderAlcanzadas($cantidad_total, $id_lider, $id_campana, $id_despacho, $lider);
+
+				}
+				
+
+				// //Esto Nooo se Descomentara
+				$request = "1";
+
+
+					if(!empty($modulo) && !empty($accion)){
+						$fecha = date('Y-m-d');
+						$hora = date('H:i:a');
+						$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Pedidos', '
+						Aprobar', '{$fecha}', '{$hora}')";
+						$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
 					}
-					// echo "Separado - Despacho: ".$keyss['id_despacho']."<br>";
-					// echo "Separado - Campaña: ".$keyss['id_campana']."<br>";
-					// echo "Separado - Factura: ".$keyss['numero_despacho']."<br>";
-					// echo "Separado - Cliente: ".$keyss['id_cliente']."<br>";
-					// echo "Separado - Pedido: ".$keyss['id_pedido']."<br>";
-					// echo "Separado - Cantidad: ".$cantidad_acumulada_separado."<br>";
-					// echo "Separado - Gemas: ".$cantidad_gemas_separado."<br>";
 
-					// echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
-					$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
-					$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
-					$lider->registrar($query, "gemas", "id_gema");
+				$configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
+				$configgema = $configgemas[0];
+				$id_configgema = $configgema['id_configgema'];
+				$cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
+				$cantidad_gemas = 0;
+				// if($configgema['condicion']=="Dividir"){
+				// }
+				// if($configgema['condicion']=="Multiplicar"){
+				//   $cantidad_gemas = $cantidad * $cantidad_gemas_correspondientes;
+				// }
+				$cantidad_gemas = $cantidad / $cantidad_gemas_correspondientes;
 
-					// echo $query."<br>";
 
-					// echo "<br>";
+				$pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
+				$cantidad_acumulada = 0;
+				foreach ($pedidosAcumulados as $keyss) {
+					if(!empty($keyss['id_pedido'])){
+						$cantidad_acumulada += $keyss['cantidad_aprobado'];
+					}
 				}
+				// echo "Cantidad: ".$cantidad."<br>";
+				// echo "Cantidad Acumulada: ".$cantidad_acumulada."<br><br>";
+
+				$cantidad_acumulada_separado = 0;
+				foreach ($pedidosAcumulados as $keyss) {
+					if(!empty($keyss['id_pedido'])){
+						// print_r($keyss);
+						// echo "<br>";
+						$cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
+						// echo "cantidad_acumulada_separado:" .$cantidad_acumulada_separado."<br>";
+						if($cantidad_acumulada >= $varMinimaColeccionesParaGemas){
+							// echo "Mayor a 30 Colecciones <br><br>";
+							$cantidad_gemas_separado = $cantidad_acumulada_separado / $cantidad_gemas_correspondientes;
+						}else{
+							// echo "Menos a 30 Colecciones <br>";
+							$cantidad_gemas_separado = 0;
+						}
+						// echo "cantidad_gemas_separado:" .$cantidad_gemas_separado."<br>";
+						// echo "<br>";
+						// echo "Separado - Despacho: ".$keyss['id_despacho']."<br>";
+						// echo "Separado - Campaña: ".$keyss['id_campana']."<br>";
+						// echo "Separado - Factura: ".$keyss['numero_despacho']."<br>";
+						// echo "Separado - Cliente: ".$keyss['id_cliente']."<br>";
+						// echo "Separado - Pedido: ".$keyss['id_pedido']."<br>";
+						// echo "Separado - Cantidad: ".$cantidad_acumulada_separado."<br>";
+						// echo "Separado - Gemas: ".$cantidad_gemas_separado."<br>";
+
+						// echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
+						$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
+						$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
+						$lider->registrar($query, "gemas", "id_gema");
+
+						// echo $query."<br>";
+
+						// echo "<br>";
+					}
+				}
+				// die();
+				// if($cantidad_acumulada >= $varMinimaColeccionesParaGemas){
+				// 	// echo "Mayor a 30 Colecciones <br><br>";
+				// 	$cantidad_acumulada_separado = 0;
+				// 	foreach ($pedidosAcumulados as $keyss) {
+				// 		if(!empty($keyss['id_pedido'])){
+				// 			$cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
+				// 			$cantidad_gemas_separado = $cantidad_acumulada_separado / $cantidad_gemas_correspondientes;
+				// 			// echo "Separado - Despacho: ".$keyss['id_despacho']."<br>";
+				// 			// echo "Separado - Campaña: ".$keyss['id_campana']."<br>";
+				// 			// echo "Separado - Factura: ".$keyss['numero_despacho']."<br>";
+				// 			// echo "Separado - Cliente: ".$keyss['id_cliente']."<br>";
+				// 			// echo "Separado - Pedido: ".$keyss['id_pedido']."<br>";
+				// 			// echo "Separado - Cantidad: ".$cantidad_acumulada_separado."<br>";
+				// 			// echo "Separado - Gemas: ".$cantidad_gemas_separado."<br>";
+
+				// 			// echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
+				// 			$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
+				// 			$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
+				// 			$lider->registrar($query, "gemas", "id_gema");
+
+				// 			// echo $query."<br>";
+
+				// 			// echo "<br>";
+				// 		}
+				// 	}
+				// }else{
+				// 	$cantidad_gemas = 0;
+				// 	// echo "Menos a 30 Colecciones <br>";
+				// 	// echo "Gemas: ".$cantidad_gemas." Unids<br>";
+				// 	$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
+				// 	$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id}, {$id_cliente}, {$id_configgema}, '{$cantidad}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', 0, '{$cantidad_gemas}', 'Bloqueado', 1)";
+
+				// 	$lider->registrar($query, "gemas", "id_gema");
+				// }
+
 			}
-			// die();
-			// if($cantidad_acumulada >= $varMinimaColeccionesParaGemas){
-			// 	// echo "Mayor a 30 Colecciones <br><br>";
-			// 	$cantidad_acumulada_separado = 0;
-			// 	foreach ($pedidosAcumulados as $keyss) {
-			// 		if(!empty($keyss['id_pedido'])){
-			// 			$cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
-			// 			$cantidad_gemas_separado = $cantidad_acumulada_separado / $cantidad_gemas_correspondientes;
-			// 			// echo "Separado - Despacho: ".$keyss['id_despacho']."<br>";
-			// 			// echo "Separado - Campaña: ".$keyss['id_campana']."<br>";
-			// 			// echo "Separado - Factura: ".$keyss['numero_despacho']."<br>";
-			// 			// echo "Separado - Cliente: ".$keyss['id_cliente']."<br>";
-			// 			// echo "Separado - Pedido: ".$keyss['id_pedido']."<br>";
-			// 			// echo "Separado - Cantidad: ".$cantidad_acumulada_separado."<br>";
-			// 			// echo "Separado - Gemas: ".$cantidad_gemas_separado."<br>";
-
-			// 			// echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
-			// 			$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
-			// 			$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
-			// 			$lider->registrar($query, "gemas", "id_gema");
-
-			// 			// echo $query."<br>";
-
-			// 			// echo "<br>";
-			// 		}
-			// 	}
-			// }else{
-			// 	$cantidad_gemas = 0;
-			// 	// echo "Menos a 30 Colecciones <br>";
-			// 	// echo "Gemas: ".$cantidad_gemas." Unids<br>";
-			// 	$lider->eliminar("DELETE FROM gemas WHERE id_campana = {$id_campana} and id_pedido = {$id} and id_cliente = {$id_cliente} and id_configgema = {$id_configgema}");
-			// 	$query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$id_campana}, {$id}, {$id_cliente}, {$id_configgema}, '{$cantidad}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas}', 0, '{$cantidad_gemas}', 'Bloqueado', 1)";
-
-			// 	$lider->registrar($query, "gemas", "id_gema");
-			// }
-
-
 		}else{
 			$response = "2";
 		}

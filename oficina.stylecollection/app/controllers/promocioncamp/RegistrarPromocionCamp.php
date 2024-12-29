@@ -100,8 +100,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 
   if(empty($_POST)){
 
-    $productos=$lider->consultar("productos");
-    $premios=$lider->consultar("premios");
+    $productos=$lider->consultarQuery("SELECT * FROM productos");
+    $premios=$lider->consultarQuery("SELECT * FROM premios");
 
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

@@ -24,7 +24,7 @@
       <ol class="breadcrumb">
         <li><a href="?route=Home"><i class="fa fa-dashboard"></i> Inicio </a></li>
         <li><a href="?route=<?=$url; ?>"><?php echo $modulo; ?></a></li>
-        <li class="active"><?php if(!empty($action)){echo $action;} echo " de x". $modulo; ?></li>
+        <li class="active"><?php if(!empty($action)){echo $action;} echo " ". $modulo; ?></li>
       </ol>
     </section>
           <br>

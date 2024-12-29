@@ -128,7 +128,7 @@
                             $num = 1;
                             if(Count($promociones)>1){
                               foreach ($promociones as $data){
-                                if(!empty($data['id_promociones'])){  
+                                if(!empty($data['id_promociones'])){
                                   ?>
                                   <tr>
                                     <td style="width:20%">
@@ -164,7 +164,8 @@
                                   </tr>
                                   <?php
                                   $href=$menu3."&route=Pedidos&id=".$data['id_pedido'];
-                                } }
+                                }
+                              }
                             }else{
                               ?>
                               <tr><td colspan='7'>Ningún dato disponible en esta tabla</td></tr>
@@ -178,7 +179,8 @@
                             </tr>
                             </tfoot>
                           </table>
-
+                          <?php 
+                          ?>
                   <?php }else{ ?>
                           <div style="margin-left:3%;font-size:1.1em;">
                           <b><i>
@@ -293,6 +295,7 @@
                     $num = 1;
                     $totalSolicitadas = 0;
                     $totalAprobadas = 0;
+                    $totalPromos = [];
                     if(Count($promocionesFull)>1){
                       foreach ($promocionesFull as $data){ if(!empty($data['id_promociones'])){
                         ?>
@@ -312,7 +315,13 @@
                             $permitido = 1;
                           }
                         ?>
-                          <?php if ($permitido == 1){ ?>
+                          <?php if ($permitido == 1){ 
+                            if(!empty($totalPromos[$data['nombre_promocion']])){
+                              $totalPromos[$data['nombre_promocion']]+=$data['cantidad_aprobada_promocion'];
+                            }else{
+                              $totalPromos[$data['nombre_promocion']]=$data['cantidad_aprobada_promocion'];
+                            }
+                            ?>
                             <tr>
                               <td style="width:20%">
                                 <span class="contenido2">
@@ -421,7 +430,14 @@
                     </th>
                     <th></th>
                     <th></th>
-                    <th></th>
+                    <th colspan="">
+                      <?php
+                        // print_r($totalPromos);
+                        foreach ($totalPromos as $key => $value){ if(!empty($key)){
+                          echo "(".$value.") ".$key."<br>";
+                        } }
+                      ?>
+                    </th>
                     <th><?=$totalSolicitadas; ?> Promos Solicitadas</th>
                     <th style="color:#0B0;"><?=$totalAprobadas; ?> Promos Aprobadas</th>
                   </tr>

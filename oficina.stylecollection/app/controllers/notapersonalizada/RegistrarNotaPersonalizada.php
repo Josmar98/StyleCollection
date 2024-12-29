@@ -165,8 +165,8 @@ if($estado_campana=="1"){
 				}
 			}
 
-			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE productos.estatus = 1");
-			$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1");
+			$productos = $lider->consultarQuery("SELECT * FROM productos");
+			$premios = $lider->consultarQuery("SELECT * FROM premios");
 
 		}
 
@@ -222,23 +222,40 @@ if($estado_campana=="1"){
 				}
 			}
 
-			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE productos.estatus = 1");
-			$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1");
+			$productos = $lider->consultarQuery("SELECT * FROM productos");
+			$premios = $lider->consultarQuery("SELECT * FROM premios");
 
 		}
 
 		$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
 
 		$notas = $lider->consultarQuery("SELECT * FROM notasentrega WHERE estatus = 1");
+		$notasPer = $lider->consultarQuery("SELECT * FROM notasentregapersonalizada WHERE estatus = 1");
+		$nume1 = 0;
+		$nume2 = 0;
 		$nume = 0;
 		if(count($notas)>1){
 			foreach ($notas as $key) {
 				if(!empty($key['id_nota_entrega'])){
 					if($key['numero_nota_entrega'] > $nume){
-						$nume = $key['numero_nota_entrega'];
+						$nume1 = $key['numero_nota_entrega'];
 					}
 				}
 			}
+		}
+		if(count($notasPer)>1){
+			foreach ($notasPer as $key) {
+				if(!empty($key['id_nota_entrega_personalizada'])){
+					if($key['numero_nota_entrega'] > $nume){
+						$nume2 = $key['numero_nota_entrega'];
+					}
+				}
+			}
+		}
+		if($nume1 > $nume2){
+			$nume = $nume1;
+		}else{
+			$nume = $nume2;
 		}
 		$nume++;
 		if(empty($_GET['cant'])){

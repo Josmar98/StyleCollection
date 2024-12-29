@@ -12,6 +12,12 @@
 	else if($url=="PremiosCol"){ $modulo = "Premios de colecciones"; }
 	else if($url=="PremiosCamp"){ $modulo = "Premios de campaña"; }
 	else if($url=="Libroiva"){ $modulo = "Libros de IVA"; }
+	else if($url=="Proveedoresinv"){ $modulo = "Proveedores de Inventario"; }
+	else if($url=="Promocionesinv"){ $modulo = "Promociones"; }
+	else if($url=="PromocionesinvBorradas"){ $modulo = "Promociones Borradas"; }
+	else if($url=="Retosinv"){ $modulo = "Retos"; }
+	else if($url=="RetosinvBorrados"){ $modulo = "Retos Borrados"; }
+	else if($url=="EmpleadosBorrados"){ $modulo = "Empleados"; }
 	else{ $modulo = $url; }
 
 	if(!empty($action)){ if($action=="Registrar"){	$accion="Registrar"; }	if($action=="Modificar"){	$accion="Editar"; } } else{ $accion="Consultar"; }
@@ -49,6 +55,14 @@
 	}
 	$lider = new Models();
 	$lid3r = new Modelss();
+
+
+	$tipoInventarios=[
+		// 0=>["id"=>"Materia Prima", "name"=>"Materia Prima"],
+		// 1=>["id"=>"Insumos", "name"=>"Insumos"],
+		2=>["id"=>"Productos", "name"=>"Productos Terminados"],
+		3=>["id"=>"Mercancia", "name"=>"Mercancía"]
+	];
 	
 	// if(!empty($modulo) && !empty($accion)){
 	// 	$fecha = date('Y-m-d');

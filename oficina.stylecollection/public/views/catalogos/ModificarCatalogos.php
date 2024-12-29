@@ -124,12 +124,109 @@
                   </div>
 
                   <div class="row">
-                    <div class="form-group col-xs-12 col-sm-6">
+                    <div class="form-group col-xs-12 col-sm-offset-6">
+                      <span class="btn btn-info mostrarocultarimg">Mostrar Imagen</span>
                     </div>
-                    <div class="form-group col-xs-12 col-sm-6">
+                    <div class="form-group col-xs-12 col-sm-6 box-img">
+                    </div>
+                    <div class="form-group col-xs-12 col-sm-6 box-img">
                       <img src="<?=$catalogo['imagen_catalogo']?>" style='width:60%;border:1px solid #ccc'>
                     </div>
                   </div>
+
+                  <hr>
+
+                  <input type="hidden" id="limiteElementos" value="<?=$limiteElementos; ?>">
+                  <div class="row" style="padding:0px 17px;">
+                    <div style="width:20%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario">
+                      <label>Cantidad</label>
+                    </div>
+                    <div style="width:80%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario">
+                      <label>Descripcion</label>
+                    </div>
+                  </div>
+                  <?php
+                    $elementosMostrar=1;
+                    // $retos_campana_premio
+                    if(!empty($catalogo['id_premio'])){
+                      $premiosInv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$catalogo['id_premio']}");
+                      if(count($premiosInv)>1){
+                        $elementosMostrar = count($premiosInv)-1;
+                      }else{
+                        $elementosMostrar=1;
+                      }
+                    }
+                  ?>
+                  <?php for($z=1; $z<=$limiteElementos; $z++){ ?>
+                    <div class="row" style="padding:0px 15px;">
+                      <?php
+                        if(!empty($premiosInv[($z-1)])){
+                          // echo $premiosInv[($z-1)]['tipo_inventario'];
+                          // echo $premiosInv[($z-1)]['id_premio_inventario'];
+                          if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
+                            $nameTabla = "Productos";
+                            $idTabla = "id_producto";
+                          }
+                          if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
+                            $nameTabla = "Mercancia";
+                            $idTabla = "id_mercancia";
+                          }
+                          $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
+                        }else{
+                          $inventario = [];
+                        }
+                      ?>
+                      <div style="width:20%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>$elementosMostrar){ echo "d-none"; } ?>">
+                        <input type="number" class="form-control" id="stock<?=$z; ?>" min="0" name="stock[]" step="1" placeholder="Cantidad (150)"  value="<?php if(!empty($inventario[0])){ echo $inventario[0]['unidades_inventario']; } ?>">
+                        <span id="error_stock<?=$z; ?>" class="errors"></span>
+                      </div>
+                      <div style="width:80%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>$elementosMostrar){ echo "d-none"; } ?>">
+                        <select class="form-control select2 inventarios" id="inventario<?=$z; ?>" min="<?=$z;?>" name="inventario[]"  style="width:100%">
+                          <option value=""></option>
+                          <?php $tipoInvOP=""; ?>
+                          <?php foreach($productos as $inv){ if(!empty($inv['id_producto'])){ ?>
+                            <option value="<?php echo $inv['id_producto']; ?>"
+                            <?php
+                              if(!empty($inventario[0])){
+                                if($inventario[0]['tipo_inventario']=="Productos"){
+                                  if($inventario[0]['id_producto']==$inv['id_producto']){
+                                    echo "selected";
+                                    $tipoInvOP="Productos";
+                                  }
+                                }
+                              }
+                            ?>
+                            ><?php echo "(".$inv['codigo_producto'].") ".$inv['producto']."(".$inv['cantidad'].") ".$inv['marca_producto']; ?></option>
+                          <?php } } ?>
+                          <?php foreach($mercancia as $inv){ if(!empty($inv['id_mercancia'])){ ?>
+                            <option value="m<?php echo $inv['id_mercancia']; ?>"
+                            <?php
+                              if(!empty($inventario[0])){
+                                if($inventario[0]['tipo_inventario']=="Mercancia"){
+                                  if($inventario[0]['id_mercancia']==$inv['id_mercancia']){
+                                    echo "selected";
+                                    $tipoInvOP="Mercancia";
+                                  }
+                                }
+                              }
+                            ?>
+                            ><?php echo "(".$inv['codigo_mercancia'].") ".$inv['mercancia']."(".$inv['medidas_mercancia'].") ".$inv['marca_mercancia']; ?></option>
+                          <?php } } ?>
+                        </select>
+                        <input type="hidden" id="tipo<?=$z; ?>" name="tipos[]" value="<?=$tipoInvOP; ?>">
+                        <span id="error_inventario<?=$z; ?>" class="errors"></span>
+                      </div>
+                    </div>
+                    <div style='width:100%;'>
+                      <span style='float:left' id="addMore<?=$z; ?>" min="<?=$z; ?>" class="addMore btn btn-success box-inventarios<?=$z; ?> box-inventario <?php if($z!=$elementosMostrar){ echo "d-none"; } ?>"><b>+</b></span>
+                      <?php if($z>1){ ?>
+                        <span style='float:right' id="addMenos<?=$z; ?>" min="<?=$z; ?>" class="addMenos btn btn-danger box-inventarios<?=$z; ?> box-inventario <?php if($z!=$elementosMostrar){ echo "d-none"; } ?>"><b>-</b></span>
+                      <?php } ?>
+                    </div>
+                  <?php } ?>
+                  <input type="hidden" id="cantidad_elementos" name="cantidad_elementos" value="<?=$elementosMostrar; ?>">
+                  <hr>
+
 
               </div>
 
@@ -171,13 +268,16 @@
 .d-none{
   display:none;
 }
+.addMore, .addMenos{
+  border-radius:40px;
+  border:1px solid #CCC;
+}
 </style>
 <script>
 $(document).ready(function(){
 
   var response = $(".responses").val();
   if(response==undefined){
-
   }else{
     if(response == "1"){
       swal.fire({
@@ -196,6 +296,68 @@ $(document).ready(function(){
       });
     }
   }
+  $(".box-img").hide();
+  $(".mostrarocultarimg").click(function(){
+    if($(".box-img").is(":visible")){
+      $(".box-img").slideUp();
+      $(this).html("Mostrar Imagen");
+    }else{
+      $(".box-img").slideDown();
+      $(this).html("Ocultar Imagen");
+    }
+  });
+
+  $(".box-inventarios").hide();
+  $(".box-inventarios").removeClass("d-none");
+  $(".addMore").click(function(){
+    // var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    alimentarFormInventario();
+  });
+  $(".addMenos").click(function(){
+    // var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    retroalimentarFormInventario();
+  });
+  function alimentarFormInventario(){
+    var limite = parseInt($("#limiteElementos").val());
+    var cant = parseInt($("#cantidad_elementos").val());
+    $("#addMore"+cant).hide();
+    $("#addMenos"+cant).hide();
+    cant++;
+    $(`.box-inventarios${cant}`).show();
+    if(cant == limite){
+      $("#addMore"+cant).hide();
+    }
+    $("#cantidad_elementos").val(cant);
+  }
+  function retroalimentarFormInventario(){
+    var cant = parseInt($("#cantidad_elementos").val());
+    $(`.box-inventarios${cant}`).hide();
+    $("#addMore"+cant).hide();
+    $("#addMenos"+cant).hide();
+    cant--;
+    $("#addMore"+cant).show();
+    $("#addMenos"+cant).show();
+    if(cant<2){
+      $("#addMenos"+cant).hide();
+    }
+    $("#cantidad_elementos").val(cant);
+  }
+  $(".inventarios").on('change', function(){
+    var value = $(this).val();
+    var index = $(this).attr("min");
+    if(value!=""){
+      var pos = value.indexOf('m');
+      if(pos>=0){ //Mercancia
+        $("#tipo"+index).val('Mercancia');
+      }else if(pos < 0){ //Productos
+        $("#tipo"+index).val('Productos');
+      }
+    }else{
+      $("#tipo"+index).val('');
+    }
+  });
     
   $(".enviar").click(function(){
     var response = validar();
@@ -314,9 +476,54 @@ function validar(){
   /*===================================================================*/
 
   /*===================================================================*/
+  var cantidad_elementos = $("#cantidad_elementos").val();
+  var rstocks = false;
+  var rinventarios = false;
+  if(cantidad_elementos==0){
+    var rstocks = false;
+    var rinventarios = false;
+  }else{
+    var erroresStock=0;
+    var erroresInventario=0;
+    for (let i=1; i<=cantidad_elementos;i++) {
+      /*===================================================================*/
+        var stock = $("#stock"+i).val();
+        var rstock = checkInput(stock, numberPattern);
+        if( rstock == false ){
+          if(stock.length != 0){
+            $("#error_stock"+i).html("La cantidad de unidades #"+i+" no debe contener letras o caracteres especiales");
+          }else{
+            $("#error_stock"+i).html("Debe llenar una cantidad de unidades #"+i);      
+          }
+        }else{
+          $("#error_stock"+i).html("");
+        }
+        if(rstock==false){ erroresStock++; }
+      /*===================================================================*/
+      
+      /*===================================================================*/
+        var inventario = $("#inventario"+i).val();
+        var rinventario = false;
+        if(inventario==""){
+          rinventario=false;
+          $("#error_inventario"+i).html("Debe seleccionar un elemento del inventario #"+i);
+        }else{
+          rinventario=true;
+          $("#error_inventario"+i).html("");
+        }
+        if(rinventario==false){ erroresInventario++; }
+      /*===================================================================*/
+    }
+    
+    if(erroresStock==0){ rstocks=true; }
+    if(erroresInventario==0){ rinventarios=true; }
+  }
+  /*===================================================================*/
+
+  /*===================================================================*/
   var result = false;
   // if( rnombre==true && rcodigo==true && rcantidad==true){
-  if( rnombre==true && rcantidad==true){
+  if( rnombre==true && rcantidad==true && rstocks==true && rinventarios==true){
     result = true;
   }else{
     result = false;

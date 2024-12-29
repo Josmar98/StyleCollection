@@ -79,8 +79,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
     $promocion = $promocion[0];
       $promocion_productos = $lider->consultarQuery("SELECT * FROM productos_promocion WHERE productos_promocion.id_promocion = {$id} and productos_promocion.id_campana = {$id_campana} and productos_promocion.estatus = 1");
       $promocion_premios = $lider->consultarQuery("SELECT * FROM premios_promocion WHERE premios_promocion.id_promocion = {$id} and premios_promocion.id_campana = {$id_campana} and premios_promocion.estatus = 1");
-      $productos=$lider->consultar("productos");
-      $premios=$lider->consultar("premios");
+      $productos=$lider->consultarQuery("SELECT * FROM productos");
+      $premios=$lider->consultarQuery("SELECT * FROM premios");
 
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
@@ -104,8 +104,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
       $promocion = $promocion[0];
       $promocion_productos = $lider->consultarQuery("SELECT * FROM productos_promocion WHERE productos_promocion.id_promocion = {$id} and productos_promocion.id_campana = {$id_campana} and productos_promocion.estatus = 1");
       $promocion_premios = $lider->consultarQuery("SELECT * FROM premios_promocion WHERE premios_promocion.id_promocion = {$id} and premios_promocion.id_campana = {$id_campana} and premios_promocion.estatus = 1");
-      $productos=$lider->consultar("productos");
-      $premios=$lider->consultar("premios");
+      $productos=$lider->consultarQuery("SELECT * FROM productos");
+      $premios=$lider->consultarQuery("SELECT * FROM premios");
 
       if(!empty($action)){
         if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

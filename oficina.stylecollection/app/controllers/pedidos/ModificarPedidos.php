@@ -70,7 +70,24 @@ if(!empty($_POST['validarData'])){
 
 if(!empty($_POST['cantidad'])){
   // print_r($_POST);
+
   $cantidad = $_POST['cantidad'];
+  if(!empty($_POST['cantidadSec'])){
+    $cantidadSec = $_POST['cantidadSec'];
+  }else{
+    $cantidadSec = [];
+  }
+  if(!empty($_POST['idColSec'])){
+    $ids = $_POST['idColSec'];
+  }else{
+    $ids = [];
+  }
+  $totalCantidadColecciones = $cantidad;
+  foreach ($cantidadSec as $cantidad_sec) {
+    $totalCantidadColecciones += $cantidad_sec;
+  }
+
+
   $pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido = $id");
   $pedido = $pedidos[0];
   
@@ -78,17 +95,122 @@ if(!empty($_POST['cantidad'])){
   $hora_aprobado = date('g:ia');
   $campAnt = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido = $id");
 
-
+  $sentencesSecundary = [];
   if(!empty($_GET['admin'])){ //fecha_aprobado = '$fecha_aprobado', hora_aprobado = '$hora_aprobado',
-    $query = "UPDATE pedidos SET cantidad_aprobado = $cantidad, visto_admin = 1, visto_cliente = 2, estatus = 1 WHERE id_pedido = $id";
+    $query = "UPDATE pedidos SET cantidad_aprobado = {$totalCantidadColecciones}, cantidad_aprobado_individual = {$cantidad}, visto_admin = 1, visto_cliente = 2, estatus = 1 WHERE id_pedido = $id";
+    $indexOf = 0;
+
+    $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
+    if(count($busquedaPedidoSecundario)>1){
+      foreach ($cantidadSec as $cantidad_sec) {
+        $querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+        $indexOf++;
+      }
+    }else{
+      // echo "No hay pedido Secundario";
+      // print_r($_POST);
+      $id_user = $pedidos[0]['id_cliente'];
+      // print_r($pedidos[0]['id_cliente']);
+      $fecha_pedido = date('d-m-Y');
+      $hora_pedido = date('g:ia');
+      $id_pedido = $id;
+      $indexOf = 0;
+      $erroresSec = 0;
+      foreach ($cantidadSec as $cantidad_sec) {
+        $idColeccionSec = $ids[$indexOf];
+        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, 0, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+        // echo "<br><br>".$querySec;
+        // $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+        // if($execSec['ejecucion']==true){
+        // }else{
+        //   $erroresSec++;
+        // }
+        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+        $indexOf++;
+      }
+    }
+    // die();
   }else{
     $query = "UPDATE pedidos SET cantidad_pedido = $cantidad, visto_admin = 0, estatus = 1 WHERE id_pedido = $id";
+    $indexOf = 0;
+
+    // $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
+    // print_r($busquedaPedidoSecundario);
+    $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
+    if(count($busquedaPedidoSecundario)>1){
+      foreach ($cantidadSec as $cantidad_sec) {
+        $querySec = "UPDATE pedidos_secundarios SET cantidad_pedido_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+        $indexOf++;
+      }
+    }else{
+      // echo "NOOO";      
+      $id_user = $pedidos[0]['id_cliente'];
+      // print_r($pedidos[0]['id_cliente']);
+      $fecha_pedido = date('d-m-Y');
+      $hora_pedido = date('g:ia');
+      $id_pedido = $id;
+      $indexOf = 0;
+      $erroresSec = 0;
+      foreach ($cantidadSec as $cantidad_sec) {
+        $idColeccionSec = $ids[$indexOf];
+        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
+        // echo "<br><br>".$querySec;
+        // $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+        // if($execSec['ejecucion']==true){
+        // }else{
+        //   $erroresSec++;
+        // }
+        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+        $indexOf++;
+      }
+
+      // foreach ($sentencesSecundary as $key) {
+      // echo "<br><br>";
+      // print_r($key);
+      // echo "<br><br>";
+      //   // code...
+      // }
+    }
+    // die();
+
   }
 
+
+  // echo "<br><br>";
+  // echo $query;
+  // echo "<br><br>";
+  // foreach ($sentencesSecundary as $querySec) {
+  //   echo $querySec;
+  //   echo "<br><br>";
+  // }
+
+  // die();
   $exec = $lider->modificar($query);
   if($exec['ejecucion']==true){
     $response = "1";
+    $cantidad=$totalCantidadColecciones;
 
+    $erroresSec=0;
+    foreach ($sentencesSecundary as $querySec) {
+      // echo "<br><br>".$querySec;
+      $execSec = $lider->modificar($querySec);
+      // print_r($execSec);
+      // die();
+      if($execSec['ejecucion']==true){
+      }else{
+        $erroresSec++;
+      }
+    }
+    if($erroresSec==0){
+
+    }
+
+    if(!empty($_GET['admin'])){
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
       $query2 = "INSERT INTO pedidos_historicos (id_pedidos_historicos, id_despacho, id_pedido, id_usuario, cantidad_aprobado, fecha_aprobado, hora_aprobado, estatus) VALUES (DEFAULT, {$id_despacho}, {$id}, {$_SESSION['id_usuario']}, {$cantidad}, '{$fecha_aprobado}', '{$hora_aprobado}', 1)";
       $exec2 = $lider->registrar($query2, "pedidos_historicos", "id_pedidos_historicos");
       if($exec['ejecucion']==true){
@@ -96,11 +218,12 @@ if(!empty($_POST['cantidad'])){
       }else{
         $execHist = "2";
       }
+    }
 
 
 
 
-        //            ABREE BORRAR PLANES Y PREMIOS AL APROBAR
+        //       ABREE BORRAR PLANES Y PREMIOS AL APROBAR
                           if(!empty($_GET['admin'])){
                               $id_cliente = $campAnt[0]['id_cliente'];
                               $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id_cliente}");
@@ -181,16 +304,27 @@ if(!empty($_POST['cantidad'])){
     $cantidad_total_alcanzada = 0;
     $pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
     $cantidad_acumulada = 0;
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
     foreach ($pedidosAcumulados as $keyss) {
       if(!empty($keyss['id_pedido'])){
         $cantidad_acumulada += $keyss['cantidad_aprobado'];
       }
     }
     if($cantidadClientesBajos > 0){
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
       $tot = comprobarVendedoras($clientesBajas, $id_despacho, $lider);
       $cantidad_total = $cantidad+$tot;
       // $cantidad_total = $tot;
 
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
         $totAlcanzadas = comprobarAlcanzadas($clientesBajas, $id_campana, $id_despacho, $lider);
 
         $cantidad_total_alcanzada = $cantidad_acumulada+$totAlcanzadas;
@@ -201,6 +335,10 @@ if(!empty($_POST['cantidad'])){
 
 
     /* PARA APLICAR LIDERAZGO SEGUN LAS VENDEDORAS MONTAR AQUI*/
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
     $query = "UPDATE pedidos SET cantidad_total = $cantidad_total WHERE id_pedido = $id";
     $exec = $lider->modificar($query);
     $res = aplicarLiderazgo($id_cliente, $id_despacho, $lider);
@@ -226,12 +364,17 @@ if(!empty($_POST['cantidad'])){
     $id_lider = $cliente['id_lider'];
     // echo $id_lider;
     if($id_lider > 0 ){
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+
       $request = comprobarLider($cantidad_total, $id_lider, $id_despacho, $lider);
       $requestXD = comprobarLiderAlcanzadas($cantidad_total, $id_lider, $id_campana, $id_despacho, $lider);
     }
 
     $request = "1";
-    // //Esto Nooo se Descomentara
+    // //Esto Nooo se Descomentara  
 
   }else{
     $response = "2";
@@ -251,13 +394,27 @@ if(!empty($_POST['cantidad'])){
 
     $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo = liderazgos_campana.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1");
 
+    $despachosSec=$lider->consultarQuery("SELECT * FROM despachos_secundarios WHERE id_despacho = {$id_despacho} and despachos_secundarios.estatus = 1");
+    if(count($despachosSec)>1){
+      $pedidos_secundarios = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE estatus = 1 and id_pedido = {$id}");
+      // print_r($pedidos_secundarios);
+    }
+
+
     $configgemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE nombreconfiggema = 'Por Colecciones De Factura Directa'");
         $configgema = $configgemas[0];
         $id_configgema = $configgema['id_configgema'];
         $cantidad_gemas_correspondientes = $configgema['cantidad_correspondiente'];
         $cantidad_gemas = 0;
         // if($configgema['condicion']=="Dividir"){
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
           $cantidad_gemas = $cantidad / $cantidad_gemas_correspondientes;
+
+
+
         // }
         // if($configgema['condicion']=="Multiplicar"){
         //   $cantidad_gemas = $cantidad * $cantidad_gemas_correspondientes;
@@ -270,6 +427,10 @@ if(!empty($_POST['cantidad'])){
 
         $pedidosAcumulados = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.estatus = 1 and despachos.estatus = 1 and despachos.id_campana = {$id_campana} and pedidos.id_cliente = $id_cliente");
         $cantidad_acumulada = 0;
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
         foreach ($pedidosAcumulados as $keyss) {
           if(!empty($keyss['id_pedido'])){
             $cantidad_acumulada += $keyss['cantidad_aprobado'];
@@ -279,6 +440,10 @@ if(!empty($_POST['cantidad'])){
         // echo "Cantidad Acumulada: ".$cantidad_acumulada."<br><br>";
 
         $cantidad_acumulada_separado = 0;
+
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+      // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
         foreach ($pedidosAcumulados as $keyss) {
           if(!empty($keyss['id_pedido'])){
             $cantidad_acumulada_separado = $keyss['cantidad_aprobado'];
@@ -299,6 +464,12 @@ if(!empty($_POST['cantidad'])){
 
             // echo "<br>Clausula: id_campana: {$keyss['id_campana']} | id_pedido: {$keyss['id_pedido']} | id_cliente: {$keyss['id_cliente']} | id_configgema: {$id_configgema} <br>";
             $lider->eliminar("DELETE FROM gemas WHERE id_campana = {$keyss['id_campana']} and id_pedido = {$keyss['id_pedido']} and id_cliente = {$keyss['id_cliente']} and id_configgema = {$id_configgema}");
+
+
+            // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+            // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+            // AQUI SE DEBE TOTALIZAR EL TOTAL TOMANDO EN CUENTAS LAS COLECCIONES SECUNDARIAS
+
             $query = "INSERT INTO gemas (id_gema, id_campana, id_pedido, id_cliente, id_configgema, cantidad_unidades, cantidad_configuracion, cantidad_gemas, activas, inactivas, estado, estatus) VALUES (DEFAULT, {$keyss['id_campana']}, {$keyss['id_pedido']}, {$keyss['id_cliente']}, {$id_configgema}, '{$cantidad_acumulada_separado}', '{$cantidad_gemas_correspondientes}', '{$cantidad_gemas_separado}', 0, '{$cantidad_gemas_separado}', 'Bloqueado', 1)";
             $lider->registrar($query, "gemas", "id_gema");
 
@@ -372,7 +543,11 @@ if(empty($_POST)){
         }
 
         $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo = liderazgos_campana.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1");
-
+        $despachosSec=$lider->consultarQuery("SELECT * FROM despachos_secundarios WHERE id_despacho = {$id_despacho} and despachos_secundarios.estatus = 1");
+        if(count($despachosSec)>1){
+          $pedidos_secundarios = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE estatus = 1 and id_pedido = {$id}");
+          // print_r($pedidos_secundarios);
+        }
         if(!empty($action)){
           if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
             require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -605,6 +780,5 @@ function aplicarLiderazgo($id, $id_despacho, $lider){
     }
   }
 }
-
 
 ?>

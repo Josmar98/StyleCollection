@@ -348,7 +348,7 @@
                     <span class="contenido2">
                       <!-- <a href="?<?php echo $menu ?>&route=Despachos">
                       </a> -->
-                        <?php echo $data['producto']." <small>".$data['cantidad']."</small>"; ?>
+                        <?php echo $data['elemento']." <small>".$data['cantidad']."</small>"; ?>
                     </span>
                   </td>                  
                   <td style="width:20%">

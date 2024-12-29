@@ -256,6 +256,16 @@
                             }
                           }
 
+                          $arrayt2 = [];
+                          $numCC = 0;
+                          foreach ($canjeosUnic as $canUnic) {
+                            if(!empty($canUnic['nombre_catalogo'])){
+                              $arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+                              $arrayt2[$numCC]['cantidad'] = 0;
+                              $numCC++;
+                            }
+                          }
+
                         ?>
 
                         <?php $num = 1; ?>
@@ -589,7 +599,7 @@
                                                                 if ($data2['cantidad_coleccion_plan']>0){
                                                                   if($dataNamePerdidoIdPlan==$data2['id_plan']){
                                                                     if(!empty($dataperdidos['id_premio_perdido'])){
-                                                                      $nuevoResult = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                                      $nuevoResult = ($data2['cantidad_coleccion_plan']*$data2['cantidad_coleccion']) - $dataperdidos['cantidad_premios_perdidos'];
                                                                       // ========================== // =============================== // ============================== //
                                                                       if($maxDisponiblePremiosSeleccion>0){
                                                                         if($nuevoResult>$maxDisponiblePremiosSeleccion){
@@ -813,6 +823,7 @@
                                                 for ($i=0; $i < count($arrayt); $i++) { 
                                                   if($canje['nombre_catalogo']==$arrayt[$i]['nombre']){
                                                     $arrayt[$i]['cantidad']++;
+                                                    $arrayt2[$i]['cantidad']++;
                                                   }
                                                 }
                                               }
@@ -1042,40 +1053,40 @@
                                 <td style="text-align:left;">Premios Canjeados</td>
                                 <td style="text-align:left;">
                                 <?php
-                                  $arrayt2 = [];
-                                  $numCC = 0;
-                                  foreach ($canjeosUnic as $canUnic) {
-                                    if(!empty($canUnic['nombre_catalogo'])){
-                                      $arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
-                                      $arrayt2[$numCC]['cantidad'] = 0;
-                                      $numCC++;
-                                    }
-                                  }
-                                  foreach ($canjeos as $canje){
-                                    if (!empty($canje['id_cliente'])){
-                                      $permitido2 = "0";
-                                      if($accesoBloqueo=="1"){
-                                        if(!empty($accesosEstructuras)){
-                                          foreach ($accesosEstructuras as $struct) {
-                                            if(!empty($struct['id_cliente'])){
-                                              if($struct['id_cliente']==$canje['id_cliente']){
-                                                $permitido2 = "1";
-                                              }
-                                            }
-                                          }
-                                        }
-                                      }else if($accesoBloqueo=="0"){
-                                        $permitido2 = "1";
-                                      }
-                                      if($permitido2=="1"){
-                                        for ($i=0; $i < count($arrayt2); $i++) { 
-                                          if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
-                                            $arrayt2[$i]['cantidad']++;
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
+                                  // $arrayt2 = [];
+                                  // $numCC = 0;
+                                  // foreach ($canjeosUnic as $canUnic) {
+                                  //   if(!empty($canUnic['nombre_catalogo'])){
+                                  //     $arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+                                  //     $arrayt2[$numCC]['cantidad'] = 0;
+                                  //     $numCC++;
+                                  //   }
+                                  // }
+                                  // foreach ($canjeos as $canje){
+                                  //   if (!empty($canje['id_cliente'])){
+                                  //     $permitido2 = "0";
+                                  //     if($accesoBloqueo=="1"){
+                                  //       if(!empty($accesosEstructuras)){
+                                  //         foreach ($accesosEstructuras as $struct) {
+                                  //           if(!empty($struct['id_cliente'])){
+                                  //             if($struct['id_cliente']==$canje['id_cliente']){
+                                  //               $permitido2 = "1";
+                                  //             }
+                                  //           }
+                                  //         }
+                                  //       }
+                                  //     }else if($accesoBloqueo=="0"){
+                                  //       $permitido2 = "1";
+                                  //     }
+                                  //     if($permitido2=="1"){
+                                  //       for ($i=0; $i < count($arrayt2); $i++) { 
+                                  //         if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
+                                  //           $arrayt2[$i]['cantidad']++;
+                                  //         }
+                                  //       }
+                                  //     }
+                                  //   }
+                                  // }
                                   foreach ($arrayt2 as $arr) {
                                     if($arr['cantidad']>0){
                                       echo "(".$arr['cantidad'].") ".$arr['nombre']."<br>";

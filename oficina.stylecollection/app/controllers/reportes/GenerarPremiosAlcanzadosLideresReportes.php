@@ -322,6 +322,15 @@ if($amReportesC == 1){
 							}
 						}
 
+            $arrayt2 = [];
+                          $numCC = 0;
+                          foreach ($canjeosUnic as $canUnic) {
+                            if(!empty($canUnic['nombre_catalogo'])){
+                              $arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+                              $arrayt2[$numCC]['cantidad'] = 0;
+                              $numCC++;
+                            }
+                          }
                 
 							$num = 1;
 							foreach ($pedidos as $data){ if(!empty($data['id_pedido'])){
@@ -603,7 +612,7 @@ if($amReportesC == 1){
                                                           if($dataNamePerdidoIdPlan==$data2['id_plan']){
                                                             if(!empty($dataperdidos['id_premio_perdido'])){
                                                               
-                                                              $alcanzados = $data2['cantidad_coleccion_plan'] - $dataperdidos['cantidad_premios_perdidos'];
+                                                              $alcanzados = ($data2['cantidad_coleccion_plan']*$data2['cantidad_coleccion']) - $dataperdidos['cantidad_premios_perdidos'];
                                                               // ========================== // =============================== // ============================== //
                                                               if($maxDisponiblePremiosSeleccion>0){
                                                                 if($alcanzados>$maxDisponiblePremiosSeleccion){
@@ -811,6 +820,7 @@ if($amReportesC == 1){
                           						for ($i=0; $i < count($arrayt); $i++) { 
                           							if($canje['nombre_catalogo']==$arrayt[$i]['nombre']){
                           								$arrayt[$i]['cantidad']++;
+                                          $arrayt2[$i]['cantidad']++;
                           							}
                           						}
                           					}
@@ -1017,41 +1027,41 @@ if($amReportesC == 1){
 									$info .=" <tr>
 										<td style='text-align:left;'>Premios Canjeados</td>
 										<td style='text-align:left;'>";
-											$arrayt2 = [];
-											$numCC = 0;
-											foreach ($canjeosUnic as $canUnic) {
-												if(!empty($canUnic['nombre_catalogo'])){
-													$arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
-													$arrayt2[$numCC]['cantidad'] = 0;
-													$numCC++;
-												}
-											}
-											foreach ($canjeos as $canje){
-												if (!empty($canje['id_cliente'])){
-													$permitido2 = "0";
-													if($accesoBloqueo=="1"){
-														if(!empty($accesosEstructuras)){
-															foreach ($accesosEstructuras as $struct) {
-																if(!empty($struct['id_cliente'])){
-																	if($struct['id_cliente']==$canje['id_cliente']){
-																		$permitido2 = "1";
-																	}
-																}
-															}
-														}
-													}else if($accesoBloqueo=="0"){
-														$permitido2 = "1";
-													}
+											// $arrayt2 = [];
+											// $numCC = 0;
+											// foreach ($canjeosUnic as $canUnic) {
+											// 	if(!empty($canUnic['nombre_catalogo'])){
+											// 		$arrayt2[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
+											// 		$arrayt2[$numCC]['cantidad'] = 0;
+											// 		$numCC++;
+											// 	}
+											// }
+											// foreach ($canjeos as $canje){
+											// 	if (!empty($canje['id_cliente'])){
+											// 		$permitido2 = "0";
+											// 		if($accesoBloqueo=="1"){
+											// 			if(!empty($accesosEstructuras)){
+											// 				foreach ($accesosEstructuras as $struct) {
+											// 					if(!empty($struct['id_cliente'])){
+											// 						if($struct['id_cliente']==$canje['id_cliente']){
+											// 							$permitido2 = "1";
+											// 						}
+											// 					}
+											// 				}
+											// 			}
+											// 		}else if($accesoBloqueo=="0"){
+											// 			$permitido2 = "1";
+											// 		}
 
-													if($permitido2=="1"){
-														for ($i=0; $i < count($arrayt2); $i++) { 
-															if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
-																$arrayt2[$i]['cantidad']++;
-															}
-														}
-													}
-												}
-											}
+											// 		if($permitido2=="1"){
+											// 			for ($i=0; $i < count($arrayt2); $i++) { 
+											// 				if($canje['nombre_catalogo']==$arrayt2[$i]['nombre']){
+											// 					$arrayt2[$i]['cantidad']++;
+											// 				}
+											// 			}
+											// 		}
+											// 	}
+											// }
 
 											foreach ($arrayt2 as $arr) {
 												if($arr['cantidad']>0){

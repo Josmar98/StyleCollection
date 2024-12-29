@@ -688,10 +688,65 @@
                       <div class="container" style="width:100%;margin-top:0px;">
 
                         <div class="row">
-                            <div class="col-md-4 text-left">
+                            <!-- <div class="col-md-4 text-left">
                               <br>
                               <span style="font-size:1.2em;color:#000;"><b>Precio Coleccion: </b></span>
                               <span style="font-size:1.4em;color:#0C0;"><b><?php if(!empty($precio_coleccion)){ echo number_format($precio_coleccion,2,',','.'); } ?>$</b></span>
+                            </div> -->
+                            <div class="col-md-4 text-left">
+                              <br>
+                              <table>
+                              <?php
+                                $query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE clientes.id_cliente = $id_cliente and campanas.id_campana = {$id_campana} and pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 ORDER BY pedidos.id_pedido ASC";
+                                $clientesPedidosS = $lider->consultarQuery($query); 
+                                $total_costo = 0;
+                                foreach ($clientesPedidosS as $pedidoCol) {
+                                  if(!empty($pedidoCol['id_pedido'])){
+                                    $precioColeccion = $pedidoCol['precio_coleccion'];
+                                    $cantColeccion = $pedidoCol['cantidad_aprobado_individual'];
+                                    $precioColGen = ($precioColeccion*$cantColeccion);
+                                    $total_costo+=$precioColGen;
+                                    ?>
+                                    <tr>
+                                      <td colspan="2">
+                                        <span style="font-size:1.1em;color:#000;"><b>Precio Coleccion: </b></span><br>
+                                      </td>
+                                    </tr>
+                                    <tr>
+                                      <td>
+                                        <b>Productos: </b>
+                                      </td>
+                                      <td>
+                                        <!-- <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><b><?php if(!empty($precioColeccion)){ echo "$".number_format($precioColeccion,2,',','.'); } ?> * <?php echo "(".$cantColeccion.") = "."$".number_format($precioColGen,2,',','.'); ?></b></span><br> -->
+                                        <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccion)){ echo "$".number_format($precioColeccion,2,',','.'); } ?></span> * <?php echo "(".$cantColeccion.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                      </td>
+                                    </tr>
+                                    <?php
+                                    $pedidosSecund = $lider->consultarQuery("SELECT * FROM pedidos_secundarios as pedSec, despachos_secundarios as desSec WHERE pedSec.id_despacho_sec=desSec.id_despacho_sec and pedSec.estatus=1 and pedSec.id_pedido = {$pedidoCol['id_pedido']}");
+                                    foreach ($pedidosSecund as $pedSec) {
+                                      if(!empty($pedSec['id_pedido_sec'])){
+                                        $precioColeccionSec = $pedSec['precio_coleccion_sec'];
+                                        $cantColeccionSec = $pedSec['cantidad_aprobado_sec'];
+                                        $precioColGen = ($precioColeccionSec*$cantColeccionSec);
+                                        $total_costo+=$precioColGen;
+                                        ?>
+                                        <tr>
+                                          <td>
+                                            <b><?=$pedSec['nombre_coleccion_sec'] ?>: </b>
+                                          </td>
+                                          <td>
+                                            <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                            <!-- <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><b><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?> * <?php echo "(".$cantColeccionSec.") = "."$".number_format($precioColGen,2,',','.'); ?></b></span><br> -->
+                                          </td>
+                                        </tr>
+                                      <?php
+                                      }
+                                    }
+                                  }
+                                }
+
+                              ?>
+                              </table>
                             </div>
 
                             <div class="col-md-4 text-left">
@@ -931,20 +986,19 @@
                                           if(count($bonosContado)>1){
                                             foreach ($bonosContado as $bono) {
                                               if(!empty($bono['id_bonocontado'])){
+
+                                                  $descuento_bono = $bono['descuentos_bono'];
                                                   $multi = $bono['colecciones_bono'];
-                                                  if(($multi * $despacho['contado_precio_coleccion']) == $bono['totales_bono']){
-                                                    $resultt = $bono['totales_bono'];
-                                                  }else{
-                                                    $resultt = $multi * $despacho['contado_precio_coleccion'];
-                                                  }
-                                              } 
-                                            }
-                                          }
-                                        ?>
-                                        <?php 
+                                                  $resultt = $multi * $descuento_bono;
+                                                  // if(($multi * $despacho['contado_precio_coleccion']) == $bono['totales_bono']){
+                                                  //   $resultt = $bono['totales_bono'];
+                                                  // }else{
+                                                  //   $resultt = $multi * $despacho['contado_precio_coleccion'];
+                                                  // }
+                                                  // echo $despacho['contado_precio_coleccion'];
                                         ?>
                                         <td><b>Contado</b></td>
-                                        <td><b> <?php echo "$".number_format($despacho['contado_precio_coleccion'],2,',','.'); ?></b></td>
+                                        <td><b> <?php echo "$".number_format($descuento_bono,2,',','.'); ?></b></td>
                                         <td><?php echo " x "; ?></td>
                                         <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
                                         <td><?php echo " = "; ?></td>
@@ -954,6 +1008,11 @@
                                         </b></td>
                                       </tr>
                                         <?php //$num++; 
+                                              } 
+                                            }
+                                          }
+                                        ?>
+                                        <?php 
                                   //} endif; endforeach ?>
                                     <tr>
                                         <td colspan="6" style="border-bottom:1px solid #777"></td>
@@ -984,21 +1043,32 @@
                               <br>
                               <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
                                 <tbody>
-                                <?php $num = 1; $resulttDescuentoDirecto=0;  foreach ($colss as $col): if(!empty($col['id_plan_campana'])): if(!empty($col['descuento_directo']) && $col['descuento_directo']>0){ ?>
-                                    <tr>
-                                      <?php $multi = $col['cantidad_coleccion']*$col['cantidad_coleccion_plan']; ?>
-                                      <?php $resultt = $multi*$col['descuento_directo']; ?>
-                                      <td><b><?php echo "Plan ".$col['nombre_plan']; ?></b></td>
-                                      <td><b> <?php echo "$".number_format($col['descuento_directo'],2,',','.'); ?></b></td>
-                                      <td><?php echo " x "; ?></td>
-                                      <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
-                                      <td><?php echo " = "; ?></td>
-                                      <td><b style="color:#0c0;">
-                                        <?php $resulttDescuentoDirecto+=$resultt; ?>
-                                        <?php echo "$".number_format($resultt,2,',','.'); ?>
-                                      </b></td>
-                                    </tr>
-                                <?php $num++; } endif; endforeach ?>
+                                <?php 
+                                $num = 1; $resulttDescuentoDirecto=0;
+                                  // echo count($colss);
+                                foreach ($colss as $col){
+                                  if(!empty($col['id_plan_campana'])){
+                                    if(!empty($col['descuento_directo']) && $col['descuento_directo']>0){
+                                      ?>
+                                      <tr>
+                                        <?php $multi = $col['cantidad_coleccion']*$col['cantidad_coleccion_plan']; ?>
+                                        <?php $resultt = $multi*$col['descuento_directo']; ?>
+                                        <td><b><?php echo "Plan ".$col['nombre_plan']; ?></b></td>
+                                        <td><b> <?php echo "$".number_format($col['descuento_directo'],2,',','.'); ?></b></td>
+                                        <td><?php echo " x "; ?></td>
+                                        <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
+                                        <td><?php echo " = "; ?></td>
+                                        <td><b style="color:#0c0;">
+                                          <?php $resulttDescuentoDirecto+=$resultt; ?>
+                                          <?php echo "$".number_format($resultt,2,',','.'); ?>
+                                        </b></td>
+                                      </tr>
+                                      <?php
+                                      $num++;
+                                    }
+                                  }
+                                }
+                                ?>
                                     <tr>
                                         <td colspan="6" style="border-bottom:1px solid #777"></td>
                                       </tr>
@@ -1049,24 +1119,26 @@
                                                           if($bono['tipo_bono']==$key['name']){
                                                             $multi = $bono['colecciones_bono'];
 
-                                                            $resultt = $pagosPlanesCamp['descuento_pago_plan_campana'] * $multi;
+                                                            $resultt = $bono['descuentos_bono'] * $multi;
+                                                            // $resultt = $pagosPlanesCamp['descuento_pago_plan_campana'] * $multi;
                                                             // $resultt = $bono['totales_bono'];
+                                                            ?>
+                                                            <td><b><?php echo "Plan ".$col['nombre_plan']; ?></b></td>
+                                                            <td><b> <?php echo "$".number_format($bono['descuentos_bono'],2,',','.'); ?></b></td>
+                                                            <td><?php echo " x "; ?></td>
+                                                            <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
+                                                            <td><?php echo " = "; ?></td>
+                                                            <td><b style="color:#0c0;">
+                                                              <?php $resultadoDescuentosPagosPuntual[$key['id']]+=$resultt; ?>
+                                                              <?php echo "$".number_format($resultt,2,',','.'); ?>
+                                                            </b></td>
+                                                          </tr>
+                                                            <?php
                                                           }
                                                         }
                                                       } 
                                                     }
-                                                  ?>
-                                                  <td><b><?php echo "Plan ".$col['nombre_plan']; ?></b></td>
-                                                  <td><b> <?php echo "$".number_format($pagosPlanesCamp['descuento_pago_plan_campana'],2,',','.'); ?></b></td>
-                                                  <td><?php echo " x "; ?></td>
-                                                  <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
-                                                  <td><?php echo " = "; ?></td>
-                                                  <td><b style="color:#0c0;">
-                                                    <?php $resultadoDescuentosPagosPuntual[$key['id']]+=$resultt; ?>
-                                                    <?php echo "$".number_format($resultt,2,',','.'); ?>
-                                                  </b></td>
-                                                </tr>
-                                                  <?php $num++; 
+                                                   $num++; 
                                               }
                                             }
                                           }

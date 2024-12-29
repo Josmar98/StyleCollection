@@ -1,5 +1,16 @@
 <?php
 
+$navegador = $_SERVER['HTTP_USER_AGENT'];
+$needde = "Firefox";
+$search = strpos($navegador, $needde);
+$bloquearNavegador = false;
+// if($search!=""){
+// 	$bloquearNavegador = true;
+// }
+
+// echo $navegador."<br>";
+// echo "bloquearNavegador: ".$bloquearNavegador;
+
 session_start();
 ini_set('date.timezone', 'america/caracas');
 define('SERVERURL', 'StyleCollection');
@@ -72,7 +83,11 @@ if(isset($_SESSION['recuerdame'])){
     ];
     // $claveInicial[0] = ['id' => "", 'name' => ""];
     // $claveInicial[1] = ['id' => "_senior", 'name' => "senior"];
-
+if($bloquearNavegador){
+	$url = "login";
+	require_once 'public/views/error404.php';
+	die();
+}
 if(!empty($_SESSION['id_usuario']) && !empty($_SESSION['cuenta']) && !empty($_SESSION['system_style'])){
 	$url = "Home";
 	if(!empty($_GET['route'])){
@@ -92,7 +107,7 @@ if(!empty($_SESSION['id_usuario']) && !empty($_SESSION['cuenta']) && !empty($_SE
 	if (is_file(__DIR__.'/app/controllers/index.php')) {
 		require_once __DIR__.'/app/controllers/index.php';
     }else{
-        require_once __DIR__.'public/views/error404.php';
+        require_once __DIR__.'/public/views/error404.php';
     }
 
 ####En caso de que no exista petición vía GET
@@ -101,6 +116,6 @@ if(!empty($_SESSION['id_usuario']) && !empty($_SESSION['cuenta']) && !empty($_SE
 	if (is_file(__DIR__.'/app/controllers/index.php')) {
 		require_once __DIR__.'/app/controllers/index.php';
     }else{
-        require_once __DIR__.'public/views/error404.php';
+        require_once __DIR__.'/public/views/error404.php';
     }
 }

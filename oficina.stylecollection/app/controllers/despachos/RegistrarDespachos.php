@@ -79,20 +79,21 @@ if($amDespachosR == 1){
 
   if(!empty($_POST['numero_despacho']) && empty($_POST['validarData'])){
     // print_r($_POST);
+
     $opInicial = $_GET['opInicial'];
     $cantidad_pagos = $_GET['cantPagos'];
     $opOpcional = $_GET['opOpt'];
     $inObligatorio = $_GET['opOblig'];
-
+    
     $nombre_despacho = ucwords(mb_strtolower($_POST['nombre_despacho']));
     $numero_despacho = $_POST['numero_despacho'];
     $limite_pedido = $_POST['limite_pedido'];
     $apertura_seleccion_plan = $_POST['apertura_seleccion_plan'];
     $limite_seleccion_plan = $_POST['limite_seleccion_plan'];
-
+    
     // $plan_seleccion = "primer_pago";
     $plan_seleccion = $_POST['plan_seleccion'];
-
+    
     $fechasPagos = $_POST['fechasPagos'];
     $precio_coleccion = $_POST['precio_coleccion'];
     $preciosPagos = $_POST['preciosPagos'];
@@ -107,8 +108,9 @@ if($amDespachosR == 1){
     $elementosid = $_POST['elementosid'];
     $cheking = $_POST['cheking'];
     $precios = $_POST['precios'];
+    $inventarios = $_POST['inventario'];
     /*-----------------------------------------------------------*/
-
+    // die();
     /*-----------------------------------------------------------*/
     $pagos_despacho = [];
     $numIndex = 0;
@@ -206,7 +208,16 @@ if($amDespachosR == 1){
             if($id_producto_key == $id_cantidad_key){
               $cantidad = $cantidad_productos[$numIndex];
               $precio_producto = $precios[$numIndex];
-        	  	$query = "INSERT INTO colecciones (id_coleccion, id_despacho, id_producto, cantidad_productos, precio_producto, estatus) VALUES (DEFAULT, $id_despacho, $id_producto_key, $cantidad, $precio_producto, 1)";
+              
+              $nameInventario = $inventarios[$numIndex];
+              $posMercancia = strpos($id_cantidad_key,'m');
+              if(strlen($posMercancia)==0){
+                $id_element = $id_producto_key;
+              }else{
+                $id_element = preg_replace("/[^0-9]/", "", $id_cantidad_key);
+              }
+
+        	  	$query = "INSERT INTO colecciones (id_coleccion, id_despacho, id_producto, cantidad_productos, precio_producto, tipo_inventario_coleccion, estatus) VALUES (DEFAULT, $id_despacho, $id_element, $cantidad, $precio_producto, '{$nameInventario}', 1)";
         	  	$exec = $lider->registrar($query, "colecciones", "id_coleccion");
         	  	if($exec['ejecucion']==true ){
         	  		$response = "1";
@@ -235,6 +246,7 @@ if($amDespachosR == 1){
     $despachosActual = $lider->consultarQuery("SELECT * from despachos WHERE estatus = 1 and id_campana = $id_campana");
     $despachosActual = Count($despachosActual)-1;
     $productos = $lider->consultarQuery("SELECT * from productos WHERE estatus = 1");
+    $mercancia = $lider->consultarQuery("SELECT * from mercancia WHERE estatus = 1 ORDER BY mercancia asc");
 
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
@@ -257,6 +269,7 @@ if($amDespachosR == 1){
     $despachosActual = $lider->consultarQuery("SELECT * from despachos WHERE estatus = 1 and id_campana = $id_campana");
     $despachosActual = Count($despachosActual)-1;
     $productos = $lider->consultarQuery("SELECT * from productos WHERE estatus = 1 ORDER BY producto asc");
+    $mercancia = $lider->consultarQuery("SELECT * from mercancia WHERE estatus = 1 ORDER BY mercancia asc");
     
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {

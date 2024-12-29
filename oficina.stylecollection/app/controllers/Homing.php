@@ -15,7 +15,21 @@
 
 	$despachos=$lider->consultarQuery("SELECT * FROM despachos WHERE estatus = 1 and id_campana = $id_campana");
 	$pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_campana = {$id_campana} and despachos.estatus = 1 and pagos_despachos.estatus = 1");
-	$colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = $id_campana");
+	$coleccionesP=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto as elemento, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = $id_campana and colecciones.tipo_inventario_coleccion='Productos' ORDER BY producto ASC;");
+	$coleccionesM=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, mercancia as elemento, descripcion_mercancia, mercancia.medidas_mercancia as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, mercancia WHERE despachos.id_despacho = colecciones.id_despacho and mercancia.id_mercancia = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and despachos.id_campana = $id_campana and colecciones.tipo_inventario_coleccion='Mercancia' ORDER BY mercancia ASC;");
+	$colecciones=[];
+	foreach($coleccionesP as $key){
+		if(!empty($key['id_coleccion'])){
+			$colecciones[count($colecciones)]=$key;
+		}
+	}
+	foreach($coleccionesM as $key){
+		if(!empty($key['id_coleccion'])){
+			$colecciones[count($colecciones)]=$key;
+		}
+	}
+	$colecciones[count($colecciones)]=['ejecucion'=>true];
+	// die();
 
 	$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
 	$estado_campana = $estado_campana2[0]['estado_campana'];
@@ -41,10 +55,9 @@ if(empty($_POST)){
 			    require_once 'public/views/error404.php';
 			}
 		}
-
 	}else{
-			    require_once 'public/views/error404.php';
-			}
+		require_once 'public/views/error404.php';
+	}
 }
 
 

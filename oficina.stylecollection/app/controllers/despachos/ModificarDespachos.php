@@ -92,6 +92,7 @@ if($amDespachosE == 1){
       $elementosid = $_POST['elementosid'];
       $cheking = $_POST['cheking'];
       $precios = $_POST['precios'];
+      $inventarios = $_POST['inventario'];
       /*-----------------------------------------------------------*/
       /*-----------------------------------------------------------*/
       $pagos_despacho = [];
@@ -222,21 +223,36 @@ if($amDespachosE == 1){
             }
 
             $numIndex = 0;
+            $errorsss = 0;
             foreach ($elementosid as $id_producto_key) {
-                foreach ($cheking as $id_cantidad_key) {
-                    if($id_producto_key == $id_cantidad_key){
-                      $cantidad = $cantidad_productos[$numIndex];
-                      $precio_producto = $precios[$numIndex];
-                      $query = "INSERT INTO colecciones (id_coleccion, id_despacho, id_producto, cantidad_productos, precio_producto, estatus) VALUES (DEFAULT, $id, $id_producto_key, $cantidad, $precio_producto, 1)";
-                	  	$exec = $lider->registrar($query, "colecciones", "id_coleccion");
-                	  	if($exec['ejecucion']==true ){
-                	  		$response = "1";
-                	  	}else{
-                	  		$response = "2";
-                	  	}
-                    }   
+              foreach ($cheking as $id_cantidad_key) {
+                if($id_producto_key == $id_cantidad_key){
+                  $cantidad = $cantidad_productos[$numIndex];
+                  $precio_producto = $precios[$numIndex];
+                  
+                  $nameInventario = $inventarios[$numIndex];
+                  $posMercancia = strpos($id_cantidad_key,'m');
+                  if(strlen($posMercancia)==0){
+                    $id_element = $id_producto_key;
+                  }else{
+                    $id_element = preg_replace("/[^0-9]/", "", $id_cantidad_key);
+                  }
+
+                  $query = "INSERT INTO colecciones (id_coleccion, id_despacho, id_producto, cantidad_productos, precio_producto, tipo_inventario_coleccion, estatus) VALUES (DEFAULT, $id, $id_element, $cantidad, $precio_producto, '{$nameInventario}', 1)";
+                  $exec = $lider->registrar($query, "colecciones", "id_coleccion");
+                  // print_r($exec);
+                  if($exec['ejecucion']==true ){
+                  }else{
+                    $errorsss++;
+                  }
                 }
-               $numIndex++;
+              }
+              $numIndex++;
+            }
+            if($errorsss==0){
+              $response = "1";
+            }else{
+              $response = "2";
             }
             if($response=="1"){      
               if(!empty($modulo) && !empty($accion)){
@@ -254,10 +270,13 @@ if($amDespachosE == 1){
       }else{
         $response = "2";
       }
-
-      $productos = $lider->consultarQuery("SELECT * FROM productos, colecciones WHERE productos.id_producto = colecciones.id_producto and colecciones.id_despacho = $id and productos.estatus = 1 ORDER BY producto asc");
+      // echo $response;
+      // die();
+      $productos = $lider->consultarQuery("SELECT * from productos WHERE estatus = 1 ORDER BY producto asc");
+      $mercancia = $lider->consultarQuery("SELECT * from mercancia WHERE estatus = 1 ORDER BY mercancia asc");
 
       $despachos=$lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id");
+      $pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id} and despachos.estatus = 1 and pagos_despachos.estatus = 1");
       $colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and colecciones.id_despacho = $id");
       $despacho = $despachos[0];
       if(!empty($action)){
@@ -283,6 +302,7 @@ if($amDespachosE == 1){
       // $despachosActual = Count($despachosActual)-1;
       // $productos = $lider->consultarQuery("SELECT * FROM productos, colecciones WHERE productos.id_producto = colecciones.id_producto and colecciones.id_despacho = $id and productos.estatus = 1 ORDER BY producto asc");
       $productos = $lider->consultarQuery("SELECT * from productos WHERE estatus = 1 ORDER BY producto asc");
+      $mercancia = $lider->consultarQuery("SELECT * from mercancia WHERE estatus = 1 ORDER BY mercancia asc");
 
       $despachos=$lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id");
       $pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id} and despachos.estatus = 1 and pagos_despachos.estatus = 1");

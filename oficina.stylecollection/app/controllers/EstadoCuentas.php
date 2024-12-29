@@ -194,10 +194,12 @@ if($permitir=="1"){
 							if(!empty($key['id_despacho'])){
 								if(!empty($totalesDeudas[$key['id_despacho']])){
 									$totalesDeudas[$key['id_despacho']]['cantidad_aprobado']+=$key['cantidad_aprobado'];
+									$totalesDeudas[$key['id_despacho']]['cantidad_aprobado_individual']+=$key['cantidad_aprobado_individual'];
 								}else{
 									$totalesDeudas[$key['id_despacho']]['id_despacho'] = $key['id_despacho'];
 									$totalesDeudas[$key['id_despacho']]['precio_coleccion']=$key['precio_coleccion'];
 									$totalesDeudas[$key['id_despacho']]['cantidad_aprobado']=$key['cantidad_aprobado'];
+									$totalesDeudas[$key['id_despacho']]['cantidad_aprobado_individual']=$key['cantidad_aprobado_individual'];
 									$totalesDeudas[$key['id_despacho']]['numero_pedido']=$key['numero_despacho'];
 								}
 							}

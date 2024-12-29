@@ -27,21 +27,6 @@ foreach ($accesos as $access) {
         $amProductosB = 1;
       }
     }
-    if($access['nombre_modulo'] == "Fragancias"){
-      $amFragancias = 1;
-      if($access['nombre_permiso'] == "Registrar"){
-        $amFraganciasR = 1;
-      }
-      if($access['nombre_permiso'] == "Ver"){
-        $amFraganciasC = 1;
-      }
-      if($access['nombre_permiso'] == "Editar"){
-        $amFraganciasE = 1;
-      }
-      if($access['nombre_permiso'] == "Borrar"){
-        $amFraganciasB = 1;
-      }
-    }
   }
 }
 if($amProductosC == 1){
@@ -49,9 +34,9 @@ if($amProductosC == 1){
 	$productos=$lider->consultarQuery("SELECT * FROM productos WHERE estatus = 1 ORDER BY producto asc;");
 
 	if(!empty($_GET['permission']) && $_GET['permission'] == 1 ){
-		if($amFraganciasB == 1){
+		if($amProductosB == 1){
 
-			$query = "UPDATE productos SET estatus = 0 WHERE id_producto = $id";
+			$query = "UPDATE productos SET estatus = 0 WHERE codigo_producto = '$cod'";
 			$res1 = $lider->eliminar($query);
 
 			if($res1['ejecucion']==true){
@@ -73,7 +58,7 @@ if($amProductosC == 1){
 
 
 	if(empty($_POST)){
-		$fragancias = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
+		// $fragancias = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
 		
 		if($productos['ejecucion']==1){
 			if(!empty($action)){

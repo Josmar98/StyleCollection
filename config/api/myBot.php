@@ -1,11 +1,11 @@
 <?php
 
 
-if(is_file('../../app/models/modelsIndex.php')){
-	require_once '../../app/models/modelsIndex.php';
-}
+// if(is_file('../../app/models/modelsIndex.php')){
+// 	require_once '../../app/models/modelsIndex.php';
+// }
 
-$lider = new Models();
+// $lider = new Models();
 
 
 $TOKEN = "1642240807:AAGFgDG4c4SNMR8YeqF9uoHD6j-UJUoT1u8";

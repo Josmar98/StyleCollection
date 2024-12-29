@@ -172,8 +172,8 @@ if($estado_campana=="1"){
 			}
 			$nombreanalista = $notaP['nombreanalista'];
 			$nume = $notaP['numero_nota_entrega'];
-			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE productos.estatus = 1");
-			$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1");
+			$productos = $lider->consultarQuery("SELECT * FROM productos");
+			$premios = $lider->consultarQuery("SELECT * FROM premios");
 
 			$opcionesEntregas = $lider->consultarQuery("SELECT * FROM opcionesentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 			if(empty($_GET['cant'])){
@@ -252,11 +252,11 @@ if($estado_campana=="1"){
 			}
 			$nombreanalista = $notaP['nombreanalista'];
 			$nume = $notaP['numero_nota_entrega'];
-			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE productos.estatus = 1");
-			$premios = $lider->consultarQuery("SELECT * FROM premios WHERE premios.estatus = 1");
+			$productos = $lider->consultarQuery("SELECT * FROM productos");
+			$premios = $lider->consultarQuery("SELECT * FROM premios");
 
 			$opcionesEntregas = $lider->consultarQuery("SELECT * FROM opcionesentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
-			if(empty($_GET['cant'])){
+			// if(empty($_GET['cant'])){
 				$_SESSION['cargaTemporalNotaPersonalizadaMod'] = [];
 				$nx = 0;
 				foreach ($opcionesEntregas as $key) {
@@ -276,7 +276,9 @@ if($estado_campana=="1"){
 						$nx++;
 					}
 				}
-			}
+			// }
+
+			// print_r($_SESSION['cargaTemporalNotaPersonalizadaMod']);
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

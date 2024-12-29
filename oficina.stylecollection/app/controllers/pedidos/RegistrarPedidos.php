@@ -55,6 +55,16 @@ if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
   // print_r($_POST);
   // $nombre = ucwords(mb_strtolower($_POST['nombre']));
   $cantidad = $_POST['cantidad'];
+  if(!empty($_POST['cantidadSec'])){
+    $cantidadSec = $_POST['cantidadSec'];
+  }else{
+    $cantidadSec = [];
+  }
+  if(!empty($_POST['idColSec'])){
+    $ids = $_POST['idColSec'];
+  }else{
+    $ids = [];
+  }
   if(!empty($_POST['cliente']) && !empty($_GET['admin']) && ($_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Analista Supervisor" || $_SESSION['nombre_rol'] == "Analista" )){
     $id_user = $_POST['cliente'];
   }else{
@@ -65,24 +75,43 @@ if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
   $buscar = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_cliente = {$id_user} and id_despacho = {$id_despacho}");
   if(count($buscar)<2){
 
-  $query = "INSERT INTO pedidos (id_pedido, id_cliente, id_despacho, cantidad_pedido, fecha_pedido, hora_pedido, cantidad_aprobado, cantidad_total, visto_admin, estatus) VALUES (DEFAULT, $id_user, $id_despacho, $cantidad, '$fecha_pedido', '$hora_pedido', 0, 0, 0, 1)";
+    $query = "INSERT INTO pedidos (id_pedido, id_cliente, id_despacho, cantidad_pedido, fecha_pedido, hora_pedido, cantidad_aprobado, cantidad_aprobado_individual, cantidad_total, visto_admin, estatus) VALUES (DEFAULT, $id_user, $id_despacho, $cantidad, '$fecha_pedido', '$hora_pedido', 0, 0, 0, 0, 1)";
+    // echo $id_user;
+    // die();
   
     $exec = $lider->registrar($query, "pedidos", "id_pedido");
     if($exec['ejecucion']==true){
-      $response = "1";
-              if(!empty($modulo) && !empty($accion)){
-                $id = $exec['id'];
-                $elementos = array(
-                        "Nombres"=> [0=>"Id", 1=>ucwords("Id Cliente"), 2=> ucwords("Id despacho"), 3=> ucwords("Cantidad de Colecciones"), 4=>ucwords("Estatus")],
-                        "Anterior"=> "",
-                        "Actual"=> [ 0=> $id, 1=> $id_user, 2=> $id_despacho , 3=>$cantidad, 4=>"1"]
-                      );
-                  $elementosJson = json_encode($elementos, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
-                $fecha = date('Y-m-d');
-                $hora = date('H:i:a');
-                $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora, elementos) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Pedidos', 'Solicitar', '{$fecha}', '{$hora}', '{$elementosJson}')";
-                $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
-              }
+      // $response = "1";
+      $id_pedido = $exec['id'];
+      $indexOf = 0;
+      $erroresSec = 0;
+      foreach ($cantidadSec as $cantidad_sec) {
+        $idColeccionSec = $ids[$indexOf];
+        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
+        $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+        if($execSec['ejecucion']==true){
+        }else{
+          $erroresSec++;
+        }
+        $indexOf++;
+      }
+      if($erroresSec==0){
+        $response="1";
+        if(!empty($modulo) && !empty($accion)){
+          $id = $exec['id'];
+          $elementos = array(
+                  "Nombres"=> [0=>"Id", 1=>ucwords("Id Cliente"), 2=> ucwords("Id despacho"), 3=> ucwords("Cantidad de Colecciones"), 4=>ucwords("Estatus")],
+                  "Anterior"=> "",
+                  "Actual"=> [ 0=> $id, 1=> $id_user, 2=> $id_despacho , 3=>$cantidad, 4=>"1"]
+                );
+            $elementosJson = json_encode($elementos, JSON_UNESCAPED_UNICODE, JSON_UNESCAPED_SLASHES);
+          $fecha = date('Y-m-d');
+          $hora = date('H:i:a');
+          $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora, elementos) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Pedidos', 'Solicitar', '{$fecha}', '{$hora}', '{$elementosJson}')";
+          $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+        }
+      }
+
     }else{
       $response = "2";
     }
@@ -95,6 +124,7 @@ if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
     $clientesConPedido = $lider->consultarQuery("SELECT clientes.id_cliente, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cedula, sexo, fecha_nacimiento, telefono, correo, clientes.estatus FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = $id_despacho and clientes.estatus = 1");
   }
   $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo = liderazgos_campana.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1");
+  $despachosSec=$lider->consultarQuery("SELECT * FROM despachos_secundarios WHERE id_despacho = {$id_despacho} and despachos_secundarios.estatus = 1");
   if(!empty($action)){
     if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
       require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -119,6 +149,7 @@ if(empty($_POST)){
     $clientesConPedido = $lider->consultarQuery("SELECT clientes.id_cliente, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, cedula, sexo, fecha_nacimiento, telefono, correo, clientes.estatus FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = $id_despacho and clientes.estatus = 1");
   }
   $liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo = liderazgos_campana.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1");
+  $despachosSec=$lider->consultarQuery("SELECT * FROM despachos_secundarios WHERE id_despacho = {$id_despacho} and despachos_secundarios.estatus = 1");
   if(!empty($action)){
     if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
       require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

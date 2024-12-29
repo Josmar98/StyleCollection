@@ -27,6 +27,12 @@
 		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 and liderazgos_campana.id_despacho = {$id_despacho}";
 
 		$liderazgosAll = $lider->consultarQuery($query);
+
+		$despachosSec=$lider->consultarQuery("SELECT * FROM despachos_secundarios WHERE id_despacho = {$id_despacho} and despachos_secundarios.estatus = 1");
+        if(count($despachosSec)>1){
+          $pedidos_secundarios = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE estatus = 1 and id_pedido = {$id}");
+          // print_r($pedidos_secundarios);
+        }
 		if(!empty($id)){
 
 			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido = $id");
@@ -113,6 +119,9 @@
 							$cantidad_total_alcanzada = $cantidad_acumulada;
 						}
 						$sumatoria_cantidad_total_real = $cantidad_total_alcanzada;
+						// echo "<br>".$cantidad_acumulada."<br>";
+						// echo "<br>".$cantidad_total_alcanzada."<br>";
+						// echo "<br>".$sumatoria_cantidad_total_real."<br>";
 						#============================================================#
 						
 						if($_SESSION['tomandoEnCuentaLiderazgo'] == "1"){

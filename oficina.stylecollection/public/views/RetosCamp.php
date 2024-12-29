@@ -55,49 +55,71 @@
                   <th>---</th>
                   <?php endif; ?>
                   <th>Nombre del Reto</th>
-                  <th>Colecciones</th>
+                  <th>Premios</th>
                 </tr>
                 </thead>
                 <tbody>
                 <?php 
-                $num = 1;
-                // print_r($planes_campana);
-                foreach ($retos_campana as $data):
-                if(!empty($data['id_reto_campana'])):  
-                ?>
-                <tr>
-                  <td style="width:5%">
-                    <span class="contenido2">
-                      <?php echo $num++; ?>
-                    </span>
-                  </td>
-                  <?php if ($amPremioscampE==1||$amPremioscampB==1): ?>
-                  <td >
-                    <?php if ($amPremioscampE==1): ?>
-                      <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_reto_campana']?>">
-                        <span class="fa fa-wrench"></span>
-                      </button>
-                    <?php endif; ?>
-                    <?php if ($amPremioscampB==1): ?>
-                      <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_reto_campana'] ?>&permission=1">
-                          <span class="fa fa-trash"></span>
-                      </button>
-                    <?php endif; ?>
-                  </td>
-                  <?php endif; ?>
-                  <td style="width:40%">
-                    <span class="contenido2">
-                      <?php echo $data['nombre_premio']; ?>
-                    </span>
-                  </td>
-                  <td style="width:40%">
-                    <span class="contenido2">
-                      <?php echo $data['cantidad_coleccion']; ?> Colecciones
-                    </span>
-                  </td>
-                </tr>
-                <?php
-               endif; endforeach;
+                  $num = 1;
+                  // print_r($planes_campana);
+                  foreach ($retos_campana as $data){
+                    if(!empty($data['id_reto_campana'])){
+                      ?>
+                        <tr>
+                          <td style="width:5%">
+                            <span class="contenido2">
+                              <?php echo $num++; ?>
+                            </span>
+                          </td>
+                          <?php if ($amPremioscampE==1||$amPremioscampB==1){ ?>
+                          <td >
+                            <?php if ($amPremioscampE==1){ ?>
+                              <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&id=<?=$data['id_reto_campana']?>">
+                                <span class="fa fa-wrench"></span>
+                              </button>
+                            <?php } ?>
+                            <?php if ($amPremioscampB==1){ ?>
+                              <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_reto_campana'] ?>&permission=1">
+                                  <span class="fa fa-trash"></span>
+                              </button>
+                            <?php } ?>
+                          </td>
+                          <?php } ?>
+                          <td style="width:40%">
+                            <span class="contenido2">
+                              <?php echo $data['nombre_premio']; ?>
+                              <br>
+                              <small>(<?php echo $data['num_coleccionesreto']; ?> Colecciones)</small>
+                            </span>
+                          </td>
+                          <td style="width:40%">
+                            <span class="contenido2">
+                              <?php 
+                                $id_premios_busqueda = $data['id_premio'];
+                                $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                foreach($premiosinv as $pinv){
+                                  if(!empty($pinv['id_premio_inventario'])){
+                                    if($pinv['tipo_inventario']=="Productos"){
+                                      $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                    }
+                                    if($pinv['tipo_inventario']=="Mercancia"){
+                                      $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                    }
+                                    $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                    foreach ($inventariosMos as $invm) {
+                                      if(!empty($invm[0])){
+                                        echo $invm['unidades_inventario']." ".$invm['elemento']."<br>";
+                                      }
+                                    }
+                                  }
+                                }
+                              ?>
+                            </span>
+                          </td>
+                        </tr>
+                      <?php
+                    }
+                  }
                 ?>
                 </tbody>
                 <tfoot>
@@ -107,7 +129,7 @@
                   <th>---</th>
                   <?php endif; ?>
                   <th>Nombre del Reto</th>
-                  <th>Colecciones</th>
+                  <th>Premios</th>
                 </tr>
                 </tfoot>
               </table>

@@ -28,6 +28,7 @@ if($amInventarioR){
 	if(!empty($_POST['validarData'])){
 		$codRif=$_POST['codRif'];
 		$rif=$_POST['rif'];
+
 		$query = "SELECT * FROM proveedores_inventarios WHERE codRif = '$codRif' and rif = '$rif'";
 		$res1 = $lider->consultarQuery($query);
 		if($res1['ejecucion']==true){
@@ -59,7 +60,11 @@ if($amInventarioR){
 		$rif=$_POST['rif'];
 		$nombre=mb_strtoupper($_POST['nombre']);
 		$tipo=json_encode($_POST['tipoInv']);
-		$query = "INSERT INTO proveedores_inventarios (id_proveedor_inventario, codRif, rif, nombreProveedor, tipoInventario, estatus) VALUES (DEFAULT, '$codRif', '$rif', '$nombre', '$tipo', 1)";
+		$cod_tlfn = $_POST['cod_tlfn'];
+		$telefono = $_POST['telefono'];
+		$direccion = $_POST['direccion'];
+
+		$query = "INSERT INTO proveedores_inventarios (id_proveedor_inventario, codRif, rif, nombreProveedor, tipoInventario, cod_tlfn, telefono, direccion, estatus) VALUES (DEFAULT, '{$codRif}', '{$rif}', '{$nombre}', '{$tipo}', '{$cod_tlfn}', '{$telefono}', '{$direccion}', 1)";
 		$exec = $lider->registrar($query, "proveedores_inventarios", "id_proveedor_inventario");
 		
 		// print_r($exec);

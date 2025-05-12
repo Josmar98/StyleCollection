@@ -246,43 +246,112 @@
                                       $cantTxtPrem = $dataPrem[$namecantTxtPrem];
                                     }
                                     if($cantTxtPrem>0){
-                                      echo "(".$cantTxtPrem.") ".$dataPrem[$nameTxtPrem]."<br>";
+                                      echo "(".$cantTxtPrem.") ".$dataPrem[$nameTxtPrem];
+                                      $id_premios_busqueda = $dataPrem['id_premio'];
+                                      $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                      $iter = 1;
+                                      echo " => <small>[";
+                                      foreach($premiosinv as $pinv){
+                                        if(!empty($pinv['id_premio_inventario'])){
+                                          if($pinv['tipo_inventario']=="Productos"){
+                                            $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                          }
+                                          if($pinv['tipo_inventario']=="Mercancia"){
+                                            $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                          }
+                                          $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                          foreach ($inventariosMos as $invm) {
+                                            if(!empty($invm[0])){
+                                              echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                              if($iter < (count($premiosinv)-1)){
+                                                echo " | ";
+                                              }
+
+                                              // echo "<br>";
+                                            }
+                                          }
+                                        }
+                                        $iter++;
+                                      }
+                                      echo "]</small>";
+                                      echo "<br>";
                                     }
                                   }
                                 }
-                                      if($data['opcion_plan']==1){
-                                        if($sql2!=""){
-                                          $premios_planes_seleccionados_opcion = $lider->consultarQuery($sql2);
+
+
+
+                                if($data['opcion_plan']==1){
+                                  if($sql2!=""){
+                                    // echo $sql2;
+                                    $premios_planes_seleccionados_opcion = $lider->consultarQuery($sql2);
+                                  }
+                                ?>
+                                <button class="btn-modal-segunda btn" id="<?=$data['id_plan']; ?>" style="background:#a4c;color:#FFF;float:right;margin-top:-5%;"><span class="fa fa-file-text"></span></button>
+                                <div 
+                                  class="modal-segunda-opciones d-none" 
+                                  id="modal-segunda-opcion<?=$data['id_plan']; ?>" 
+                                  style="background:#00000077;border-radius:10px;position:absolute;right:2%;margin-top:10px;max-width:50%;max-height:40vh;"
+                                  >
+                                  <div style="background:#DDD;box-shadow:0px 0px 5px #FFF;border:1px solid #ccc;border-radius:10px;width:100%;height:100%;padding:15px;">
+                                  <?php
+                                    // print_r($premios_planes_seleccionados_opcion);
+                                    echo "<center><b>Segunda opción del plan ".$data['nombre_plan']."</b></center><br>";
+                                    // foreach ($premios_planes_seleccionados_opcion as $key) {
+                                    //   print_r($key);
+                                    //   echo "<br><br><br>";
+                                    // }
+                                    foreach ($premios_planes_seleccionados_opcion as $dataPremOp) {
+                                      if(!empty($dataPremOp['id_plan_campana'])){
+                                        if($namecantTxtPrem==""){
+                                          $cantTxtPrem = $colsss;
+                                        }else{
+                                          $cantTxtPrem = $dataPremOp[$namecantTxtPrem];
                                         }
-                                      ?>
-                                      <button class="btn-modal-segunda btn" id="<?=$data['id_plan']; ?>" style="background:#a4c;color:#FFF;float:right;margin-top:-5%;"><span class="fa fa-file-text"></span></button>
-                                      <div 
-                                        class="modal-segunda-opciones d-none" 
-                                        id="modal-segunda-opcion<?=$data['id_plan']; ?>" 
-                                        style="background:#00000077;border-radius:10px;position:absolute;right:2%;margin-top:10px;max-width:50%;max-height:40vh;"
-                                        >
-                                        <div style="background:#DDD;box-shadow:0px 0px 5px #FFF;border:1px solid #ccc;border-radius:10px;width:100%;height:100%;padding:15px;">
-                                        <?php
-                                          // print_r($premios_planes_seleccionados_opcion);
-                                          echo "<center><b>Segunda opción del plan ".$data['nombre_plan']."</b></center><br>";
-                                          foreach ($premios_planes_seleccionados_opcion as $dataPremOp) {
-                                            if(!empty($dataPremOp['id_plan_campana'])){
-                                              if($namecantTxtPrem==""){
-                                                $cantTxtPrem = $colsss;
-                                              }else{
-                                                $cantTxtPrem = $dataPremOp[$namecantTxtPrem];
+
+                                        // echo $cantTxtPrem;
+                                        // print_r($dataPremOp);
+                                        // echo "<br><br>";
+
+                                        if($cantTxtPrem>0){
+                                          echo "-> (".$cantTxtPrem.") ".$dataPremOp[$nameTxtPrem];
+                                          $id_premios_busqueda = $dataPrem['id_premio'];
+                                          $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                          $iter = 1;
+                                          echo " => <small>[";
+                                          foreach($premiosinv as $pinv){
+                                            if(!empty($pinv['id_premio_inventario'])){
+                                              if($pinv['tipo_inventario']=="Productos"){
+                                                $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
                                               }
-                                              if($cantTxtPrem>0){
-                                                echo "-> (".$cantTxtPrem.") ".$dataPremOp[$nameTxtPrem]."<br>";
+                                              if($pinv['tipo_inventario']=="Mercancia"){
+                                                $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                              }
+                                              $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                              foreach ($inventariosMos as $invm) {
+                                                if(!empty($invm[0])){
+                                                  echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                                  if($iter < (count($premiosinv)-1)){
+                                                    echo " | ";
+                                                  }
+
+                                                  // echo "<br>";
+                                                }
                                               }
                                             }
+                                            $iter++;
                                           }
-
-                                        ?>
-                                        </div>
-                                      </div>
-                                      <?php
+                                          echo "]</small>";
+                                          echo "<br>";
+                                        }
                                       }
+                                    }
+
+                                  ?>
+                                  </div>
+                                </div>
+                                <?php
+                                }
                               }
                             ?>
                           </td>

@@ -94,9 +94,11 @@
                     <span class="contenido2">
                       <?php
                         $nElement = 1;
+                        $id_premios_busqueda = 0;
                         foreach ($promocion_productos as $dataProd){ 
                           if(!empty($dataProd['id_promocion'])){
                             if($dataProd['id_promocion']==$data['id_promocion']){
+                              $id_premios_busqueda=$dataProd['id_producto'];
                               // print_r($dataProd);
                               if($dataProd['tipo_producto']=="Producto"){
                                 foreach ($productos as $prod) {
@@ -127,29 +129,20 @@
                     <span class="contenido2" style="">
                       <?php
                         $nElement = 1;
-                        foreach ($promocion_premios as $dataPrem){ 
-                          if(!empty($dataPrem['id_promocion'])){
-                            if($dataPrem['id_promocion']==$data['id_promocion']){
-                              // print_r($dataPrem);
-                              if($dataPrem['tipo_premio']=="Producto"){
-                                foreach ($productos as $prod) {
-                                  if(!empty($prod['id_producto'])){
-                                    if($prod['id_producto']==$dataPrem['id_premio']){
-                                      echo "<small>".$nElement."-".$prod['producto']."</small><br>";
-                                    }
-                                  }
-                                }
+                        $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                        foreach($premiosinv as $pinv){
+                          if(!empty($pinv['id_premio_inventario'])){
+                            if($pinv['tipo_inventario']=="Productos"){
+                              $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                            }
+                            if($pinv['tipo_inventario']=="Mercancia"){
+                              $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                            }
+                            $inventariosMos = $lider->consultarQuery($queryMosInv);
+                            foreach ($inventariosMos as $invm) {
+                              if(!empty($invm[0])){
+                                echo $invm['unidades_inventario']." ".$invm['elemento']."<br>";
                               }
-                              if($dataPrem['tipo_premio']=="Premio"){
-                                foreach ($premios as $prem) {
-                                  if(!empty($prem['id_premio'])){
-                                    if($prem['id_premio']==$dataPrem['id_premio']){
-                                      echo "<small>".$nElement."-".$prem['nombre_premio']."</small><br>";
-                                    }
-                                  }
-                                }
-                              }
-                              $nElement++;
                             }
                           }
                         }

@@ -127,9 +127,9 @@
 
                 $canjeosPersonalesCliente = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and id_cliente = {$id_cliente_personal_cliente} and canjeos.estatus = 1");
                 foreach ($canjeosPersonalesCliente as $canje) {
-                  if(!empty($canje['cantidad_gemas'])){
-                    // $gemasCanjeadasCliente += $canje['cantidad_gemas'];
-                    $gemasCanjeadasCliente += ($canje['unidades'] * $canje['cantidad_gemas']);
+                  if(!empty($canje['precio_gemas'])){
+                    // $gemasCanjeadasCliente += $canje['precio_gemas'];
+                    $gemasCanjeadasCliente += ($canje['unidades'] * $canje['precio_gemas']);
 
                   }
                 }
@@ -641,7 +641,8 @@
                       <div class="col-xs-12">
                         <label for="cantidad"><span style="color:#000;">Cantidad (Colección: Productos)</span></label>
                         <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
-                        <input class="form-control cantidadesT" id="cantidad" step="1" name="cantidad" min="<?=$liderazgoTempxd['minima_cantidad']; ?>" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
+                        <!-- min="<?=$liderazgoTempxd['minima_cantidad']; ?>"  -->
+                        <input class="form-control cantidadesT" id="cantidad" step="1" name="cantidad" max="<?php echo $numMax; ?>" type="number" value="<?php echo $pedido['cantidad_pedido'] ?>" placeholder="Cantidad de coleccion para aprobar" <?php if($_SESSION['nombre_rol']=="Administrador"||$_SESSION['nombre_rol']=="Superusuario"||$_SESSION['nombre_rol']=="Analista Supervisor2"){}else{echo "readonly";} ?> <?php if($estado_campana=="0"){ echo "disabled"; } ?> >
                       </div>
                       <?php
                       if(count($despachosSec)>1){
@@ -734,29 +735,54 @@
                       <?php endif; ?>
                         <b style="color:#000 !important">Abonado</b>
                         <hr style="margin:0px;padding:0px;border-bottom:1px solid #ccc">
-                        <h4 style="color:#00FF00 !important"><b>$<?=number_format($abonado,2, ",",".")?></b></h4>
+                        <h4 style="color:#009900 !important"><b>$<?=number_format($abonado,2, ",",".")?></b></h4>
                       </a>
                     </div>
                   </div>
 
+
+                  <?php
+                    $coleccionesFacturadas = $lider->consultarQuery("SELECT * FROM despachos_facturados WHERE id_pedido={$id}");
+                  ?>
                   <div class="" style="background:<?=$color_liderazgo?>33;border:1px solid #EFEFEF;color:#444;width:100%;padding:15px 30px 0px 30px;border-radius:5px">
-                    <?php  if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
-                      <b style="float:left;"><u><a href="?<?php echo $menu ?>&route=Pedidos&action=Eliminar&id=<?php echo $pedido['id_pedido'] ?>&admin=1"><i>Eliminar Colecciones Aprobadas</i></a></u></b>
-                    <?php } ?>
-                    <?php //if(Count($colss)<2): ?>
-                      <?php  if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
-                        <!-- <div class="hidden-md hidden-sm hidden-lg"><br></div> -->
-                        <div class="hidden-md hidden-sm hidden-lg"><br><br></div>
-                        <b style="float:right;"><u><a href="?<?php echo $menu ?>&route=Pedidos&action=Modificar&id=<?php echo $pedido['id_pedido'] ?>&admin=1"><i>Editar Colecciones Aprobadas</i></a></u></b>
-                        <br>
-                      <?php } ?>
-                    <?php //endif; ?>
+                    <div class="row" style='background:;'>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                          <?php 
+                            if(count($coleccionesFacturadas)>1){
+                              if($_SESSION['nombre_rol']=="Administrador" ||  $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){
+                                ?>
+                                  <div class=" hidden-sm hidden-md hidden-lg"><br><br></div>
+                                  <p style='text-align:left;'>
+                                    <b><u><a class="devolucionbtn" href="?<?php echo $menu ?>&route=Pedidos&action=Devolucion&id=<?php echo $pedido['id_pedido'] ?>&admin=1"><i>Devolución en Ventas</i></a></u></b>
+                                  </p>
+                                <?php
+                              }
+                            } else {
+                              if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                                <p style="text-align:left;">
+                                  <b style="float:lef;"><u><a href="?<?php echo $menu ?>&route=Pedidos&action=Eliminar&id=<?php echo $pedido['id_pedido'] ?>&admin=1"><i>Eliminar Colecciones Aprobadas</i></a></u></b>
+                                </p>
+                                <?php
+                              }
+                            }
+                          ?>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-6">
+                          <?php  if($_SESSION['nombre_rol']=="Administrador" ||  $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+                            <div class=" hidden-sm hidden-md hidden-lg"><br><br></div>
+                            <p style="text-align:right;">
+                              <b style="float:righ;"><u><a href="?<?php echo $menu ?>&route=Pedidos&action=Modificar&id=<?php echo $pedido['id_pedido'] ?>&admin=1"><i>Editar Colecciones Aprobadas</i></a></u></b>
+                            </p>
+                          <?php } ?>
+                        </div>
+                    </div>
+                    <br>
 
                     <div class="box-header">
                       <div class="container" style="width:100%;margin-top:0px;">
 
                         <div class="row">
-                            <div class="col-md-4 text-left">
+                            <div class="col-md-6 text-left">
                               <br>
                               <table>
                               <?php
@@ -781,7 +807,7 @@
                                         <b>Productos: </b>
                                       </td>
                                       <td>
-                                        <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccion)){ echo "$".number_format($precioColeccion,2,',','.'); } ?></span> * <?php echo "(".$cantColeccion.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                        <b><span style="font-size:1.2em;color:#009900;margin-left:5px;"><?php if(!empty($precioColeccion)){ echo "$".number_format($precioColeccion,2,',','.'); } ?></span> * <?php echo "(".$cantColeccion.") = "; ?> <span style="font-size:1.2em;color:#009900;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
                                       </td>
                                     </tr>
                                     <?php
@@ -792,16 +818,18 @@
                                         $cantColeccionSec = $pedSec['cantidad_aprobado_sec'];
                                         $precioColGen = ($precioColeccionSec*$cantColeccionSec);
                                         $total_costo+=$precioColGen;
+                                        if($cantColeccionSec>0){
                                         ?>
-                                        <tr>
-                                          <td>
-                                            <b><?=$pedSec['nombre_coleccion_sec'] ?>: </b>
-                                          </td>
-                                          <td>
-                                            <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
-                                          </td>
-                                        </tr>
-                                      <?php
+                                          <tr>
+                                            <td>
+                                              <b><?=$pedSec['nombre_coleccion_sec'] ?>: </b>
+                                            </td>
+                                            <td>
+                                              <b><span style="font-size:1.2em;color:#009900;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#009900;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                            </td>
+                                          </tr>
+                                        <?php
+                                        }
                                       }
                                     }
                                   }
@@ -811,7 +839,7 @@
                               </table>
                             </div>
 
-                            <div class="col-md-4 text-left">
+                            <div class="col-md-2 text-left">
                               <!-- <span style="font-size:1.1em;color:#000;"><b>Colecciones aprobadas: </b></span> -->
                               <!-- <span style="font-size:1.3em;color:#7C4;"><b><?php echo $cantidad_aprobado ?></b></span> -->
                             </div>
@@ -1141,6 +1169,7 @@
                                 </tbody>
                               </table>
 
+
                               <?php $resultadoDescuentosPagosPuntual = []; ?>
                               <?php foreach ($cantidadPagosDespachosFild as $key): ?>
                                 <br>
@@ -1221,8 +1250,9 @@
                                 foreach ($resultadoDescuentosPagosPuntual as $bonoPuntual) {
                                   $resulttDescuentoPagosPuntuales+=$bonoPuntual;
                                 }
-
                                 $resulttDescuentoCierreEstructura = 0;
+
+
                               ?>
                               <?php if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){ if(count($estructuraLideres) > 0){ ?>
                                 <br>
@@ -1309,108 +1339,112 @@
                               <?php
                                 $Opttraspasarexcedente=="1";
                                 $totalTraspasoRecibido=0; 
-                                if ($Opttraspasarexcedente=="1"): if(count($traspasosRecibidos)>1):
-                                  ?>
-                                  <br>
-                                  <span style="font-size:1.1em;color:#000;"><b>Traspasos Recibidos</b></span>
-                                  <br>
-                                  <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
-                                    <tbody>
-                                    <?php $num = 1;   
-                                      foreach ($traspasosRecibidos as $traspas): 
-                                        if(!empty($traspas['id_traspaso'])):?>
+                                if ($Opttraspasarexcedente=="1"){
+                                  if(count($traspasosRecibidos)>1){
+                                    ?>
+                                    <br>
+                                    <span style="font-size:1.1em;color:#000;"><b>Traspasos Recibidos</b></span>
+                                    <br>
+                                    <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                      <tbody>
+                                      <?php $num = 1;   
+                                        foreach ($traspasosRecibidos as $traspas): 
+                                          if(!empty($traspas['id_traspaso'])):?>
+                                            <tr>
+                                              <?php  ?>
+                                              <td><b><?php echo "Líder ".$traspas['primer_nombre']." ".$traspas['primer_apellido']." (".$traspas['numero_despacho'].")"; ?></b></td>
+                                              <td></td>
+                                              <td><b style="color:#ED2A77;">Traspaso</b></td>
+                                              <td><?php echo " = "; ?></td>
+                                              <td><b style="color:#009900;">
+                                                <?php $totalTraspasoRecibido+=$traspas['cantidad_traspaso']; ?>
+                                                <?php echo "$".number_format($traspas['cantidad_traspaso'],2,',','.'); ?>
+                                              </b></td>
+                                            </tr>
+                                              <?php $num++; 
+                                        endif; endforeach ?>
                                           <tr>
-                                            <?php  ?>
-                                            <td><b><?php echo "Líder ".$traspas['primer_nombre']." ".$traspas['primer_apellido']." (".$traspas['numero_despacho'].")"; ?></b></td>
-                                            <td></td>
-                                            <td><b style="color:#ED2A77;">Traspaso</b></td>
-                                            <td><?php echo " = "; ?></td>
-                                            <td><b style="color:#0C0;">
-                                              <?php $totalTraspasoRecibido+=$traspas['cantidad_traspaso']; ?>
-                                              <?php echo "$".number_format($traspas['cantidad_traspaso'],2,',','.'); ?>
-                                            </b></td>
-                                          </tr>
-                                            <?php $num++; 
-                                       endif; endforeach ?>
-                                        <tr>
-                                            <td colspan="6" style="border-bottom:1px solid #777"></td>
-                                          </tr>
-                                          <tr>
-                                            <td></td>
-                                            <td colspan="2">
-                                              <span style="font-size:1.2em">
-                                                <b>Total</b>
-                                              </span>
-                                            </td>
-                                            <td> 
-                                              <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
-                                                <b>=</b>
-                                              </span> 
-                                            </td>
-                                            <td colspan="">
-                                              <span style="font-size:1.5em;color:#0C0">
-                                                <b>$<?php echo number_format($totalTraspasoRecibido,2,',','.') ?></b>
-                                              </span>
-                                            </td>
-                                          </tr>
+                                              <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td colspan="2">
+                                                <span style="font-size:1.2em">
+                                                  <b>Total</b>
+                                                </span>
+                                              </td>
+                                              <td> 
+                                                <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                                  <b>=</b>
+                                                </span> 
+                                              </td>
+                                              <td colspan="">
+                                                <span style="font-size:1.5em;color:#0C0">
+                                                  <b>$<?php echo number_format($totalTraspasoRecibido,2,',','.') ?></b>
+                                                </span>
+                                              </td>
+                                            </tr>
 
-                                    </tbody>
-                                  </table>
-                                <?php endif; endif;
+                                      </tbody>
+                                    </table>
+                                    <?php
+                                  }
+                                }
                               ?>
-
-                                <hr>
-                                <br>
-                                <hr>
                               <?php 
                                 $resultLiquidacionGemas = 0;
+                                //borrar
                                 if(count($liquidacion_gemas)>1){
                                   $liquidacionGemas = $liquidacion_gemas[0];
                                   $resulttDescuentoLiquidacion = 0; 
-                              ?>
-                                <br>
-                                <span style="font-size:1.1em;color:#000;"><b>Descuentos Por Liquidación de gemas</b></span>
-                                <br>
-                                <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
-                                  <tbody>
-                                    <tr>
-                                      <td><b><?php echo "Liquidación "; ?></b></td>
-                                      <td><b> <?php echo "$".number_format($precio_gema,2,',','.'); ?></b></td>
-                                      <td><?php echo " x "; ?></td>
-                                      <td><b style="color:#ED2A77;"><?php echo number_format($liquidacionGemas['cantidad_descuento_gemas'],2,',','.');; ?> <small>Gemas.</small></b></td>
-                                      <td><?php echo " = "; ?></td>
-                                      <td><b style="color:#0c0;">
-                                        <?php $resultLiquidacionGemas = $liquidacionGemas['total_descuento_gemas']; ?>
-                                        <?php $resulttDescuentoLiquidacion+=$resultLiquidacionGemas; ?>
-                                        <?php echo "$".number_format($resultLiquidacionGemas,2,',','.'); ?>
-                                      </b></td>
-                                    </tr>
-                                    <tr>
-                                      <td colspan="6" style="border-bottom:1px solid #777"></td>
-                                    </tr>
-                                    <tr>
-                                      <td></td>
-                                      <td colspan="3">
-                                        <span style="font-size:1.2em">
-                                          <b>Total</b>
-                                        </span>
-                                      </td>
-                                      <td> 
-                                        <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
-                                          <b>=</b>
-                                        </span> 
-                                      </td>
-                                      <td colspan="">
-                                        <span style="font-size:1.5em;color:#0C0">
-                                          <b>$<?php echo number_format($resultLiquidacionGemas,2,',','.') ?></b>
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              <?php
+                                  ?>
+                                    <br>
+                                    <span style="font-size:1.1em;color:#000;"><b>Descuentos Por Liquidación de gemas</b></span>
+                                    <br>
+                                    <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                      <tbody>
+                                        <tr>
+                                          <td><b><?php echo "Liquidación "; ?></b></td>
+                                          <td><b> <?php echo "$".number_format($precio_gema,2,',','.'); ?></b></td>
+                                          <td><?php echo " x "; ?></td>
+                                          <td><b style="color:#ED2A77;"><?php echo number_format($liquidacionGemas['cantidad_descuento_gemas'],2,',','.');; ?> <small>Gemas.</small></b></td>
+                                          <td><?php echo " = "; ?></td>
+                                          <td><b style="color:#0c0;">
+                                            <?php $resultLiquidacionGemas = $liquidacionGemas['total_descuento_gemas']; ?>
+                                            <?php $resulttDescuentoLiquidacion+=$resultLiquidacionGemas; ?>
+                                            <?php echo "$".number_format($resultLiquidacionGemas,2,',','.'); ?>
+                                          </b></td>
+                                        </tr>
+                                        <tr>
+                                          <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                        </tr>
+                                        <tr>
+                                          <td></td>
+                                          <td colspan="3">
+                                            <span style="font-size:1.2em">
+                                              <b>Total</b>
+                                            </span>
+                                          </td>
+                                          <td> 
+                                            <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                              <b>=</b>
+                                            </span> 
+                                          </td>
+                                          <td colspan="">
+                                            <span style="font-size:1.5em;color:#0C0">
+                                              <b>$<?php echo number_format($resultLiquidacionGemas,2,',','.') ?></b>
+                                            </span>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                  <?php
                                 }
                               ?>
+
+                                <!-- <hr> -->
+                                <!-- <br> -->
+                                <hr>
 
 
 
@@ -1431,120 +1465,200 @@
 
                               <?php
                                 $totalTraspasoEmitido = 0;
-                                if ($Opttraspasarexcedente=="1"):
-                                  if(count($traspasosEmitidos)>1):
-                                
-                                  ?>
-                                  <br><br>
-                                  <span style="font-size:1.1em;color:#000;"><b>Traspasos Realizados</b></span>
-                                  <br>
-                                  <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
-                                    <tbody>
-                                    <?php $num = 1;   
-                                      foreach ($traspasosEmitidos as $traspas): 
-                                        if(!empty($traspas['id_traspaso'])):?>
+                                if ($Opttraspasarexcedente=="1"){
+                                  //borrar
+                                  if(count($traspasosEmitidos)>1){
+                                    ?>
+                                    <br><br>
+                                    <span style="font-size:1.1em;color:#000;"><b>Traspasos Realizados</b></span>
+                                    <br>
+                                    <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                      <tbody>
+                                      <?php $num = 1;   
+                                        foreach ($traspasosEmitidos as $traspas): 
+                                          if(!empty($traspas['id_traspaso'])):?>
+                                            <tr>
+                                              <?php
+                                                // $totalTraspasoEmitido = 0;
+                                                // $multi = 0;
+                                                // $resultt = 0;
+                                                // foreach ($bonosPago1 as $bono) {
+                                                //   if(!empty($bono['id_plan_campana'])){
+                                                //     if($bono['id_plan_campana']==$col['id_plan_campana']){
+                                                //       $multi = $bono['colecciones_bono'];
+                                                //       $resultt = $bono['totales_bono'];
+                                                //     }
+                                                //   } 
+                                                // }
+                                              ?>
+                                              <?php  ?>
+                                              <td><b><?php echo "Líder ".$traspas['primer_nombre']." ".$traspas['primer_apellido']." (".$traspas['numero_despacho'].")"; ?></b></td>
+                                              <td></td>
+                                              <td><b style="color:#ED2A77;">Traspaso</b></td>
+                                              <td><?php echo " = "; ?></td>
+                                              <td><b style="color:#C00;">
+                                                <?php $totalTraspasoEmitido+=$traspas['cantidad_traspaso']; ?>
+                                                <?php echo "$".number_format($traspas['cantidad_traspaso'],2,',','.'); ?>
+                                              </b></td>
+                                            </tr>
+                                              <?php $num++; 
+                                        endif; endforeach ?>
                                           <tr>
-                                            <?php
-                                              // $totalTraspasoEmitido = 0;
-                                              // $multi = 0;
-                                              // $resultt = 0;
-                                              // foreach ($bonosPago1 as $bono) {
-                                              //   if(!empty($bono['id_plan_campana'])){
-                                              //     if($bono['id_plan_campana']==$col['id_plan_campana']){
-                                              //       $multi = $bono['colecciones_bono'];
-                                              //       $resultt = $bono['totales_bono'];
-                                              //     }
-                                              //   } 
-                                              // }
-                                            ?>
-                                            <?php  ?>
-                                            <td><b><?php echo "Líder ".$traspas['primer_nombre']." ".$traspas['primer_apellido']." (".$traspas['numero_despacho'].")"; ?></b></td>
-                                            <td></td>
-                                            <td><b style="color:#ED2A77;">Traspaso</b></td>
-                                            <td><?php echo " = "; ?></td>
-                                            <td><b style="color:#C00;">
-                                              <?php $totalTraspasoEmitido+=$traspas['cantidad_traspaso']; ?>
-                                              <?php echo "$".number_format($traspas['cantidad_traspaso'],2,',','.'); ?>
-                                            </b></td>
-                                          </tr>
-                                            <?php $num++; 
-                                       endif; endforeach ?>
-                                        <tr>
-                                            <td colspan="6" style="border-bottom:1px solid #777"></td>
-                                          </tr>
-                                          <tr>
-                                            <td></td>
-                                            <td colspan="2">
-                                              <span style="font-size:1.2em">
-                                                <b>Total</b>
-                                              </span>
-                                            </td>
-                                            <td> 
-                                              <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
-                                                <b>=</b>
-                                              </span> 
-                                            </td>
-                                            <td colspan="">
-                                              <span style="font-size:1.5em;color:#C00">
-                                                <b>$<?php echo number_format($totalTraspasoEmitido,2,',','.') ?></b>
-                                              </span>
-                                            </td>
-                                          </tr>
+                                              <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                            </tr>
+                                            <tr>
+                                              <td></td>
+                                              <td colspan="2">
+                                                <span style="font-size:1.2em">
+                                                  <b>Total</b>
+                                                </span>
+                                              </td>
+                                              <td> 
+                                                <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                                  <b>=</b>
+                                                </span> 
+                                              </td>
+                                              <td colspan="">
+                                                <span style="font-size:1.5em;color:#C00">
+                                                  <b>$<?php echo number_format($totalTraspasoEmitido,2,',','.') ?></b>
+                                                </span>
+                                              </td>
+                                            </tr>
 
-                                    </tbody>
-                                  </table>
-                                <?php endif; endif;
+                                      </tbody>
+                                    </table>
+                                    <?php
+                                  }
+                                }
                               ?>
 
                               <br>
-                              <?php  if(count($promocionesFull)>1){ ?>
-                                <br>
-                                <span style="font-size:1.1em;color:#000;"><b>(-) Promociones adquiridas</b></span>
-                                <br>
-                                <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
-                                  <tbody>
+                              
+                              <?php 
+                                $resultDeudaPorPromociones=0;
+                                if(count($promocionesFull)>1){
+                                  $promocionesAprobadasTotal=0;
+                                  foreach ($promocionesFull as $promo){ 
+                                    if(!empty($promo['id_promociones'])){
+                                      $promocionesAprobadasTotal += $promo['cantidad_aprobada_promocion'];
+                                    }
+                                  }
+                                  if($promocionesAprobadasTotal>0){
+                                    ?>
+                                    <br>
+                                    <span style="font-size:1.1em;color:#000;"><b>(-) Promociones adquiridas</b></span>
+                                    <br>
+                                    <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                      <tbody>
+                                        <?php 
+                                          foreach ($promocionesFull as $promo){ if(!empty($promo['id_promociones'])){ ?>
+                                          <tr>
+                                            <td><b><?php echo $promo['nombre_promocion']; ?></b></td>
+                                            <td><b> <?php echo "$".number_format($promo['precio_promocion'],2,',','.'); ?></b></td>
+                                            <td><?php echo " x "; ?></td>
+                                            <td><b style="color:#ED2A77;"><?php echo number_format($promo['cantidad_aprobada_promocion'],2,',','.'); ?></b></td>
+                                            <td><?php echo " = "; ?></td>
+                                            <td><b style="color:#C00;">
+                                              <?php
+                                                $deudaPorPromocion = $promo['precio_promocion']*$promo['cantidad_aprobada_promocion'];
+                                                $resultDeudaPorPromociones += $deudaPorPromocion;
+                                                echo "$".number_format($deudaPorPromocion,2,',','.');
+                                              ?>
+                                            </b></td>
+                                          </tr>
+                                        <?php } } ?>
+                                        <tr>
+                                          <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                        </tr>
+                                        <tr>
+                                          <td></td>
+                                          <td colspan="3">
+                                            <span style="font-size:1.2em">
+                                              <b>Total</b>
+                                            </span>
+                                          </td>
+                                          <td> 
+                                            <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                              <b>=</b>
+                                            </span> 
+                                          </td>
+                                          <td colspan="">
+                                            <span style="font-size:1.5em;color:#C00">
+                                              <b>$<?php echo number_format($resultDeudaPorPromociones,2,',','.') ?></b>
+                                            </span>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    <br>
                                     <?php 
-                                      foreach ($promocionesFull as $promo){ if(!empty($promo['id_promociones'])){ ?>
-                                      <tr>
-                                        <td><b><?php echo $promo['nombre_promocion']; ?></b></td>
-                                        <td><b> <?php echo "$".number_format($promo['precio_promocion'],2,',','.'); ?></b></td>
-                                        <td><?php echo " x "; ?></td>
-                                        <td><b style="color:#ED2A77;"><?php echo number_format($promo['cantidad_aprobada_promocion'],2,',','.'); ?></b></td>
-                                        <td><?php echo " = "; ?></td>
-                                        <td><b style="color:#C00;">
-                                          <?php
-                                            $deudaPorPromocion = $promo['precio_promocion']*$promo['cantidad_aprobada_promocion'];
-                                            $resultDeudaPorPromociones += $deudaPorPromocion;
-                                            echo "$".number_format($deudaPorPromocion,2,',','.');
-                                          ?>
-                                        </b></td>
-                                      </tr>
-                                    <?php } } ?>
-                                    <tr>
-                                      <td colspan="6" style="border-bottom:1px solid #777"></td>
-                                    </tr>
-                                    <tr>
-                                      <td></td>
-                                      <td colspan="3">
-                                        <span style="font-size:1.2em">
-                                          <b>Total</b>
-                                        </span>
-                                      </td>
-                                      <td> 
-                                        <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
-                                          <b>=</b>
-                                        </span> 
-                                      </td>
-                                      <td colspan="">
-                                        <span style="font-size:1.5em;color:#C00">
-                                          <b>$<?php echo number_format($resultDeudaPorPromociones,2,',','.') ?></b>
-                                        </span>
-                                      </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                                <br>
-                              <?php } ?>
+                                  }
+                                }
+
+
+                                // echo $id_despacho;
+                                $servicios = $lider->consultarQuery("SELECT * FROM servicios, servicio, servicioss WHERE servicios.id_servicio=servicio.id_servicio and servicio.id_servicioss=servicioss.id_servicioss and servicios.id_cliente={$id_cliente} and servicios.id_pedido={$id} and servicios.id_campana={$id_campana} and servicios.estatus=1");
+                                if(count($servicios)>1){
+                                  $serviciosTotal=0;
+                                  foreach ($servicios as $serv){ 
+                                    if(!empty($serv['id_servicios'])){
+                                      $serviciosTotal += $serv['cantidad_servicio'];
+                                    }
+                                  }
+                                  $resultDeudaPorServicio=0;
+                                  if($serviciosTotal>0){
+                                    ?>
+                                    <br>
+                                    <span style="font-size:1.1em;color:#000;"><b>(-) Servicios adquiridos</b></span>
+                                    <br>
+                                    <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                      <tbody>
+                                        <?php 
+                                          foreach ($servicios as $serv){ if(!empty($serv['id_servicio'])){ ?>
+                                          <tr>
+                                            <td><b><?php echo $serv['nombre_servicio']; ?></b></td>
+                                            <td><b> <?php echo "$".number_format($serv['precio_servicio'],2,',','.'); ?></b></td>
+                                            <td><?php echo " x "; ?></td>
+                                            <td><b style="color:#ED2A77;"><?php echo number_format($serv['cantidad_servicio'],2,',','.'); ?></b></td>
+                                            <td><?php echo " = "; ?></td>
+                                            <td><b style="color:#C00;">
+                                              <?php
+                                                $deudaPorServicio = $serv['precio_servicio']*$serv['cantidad_servicio'];
+                                                $resultDeudaPorServicio += $deudaPorServicio;
+                                                $resultDeudaPorPromociones += $deudaPorServicio;
+                                                echo "$".number_format($deudaPorServicio,2,',','.');
+                                              ?>
+                                            </b></td>
+                                          </tr>
+                                        <?php } } ?>
+                                        <tr>
+                                          <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                        </tr>
+                                        <tr>
+                                          <td></td>
+                                          <td colspan="3">
+                                            <span style="font-size:1.2em">
+                                              <b>Total</b>
+                                            </span>
+                                          </td>
+                                          <td> 
+                                            <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                              <b>=</b>
+                                            </span> 
+                                          </td>
+                                          <td colspan="">
+                                            <span style="font-size:1.5em;color:#C00">
+                                              <b>$<?php echo number_format($resultDeudaPorServicio,2,',','.') ?></b>
+                                            </span>
+                                          </td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    <br>
+                                    <?php 
+                                  }
+                                }
+                              ?>
                             </div>
                           </div>
                           <br>
@@ -1579,10 +1693,19 @@
                                 }
                               }
 
-
                                 // $total_responsabilidad = $total_costo - $total_descuento_distribucion;
                                 $total_responsabilidad = $total_costo - $totalDescuentoVendedor + $resultDeudaPorPromociones;
                                 $restaTotalResponsabilidad = $total_responsabilidad-$abonado + $cantidad_excedente;
+
+                                // echo "total_costo: ".$total_costo."<br>";
+                                // echo "totalDescuentoVendedor: -".$totalDescuentoVendedor."<br>";
+                                // echo "resultDeudaPorPromociones: +".$resultDeudaPorPromociones."<br>";
+                                // echo "total_responsabilidad: =".$total_responsabilidad."<br>";
+                                $total_pagar_new = (float) $total_responsabilidad;
+                                $execPedidoTotalPagar = $lider->modificar("UPDATE pedidos SET total_pagar={$total_pagar_new} WHERE id_pedido={$id}");
+                                if($execPedidoTotalPagar['ejecucion']==true){
+                                  
+                                }
                             ?>
                             <div class="col-md-4" style="background:<?php echo $bg_debe_haber; ?>;position:relative;top:5px">
                               <br>
@@ -1688,7 +1811,7 @@
                               <span style="font-size:1.3em;color:#222;"><b><u>Abonado</u></b></span>    
                               <br>
 
-                              <span style="font-size:2em;color:#0C0;">
+                              <span style="font-size:2em;color:#009900;">
                                 <b>$<?php echo number_format($abonado,2,',','.') ?></b>
                               </span>
                               
@@ -1934,7 +2057,7 @@
                       <?php endif; ?>
                         <b style="color:#000 !important">Abonado</b>
                         <hr style="margin:0px;padding:0px;border-bottom:1px solid #ccc">
-                        <h4 style="color:#00FF00 !important"><b>$<?=number_format($abonado,2, ",",".")?></b></h4>
+                        <h4 style="color:#009900 !important"><b>$<?=number_format($abonado,2, ",",".")?></b></h4>
                       </a>
                     </div>
                   </div>
@@ -2297,15 +2420,15 @@
 
 
   <?php if(!empty($_GET['liderEstruct'])){ ?>
-  <div class="box-modalDescuentoCierreEstructura" style="background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050">
+  <div class="box-modalDescuentoCierreEstructura" style="background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050;overflow:auto;">
     <?php } else { ?>
-  <div class="box-modalDescuentoCierreEstructura" style="display:none;background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050">
+  <div class="box-modalDescuentoCierreEstructura" style="display:none;background:#00000099;position:fixed;top:0;left:0;width:100%;height:100vh;padding-top:50px;z-index:1050;overflow:auto;">
     <?php } ?>
       <div class="content">
         <div class="row">
           <div class="col-xs-12 col-md-8 col-md-offset-2">
             <div class="container-fluid">
-              <div class="box">
+              <div class="box" style="">
                   <div class="box-header with-border">
                     <div style="text-align:right;"><span class="btn cerrarModalDescuentoCierreEstructura" style="background:#CCC"><b>X</b></span></div>
                     <div class="user-block">
@@ -2336,7 +2459,8 @@
                       <input type="hidden" value="<?=$_GET['route']?>" name="route">
                       <input type="hidden" value="<?=$_GET['id']?>" name="id">
                         <div class="form-group col-xs-12 col-sm-12 col-md-12">
-                           <label for="liderEstruct">Por Cierre de Lider</label><style type="text/css">.select2{z-index:990000"}</style>
+                           <label for="liderEstruct">Por Cierre de Lider</label>
+                           <style type="text/css">.select2{z-index:990000; }</style>
                            <select class="form-control liderEstruct select2" id="liderEstruct"  name="liderEstruct" style="width:100%;z-index:990000">
                              <option></option>
                                <?php foreach ($estructuraLideres as $lid): ?>
@@ -2357,64 +2481,148 @@
                         <?php // print_r($liderazgosAll[5]); ?>
                     </div>
                   </div>
-                    <button class="btn-enviar-modalDescuentoCierreEstructuraget d-none" disabled="" >enviar</button>
+                  <button class="btn-enviar-modalDescuentoCierreEstructuraget d-none" disabled="" >enviar</button>
                 </form>
                 <?php //print_r($lidera); ?>
-                        <input type="hidden" class="id_pago_modal" name="id_pago_modal">
-                <?php if (!empty($_GET['liderEstruct'])): ?>
+                <input type="hidden" class="id_pago_modal" name="id_pago_modal">
+                <?php if (!empty($_GET['liderEstruct'])){ ?>
+                  <?php
+                    $liderazgoLimite = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} ORDER BY liderazgos.id_liderazgo DESC LIMIT 1;");
+                    $liderazgoLimite=$liderazgoLimite[0];
+                    $lliderazgossAll = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} ORDER BY liderazgos.id_liderazgo ASC;");
+                    $idPropio = $cliente['id_cliente'];
+                    $id_seleccionado = $_GET['liderEstruct'];
+                    $aprobadoPropio=$cantidad_total;
+                    if($aprobadoPropio>=$liderazgoLimite['minima_cantidad']){
+                      // echo "DEBE ser el maximo";
+                      $lliderazgoss = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} and {$aprobadoPropio} >= liderazgos_campana.minima_cantidad and liderazgos_campana.maxima_cantidad=0 ORDER BY liderazgos.id_liderazgo DESC;");
+                    }else{
+                      // echo "Normal";
+                      $lliderazgoss = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} and {$aprobadoPropio} BETWEEN liderazgos_campana.minima_cantidad and liderazgos_campana.maxima_cantidad ORDER BY liderazgos.id_liderazgo DESC;");
+                    }
+                    $liderazgoPropio=$lliderazgoss[0];
+                    $descuentosObtenidosEstructura=[];
+                    // foreach ($descuentosObtenidosEstructura as $keyssss) {
+                      //   print_r($keyssss);
+                      //   echo "<br><br>";
+                      // }
+                      // print_r($liderazgoPropio);
+                      
+                      $ccliente = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente={$id_seleccionado}");
+                      $clientTemp=$ccliente[0];
+                      $ppedidoss=$lider->consultarQuery("SELECT * FROM pedidos WHERE id_despacho={$id_despacho} and id_cliente={$clientTemp['id_cliente']}");
+                      $pedBusqueda=$ppedidoss[0];
+                      foreach ($lliderazgossAll as $lliderazz) {
+                        if(!empty($lliderazz['id_liderazgo'])){
+                          $descuentosObtenidosEstructura[count($descuentosObtenidosEstructura)]=[
+                            'id'=> $lliderazz['id_liderazgo'],
+                            'name'=> $lliderazz['nombre_liderazgo'],
+                            'col_min'=>$lliderazz['minima_cantidad'],
+                            'col_max'=>$lliderazz['maxima_cantidad'],
+                            'ganadas'=>$pedBusqueda['cantidad_aprobado'],
+                          ];
+                          if($liderazgoPropio['id_liderazgo']==$lliderazz['id_liderazgo']){
+                            break;
+                          }
+                        }
+                      }
+                    $aprobado_seleccionado=$pedBusqueda['cantidad_total'];
+                    $lliderazgoss_seleccionado = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} and {$aprobado_seleccionado} BETWEEN liderazgos_campana.minima_cantidad and liderazgos_campana.maxima_cantidad ORDER BY liderazgos.id_liderazgo DESC;");
+                    $lliderazgoss_seleccionado_busqueda=$lliderazgoss_seleccionado[0];
+                    $id_lider_busqueda=$clientTemp['id_lider'];
+                    for ($i=0; $i < count($descuentosObtenidosEstructura); $i++){
+                      $descuentosObtenidosEstructura[$i]['ganadas']=0;
+                      if($descuentosObtenidosEstructura[$i]['name']==$lliderazgoss_seleccionado_busqueda['nombre_liderazgo']){
+                        break;
+                      }
+                    }
 
-                <?php //print_r($bonosEstructura); ?>
-                <form action="" method="POST" class="form">
-                    <input type="hidden" value="<?=$_GET['liderEstruct']?>" class="id_cliente" name="id_cliente">
-                  
-                    <div class="row">
-                      <table class="text-center" style="width:90%;">
-                        <thead>
-                          <th>Niveles</th>
-                          <th></th>
-                          <th>Descuento</th>
-                          <th></th>
-                          <th>Colecciones</th>
-                          <th></th>
-                          <th>Total</th>
-                        </thead>
-                        <tbody>
-                          <?php foreach ($liderazgosAll as $col): if(!empty($col['id_liderazgo'])): if(($col['nombre_liderazgo']!="JUNIOR")&&($col['nombre_liderazgo']!="SENIOR")): if($col['id_liderazgo'] <= $lidera['id_liderazgo']): ?>
-                            <tr>
-                              <td style="width:50%">Nivel <?=$col['nombre_liderazgo']?></td>
-                              <td style="width:3.3%"><input type="hidden" value="<?=$col['id_liderazgo']?>" name="id[]" readonly></td>
-                              <td style="width:10%"><input type="number" class="form-control" id="descuentoDesc<?=$col['id_liderazgo']?>" value="<?=$col['descuento_coleccion']?>" readonly style='background:none;' name="descuentos[]"></td>
-                              <td style="width:3.3%">x</td>
-                              <td style="width:10%"><input type="number" <?php foreach ($bonosEstructura as $bono) {
-                                if(!empty($bono['id_bonocierre'])){
-                                  if($bono['id_liderazgo']==$col['id_liderazgo']){ ?>
-                                    value="<?=$bono['colecciones_bono_cierre']?>"
-                                  <?php }
+                    
+
+                    while ($id_lider_busqueda!=$idPropio) {
+                      $ccliente = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente={$id_lider_busqueda}");
+                      $clientTemp=$ccliente[0];
+                      $ppedidoss=$lider->consultarQuery("SELECT * FROM pedidos WHERE id_despacho={$id_despacho} and id_cliente={$clientTemp['id_cliente']}");
+                      $pedBusqueda=$ppedidoss[0];
+                      $aprobado_seleccionado=$pedBusqueda['cantidad_total'];
+                      $lliderazgoss_seleccionado = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos.id_liderazgo=liderazgos_campana.id_liderazgo and liderazgos_campana.id_despacho={$id_despacho} and {$aprobado_seleccionado} BETWEEN liderazgos_campana.minima_cantidad and liderazgos_campana.maxima_cantidad ORDER BY liderazgos.id_liderazgo DESC;");
+                      $lliderazgoss_seleccionado_busqueda=$lliderazgoss_seleccionado[0];
+                      $id_lider_busqueda=$clientTemp['id_lider'];
+                      for ($i=0; $i < count($descuentosObtenidosEstructura); $i++){
+                        $descuentosObtenidosEstructura[$i]['ganadas']=0;
+                        if($descuentosObtenidosEstructura[$i]['name']==$lliderazgoss_seleccionado_busqueda['nombre_liderazgo']){
+                          break;
+                        }
+                      }
+                    }
+                    // foreach ($descuentosObtenidosEstructura as $keyssss) {
+                    //   print_r($keyssss);
+                    //   echo "<br><br>";
+                    // }
+
+                    // print_r($bonosEstructura);
+                    $bonosEstructura=[];
+                  ?>
+                  <form action="" method="POST" class="form">
+                      <input type="hidden" value="<?=$_GET['liderEstruct']?>" class="id_cliente" name="id_cliente">
+                    
+                      <div class="row">
+                        <table class="text-center" style="width:90%;">
+                          <thead>
+                            <th>Niveles</th>
+                            <th></th>
+                            <th>Descuento</th>
+                            <th></th>
+                            <th>Colecciones</th>
+                            <th></th>
+                            <th>Total</th>
+                          </thead>
+                          <tbody>
+                            <?php foreach ($liderazgosAll as $col){ if(!empty($col['id_liderazgo'])){ if(($col['nombre_liderazgo']!="JUNIOR")&&($col['nombre_liderazgo']!="SENIOR")){ if($col['id_liderazgo'] <= $lidera['id_liderazgo']){ ?>
+                              <?php
+                                $valoresDescuentoAutomatico=0;
+                                $totalesDescuentoAutomatico=0;
+                                if(count($bonosEstructura)>1){
+                                  foreach ($bonosEstructura as $bono) {
+                                    if(!empty($bono['id_bonocierre'])){
+                                      if($bono['id_liderazgo']==$col['id_liderazgo']){
+                                        $valoresDescuentoAutomatico=$bono['colecciones_bono_cierre'];
+                                        $totalesDescuentoAutomatico=$bono['totales_bono_cierre'];
+                                      }
+                                    }
+                                  } 
+                                }else{
+                                  foreach ($descuentosObtenidosEstructura as $descuentokey) {
+                                    if($descuentokey['id']==$col['id_liderazgo']){
+                                      $valoresDescuentoAutomatico=$descuentokey['ganadas'];
+                                      $totalesDescuentoAutomatico=(float) number_format(($col['descuento_coleccion']*$descuentokey['ganadas']),2);
+                                    }
+                                  }
                                 }
-                              } ?> placeholder="0" class="form-control valoresDesc" id="<?=$col['id_liderazgo']?>" max="<?=$pedidoHijoActual['cantidad_acumulada'];?>" step="1" name="valores[]"></td>
-                              <!-- max="<?=$pedidoHijoActual['cantidad_aprobado'];?>" -->
-                              <td style="width:3.3%">=</td>
-                              <td style="width:15%"><input type="number" <?php foreach ($bonosEstructura as $bono) {
-                                if(!empty($bono['id_bonocierre'])){
-                                  if($bono['id_liderazgo']==$col['id_liderazgo']){?>
-                                    value="<?=$bono['totales_bono_cierre']?>"
-                                  <?php }
-                                }
-                              } ?> placeholder="0" class="form-control" step="1" id="totalDesc<?=$col['id_liderazgo']?>" name="totales[]" readonly style='background:none;'></td>
-                            </tr>
-                          <?php  endif; endif; endif; endforeach; ?>
-                          <input type="hidden" class="id_pedido_modal" value="<?=$pedido['id_pedido']?>" name="id_pedido_modal">
-                          <!-- <input type="hidden" class="tipo_bono" value="Cierre" name="tipo_bono"> -->
-                        </tbody>
-                      </table>
+                              ?>
+                              <tr>
+                                <td style="width:50%">Nivel <?=$col['nombre_liderazgo']?></td>
+                                <td style="width:3.3%"><input type="hidden" value="<?=$col['id_liderazgo']?>" name="id[]" readonly></td>
+                                <td style="width:10%"><input type="number" class="form-control" id="descuentoDesc<?=$col['id_liderazgo']?>" value="<?=$col['descuento_coleccion']?>" readonly style='background:none;' name="descuentos[]"></td>
+                                <td style="width:3.3%">x</td>
+                                <td style="width:10%"><input type="number" readonly value="<?=$valoresDescuentoAutomatico; ?>" placeholder="0" class="form-control valoresDesc" id="<?=$col['id_liderazgo']?>" max="<?=$pedidoHijoActual['cantidad_acumulada'];?>" step="1" name="valores[]"  style='background:none;'></td>
+                                <!-- max="<?=$pedidoHijoActual['cantidad_aprobado'];?>" -->
+                                <td style="width:3.3%">=</td>
+                                <td style="width:15%"><input type="number" value="<?=$totalesDescuentoAutomatico; ?>" placeholder="0" class="form-control" step="1" id="totalDesc<?=$col['id_liderazgo']?>" name="totales[]" readonly style='background:none;'></td>
+                              </tr>
+                            <?php } } } } ?>
+                            <input type="hidden" class="id_pedido_modal" value="<?=$pedido['id_pedido']?>" name="id_pedido_modal">
+                            <!-- <input type="hidden" class="tipo_bono" value="Cierre" name="tipo_bono"> -->
+                          </tbody>
+                        </table>
+                      </div>
+                    <div class="box-footer">
+                      <span type="submit" class="btn enviar enviarModalDescuentoCierreEstructura">Enviar</span>
+                      <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
+                      <button class="btn-enviar-modalDescuentoCierreEstructura d-none" disabled="" >enviar</button>
                     </div>
-                  <div class="box-footer">
-                    <span type="submit" class="btn enviar enviarModalDescuentoCierreEstructura">Enviar</span>
-                    <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
-                    <button class="btn-enviar-modalDescuentoCierreEstructura d-none" disabled="" >enviar</button>
-                  </div>
-                </form>
-              <?php endif ?>
+                  </form>
+                <?php } ?>
 
               </div>
             </div>
@@ -2461,7 +2669,7 @@
                       <input type="hidden" value="<?=$_GET['route']?>" name="route">
                       <input type="hidden" value="<?=$_GET['id']?>" name="id">
                         <div class="form-group col-xs-12 col-sm-12 col-md-12">
-                           <label for="liderTraspaso">Por Cierre de Lider</label><style type="text/css">.select2{z-index:990000"}</style>
+                           <label for="liderTraspaso">Por Cierre de Lider</label><style type="text/css">.select2{z-index:990000;}</style>
                            <select class="form-control liderTraspaso select2" id="liderTraspaso"  name="liderTraspaso" style="width:100%;z-index:990000">
                              <option></option>
                                <?php 
@@ -2688,7 +2896,14 @@
         </div>
       </div>
   </div>  
-
+<style>
+.devolucionbtn{
+  color:rgb(255, 0, 0);
+}
+.devolucionbtn:hover{
+  color:rgb(180, 24, 24);
+}
+</style>
   <!-- /.content-wrapper -->
   <?php require_once 'public/views/assets/footer.php'; ?>
   <?php require_once 'public/views/assets/aside-config.php'; ?>

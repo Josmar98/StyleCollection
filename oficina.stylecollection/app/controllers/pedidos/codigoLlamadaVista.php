@@ -24,7 +24,7 @@
 	 	$liquidacion_gemas = $lider->consultarQuery("SELECT * FROM descuentos_gemas WHERE estatus = 1 and id_pedido = {$id}");
 		$precio_gema = $lider->consultarQuery("SELECT * FROM precio_gema WHERE estatus = 1 and id_campana = {$id_campana}");
 
-		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 and liderazgos_campana.id_despacho = {$id_despacho}";
+		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 and liderazgos_campana.id_despacho = {$id_despacho} ORDER BY liderazgos.id_liderazgo ASC;";
 
 		$liderazgosAll = $lider->consultarQuery($query);
 
@@ -148,8 +148,7 @@
 								$maxima_cantidadTemp = $maxmax['minima_cantidad']*10;
 								$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos.id_liderazgo = {$id_liderazgoTemp} and $total > minima_cantidad and liderazgos_campana.id_despacho = {$id_despacho}");
 							}else{
-
-								$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and $total BETWEEN minima_cantidad and maxima_cantidad and liderazgos_campana.id_despacho = {$id_despacho}");
+								$liderazgos = $lider->consultarQuery("SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and $total BETWEEN minima_cantidad and maxima_cantidad and liderazgos_campana.id_despacho = {$id_despacho} ORDER BY liderazgos.id_liderazgo DESC;");
 							}
 						}
 
@@ -158,7 +157,6 @@
 						if(count($liderazgos)>1){
 			                $clientePedidos = $clientesPedidos[0];
 							$lidera = $liderazgos[0];
-							// print_r($lidera);
 							$precio_coleccion = $clientePedidos['precio_coleccion'];
 			                $cantidad_aprobado = $clientePedidos['cantidad_aprobado'];
 			                $total_costo = $precio_coleccion * $cantidad_aprobado;

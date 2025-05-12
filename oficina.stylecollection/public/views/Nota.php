@@ -108,6 +108,7 @@
                     <th>---</th>
                     <th>Líder</th>
                     <th>Fecha de Emision</th>
+                    <th>Estado</th>
                     <th>---</th>
                   </tr>
                 </thead>
@@ -133,6 +134,13 @@
                       $permitido = 1;
                     }
                     if($permitido==1){
+                      $estado_nota = "";
+                      if($data['estado_nota']==1){
+                        $estado_nota = "Abierta";
+                      }
+                      if($data['estado_nota']==0){
+                        $estado_nota = "Cerrada";
+                      }
                       ?>
                       <tr >
                         <td style="width:5%">
@@ -140,8 +148,8 @@
                             <?php echo $num++; ?>
                           </span>
                         </td>
-                        <td style="width:15%">
-                          <?php if($estado_campana=="1"){ ?>
+                        <td style="width:10%">
+                          <?php if($estado_campana=="1" and $data['estado_nota']==1){ ?>
                               <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&nota=<?=$data['id_nota_entrega']?>">
                                 <span class="fa fa-wrench"></span>
                               </button>
@@ -152,7 +160,7 @@
                               <?php endif; ?>
                           <?php } ?>
                         </td>
-                        <td style="width:40%">
+                        <td style="width:30%">
                           <span class="contenido2">
                             <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
                             <br>
@@ -187,12 +195,17 @@
                             <?php echo $numero_nota_entrega; ?>
                           </span>
                         </td>
-                        <td>
+                        <td style="width:18%;">
                           <span class="contenido2">
                             <?=$lider->formatFecha($data['fecha_emision']);?>
                           </span>
                         </td>
-                        <td style="">
+                        <td style="width:18%;">
+                          <span class="contenido2">
+                            <?=$estado_nota; ?>
+                          </span>
+                        </td>
+                        <td style="width:15%;">
                           <span class="contenido2">
                             <a href="?<?=$menu?>&route=<?=$url; ?>&action=Ver&nota=<?=$data['id_nota_entrega']?>"> Ver nota de entrega</a>
                           </span>
@@ -209,6 +222,7 @@
                     <th>---</th>
                     <th>Líder</th>
                     <th>Fecha de Emision</th>
+                    <th>Estado</th>
                     <th>---</th>
                   </tr>
                 </tfoot>

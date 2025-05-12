@@ -26,10 +26,10 @@
 	use PhpOffice\PhpSpreadsheet\Reader;
 
 	if(is_file('app/models/excel.php')){
-		require_once'app/models/excel.php';
+		require_once 'app/models/excel.php';
 	}
 	if(is_file('../app/models/excel.php')){
-		require_once'../app/models/excel.php';
+		require_once '../app/models/excel.php';
 	}
 
 	$file = "./config/temp/pagos.xlsx";

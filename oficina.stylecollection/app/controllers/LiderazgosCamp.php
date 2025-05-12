@@ -58,7 +58,7 @@ if($amLiderazgosCampC == 1){
 	}
 
 	if(empty($_POST)){
-		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 and liderazgos_campana.id_despacho = {$id_despacho}";
+		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = $id_campana and liderazgos_campana.estatus = 1 and liderazgos_campana.id_despacho = {$id_despacho} ORDER BY liderazgos.id_liderazgo ASC";
 		$liderazgos = $lider->consultarQuery($query);
 		if($liderazgos['ejecucion']==1){
 			if(!empty($action)){

@@ -142,6 +142,7 @@
                       <div style="width:80%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>1){ echo "d-none"; } ?>">
                         <select class="form-control select2 inventarios" id="inventario<?=$z; ?>" min="<?=$z;?>" name="inventario[]"  style="width:100%">
                           <option value=""></option>
+                          <option value="-1">Servicio</option>
                           <?php foreach($productos as $inv){ if(!empty($inv['id_producto'])){ ?>
                             <option value="<?php echo $inv['id_producto']; ?>"><?php echo "(".$inv['codigo_producto'].") ".$inv['producto']."(".$inv['cantidad'].") ".$inv['marca_producto']; ?></option>
                           <?php } } ?>
@@ -272,11 +273,15 @@ $(document).ready(function(){
     var value = $(this).val();
     var index = $(this).attr("min");
     if(value!=""){
-      var pos = value.indexOf('m');
-      if(pos>=0){ //Mercancia
-        $("#tipo"+index).val('Mercancia');
-      }else if(pos < 0){ //Productos
-        $("#tipo"+index).val('Productos');
+      if(value==-1){
+        $("#tipo"+index).val('Servicio');
+      }else{
+        var pos = value.indexOf('m');
+        if(pos>=0){ //Mercancia
+          $("#tipo"+index).val('Mercancia');
+        }else if(pos < 0){ //Productos
+          $("#tipo"+index).val('Productos');
+        }
       }
     }else{
       $("#tipo"+index).val('');

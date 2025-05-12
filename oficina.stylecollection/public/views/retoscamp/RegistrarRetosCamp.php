@@ -167,7 +167,7 @@
                                           }
                                         }
                                       ?>
-                                      ><?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                                      ><?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                                       <!-- Productos:  -->
                                     <?php } } ?>
                                     <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
@@ -182,7 +182,7 @@
                                           }
                                         }
                                       ?>
-                                      ><?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                                      ><?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                                       <!-- Mercancia:  -->
                                     <?php } } ?>
                                   </select>
@@ -517,15 +517,15 @@ function validar(){
     $("#error_reto").html("");
   }
   // /*===================================================================*/
-  var name_opcion = $("#name_opcion").val();
-  var rname_opcion = false;
-  if(name_opcion == ""){
-    rname_opcion = false;
-    $("#error_name_opcion").html("Debe agregar un nombre para el premio");
-  }else{
-    rname_opcion = true;
-    $("#error_name_opcion").html("");
-  }
+  // var name_opcion = $("#name_opcion").val();
+  // var rname_opcion = false;
+  // if(name_opcion == ""){
+  //   rname_opcion = false;
+  //   $("#error_name_opcion").html("Debe agregar un nombre para el premio");
+  // }else{
+  //   rname_opcion = true;
+  //   $("#error_name_opcion").html("");
+  // }
   // /*===================================================================*/
   // var cantidad_elementos = $("#cantidad_elementosOp").val();
   // var erroresStock=0;
@@ -562,9 +562,11 @@ function validar(){
 
 
 
+  var rname_opcion = false;
   var runidades = false;
   var rinventarios = false;
   if(errores==0){
+    rname_opcion   = true;
     runidades = true;
     rinventarios = true;
   }

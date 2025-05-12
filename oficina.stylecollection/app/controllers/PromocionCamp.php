@@ -1,6 +1,32 @@
 <?php 
-
-if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Analista Supervisor2"){
+$amPromociones = 0;
+$amPromocionesR = 0;
+$amPromocionesC = 0;
+$amPromocionesE = 0;
+$amPromocionesB = 0;
+foreach ($accesos as $access) {
+  if(!empty($access['id_acceso'])){
+	if($access['nombre_modulo'] == "Promociones"){
+	  $amPromociones = 1;
+	  if($access['nombre_permiso'] == "Registrar"){
+		$amPromocionesR = 1;
+	  }
+	  if($access['nombre_permiso'] == "Ver"){
+		$amPromocionesC = 1;
+	  }
+	  if($access['nombre_permiso'] == "Editar"){
+		$amPromocionesE = 1;
+	  }
+	  if($access['nombre_permiso'] == "Borrar"){
+		$amPromocionesB = 1;
+	  }
+	}
+  }
+}
+if($amPromocionesC == 1){
+	
+	$limitesOpciones = 10;
+	$limitesElementos = 10;
 
 	$id_campana = $_GET['campaing'];
 	$numero_campana = $_GET['n'];

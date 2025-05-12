@@ -24,7 +24,6 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 			$rif=$_POST['rif'];
 			$nombre=mb_strtoupper($_POST['nombre']);
 
-
 			$query = "UPDATE proveedores_compras SET codRif='{$codRif}', rif='{$rif}', nombreProveedor='{$nombre}', estatus=1 WHERE id_proveedor_compras={$id}";
 			$exec = $lider->modificar($query);
 			if($exec['ejecucion']==true){

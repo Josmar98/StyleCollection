@@ -60,21 +60,26 @@ if($amReportesC == 1){
     }
 
 
-
+    $queryFechas="";
+    if(!empty($_GET['FA']) && !empty($_GET['FC'])){
+      $fechaAp=$_GET['FA'];
+      $fechaCi=$_GET['FC'];
+      $queryFechas=" and canjeos.fecha_canjeo BETWEEN '{$fechaAp}' and '{$fechaCi}' ";
+    }
     if(isset($_GET['C'])){
       if($_GET['C'] == 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas}");
       }
       if($_GET['C'] > 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and catalogos.cantidad_gemas = {$_GET['C']}");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and catalogos.cantidad_gemas = {$_GET['C']}");
       }
     }
     if(isset($_GET['ID'])){
       if($_GET['ID'] == 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas}");
       }
       if($_GET['ID'] > 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and catalogos.id_catalogo = {$_GET['ID']}");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and catalogos.id_catalogo = {$_GET['ID']}");
       }
       
     }

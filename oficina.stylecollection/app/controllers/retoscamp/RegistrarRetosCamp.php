@@ -114,6 +114,12 @@ if($amPremioscampR == 1){
 
       if($errores==0){
         $response = "1";
+        if(!empty($modulo) && !empty($accion)){
+          $fecha = date('Y-m-d');
+          $hora = date('H:i:a');
+          $query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Retos de Campaña', 'Registrar', '{$fecha}', '{$hora}')";
+          $exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+        }
       }else{
         $response = "2";
       }

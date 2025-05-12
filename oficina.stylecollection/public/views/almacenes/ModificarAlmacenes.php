@@ -53,7 +53,7 @@
                     </div>
                     <div class="form-group col-sm-12">
                        <label for="direccion">Direccion</label>
-                       <textarea type="text" class="form-control" id="direccion" name="direccion" value="<?php echo $datas['direccion_almacen'] ?>" maxlength="200"></textarea>
+                       <textarea type="text" class="form-control" id="direccion" name="direccion" maxlength="200"><?php echo $datas['direccion_almacen'] ?></textarea>
                        <span id="error_direccion" class="errors"></span>
                     </div>
                   </div>
@@ -212,16 +212,24 @@ function validar(){
   }
   /*===================================================================*/
   var direccion = $("#direccion").val();
-  var rdireccion = checkInput(direccion, alfanumericPattern3);
-  if( rdireccion == false ){
-    if(direccion.length != 0){
-      $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
-    }else{
-      $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
-    }
-  }else{
+  var rdireccion = false;
+  if(direccion.length != 0){
+    rdireccion = true;
     $("#error_direccion").html("");
+  }else{
+    rdireccion = false;
+    $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
   }
+  // var rdireccion = checkInput(direccion, alfanumericPattern3);
+  // if( rdireccion == false ){
+  //   if(direccion.length != 0){
+  //     $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
+  //   }else{
+  //     $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
+  //   }
+  // }else{
+  //   $("#error_direccion").html("");
+  // }
   /*===================================================================*/
 
   /*===================================================================*/

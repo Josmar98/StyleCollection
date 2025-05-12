@@ -3,7 +3,7 @@
 	font-family: 'Arial', sans-serif !important;
 
 	font-size: 1.01em;
-
+	text-transform: uppercase !important;
 }
 
 .serif{
@@ -66,7 +66,7 @@
 
 .celtitle2R{
 
-	text-align:right; !important;
+	text-align:right !important;
 
 	/*width:20%;*/
 
@@ -139,9 +139,18 @@
 .celtitleL{
 
 	text-align:left;
+}
 
-
-
+.celtitleL.descrip{
+	width:65%;
+}
+.tablecontent{
+	/* background-color:red; */
+	margin-left:-15px;
+}
+/* .cantidades, .descripciones, .precios, .totales{ */
+.cantidades, .precios, .totales{
+		font-size:1.08em;
 }
 
 .dates{

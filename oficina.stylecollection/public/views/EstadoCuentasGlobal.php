@@ -127,8 +127,8 @@
 
                 $canjeosPersonalesCliente = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and id_cliente = {$id_cliente_personal_cliente} and canjeos.estatus = 1");
                 foreach ($canjeosPersonalesCliente as $canje) {
-                  if(!empty($canje['cantidad_gemas'])){
-                    $gemasCanjeadasCliente += $canje['cantidad_gemas'];
+                  if(!empty($canje['precio_gemas'])){
+                    $gemasCanjeadasCliente += $canje['precio_gemas'];
                   }
                 }
 
@@ -1499,7 +1499,76 @@
                                   </tbody>
                                 </table>
                                 <br>
-                              <?php } ?>
+                              <?php } 
+                              
+                              
+                              // echo $id_despacho;
+                              $servicios = $lider->consultarQuery("SELECT * FROM servicios, servicio, servicioss WHERE servicios.id_servicio=servicio.id_servicio and servicio.id_servicioss=servicioss.id_servicioss and servicios.id_cliente={$id_cliente} and servicios.id_pedido={$id} and servicios.id_campana={$id_campana} and servicios.estatus=1");
+                              if(count($servicios)>1){
+                                $serviciosTotal=0;
+                                foreach ($servicios as $serv){ 
+                                  if(!empty($serv['id_servicios'])){
+                                    $serviciosTotal += $serv['cantidad_servicio'];
+                                  }
+                                }
+                                $resultDeudaPorServicio=0;
+                                if($serviciosTotal>0){
+                                  ?>
+                                  <br>
+                                  <span style="font-size:1.1em;color:#000;"><b>(-) Servicios adquiridos</b></span>
+                                  <br>
+                                  <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                    <tbody>
+                                      <?php 
+                                        foreach ($servicios as $serv){ if(!empty($serv['id_servicio'])){ ?>
+                                        <tr>
+                                          <td><b><?php echo $serv['nombre_servicio']; ?></b></td>
+                                          <td><b> <?php echo "$".number_format($serv['precio_servicio'],2,',','.'); ?></b></td>
+                                          <td><?php echo " x "; ?></td>
+                                          <td><b style="color:#ED2A77;"><?php echo number_format($serv['cantidad_servicio'],2,',','.'); ?></b></td>
+                                          <td><?php echo " = "; ?></td>
+                                          <td><b style="color:#C00;">
+                                            <?php
+                                              $deudaPorServicio = $serv['precio_servicio']*$serv['cantidad_servicio'];
+                                              $resultDeudaPorServicio += $deudaPorServicio;
+                                              $resultDeudaPorPromociones += $deudaPorServicio;
+                                              echo "$".number_format($deudaPorServicio,2,',','.');
+                                            ?>
+                                          </b></td>
+                                        </tr>
+                                      <?php } } ?>
+                                      <tr>
+                                        <td colspan="6" style="border-bottom:1px solid #777"></td>
+                                      </tr>
+                                      <tr>
+                                        <td></td>
+                                        <td colspan="3">
+                                          <span style="font-size:1.2em">
+                                            <b>Total</b>
+                                          </span>
+                                        </td>
+                                        <td> 
+                                          <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                            <b>=</b>
+                                          </span> 
+                                        </td>
+                                        <td colspan="">
+                                          <span style="font-size:1.5em;color:#C00">
+                                            <b>$<?php echo number_format($resultDeudaPorServicio,2,',','.') ?></b>
+                                          </span>
+                                        </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                  <br>
+                                  <?php 
+                                }
+                              }
+                              
+                              ?>
+
+
+                              
                             </div>
                           </div>
                           <br>

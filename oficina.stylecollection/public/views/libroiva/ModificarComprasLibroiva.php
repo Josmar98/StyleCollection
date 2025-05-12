@@ -458,7 +458,7 @@ $(document).ready(function(){
       }).then((isConfirm) => {
         if (isConfirm.value){
           $.ajax({
-            url: '?route=Libroiva&action=ModificarCompras',
+            url: '',
             type: 'POST',
             data: {
               validarData: true,

@@ -102,7 +102,7 @@ if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
   }else{
     $id_user = $_SESSION['id_cliente'];
   }
-  $promociones = $lider->consultarQuery("SELECT * FROM promocion WHERE id_campana = {$id_campana}");
+  $promociones = $lider->consultarQuery("SELECT * FROM promocion WHERE id_campana = {$id_campana} and estatus=1");
   $pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = $id_user and pedidos.id_despacho = $id_despacho");
   if(count($pedidos)>1){
     $pedido = $pedidos[0];
@@ -137,7 +137,7 @@ if(empty($_POST)){
   }else{
     $id_user = $_SESSION['id_cliente'];
   }
-  $promociones = $lider->consultarQuery("SELECT * FROM promocion WHERE id_campana = {$id_campana}");
+  $promociones = $lider->consultarQuery("SELECT * FROM promocion WHERE id_campana = {$id_campana} and estatus=1");
   $pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = $id_user and pedidos.id_despacho = $id_despacho");
   if(count($pedidos)>1){
     $pedido = $pedidos[0];

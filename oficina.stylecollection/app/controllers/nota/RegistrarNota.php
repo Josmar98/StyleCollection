@@ -43,6 +43,9 @@ if($estado_campana=="1"){
 	}
 	if (!empty($_POST)) {
 		// print_r($_POST);
+		// die();
+		$id_almacen = $_POST['almacen'];
+		$observaciones = $_POST['observacion'];
 		$nameAnalista = "";
 		if(!empty($_POST['nombreanalista'])){
 			$nameAnalista = ucwords(mb_strtolower($_POST['nombreanalista']));
@@ -51,6 +54,14 @@ if($estado_campana=="1"){
 		$lugar = ucwords(mb_strtolower($_POST['lugar_emision']));
 		$fecha = $_POST['fecha_emision'];
 		$num = $_POST['numero'];
+		$maxNumero = $lider->consultarQuery("SELECT MAX(notasentrega.numero_nota_entrega) as numero_nota FROM notasentregapersonalizada WHERE estatus=1");
+		if(!empty($maxNumero[0]['numero_nota'])){
+			if($maxNumero[0]['numero_nota']>=$num){
+				$num = $maxNumero[0]['numero_nota'];
+				$num++;
+			}
+		}
+
 		$id_lider = $_POST['id_cliente'];
 		$pedidoss = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_cliente = {$id_lider} and id_despacho = {$id_despacho}");
 		$id_pedido = $pedidoss[0]['id_pedido'];
@@ -59,7 +70,7 @@ if($estado_campana=="1"){
 			$opts = $_POST['opts'];
 		}
 		$max = count($opts);
-		$query = "INSERT INTO notasentrega (id_nota_entrega, id_cliente, id_campana, direccion_emision, lugar_emision, fecha_emision, numero_nota_entrega, nombreanalista, id_pedido, estatus) VALUES (DEFAULT, {$id_lider}, {$id_campana}, '{$direccion}', '{$lugar}', '{$fecha}', {$num}, '{$nameAnalista}', {$id_pedido}, 1)";
+		$query = "INSERT INTO notasentrega (id_nota_entrega, id_cliente, id_campana, id_almacen, direccion_emision, lugar_emision, fecha_emision, numero_nota_entrega, nombreanalista, id_pedido, estado_nota, observaciones, estatus) VALUES (DEFAULT, {$id_lider}, {$id_campana}, {$id_almacen}, '{$direccion}', '{$lugar}', '{$fecha}', {$num}, '{$nameAnalista}', {$id_pedido}, 1, '{$observaciones}', 1)";
 		// echo $query."<br>";
 		$exec = $lider->registrar($query, "notasentrega", "id_nota_entrega");
 		// print_r($exec);
@@ -123,16 +134,16 @@ if($estado_campana=="1"){
 						break;
 				}
 			}
+			
 
-			// $planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana, tipos_colecciones, pedidos WHERE confignotaentrega.id_plan = planes.id_plan and confignotaentrega.opcion = 1 and planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and planes_campana.id_campana = {$id_campana}");
 			$planesCol = $lider->consultarQuery("SELECT * FROM confignotaentrega, planes, planes_campana, tipos_colecciones, pedidos WHERE confignotaentrega.id_plan = planes.id_plan and confignotaentrega.id_campana = {$id_campana} and planes_campana.id_campana = {$id_campana} and planes_campana.id_plan = planes.id_plan and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and tipos_colecciones.id_pedido = {$id_pedido} and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id} and planes_campana.id_despacho = {$id_despacho} and confignotaentrega.id_despacho = {$id_despacho}");
+			// $planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC");
+			// print_r($planesCol);
 			$premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
+
+			$premios_planes4 = $lider->consultarQuery("SELECT DISTINCT * FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
 			$premios_planes3 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
 			$premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = 'Standard' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
-			// if(count($premios_planes) < 2){
-			// 	$pplan_momentaneo = $planesCol[0]['nombre_plan'];
-			// 	$premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho} and planes.nombre_plan = '{$pplan_momentaneo}'");
-			// }
 
 			$retos = $lider->consultarQuery("SELECT * FROM retos, retos_campana, premios WHERE retos.id_reto_campana = retos_campana.id_reto_campana and retos_campana.id_premio = premios.id_premio and retos_campana.id_campana = $id_campana and retos.id_campana = $id_campana");
 
@@ -140,16 +151,22 @@ if($estado_campana=="1"){
 
 			$canjeos = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho} and canjeos.id_cliente = {$id}");
 
-			$canjeosUnic = $lider->consultarQuery("SELECT DISTINCT catalogos.id_catalogo, nombre_catalogo FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho}");
+			$canjeosUnic = $lider->consultarQuery("SELECT DISTINCT catalogos.id_catalogo, nombre_catalogo, id_premio FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho}");
 
 			$premios_autorizados = $lider->ConsultarQuery("SELECT * FROM pedidos, clientes, premios_autorizados, premios WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = premios_autorizados.id_cliente and pedidos.id_pedido = premios_autorizados.id_pedido and pedidos.id_despacho = {$id_despacho} and premios.id_premio = premios_autorizados.id_premio and clientes.id_cliente = premios_autorizados.id_cliente and premios_autorizados.estatus = 1 and clientes.estatus = 1 and premios.estatus = 1 and clientes.id_cliente = {$id} and premios_autorizados.descripcion_PA = ''");
 
 			$premios_autorizados_obsequio = $lider->ConsultarQuery("SELECT * FROM pedidos, clientes, premios_autorizados, premios WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = premios_autorizados.id_cliente and pedidos.id_pedido = premios_autorizados.id_pedido and pedidos.id_despacho = {$id_despacho} and premios.id_premio = premios_autorizados.id_premio and clientes.id_cliente = premios_autorizados.id_cliente and premios_autorizados.estatus = 1 and clientes.estatus = 1 and premios.estatus = 1 and clientes.id_cliente = {$id} and premios_autorizados.descripcion_PA <> ''");
 
 			$despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and campanas.estatus = 1 and despachos.estatus = 1 and despachos.id_despacho = {$id_despacho}");
+
 			$pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_despacho = {$id_despacho} and despachos.estatus = 1 and pagos_despachos.estatus = 1");
+
 			$despacho = $despachos[0];
+
+			// $pagosRecorridos[0] = ['name'=> "Contado", 'id'=> "contado", 'precio'=>$despacho['contado_precio_coleccion']];
+
 			$iterRecor = 0;
+
 			foreach ($pagos_despacho as $pagosD){ if(!empty($pagosD['id_despacho'])){
 				if($pagosD['tipo_pago_despacho']=="Inicial"){
 					// $pagosRecorridos[0]['fecha_pago'] = $pagosD['fecha_pago_despacho_senior'];
@@ -264,6 +281,7 @@ if($estado_campana=="1"){
 			}
 			// print_r($controladorPremios);
 			// ========================== // =============================== // ============================== //
+
 			# ==================================================================================
 				$fechas_promociones = $lider->consultarQuery("SELECT * FROM fechas_promocion WHERE id_campana = {$id_campana}");
 				$abonoCantPromo = [];
@@ -327,10 +345,22 @@ if($estado_campana=="1"){
 					$premios = $lider->consultarQuery("SELECT * FROM premios, premios_promocion WHERE premios.id_premio = premios_promocion.id_premio and premios_promocion.id_campana = {$id_campana} and premios.estatus = 1");
 				}
 			# ==================================================================================
-
 		}
 
 		$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
+		$notas = $lider->consultarQuery("SELECT * FROM notasentrega WHERE estatus = 1");
+		$nume = 0;
+		if(count($notas)>1){
+			foreach ($notas as $key) {
+				if(!empty($key['id_nota_entrega'])){
+					if($key['numero_nota_entrega'] > $nume){
+						$nume = $key['numero_nota_entrega'];
+					}
+				}
+			}
+		}
+		$nume++;
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
 		if(!empty($action)){
 			if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 				require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -386,6 +416,7 @@ if($estado_campana=="1"){
 			// print_r($planesCol);
 			$premioscol = $lider->consultarQuery("SELECT * FROM premio_coleccion, tipos_premios_planes_campana, premios, tipos_colecciones, planes_campana, planes, pedidos WHERE tipos_colecciones.id_tipo_coleccion = premio_coleccion.id_tipo_coleccion and pedidos.id_pedido = tipos_colecciones.id_pedido and tipos_premios_planes_campana.id_tppc = premio_coleccion.id_tppc and tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_colecciones.id_plan_campana = planes_campana.id_plan_campana and planes_campana.id_plan = planes.id_plan and pedidos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
 
+			$premios_planes4 = $lider->consultarQuery("SELECT DISTINCT * FROM premios, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = premios.id_premio and tipos_premios_planes_campana.tipo_premio_producto = 'Premios' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = {$id_despacho} and planes_campana.id_despacho = {$id_despacho}");
 			$premios_planes3 = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
 			$premios_planes = $lider->consultarQuery("SELECT DISTINCT * FROM productos, tipos_premios_planes_campana, premios_planes_campana, planes_campana, despachos, planes WHERE tipos_premios_planes_campana.id_premio = productos.id_producto and tipos_premios_planes_campana.tipo_premio_producto = 'Productos' and premios_planes_campana.id_ppc = tipos_premios_planes_campana.id_ppc and planes_campana.id_plan_campana = premios_planes_campana.id_plan_campana and planes.id_plan = planes_campana.id_plan and planes.nombre_plan = 'Standard' and planes_campana.id_campana = despachos.id_campana and despachos.id_despacho = $id_despacho and planes_campana.id_despacho = {$id_despacho}");
 
@@ -395,7 +426,7 @@ if($estado_campana=="1"){
 
 			$canjeos = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho} and canjeos.id_cliente = {$id}");
 
-			$canjeosUnic = $lider->consultarQuery("SELECT DISTINCT catalogos.id_catalogo, nombre_catalogo FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho}");
+			$canjeosUnic = $lider->consultarQuery("SELECT DISTINCT catalogos.id_catalogo, nombre_catalogo, id_premio FROM canjeos, catalogos WHERE canjeos.id_catalogo = catalogos.id_catalogo and canjeos.estatus = 1 and canjeos.id_campana = {$id_campana} and canjeos.id_despacho = {$id_despacho}");
 
 			$premios_autorizados = $lider->ConsultarQuery("SELECT * FROM pedidos, clientes, premios_autorizados, premios WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = premios_autorizados.id_cliente and pedidos.id_pedido = premios_autorizados.id_pedido and pedidos.id_despacho = {$id_despacho} and premios.id_premio = premios_autorizados.id_premio and clientes.id_cliente = premios_autorizados.id_cliente and premios_autorizados.estatus = 1 and clientes.estatus = 1 and premios.estatus = 1 and clientes.id_cliente = {$id} and premios_autorizados.descripcion_PA = ''");
 
@@ -605,7 +636,7 @@ if($estado_campana=="1"){
 			}
 		}
 		$nume++;
-
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
 		if(!empty($action)){
 			if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 				require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

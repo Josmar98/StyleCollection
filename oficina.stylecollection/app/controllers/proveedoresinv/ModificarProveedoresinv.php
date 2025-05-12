@@ -27,12 +27,17 @@ if($amInventarioE){
 	if(!empty($_POST['validarData'])){
 		$codRif=$_POST['codRif'];
 		$rif=$_POST['rif'];
-		$query = "SELECT * FROM proveedores_inventarios WHERE codRif = '$codRif' and rif = '$rif'";
+		$query = "SELECT * FROM proveedores_inventarios WHERE rif = '$rif'";
 		$res1 = $lider->consultarQuery($query);
 		if($res1['ejecucion']==true){
 			if(Count($res1)>1){
 				$response = "1";
 			}else{
+				// if($res1[0]['rif']==$rif){
+				// 	$response = "1";
+				// }else{
+				// 	$response = "9"; //echo "Registro ya guardado.";
+				// }
 				$response = "9"; //echo "Registro ya guardado.";
 			}
 		}else{
@@ -46,9 +51,11 @@ if($amInventarioE){
 		$rif=$_POST['rif'];
 		$nombre=mb_strtoupper($_POST['nombre']);
 		$tipo=json_encode($_POST['tipoInv']);
+		$cod_tlfn = $_POST['cod_tlfn'];
+		$telefono = $_POST['telefono'];
+		$direccion = $_POST['direccion'];
 
-
-		$query = "UPDATE proveedores_inventarios SET codRif='{$codRif}', rif='{$rif}', nombreProveedor='{$nombre}', tipoInventario='{$tipo}', estatus=1 WHERE id_proveedor_inventario={$id}";
+		$query = "UPDATE proveedores_inventarios SET codRif='{$codRif}', rif='{$rif}', nombreProveedor='{$nombre}', tipoInventario='{$tipo}', cod_tlfn='{$cod_tlfn}', telefono='{$telefono}', direccion='{$direccion}', estatus=1 WHERE id_proveedor_inventario={$id}";
 		$exec = $lider->modificar($query);
 		if($exec['ejecucion']==true){
 			$response = "1";

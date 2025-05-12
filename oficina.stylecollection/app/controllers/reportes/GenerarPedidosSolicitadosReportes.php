@@ -1,4 +1,5 @@
 <?php 
+	set_time_limit(320);
 			if(is_file('app/models/indexModels.php')){
 				 	require_once'app/models/indexModels.php';
 				 }
@@ -83,22 +84,39 @@ if($amReportesC == 1){
 				<div class='col-xs-12'  style='width:100%;'>
 
 						<h3 style='text-align:right;float:right;'><small>StyleCollection- ".$nombreCampana."</small></h3>
-						<h2 style='font-size:1.9em;'> Solicitudes de Pedido - Campaña ".$numeroCampana."/".$anioCampana."</h2>
+						<h2 style='font-size:1.5em;'> Solicitudes de Pedido - Campaña ".$numeroCampana."/".$anioCampana."</h2>
 						<br>
 				";		
 
-					$info .= "<table class='table text-center' style='font-size:1.3em;width:110%;position:relative;left:-5%;'>
+					$info .= "<table class='table text-center' style='font-size:1.2em;width:110%;position:relative;left:-5%;'>
 								<thead style='background:#efefef55;font-size:1.05em;'>
 									<tr class='text-center'>
 										<th>Nº</th>
 										<th>Lider</th>
 										<th>Pedido Solicitado</th>
+										<th>Pedido Solicitado Colecciones</th>
 										<th>Pedido Aprobado <small style='font-size:0.8em;'>(En espera)</small></th>
 									</tr>
 								</thead>
 								<tbody> ";
 									$num = 1;
 									$cantidadPedido = 0;
+									$sumatorias = [];
+							
+									for ($i=0; $i < count($pedidosClientes)-1; $i++) {
+										$ped = $pedidosClientes[$i];
+										$sum = 0;
+										$sum=$ped['cantidad_pedido'];
+										$pedSec = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido = {$ped['id_pedido']}");
+										foreach ($pedSec as $key) {
+											if(!empty($key['id_pedido_sec'])){
+												$sum+=$key['cantidad_pedido_sec'];
+											}
+										}
+										$pedidosClientes[$i]['cantidad_pedido_total']=$sum;
+										$ped = $pedidosClientes[$i];
+									}
+
 									foreach ($pedidosClientes as $data): if(!empty($data['id_pedido'])):
 			                        	foreach ($clientess as $data2): if(!empty($data2['id_cliente'])):
 			                        		if($data['id_cliente'] == $data2['id_cliente']):
@@ -119,23 +137,49 @@ if($amReportesC == 1){
 												}
 
 												if($permitido=="1"):
+													$query2 = "SELECT * FROM despachos_secundarios, pedidos_secundarios WHERE despachos_secundarios.id_despacho_sec=pedidos_secundarios.id_despacho_sec and despachos_secundarios.id_despacho={$_GET['id']} and pedidos_secundarios.id_despacho={$_GET['id']} and pedidos_secundarios.id_cliente={$data['id_cliente']}";
+													$pedSec = $lider->consultarQuery($query2);
+													$info .= "
+													<tr class='text-center'>
+														<td style='width:7%;'>".$num."</td>
+														<td style='width:31%;'>
+															".number_format($data2['cedula'],0,'','.')." ".$data2['primer_nombre']." ".$data2['primer_apellido']."
+														</td>
+														<td style='width:31%;'>
+															".$data['cantidad_pedido_total']." Colecciones";
+															$cantidadPedido += $data['cantidad_pedido_total'];
+															$info .= "
+														</td>
 
-								$info .= "<tr class='text-center'>
-										<td style='width:7%;'>".$num."</td>
-										<td style='width:31%;'>
-											".number_format($data2['cedula'],0,'','.')." ".$data2['primer_nombre']." ".$data2['primer_apellido']."
-										</td>
+														<td style='width:31%;'>
+															".$data['cantidad_pedido']." Cols. Productos<br>";
+															if(!empty($sumatorias['Productos'])){
+																$sumatorias['Productos']['cantidad']+=$data['cantidad_pedido'];
+															}else{
+																$sumatorias['Productos']['cantidad']=$data['cantidad_pedido'];
+																$sumatorias['Productos']['name']="Productos";
+															}
+
+															foreach ($pedSec as $key) {
+																if(!empty($key['id_pedido_sec'])){
+																	$info .= $key['cantidad_pedido_sec']." Cols. ".$key['nombre_coleccion_sec']."<br>";
+																	if(!empty($sumatorias[$key['nombre_coleccion_sec']])){
+																		$sumatorias[$key['nombre_coleccion_sec']]['cantidad']+=$key['cantidad_pedido_sec'];
+																	}else{
+																		$sumatorias[$key['nombre_coleccion_sec']]['cantidad']=$key['cantidad_pedido_sec'];
+																		$sumatorias[$key['nombre_coleccion_sec']]['name']=$key['nombre_coleccion_sec'];
+																	}
+																}
+															}
+															$info .= "
+														</td>
 										
-										<td style='width:31%;'>
-											".$data['cantidad_pedido']." Colecciones";
-			                                  $cantidadPedido += $data['cantidad_pedido'];
-										$info .= "</td>
-
-										<td style='width:31%;margin:auto;'>
-											<span style='font-size:1.5em;margin-left:5em;border:1px solid #ccc;padding:0;color:#00000000;''> __ </span>
-										</td>
-									</tr>";
-										$num++;
+														<td style='width:31%;margin:auto;'>
+															<span style='font-size:1.5em;margin-left:5em;border:1px solid #ccc;padding:0;color:#00000000;''> __ </span>
+														</td>
+													</tr>";
+										
+													$num++;
 												
 												endif;
 
@@ -146,7 +190,17 @@ if($amReportesC == 1){
 			                            <td></td>
 			                            <td><b>Total: </b></td>
 			                            <td>
-			                              <b>".$cantidadPedido." Colecciones
+			                              <b>
+										  	".$cantidadPedido." Colecciones
+			                              </b>
+			                            </td>
+										<td>
+			                              <b>
+										  	";
+												foreach ($sumatorias as $keys) {
+													$info .= $keys['cantidad']." Cols. ".$keys['name']."<br>";
+												}
+											$info .= "
 			                              </b>
 			                            </td>
 			                            <td></td>
@@ -173,23 +227,26 @@ if($amReportesC == 1){
 			";
 
 
-					// $dompdf->loadHtml( file_get_contents( 'public/views/home.php' ) );
-					// $dompdf->loadHtml($file);
-					//$dompdf->setPaper('A4', 'landscape'); // para contenido en pagina de lado
+			// $dompdf->loadHtml( file_get_contents( 'public/views/home.php' ) );
+			// $dompdf->loadHtml($file);
+			//$dompdf->setPaper('A4', 'landscape'); // para contenido en pagina de lado
 
-					// top:30%;left:33%; || para A4 y para MEDIA CARTA
-					// top:35%;left:25%; || para pagina carta normal
+			// top:30%;left:33%; || para A4 y para MEDIA CARTA
+			// top:35%;left:25%; || para pagina carta normal
 
-					//$ancho = 616.56;
-					//$alto = 842.292;
+			//$ancho = 616.56;
+			//$alto = 842.292;
 
-					//$dompdf->setPaper(array(0,0,$ancho,$altoMedio)); // tamaño carta original
-					// $dompdf->setPaper(array(0,0,619.56,842.292)); // para contenido en pagina de lado
+			//$dompdf->setPaper(array(0,0,$ancho,$altoMedio)); // tamaño carta original
+			// $dompdf->setPaper(array(0,0,619.56,842.292)); // para contenido en pagina de lado
+			// $pgl1 = 96.001;
+			// $ancho = 528.00;
+			// $alto = 816.009;
+			// $altoMedio = $alto / 2;
+
+
+
 			$dompdf->loadHtml($info);
-			$pgl1 = 96.001;
-			$ancho = 528.00;
-			$alto = 816.009;
-			$altoMedio = $alto / 2;
 			$dompdf->render();
 			$dompdf->stream("Pedidos Solicitados de Campaña {$numeroCampana}-{$anioCampana} - StyleCollection", array("Attachment" => false));
 			// echo $info;

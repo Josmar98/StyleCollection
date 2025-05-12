@@ -132,8 +132,8 @@
                               $liderid_cliente_personal = $_GET['lider'];
                               $lidercanjeosPersonales = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and id_cliente = {$liderid_cliente_personal} and canjeos.estatus = 1");
                               foreach ($lidercanjeosPersonales as $canje) {
-                                if(!empty($canje['cantidad_gemas'])){
-                                  $lidergemasCanjeadas += ($canje['unidades'] * $canje['cantidad_gemas']);
+                                if(!empty($canje['precio_gemas'])){
+                                  $lidergemasCanjeadas += ($canje['unidades'] * $canje['precio_gemas']);
                                 }
                               }
 
@@ -275,8 +275,17 @@
                         <div class="col-xs-12 col-sm-12" style="margin-top:2%;">
                           <input type="hidden" id="totalGemasDisponibles" value="<?=$gemasAdquiridasDisponibles; ?>">
                           <?php
-
-                            if ($gemasAdquiridasDisponibles >= $data['cantidad_gemas']){
+                          // echo ;
+                            $catalogos=$lider->consultarQuery("SELECT * FROM catalogos, premios WHERE catalogos.id_premio=premios.id_premio and catalogos.estatus = 1 and catalogos.id_catalogo={$id} ORDER BY catalogos.cantidad_gemas asc;");
+                            // print_r($catalogos);
+                            $procederCanjear=false;
+                            if(!empty($catalogos[0]['nombre_premio'])){
+                              $procederCanjear=true;
+                            }
+                            if($data['id_premio']==-1){
+                              $procederCanjear=true;
+                            }
+                            if ($gemasAdquiridasDisponibles >= $data['cantidad_gemas'] && $procederCanjear==true){
                               // CUANDO SI HAY SUFICIENTE GEMAS
                               $buscar = $lider->consultarQuery("SELECT * FROM fechas_catalogo WHERE id_fecha_catalogo = 1");
                               $apertura = "";

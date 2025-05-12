@@ -25,275 +25,308 @@
 .fondoGeneral{
   width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
 }
-.box2logotipo{
-  position:absolute;top:14%;left:5%;width:12%;
-}
 .box2cintillo{
-  position:absolute;bottom:5%;left:4%;width:10%;
-  filter:drop-shadow(0px 0px 6px #FFF);
-}
-.box2emblema{
-  position:absolute;top:20vh;width:37.5%;margin-left:13%;margin-right:10%;
+  position:absolute;bottom:5%;right:4%;width:13%;
 }
 .box2detalle1{
-  position:absolute;width:50%;bottom:0%;left:55%;
+  position:absolute;top:35%;width:90%;left:5%;
 }
 .box2detalle2{
-  /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-  position:absolute;width:30%;top:0%;right:0%;
-  filter:drop-shadow(0px 0px 6px #ffff00);
+  position:absolute;top:11%;width:40%;left:30%;
 }
-.box2detalle22{
-  /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-  position:absolute;width:30%;top:0%;left:0%;
-  filter:drop-shadow(0px 0px 6px #ffff00);
-}
-.box2detalle3{
-  /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
-  position:absolute;width:25%;left:40%;top:20%;
-}
-.box2detalle4{
-  position:absolute;width:100%;left:0%;bottom:0%;
-  filter:drop-shadow(0px 0px 1px #094293);
+.box2emblema{
+  /* position:absolute;top:11%;width:35%;margin-left:32.5%; */
+  position:absolute;top:48%;width:35%;left:32.5%;
 }
 
 
-@media screen and (min-width: 1025px) and (max-width: 1280px){
+@media screen and (min-width: 1024px) and (max-width: 1280px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-    position:absolute;top:14%;left:5%;width:12%;
-  }
   .box2cintillo{
-    position:absolute;bottom:5%;left:4%;width:10%;
-  }
-  .box2emblema{
-/*    background:red;*/
-    position:absolute;top:20vh;width:37.5%;margin-left:13%;margin-right:10%;
+    position:absolute;bottom:5%;right:4%;width:13%;
   }
   .box2detalle1{
-    position:absolute;width:50%;bottom:0%;left:55%;
+    position:absolute;top:35%;width:90%;left:5%;
   }
   .box2detalle2{
-    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:11%;width:40%;left:30%;
   }
-  .box2detalle22{
-    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
-    position:absolute;width:25%;left:40%;top:20%;
-  }
-  .box2detalle4{
-    position:absolute;width:100%;left:0%;bottom:0%;
+  .box2emblema{
+    /* background:black; */
+    position:absolute;top:48%;width:35%;left:32.5%;
   }
 }
-
-
-@media screen and (min-width: 981px) and (max-width: 1024px){
+@media screen and (min-width: 981px) and (max-width: 1023px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-    position:absolute;top:14%;left:5%;width:12%;
-  }
   .box2cintillo{
-    position:absolute;bottom:5%;left:4%;width:10%;
-  }
-  .box2emblema{
-/*    background:blue;*/
-    position:absolute;top:20vh;width:37.5%;margin-left:13%;margin-right:10%;
+    position:absolute;bottom:5%;right:4%;width:14%;
   }
   .box2detalle1{
-    position:absolute;width:50%;bottom:0%;left:55%;
+    position:absolute;top:43%;width:90%;left:5%;
   }
   .box2detalle2{
-    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:17%;width:45%;left:27.5%;
   }
-  .box2detalle22{
-    /*position:absolute;width:11%;left:-0.5%;bottom:15%;transform: rotate(33deg);*/
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    /*position:absolute;width:20%;right:-6%;top:20%;transform: rotate(33deg);*/
-    position:absolute;width:25%;left:40%;top:20%;
-  }
-  .box2detalle4{
-    position:absolute;width:100%;left:0%;bottom:0%;
+  .box2emblema{
+    /* background:pink; */
+    position:absolute;top:48%;width:40%;left:30%;
   }
 }
-
-@media screen and (min-width: 861px) and (max-width: 980px){
+@media screen and (min-width: 931px) and (max-width: 980px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-/*    background:green;*/
-    position:absolute;width:28%;top:13%;left:36%;
-  }
   .box2cintillo{
-    position:absolute;bottom:15%;left:42.5%;width:15%;
-  }
-  .box2emblema{
-    position:absolute;top:25%;width:45%;margin-left:27.5%;margin-right:27.5%;
+    position:absolute;bottom:5%;right:4%;width:14%;
   }
   .box2detalle1{
-    position:absolute;width:75%;bottom:0%;left:12.5%;
+    position:absolute;top:40%;width:90%;left:5%;
   }
   .box2detalle2{
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:17%;width:45%;left:27.5%;
   }
-  .box2detalle22{
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    position:absolute;top:23%;left:10%;width:80%;
-  }
-  .box2detalle4{
-    position:absolute;bottom:0%;width:100%;
-  }
-  .box2detalle4 > img{
-/*    height:30vh !important;*/
+  .box2emblema{
+    /* background:blue; */
+    position:absolute;top:48%;width:40%;left:30%;
   }
 }
-
-@media screen and (min-width: 641px) and (max-width: 860px){
+@media screen and (min-width: 861px) and (max-width: 930px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-/*    background:pink;*/
-    position:absolute;width:28%;top:13%;left:36%;
-  }
   .box2cintillo{
-    position:absolute;bottom:15%;left:42.5%;width:15%;
-  }
-  .box2emblema{
-    position:absolute;top:25%;width:45%;margin-left:27.5%;margin-right:27.5%;
+    position:absolute;bottom:5%;right:4%;width:18%;
   }
   .box2detalle1{
-    position:absolute;width:85%;bottom:0%;left:7.5%;
+    position:absolute;top:43%;width:90%;left:5%;
   }
   .box2detalle2{
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:20%;width:50%;left:25%;
   }
-  .box2detalle22{
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    position:absolute;top:23%;left:10%;width:80%;
-  }
-  .box2detalle4{
-    position:absolute;bottom:0%;width:100%;
-  }
-  .box2detalle4 > img{
-    height:35vh !important;
+  .box2emblema{
+    /* background:green; */
+    position:absolute;top:48%;width:45%;left:27.5%;
   }
 }
-
-@media screen and (min-width: 521px) and (max-width: 640px){
+@media screen and (min-width: 810px) and (max-width: 860px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-/*    background:purple;*/
-    position:absolute;width:28%;top:13%;left:36%;
-  }
   .box2cintillo{
-    position:absolute;bottom:10%;left:42.5%;width:15%;;
-  }
-  .box2emblema{
-    position:absolute;top:25%;width:55%;margin-left:22.5%;margin-right:22.5%;
+    position:absolute;bottom:5%;right:4%;width:19%;
   }
   .box2detalle1{
-    position:absolute;width:85%;bottom:0%;left:7.5%;
+    position:absolute;top:45%;width:92%;left:4%;
   }
   .box2detalle2{
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:22%;width:52%;left:24%;
   }
-  .box2detalle22{
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    position:absolute;top:23%;left:10%;width:80%;
-  }
-  .box2detalle4{
-    position:absolute;bottom:0%;width:100%;
-  }
-  .box2detalle4 > img{
-    height:30vh !important;
+  .box2emblema{
+    /* background:purple; */
+    position:absolute;top:50%;width:45%;left:27.5%;
   }
 }
-
-@media screen and (min-width: 361px) and (max-width: 520px){
+@media screen and (min-width: 760px) and (max-width: 810px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-/*    background:red;*/
-    position:absolute;width:28%;top:13%;left:36%;
-  }
   .box2cintillo{
-    position:absolute;bottom:10%;left:42.5%;width:15%;
-  }
-  .box2emblema{
-    position:absolute;top:25%;width:55%;margin-left:22.5%;margin-right:22.5%;
+    position:absolute;bottom:5%;right:4%;width:19%;
   }
   .box2detalle1{
-    position:absolute;width:100%;bottom:0%;left:0%;
+    position:absolute;top:45%;width:94%;left:3%;
   }
   .box2detalle2{
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:22%;width:52%;left:24%;
   }
-  .box2detalle22{
-    position:absolute;width:30%;top:0%;left:0%;
-  }
-  .box2detalle3{
-    position:absolute;top:23%;left:10%;width:80%;
-  }
-  .box2detalle4{
-    position:absolute;bottom:0%;width:100%;
-  }
-  .box2detalle4 > img{
-    height:25vh !important;
+  .box2emblema{
+    /* background:yellow; */
+    position:absolute;top:50%;width:45%;left:27.5%;
   }
 }
-
-@media screen and (min-width: 100px) and (max-width: 360px){
+@media screen and (min-width: 710px) and (max-width: 760px){
   .fondoGeneral{
     width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2logotipo{
-/*    background:#4AC;*/
-    position:absolute;width:28%;top:13%;left:36%;
-  }
   .box2cintillo{
-    position:absolute;bottom:10%;left:42.5%;width:15%;
-  }
-  .box2emblema{
-    position:absolute;top:25%;width:55%;margin-left:22.5%;margin-right:22.5%;
+    position:absolute;bottom:5%;right:4%;width:22%;
   }
   .box2detalle1{
-    position:absolute;width:100%;bottom:0%;left:0%;
+    position:absolute;top:47%;width:96%;left:2%;
   }
   .box2detalle2{
-    position:absolute;width:30%;top:0%;right:0%;
+    position:absolute;top:25%;width:60%;left:20%;
   }
-  .box2detalle22{
-    position:absolute;width:30%;top:0%;left:0%;
+  .box2emblema{
+    /* background:red; */
+    position:absolute;top:55%;width:48%;left:26%;
   }
-  .box2detalle3{
-    position:absolute;top:23%;left:10%;width:80%;
+}
+@media screen and (min-width: 660px) and (max-width: 710px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
   }
-  .box2detalle4{
-    position:absolute;bottom:0%;width:100%;
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:22%;
   }
-  .box2detalle4 > img{
-    height:25vh !important;
+  .box2detalle1{
+    position:absolute;top:47%;width:98%;left:1%;
+  }
+  .box2detalle2{
+    position:absolute;top:25%;width:64%;left:18%;
+  }
+  .box2emblema{
+    /* background:blue; */
+    position:absolute;top:55%;width:48%;left:26%;
+  }
+}
+@media screen and (min-width: 610px) and (max-width: 660px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:24%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:98%;left:1%;
+  }
+  .box2detalle2{
+    position:absolute;top:24%;width:70%;left:15%;
+  }
+  .box2emblema{
+    /* background:green; */
+    position:absolute;top:55%;width:54%;left:23%;
+  }
+}
+@media screen and (min-width: 571px) and (max-width: 609px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:24%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:98%;left:1%;
+  }
+  .box2detalle2{
+    position:absolute;top:24%;width:70%;left:15%;
+  }
+  .box2emblema{
+    /* background:pink; */
+    position:absolute;top:55%;width:54%;left:23%;
+  }
+}
+@media screen and (min-width: 520px) and (max-width: 570px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:75%;left:12.5%;
+  }
+  .box2emblema{
+    /* background:black; */
+    position:absolute;top:55%;width:60%;left:20%;
+  }
+}
+@media screen and (min-width: 471px) and (max-width: 519px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:75%;left:12.5%;
+  }
+  .box2emblema{
+    /* background:orange; */
+    position:absolute;top:55%;width:60%;left:20%;
+  }
+}
+@media screen and (min-width: 421px) and (max-width: 470px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:80%;left:10%;
+  }
+  .box2emblema{
+    /* background:purple; */
+    position:absolute;top:55%;width:64%;left:18%;
+  }
+}
+@media screen and (min-width: 361px) and (max-width: 420px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:80%;left:10%;
+  }
+  .box2emblema{
+    /* background:silver; */
+    position:absolute;top:55%;width:64%;left:18%;
+  }
+}
+@media screen and (min-width: 276px) and (max-width: 360px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:80%;left:10%;
+  }
+  .box2emblema{
+    /* background:#44AACC; */
+    position:absolute;top:55%;width:64%;left:18%;
+  }
+}
+
+@media screen and (min-width: 100px) and (max-width: 275px){
+  .fondoGeneral{
+    width:100%;height:100%;position:absolute;top:0%;left:0;overflow:none;opacity:.7;
+  }
+  .box2cintillo{
+    position:absolute;bottom:5%;right:4%;width:25%;
+  }
+  .box2detalle1{
+    position:absolute;top:50%;width:100%;left:0%;
+  }
+  .box2detalle2{
+    position:absolute;top:27%;width:85%;left:7.5%;
+  }
+  .box2emblema{
+    /* background:#AA44CC; */
+    position:absolute;top:55%;width:68%;left:16%;
   }
 }
 
@@ -335,7 +368,7 @@ th{text-align:center;}
 .contentTitle{ font-size:3.5em; }
 .contentTitle2{ font-size:2.5em; }
 
-.btnContent2{ font-size:1.2em; background:#FFF;color:<?=$fucsia?>; border:0px solid #FFF;border-radius:10px;padding:10px }
+.btnContent2{ font-size:1.2em; color:#FFF;background:<?=$fucsia?>; border:0px solid #FFF;border-radius:10px;padding:10px }
 .btnContent2:hover,.btnContent2:focus, .btnContent2:active{color:#fff;background:#DC1966}
 
 

@@ -96,7 +96,6 @@ if($amUsuariosR == 1){
     // $despachosActual = $lider->consultarQuery("SELECT * from despachos WHERE estatus = 1 and id_campana = $id_campana");
     // $despachosActual = Count($despachosActual)-1;
     $clientes = $lider->consultarQuery("SELECT * FROM clientes, usuarios, roles WHERE clientes.id_cliente = usuarios.id_cliente and roles.id_rol = usuarios.id_rol and clientes.estatus = 1 and roles.nombre_rol != 'Administrador' ORDER BY clientes.id_cliente ASC");
-
     $accesosUsuarios = $lider->consultarQuery("SELECT * FROM accesosUsuarios");
     
     if(!empty($action)){

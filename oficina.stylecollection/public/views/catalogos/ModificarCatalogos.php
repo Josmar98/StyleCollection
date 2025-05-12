@@ -156,6 +156,7 @@
                         $elementosMostrar=1;
                       }
                     }
+                    // print_r($premiosInv);
                   ?>
                   <?php for($z=1; $z<=$limiteElementos; $z++){ ?>
                     <div class="row" style="padding:0px 15px;">
@@ -164,11 +165,11 @@
                           // echo $premiosInv[($z-1)]['tipo_inventario'];
                           // echo $premiosInv[($z-1)]['id_premio_inventario'];
                           if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
-                            $nameTabla = "Productos";
+                            $nameTabla = "productos";
                             $idTabla = "id_producto";
                           }
                           if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
-                            $nameTabla = "Mercancia";
+                            $nameTabla = "mercancia";
                             $idTabla = "id_mercancia";
                           }
                           $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
@@ -182,8 +183,9 @@
                       </div>
                       <div style="width:80%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario <?php if($z>$elementosMostrar){ echo "d-none"; } ?>">
                         <select class="form-control select2 inventarios" id="inventario<?=$z; ?>" min="<?=$z;?>" name="inventario[]"  style="width:100%">
-                          <option value=""></option>
-                          <?php $tipoInvOP=""; ?>
+                        <option value=""></option>
+                        <option value="-1">Servicio</option>
+                        <?php $tipoInvOP=""; ?>
                           <?php foreach($productos as $inv){ if(!empty($inv['id_producto'])){ ?>
                             <option value="<?php echo $inv['id_producto']; ?>"
                             <?php
@@ -348,11 +350,15 @@ $(document).ready(function(){
     var value = $(this).val();
     var index = $(this).attr("min");
     if(value!=""){
-      var pos = value.indexOf('m');
-      if(pos>=0){ //Mercancia
-        $("#tipo"+index).val('Mercancia');
-      }else if(pos < 0){ //Productos
-        $("#tipo"+index).val('Productos');
+      if(value==-1){
+        $("#tipo"+index).val('Servicio');
+      }else{
+        var pos = value.indexOf('m');
+        if(pos>=0){ //Mercancia
+          $("#tipo"+index).val('Mercancia');
+        }else if(pos < 0){ //Productos
+          $("#tipo"+index).val('Productos');
+        }
       }
     }else{
       $("#tipo"+index).val('');

@@ -76,7 +76,14 @@
               <div class="box-body">
                     
                   <div class="row">
-
+                    <div class="form-group col-sm-12">
+                      <label for="fechaDesde">Fecha de Canjeo (DESDE)</label>
+                      <input type="date" class="form-control" id="fechaDesde" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label for="fechaHasta">Fecha de Canjeo (HASTA)</label>
+                      <input type="date" class="form-control" id="fechaHasta" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
+                    </div>
                     <div class="form-group col-sm-12">
                       <label for="tipoElemento"><b style="color:#000;">Seleccionar Tipo de Elemento del catálogo</b></label>
                       <select id="tipoElemento" class="form-control select2" style="width:100%;">
@@ -91,6 +98,8 @@
                   <form action="" method="get" role="form" class="form_register formgemasCatalogo">
                     <input type="hidden" name="route" value="Reportes">
                     <input type="hidden" name="action" value="PremiosCanjeadosAsignados">
+                      <input type="hidden" name="FA" class="fechaa" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                      <input type="hidden" name="FC" class="fechac" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
                     <input type="hidden" name="T" value="1">
                     <div class="form-group col-sm-12 boxgemasCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="1" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
                         <label for="gemasCatalogo"><b style="color:#000;">Cantidad de Gemas del catálogo </b></label>
@@ -113,6 +122,8 @@
                   <form action="" method="get" role="form" class="form_register formelementosCatalogo">
                     <input type="hidden" name="route" value="Reportes">
                     <input type="hidden" name="action" value="PremiosCanjeadosAsignados">
+                      <input type="hidden" name="FA" class="fechaa" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                      <input type="hidden" name="FC" class="fechac" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
                     <input type="hidden" name="T" value="2">
                     <div class="form-group col-sm-12 boxelementosCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="2" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
                         <label for="elementosCatalogo"><b style="color:#000;">Premios del catálogo </b></label>
@@ -189,6 +200,9 @@
                       <div class="col-xs-12 col-sm-6" style="text-align:right;">
                         <?php
                           $rutaReporte = "?route=Reportes&action=GenerarPremiosCanjeadosAsignados";
+                          if(!empty($_GET['FA']) && !empty($_GET['FC'])){
+                            $rutaReporte .= "&FA=".$_GET['FA']."&FC=".$_GET['FC']; 
+                          }
                           if(!empty($_GET['T']) && isset($_GET['C'])){
                             $rutaReporte .= "&T=".$_GET['T']."&C=".$_GET['C'];
                           }
@@ -361,7 +375,14 @@ $(document).ready(function(){
       });
     }
   }
-    
+  $("#fechaDesde").change(function(){
+    var fa = $(this).val();
+    $(".fechaa").val(fa);
+  });
+  $("#fechaHasta").change(function(){
+    var fh = $(this).val();
+    $(".fechac").val(fh);
+  });
   $("#tipoElemento").change(function(){
     var tipo = $(this).val();
     $(".boxgemasCatalogo").slideUp(500);

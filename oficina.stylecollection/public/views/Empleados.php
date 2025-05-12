@@ -51,7 +51,7 @@
                   <?php if ($amEmpleadosE==1 || $amEmpleadosB==1){ ?>
                   <th>---</th>
                   <?php } ?>
-                  <th>Cedula</th>
+                  <th>Cedula/Rif</th>
                   <th>Nombres</th>
                   <th>Apellidos</th>
                   <!-- <th>Correo</th> -->
@@ -90,7 +90,7 @@
                     <td style="width:5%">
                       <span class="contenido2">
                       <!-- <a href="?route=<?php echo $url ?>&action=Detalles&id=<?php echo $data['id_empleado'] ?>"> -->
-                        <?php echo $data['cedula']; ?>
+                        <?php echo $data['cod_rif'].$data['rif']; ?>
                       <!-- </a> -->
                       </span>
                     </td>

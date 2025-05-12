@@ -100,7 +100,37 @@
                                         if($premiosPlan['id_ppc']==$premios['id_ppc']){ ?>
                                           <div class="col-xs-12">
                                             <div class="form-group col-xs-12">
-                                              <label for="<?=$plan['id_plan'].$premiosPlan['id_premio']?>">Cantidad del Premio | <span style="font-size:1.2em;">(<?=$premiosPlan['nombre_premio']?>)</span></label>
+                                              <label for="<?=$plan['id_plan'].$premiosPlan['id_premio']?>">
+                                                Cantidad del Premio | <span style="font-size:1.2em;">(<?=$premiosPlan['nombre_premio']?>)</span>
+                                                <?php
+                                                  $id_premios_busqueda = $premiosPlan['id_premio'];
+                                                  $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                                  $iter = 1;
+                                                  echo " => <small>[";
+                                                  foreach($premiosinv as $pinv){
+                                                    if(!empty($pinv['id_premio_inventario'])){
+                                                      if($pinv['tipo_inventario']=="Productos"){
+                                                        $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                      }
+                                                      if($pinv['tipo_inventario']=="Mercancia"){
+                                                        $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                      }
+                                                      $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                                      foreach ($inventariosMos as $invm) {
+                                                        if(!empty($invm[0])){
+                                                          echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                                          if($iter < (count($premiosinv)-1)){
+                                                            echo " | ";
+                                                          }
+
+                                                        }
+                                                      }
+                                                    }
+                                                    $iter++;
+                                                  }
+                                                  echo "]</small>";
+                                                ?>
+                                              </label>
                                               <!-- <label for="">Premio</label> -->
                                               <input type="hidden" class="form-control " id="" name="premios[]" value="<?=$premiosPlan['nombre_premio']?>" readonly>
                                               <span class="existenciaDisponible<?=$plan['id_plan'].$premiosPlan['id_premio']?> errors"></span>

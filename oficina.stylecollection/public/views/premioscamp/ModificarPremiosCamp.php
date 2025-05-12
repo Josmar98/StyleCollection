@@ -143,11 +143,11 @@
                                     if(!empty($premiosInv[($z-1)])){
                                       // echo $premiosInv[($z-1)]['id_premio_inventario'];
                                       if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
-                                        $nameTabla = "Productos";
+                                        $nameTabla = "productos";
                                         $idTabla = "id_producto";
                                       }
                                       if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
-                                        $nameTabla = "Mercancia";
+                                        $nameTabla = "mercancia";
                                         $idTabla = "id_mercancia";
                                       }
                                       $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
@@ -178,7 +178,7 @@
                                             }
                                           }
                                         ?>
-                                        >Productos: <?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                                        >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                                       <?php } } ?>
                                       <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
                                         <option value="m<?=$data['id_mercancia'] ?>"
@@ -192,7 +192,7 @@
                                             }
                                           }
                                         ?>
-                                        >Mercancia: <?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                                        >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                                       <?php } } ?>
                                     </select>
                                     <input type="hidden" id="tipoinicial<?=$x.$z; ?>" name="tipos[inicial][]"  value="<?=$tipoInvOP; ?>">
@@ -286,11 +286,11 @@
                                             // echo $premiosInv[($z-1)]['tipo_inventario'];
                                             // echo $premiosInv[($z-1)]['id_premio_inventario'];
                                             if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
-                                              $nameTabla = "Productos";
+                                              $nameTabla = "productos";
                                               $idTabla = "id_producto";
                                             }
                                             if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
-                                              $nameTabla = "Mercancia";
+                                              $nameTabla = "mercancia";
                                               $idTabla = "id_mercancia";
                                             }
                                             $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
@@ -320,7 +320,7 @@
                                                   }
                                                 }
                                               ?>
-                                              >Productos: <?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                                              >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                                             <?php } } ?>
                                             <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
                                               <option value="m<?=$data['id_mercancia'] ?>"
@@ -334,7 +334,7 @@
                                                   }
                                                 }
                                               ?>
-                                              >Mercancia: <?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                                              >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                                             <?php } } ?>
                                           </select>
                                           <input type="hidden" id="tipo<?=$pagosDFill['id'];?><?=$x.$z; ?>" name="tipos[<?=$pagosDFill['id'];?>][]" value="<?=$tipoInvOP; ?>">

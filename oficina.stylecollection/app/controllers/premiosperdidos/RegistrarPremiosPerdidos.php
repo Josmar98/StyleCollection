@@ -7,6 +7,7 @@
 	// 	require_once'../app/models/indexModels.php';
 	// }
 	// $lider = new Models();
+	// if($_SESSION['nombre_rol']!="Superusuario"){ die(); }
 
 	$id_campana = $_GET['campaing'];
 	$numero_campana = $_GET['n'];
@@ -143,6 +144,9 @@ if($estado_campana=="1"){
 			$pagos = $lider->consultarQuery("SELECT * FROM pagos WHERE pagos.estatus = 1 and pagos.estado = 'Abonado' and pagos.id_pedido = {$id_pedido}");
 			$pagosRealizados = [];
 			$pagosTotal = 0;
+
+			$total_pagar=$pedido['total_pagar'];
+			$fechaLimite="";
 			foreach ($pagosRecorridos as $pagosR) {
 				$pagosRealizados[$pagosR['id']] = 0;
 				foreach ($pagos as $data){ if(!empty($data['id_pago'])){
@@ -154,9 +158,20 @@ if($estado_campana=="1"){
 						if($aprob==true){
 							$pagosRealizados[$pagosR['id']] += $data['equivalente_pago'];
 						}
+						$fechaLimite=$pagosR['fecha_pago'];
 					}
 				}}
 				$pagosTotal += $pagosRealizados[$pagosR['id']];
+			}
+			$sumatoriaPagos = 0;
+			foreach ($pagos as $data){ if(!empty($data['id_pago'])){
+				if($data['fecha_pago'] <= $fechaLimite){
+					$sumatoriaPagos+=$data['equivalente_pago'];
+				}
+			}}
+			$tieneEl100 = false;
+			if($sumatoriaPagos>=$total_pagar){
+				$tieneEl100 = true;
 			}
 
 			$bonosContado = $lider->consultarQuery("SELECT * FROM bonoscontado WHERE bonoscontado.estatus = 1 and bonoscontado.id_pedido = {$id_pedido}");
@@ -210,6 +225,15 @@ if($estado_campana=="1"){
 				if($totalPremiosGanados[$pagosR['id']] > $pedido['cantidad_aprobado']){
 					$totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
 				}
+				if(!empty($_GET['allPremios']) && $_GET['allPremios']=100){
+					if($tieneEl100==true){
+						if(mb_strtolower($pagosR['id'])==mb_strtolower("inicial")){
+							// $totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+						}else{
+							$totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+						}
+					}
+				}
 			}
 
 			// =============================================================================================================== //
@@ -248,6 +272,7 @@ if($estado_campana=="1"){
 			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho");
 			$premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE estatus = 1");
 		}
+
 		$premios_perdidos_usados = $lider->consultarQuery("SELECT DISTINCT premios_perdidos.id_cliente FROM premios_perdidos, pedidos WHERE premios_perdidos.id_pedido = pedidos.id_pedido and pedidos.id_despacho = {$id_despacho} and premios_perdidos.estatus = 1");
 
 		$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
@@ -258,6 +283,8 @@ if($estado_campana=="1"){
 
 			$pedido = $pedidos[0];
 			$id_pedido = $pedido['id_pedido'];
+			// $ped = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_pedido={$id_pedido}");
+
 			$tipo_premios_planespp = $lider->consultarQuery("SELECT DISTINCT id_premio, nombre_premio, estatus FROM premios");
 		
 			$planesCol = $lider->consultarQuery("SELECT * FROM planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and pedidos.id_pedido = tipos_colecciones.id_pedido and pedidos.id_despacho = {$id_despacho} and pedidos.id_cliente = {$id} and planes_campana.id_campana = {$id_campana} and planes_campana.id_despacho = {$id_despacho} ORDER BY planes.id_plan ASC;");
@@ -294,6 +321,9 @@ if($estado_campana=="1"){
 				$pagos = $lider->consultarQuery("SELECT * FROM pagos WHERE pagos.estatus = 1 and pagos.estado = 'Abonado' and pagos.id_pedido = {$id_pedido}");
 				$pagosRealizados = [];
 				$pagosTotal = 0;
+				
+				$total_pagar=(float) $pedido['total_pagar'];
+				$fechaLimite="";
 				foreach ($pagosRecorridos as $pagosR) {
 					$pagosRealizados[$pagosR['id']] = 0;
 					foreach ($pagos as $data){ if(!empty($data['id_pago'])){
@@ -305,10 +335,27 @@ if($estado_campana=="1"){
 							if($aprob==true){
 								$pagosRealizados[$pagosR['id']] += $data['equivalente_pago'];
 							}
+							$fechaLimite=$pagosR['fecha_pago'];
 						}
 					}}
 					$pagosTotal += $pagosRealizados[$pagosR['id']];
+					// echo "pagosTotal [".$pagosR['id']."]: ".$pagosTotal."<br>";
 				}
+				// echo "FECHA: ".$fechaLimite."<br>";
+				$sumatoriaPagos = 0;
+				foreach ($pagos as $data){ if(!empty($data['id_pago'])){
+					if($data['fecha_pago'] <= $fechaLimite){
+						$sumatoriaPagos+=$data['equivalente_pago'];
+					}
+				}}
+				$tieneEl100 = false;
+				if(($sumatoriaPagos+0.0000001)>=$total_pagar){
+					$tieneEl100 = true;
+				}
+				// echo "tieneEl100: ".$tieneEl100."<br>";
+				// echo "pagosTotal: ".$pagosTotal."<br>";
+				// echo "sumatoriaPagos: ".$sumatoriaPagos."<br>";
+				// echo "total_pagar: ".$total_pagar."<br>";
 
 				// ##################
 				// $pagosContado = 0;
@@ -425,6 +472,10 @@ if($estado_campana=="1"){
 					$cantidadPremiosGanados[$pagosR['id']] = $pagosRealizados[$pagosR['id']] / $pagosR['precio'];
 					$cantidadPremiosGanadosEnteros[$pagosR['id']] = intval($cantidadPremiosGanados[$pagosR['id']]);
 					$totalPremiosGanados[$pagosR['id']] = $cantidadPremiosGanadosEnteros[$pagosR['id']] + $cantidadColeccionesContado;
+					// echo "Pagos Precio: ".$pagosR['precio']."<br>";
+					// echo "cantidadPremiosGanados: ".$cantidadPremiosGanados[$pagosR['id']]."<br><br>";
+					// echo "totalPremiosGanados: ".$totalPremiosGanados[$pagosR['id']]."<br><br>";
+
 					// echo "Distribuido: ".$cantidadDistribucion[$pagosR['id']];
 					// echo "<br>";
 					// echo "Abonado Real: ".$pagosRealizados[$pagosR['id']];
@@ -441,6 +492,18 @@ if($estado_campana=="1"){
 					// echo "<br>";
 					if($totalPremiosGanados[$pagosR['id']] > $pedido['cantidad_aprobado']){
 						$totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+					}
+					// if($tieneEl100==true){
+					// 	$totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+					// }
+					if(!empty($_GET['allPremios']) && $_GET['allPremios']=100){
+						if($tieneEl100==true){
+							if(mb_strtolower($pagosR['id'])==mb_strtolower("inicial")){
+								// $totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+							}else{
+								$totalPremiosGanados[$pagosR['id']] = $pedido['cantidad_aprobado'];
+							}
+						}
 					}
 
 					// echo "Total: <b>".$totalPremiosGanados[$pagosR['id']]." Premios Ganados"."</b>";

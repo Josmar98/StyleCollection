@@ -786,7 +786,7 @@
                               $permitido = "1";
                             }
                             if($permitido=="1"){
-                              if(ucwords(mb_strtolower($data['tipo_pago']))==$pagosR['name']){ ?>
+                              if(mb_strtolower($data['tipo_pago'])==mb_strtolower($pagosR['name'])){ ?>
                                 <?php
                                   if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){ if($data['estado']=="Diferido"){
                                     $montosPagos[$pagosR['id']] += $data['monto_pago'];
@@ -960,7 +960,7 @@
                                         <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
                                         <br>
                                         <?php
-                                          if(ucwords(mb_strtolower($data['tipo_pago']))==$pagosR['name']){
+                                          if(mb_strtolower($data['tipo_pago'])==mb_strtolower($pagosR['name'])){
                                             $restriccion = $pagosR['fecha_pago'];
                                           }
                                           $temporalidad = "";

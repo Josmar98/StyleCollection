@@ -306,7 +306,14 @@ if($amDespachosE == 1){
 
       $despachos=$lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id");
       $pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id} and despachos.estatus = 1 and pagos_despachos.estatus = 1");
-      $colecciones=$lider->consultarQuery("SELECT id_coleccion, colecciones.id_despacho, colecciones.id_producto, despachos.numero_despacho, colecciones.cantidad_productos, producto, descripcion, productos.cantidad as cantidad, precio_producto, colecciones.estatus FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and colecciones.id_despacho = $id");
+
+      // SELECT * FROM colecciones WHERE colecciones.id_despacho=21 and colecciones.estatus=1;
+      // $colecciones=$lider->consultarQuery("SELECT * FROM despachos, colecciones, productos WHERE despachos.id_despacho = colecciones.id_despacho and productos.id_producto = colecciones.id_producto and despachos.estatus = 1 and colecciones.estatus = 1 and colecciones.id_despacho = {$id}");
+      $colecciones=$lider->consultarQuery("SELECT * FROM colecciones WHERE colecciones.estatus = 1 and colecciones.id_despacho = {$id}");
+      // foreach ($colecciones as $key) {
+      //   print_r($key);
+      //   echo "<br><br>";
+      // }
       if(Count($despachos)>1){
           $despacho = $despachos[0];
           if(!empty($action)){

@@ -50,7 +50,14 @@
                       <input type="hidden" value="RutasLideres" name="route">
                       <input type="hidden" value="Registrar" name="action">
                       <select class="form-control select2" id="cant" name="cant" style="width:100%;">
-                        <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "10"){ echo "selected"; } } ?> value="10">10</option>
+                        <?php
+                          for ($cantValue=1; $cantValue <= 100; $cantValue++) { 
+                            ?>
+                              <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == $cantValue){ echo "selected"; } } ?> value="<?=$cantValue;?>"><?=$cantValue;?></option>
+                            <?php
+                          }
+                        ?>
+                        <!-- <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "10"){ echo "selected"; } } ?> value="10">10</option>
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "20"){ echo "selected"; } } ?> value="20">20</option>
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "30"){ echo "selected"; } } ?> value="30">30</option>
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "40"){ echo "selected"; } } ?> value="40">40</option>
@@ -58,7 +65,7 @@
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "60"){ echo "selected"; } } ?> value="60">60</option>
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "70"){ echo "selected"; } } ?> value="70">70</option>
                         <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "80"){ echo "selected"; } } ?> value="80">80</option>
-                        <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "90"){ echo "selected"; } } ?> value="90">90</option>
+                        <option <?php if(!empty($_GET['cant'])){ if($_GET['cant'] == "90"){ echo "selected"; } } ?> value="90">90</option> -->
                       </select>
                   </div>
                   <div class="form-group col-xs-12 col-sm-6">

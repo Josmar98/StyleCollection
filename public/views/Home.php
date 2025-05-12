@@ -27,84 +27,47 @@
 			object-position: bottom;
 		}
 	</style>
-	<div class="wrapper" style="background:url('public/assets/img/resources/4.24/fondo.png');background-repeat:no-repeat;background-size:100% 100%;background-position-y:100%;opacity:1;">
+	<!-- <div class="wrapper" style="background:#F9F9FA;background-repeat:no-repeat;background-size:100% 100%;background-position-y:100%;opacity:1;"> -->
+	<!-- <div class="wrapper" style="background:url('public/assets/img/resources/2.25/fondo.png');background-repeat:no-repeat;background-size:100% 100%;background-position-y:100%;opacity:1;"> -->
+	<div class="wrapper" style="background:url('public/assets/img/resources/2.25/fondo.png');background-repeat:no-repeat;background-size:100% 100%;background-position-y:10%;opacity:1;">
 	<!-- <div class="wrapper" style="background:red;width:100%;"> -->
 
 		<!-- <img src="public/assets/img/resources/4.24/fondo.png" class="fondoGeneral"> -->
 		<div class="head seccionFull"></div><!-- INDISPENSABLE NO SE PUEDE BORRAR -->
-
-		<div style="max-width:100%;min-width:100%;width:100%;min-height:90vh;max-height:90vh;overflow:hidden;">
+		<div style="max-width:100%;min-width:100%;width:100%;min-height:85vh;max-height:85vh;overflow:hidden;">
 			<!-- <div style="background:#FFF;background-size:100% 100%;position:absolute;max-width:100%;min-width:100%;min-height:90vh;max-height:90vh;opacity:0.1;"></div> -->
-			<div style="" class="box1detalle4">
-				<div style="" class="box2detalle4">
-					<img src="public/assets/img/resources/4.24/montains.png" style="max-width:100%;width:100%;">
+			<!-- <div style="" class="box1fondo1">
+				<div style="" class="box2fondo2">
+					<img src="public/assets/img/resources/2.25/fondo.png" style="width: 100%;overflow: hidden;">
+				</div>
+			</div> -->
+			<div style="" class="box1detalle1">
+				<div style="" class="box2detalle1">
+					<img src="public/assets/img/resources/2.25/detalle-fondo.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-
-			<div style="" class="box1detalle3">
-				<div style="" class="box2detalle3">
-					<img src="public/assets/img/resources/4.24/nubes.png" class=""  style="max-width:100%;width:100%;">
-				</div>
-			</div>
-
-			<div style="" class="box1detalle2">
-				<div style="" class="box2detalle22">
-					<img src="public/assets/img/resources/4.24/lasersL.png" style="max-width:100%;width:100%;">
-				</div>
-			</div>
-
 			<div style="" class="box1detalle2">
 				<div style="" class="box2detalle2">
-					<img src="public/assets/img/resources/4.24/lasersR.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/2.25/detalle-centro.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-
-
 
 			<div style="" class="box1emblema">
 				<div style="" class="box2emblema">
-					<img src="public/assets/img/resources/4.24/emblema.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/2.25/emblema.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-			<div style="" class="box1detalle1">
-				<div style="" class="box2detalle1">
-					<img src="public/assets/img/resources/4.24/personajes.png" style="max-width:100%;width:100%;">
-				</div>
-			</div>
-
+			
 			<div style="" class="box1logotipo">
 				<div style="" class="box2logotipo">
-					<img src="public/assets/img/resources/4.24/logo.png" style="max-width:100%;width:100%;">
+					<!-- <img src="public/assets/img/resources/2.25/logo.png" style="max-width:100%;width:100%;"> -->
 				</div>
 			</div>
 			<div style="" class="box1cintillo">
 				<div style="" class="box2cintillo">
-					<img src="public/assets/img/resources/4.24/cintillo.png" style="max-width:100%;width:100%;">
+					<img src="public/assets/img/resources/2.25/cintillo.png" style="max-width:100%;width:100%;">
 				</div>
 			</div>
-			<!-- 
-			<div style="" class="box1detalle5">
-				<div style="" class="box2detalle5">
-					<img src="public/assets/img/resources/3.24/detalle3.24.2.png" style="max-width:100%;width:100%;">
-				</div>
-			</div>
-			<div style="" class="box1detalle6">
-				<div style="" class="box2detalle6">
-					<img src="public/assets/img/resources/2.24/detalle6.2.24.png" style="max-width:100%;width:100%;">
-				</div>
-			</div>
-
-			<div style="" class="box1detalle7">
-				<div style="" class="box2detalle7">
-					<img src="public/assets/img/resources/2.24/detalle7.2.24.png" style="max-width:100%;width:100%;">
-				</div>
-			</div>
-
-			<div style="" class="box1detalle8">
-				<div style="" class="box2detalle8">
-					<img src="public/assets/img/resources/2.24/detalle8.2.24.png" style="max-width:100%;width:100%;">
-				</div>
-			</div> -->
 		</div>
 				<!-- <a href="./oficina.stylecollection/" target="_blank">
 					<button class="btn btnContent col-xs-8 col-xs-offset-2 col-sm-4 col-sm-offset-4 col-md-2 col-md-offset-5" style="position:absolute;bottom:2%;"> 
@@ -119,7 +82,7 @@
 		<div class="col-xs-12" style="padding:2% 5%;">
 			<div class="row">
 				<div class="col-xs-12 col-sm-8 col-sm-offset-2">
-					<div style="border:0px solid #aaa;border-radius:20px;background:#DEDEDE;padding:5%;">
+					<div style="border:0px solid #aaa;border-radius:20px;background:#FFFFFF;padding:5%;">
 						<span style="text-transform:;display:block;text-align:center;"><b>Bienvenido a tu oficina virtual Style Collection</b></span><br>
 						<span style="text-transform:;display:block;text-align:center;">1. Haz clic en <b>Entrar</b></span><br>
 						<span style="text-transform:;display:block;text-align:center;">2. Ingresa tu usuario y tu contraseña.</span><br>

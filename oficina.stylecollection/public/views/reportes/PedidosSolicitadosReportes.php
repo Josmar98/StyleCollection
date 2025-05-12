@@ -192,12 +192,30 @@
                           <th>Nº</th>
                           <th>Lider</th>
                           <th>Pedido Solicitado</th>
+                          <th>Pedido Solicitado Colecciones</th>
                           <th>Pedido Aprobado <small>(En espera)</small></th>
                         </tr>
                       </thead>
                       <tbody>
-                        <?php $num = 1; 
+                        <?php 
+                          $num = 1; 
                           $cantidadPedido = 0;
+
+                          $sumatorias = [];
+
+                          for ($i=0; $i < count($pedidosClientes)-1; $i++) {
+                            $ped = $pedidosClientes[$i];
+                            $sum = 0;
+                            $sum=$ped['cantidad_pedido'];
+                            $pedSec = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido = {$ped['id_pedido']}");
+                            foreach ($pedSec as $key) {
+                              if(!empty($key['id_pedido_sec'])){
+                                $sum+=$key['cantidad_pedido_sec'];
+                              }
+                            }
+                            $pedidosClientes[$i]['cantidad_pedido_total']=$sum;
+                            $ped = $pedidosClientes[$i];
+                          }
                         ?>
                         <?php foreach ($pedidosClientes as $data): if(!empty($data['id_pedido'])):?>
                           <?php foreach ($clientess as $data2): if(!empty($data2['id_cliente'])): ?>
@@ -221,6 +239,8 @@
 
 
                                 if($permitido=="1"):
+                                  $query2 = "SELECT * FROM despachos_secundarios, pedidos_secundarios WHERE despachos_secundarios.id_despacho_sec=pedidos_secundarios.id_despacho_sec and despachos_secundarios.id_despacho={$_GET['P']} and pedidos_secundarios.id_despacho={$_GET['P']} and pedidos_secundarios.id_cliente={$data['id_cliente']}";
+                                  $pedSec = $lider->consultarQuery($query2);
                                 ?>
                                   <tr class="elementTR">
                                     <td><?=$num?></td>
@@ -230,14 +250,36 @@
                                         ?>
                                     </td>
                                     <td>
-                                        <?php 
-                                          echo $data['cantidad_pedido']." Colecciones";
-                                          $cantidadPedido += $data['cantidad_pedido'];
-                                        ?>
+                                      <?php 
+                                        echo $data['cantidad_pedido_total']." Productos";
+                                        $cantidadPedido += $data['cantidad_pedido_total'];
+                                      ?>
+                                    </td>
+                                    <td>
+                                      <?php 
+                                        echo $data['cantidad_pedido']." Cols. Productos<br>";
+                                        if(!empty($sumatorias['Productos'])){
+                                          $sumatorias['Productos']['cantidad']+=$data['cantidad_pedido'];
+                                        }else{
+                                          $sumatorias['Productos']['cantidad']=$data['cantidad_pedido'];
+                                          $sumatorias['Productos']['name']="Productos";
+                                        }
+
+                                        foreach ($pedSec as $key) {
+                                          if(!empty($key['id_pedido_sec'])){
+                                            echo $key['cantidad_pedido_sec']." Cols. ".$key['nombre_coleccion_sec']."<br>";
+                                            if(!empty($sumatorias[$key['nombre_coleccion_sec']])){
+                                              $sumatorias[$key['nombre_coleccion_sec']]['cantidad']+=$key['cantidad_pedido_sec'];
+                                            }else{
+                                              $sumatorias[$key['nombre_coleccion_sec']]['cantidad']=$key['cantidad_pedido_sec'];
+                                              $sumatorias[$key['nombre_coleccion_sec']]['name']=$key['nombre_coleccion_sec'];
+                                            }
+                                          }
+                                        }
+                                      ?>
                                     </td>
                                     <td>
                                         <span style="font-size:1.3em;border:1px solid #ccc;border-radius:5px;padding:5px;color:#00000000;"> ___ </span>
-
                                     </td>
                                   </tr>
                                   <?php $num++; ?>
@@ -253,6 +295,15 @@
                                   <?php 
                                       echo $cantidadPedido." Colecciones"; 
                                   ?>
+                              </b>
+                            </td>
+                            <td>
+                              <b>
+                                <?php
+                                  foreach ($sumatorias as $keys) {
+                                    echo $keys['cantidad']." Cols. ".$keys['name']."<br>";
+                                  }
+                                ?>
                               </b>
                             </td>
                             <td></td>

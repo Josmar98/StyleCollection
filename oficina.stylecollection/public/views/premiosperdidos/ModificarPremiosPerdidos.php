@@ -170,6 +170,34 @@
                                                     ?>
                                                     <div class="form-group col-xs-12">
                                                       <label><?=$data3['nombre_premio'];?></label>
+                                                      <?php
+                                                        $id_premios_busqueda = $data3['id_premio'];
+                                                        $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                                        $iter = 1;
+                                                        echo " => <b><small>[";
+                                                        foreach($premiosinv as $pinv){
+                                                          if(!empty($pinv['id_premio_inventario'])){
+                                                            if($pinv['tipo_inventario']=="Productos"){
+                                                              $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                            }
+                                                            if($pinv['tipo_inventario']=="Mercancia"){
+                                                              $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                            }
+                                                            $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                                            foreach ($inventariosMos as $invm) {
+                                                              if(!empty($invm[0])){
+                                                                echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                                                if($iter < (count($premiosinv)-1)){
+                                                                  echo " | ";
+                                                                }
+
+                                                              }
+                                                            }
+                                                          }
+                                                          $iter++;
+                                                        }
+                                                        echo "]</small></b>";
+                                                      ?>
                                                       <div class="input-group">
                                                         <span class="input-group-addon"><?=$data3['cantidad_premios_plan'];?></span>
 
@@ -240,7 +268,7 @@
                                               $idPlanesTemp = $data2['id_plan'];
                                               $namePlanesTemp = $data2['nombre_plan'];
 
-                                              if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){ 
+                                              // if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){ 
                                                 ?>
                                                 <?php
                                                   $cantidadPerdidoAct = 0;
@@ -277,7 +305,7 @@
                                                 </div>
                                                 <?php 
                                                   
-                                              }
+                                              // }
                                               ?>
 
 

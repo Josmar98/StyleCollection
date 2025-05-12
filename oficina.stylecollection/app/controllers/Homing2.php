@@ -22,6 +22,21 @@ $_SESSION['tomandoEnCuentaLiderazgo'] = "1";
 	//SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = 1 and pedidos.id_despacho = 15
 	$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_cliente = $id_cliente and pedidos.id_despacho = $id_despacho");
 	$pedidosFull = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho ORDER BY pedidos.id_pedido DESC");
+
+	for ($i=0; $i < count($pedidosFull)-1; $i++) {
+		$ped = $pedidosFull[$i];
+		$sum = 0;
+		$sum=$ped['cantidad_pedido'];
+		$pedSec = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido = {$ped['id_pedido']}");
+		foreach ($pedSec as $key) {
+			if(!empty($key['id_pedido_sec'])){
+				$sum+=$key['cantidad_pedido_sec'];
+			}
+		}
+		$pedidosFull[$i]['cantidad_pedido_total']=$sum;
+		$ped = $pedidosFull[$i];
+	}
+
 	$despachos = $lider->consultarQuery("SELECT * FROM despachos WHERE id_despacho = $id_despacho");
 	$despacho = $despachos[0];
 
@@ -265,6 +280,10 @@ if(empty($_POST)){
 											$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPagosPuntuales + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura + $liquidacion_gemas;
 											$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos;
 
+											if($pedido['total_pagar']>0){
+												$nuevoTotal=$pedido['total_pagar'];
+											}
+											
 											$porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$nuevoTotal;
 											// echo "<br>".$porcentajeAbonadoPuntual."<br>";
 											if($porcentajeAbonadoPuntual>=100){

@@ -50,10 +50,21 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			$forma_pago = ucwords(mb_strtolower($_POST['forma']));
 			$fecha_emision = $_POST['fecha1'];
 			$fecha_vencimiento = $_POST['fecha2'];
+
 			$numero_factura = $_POST['num_factura'];
+			$maxNumero = $lider->consultarQuery("SELECT MAX(factura_despacho.numero_factura) as numero_factura FROM notasentregapersonalizada WHERE estatus=1");
+			if(!empty($maxNumero[0]['numero_factura'])){
+				if($maxNumero[0]['numero_factura']>=$numero_factura){
+					$numero_factura = $maxNumero[0]['numero_factura'];
+					$numero_factura++;
+				}
+			}
 
 			$control1 = $_POST['control1'];
 			$control2 = $_POST['control2'];
+			$id_almacen = $_POST['almacen'];
+			$observacion = ucwords(mb_strtolower($_POST['observacion']));
+			
 
 			$proceder = false;
 			if(count($_POST['pedidoss'])>0){
@@ -95,64 +106,144 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			// echo $numero_factura;
 			
 			// die();
-			$buscar = $lider->consultarQuery("SELECT * FROM factura_despacho WHERE id_pedido = {$id_pedido} AND estatus = 1");
-			if(count($buscar)>1){
-				$response = "9";
-			}else{
-				$fechaHoraActual = date('Y-m-d H:i:s');
-				$query = "INSERT INTO factura_despacho (id_factura_despacho, id_pedido, numero_factura, tipo_factura, fecha_emision, fecha_vencimiento, numero_control1, numero_control2, fecha_creacion, estatus) VALUES (DEFAULT, $id_pedido, $numero_factura, '$forma_pago', '$fecha_emision', '$fecha_vencimiento', {$control1}, {$control2}, '{$fechaHoraActual}', 1)";
-				// echo $query;
-				$exec = $lider->registrar($query, "factura_despacho", "id_factura_despacho");
-				if($exec['ejecucion']==true){
-					$response = "1";
-					$pedido = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = {$id_pedido}");
-					if(count($pedido)>1){
-						$pedid=$pedido[0];
-						$id_factura_despacho = $exec['id'];
-						$precioTotalDeuda = 0;
-						if($proceder){
-							foreach ($pedidosVariados as $pedidoVariado) {
-								foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = $pedidoVariado") as $key){
-									if(!empty($key['id_pedido'])){
-										$precioDeuda = (float) number_format($key['cantidad_aprobado'] * $key['precio_coleccion'],2,'.','');
-										$precioTotalDeuda += $precioDeuda;
-									}
-								}
-							}
-						}
-						if($precioTotalDeuda==0){
-							$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
-						}else{
-							$totalVenta=$precioTotalDeuda;
-						}
-						$querys = "INSERT INTO factura_ventas (id_factura_ventas, id_factura_despacho, totalVenta, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$totalVenta}, 1)";
-						$exec = $lider->registrar($querys, "factura_ventas", "id_factura_ventas");
-						// print_r($exec);
-						// echo "asdasd";
 
-						if($proceder){
-							foreach ($pedidosVariados as $pedidoVariado) {
-								$query = "INSERT INTO factura_despacho_variadas (id_factura_despacho_variada, id_factura_despacho, id_pedido_factura, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$pedidoVariado}, 1);";
-								$exec = $lider->registrar($query, "factura_despacho_variadas", "id_factura_despacho_variada");
-								if($exec['ejecucion']==true){
+
+
+			// $buscar = $lider->consultarQuery("SELECT * FROM factura_despacho WHERE id_pedido = {$id_pedido} AND estatus = 1");
+			// if(count($buscar)>1){
+			// 	$response = "9";
+			// }else{
+			// 	$fechaHoraActual = date('Y-m-d H:i:s');
+			// 	$query = "INSERT INTO factura_despacho (id_factura_despacho, id_pedido, id_almacen, numero_factura, tipo_factura, fecha_emision, fecha_vencimiento, numero_control1, numero_control2, fecha_creacion, estado_factura, estatus) VALUES (DEFAULT, {$id_pedido}, {$id_almacen}, {$numero_factura}, '{$forma_pago}', '{$fecha_emision}', '{$fecha_vencimiento}', {$control1}, {$control2}, '{$fechaHoraActual}', 1, 1)";
+			// 	// echo $query;
+			// 	$exec = $lider->registrar($query, "factura_despacho", "id_factura_despacho");
+			// 	if($exec['ejecucion']==true){
+			// 		$response = "1";
+			// 		$pedido = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = {$id_pedido}");
+			// 		if(count($pedido)>1){
+			// 			$pedid=$pedido[0];
+			// 			$id_factura_despacho = $exec['id'];
+			// 			$precioTotalDeuda = 0;
+			// 			if($proceder){
+			// 				foreach ($pedidosVariados as $pedidoVariado) {
+			// 					foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = $pedidoVariado") as $key){
+			// 						if(!empty($key['id_pedido'])){
+			// 							$precioDeuda = (float) number_format($key['cantidad_aprobado'] * $key['precio_coleccion'],2,'.','');
+			// 							$precioTotalDeuda += $precioDeuda;
+			// 						}
+			// 					}
+			// 				}
+			// 			}
+			// 			if($precioTotalDeuda==0){
+			// 				$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
+			// 			}else{
+			// 				$totalVenta=$precioTotalDeuda;
+			// 			}
+			// 			$querys = "INSERT INTO factura_ventas (id_factura_ventas, id_factura_despacho, totalVenta, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$totalVenta}, 1)";
+			// 			$exec = $lider->registrar($querys, "factura_ventas", "id_factura_ventas");
+			// 			// print_r($exec);
+			// 			// echo "asdasd";
+
+			// 			if($proceder){
+			// 				foreach ($pedidosVariados as $pedidoVariado) {
+			// 					$query = "INSERT INTO factura_despacho_variadas (id_factura_despacho_variada, id_factura_despacho, id_pedido_factura, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$pedidoVariado}, 1);";
+			// 					$exec = $lider->registrar($query, "factura_despacho_variadas", "id_factura_despacho_variada");
+			// 					if($exec['ejecucion']==true){
 									
+			// 					}
+			// 				}
+			// 			}
+						
+			// 		}
+
+
+
+			// 		if(!empty($modulo) && !empty($accion)){
+			// 			$fecha = date('Y-m-d');
+			// 			$hora = date('H:i:a');
+			// 			$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura De Despacho', 'Registrar', '{$fecha}', '{$hora}')";
+			// 			$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+			// 		}
+			// 	}else{
+			// 		$response = "2"; //echo 'Error en SQL, no se guardaron los cambios';
+			// 	}
+			// }
+			
+			$fechaHoraActual = date('Y-m-d H:i:s');
+			$query = "INSERT INTO factura_despacho (id_factura_despacho, id_pedido, id_almacen, numero_factura, tipo_factura, fecha_emision, fecha_vencimiento, numero_control1, numero_control2, fecha_creacion, estado_factura, observacion, estatus) VALUES (DEFAULT, {$id_pedido}, {$id_almacen}, {$numero_factura}, '{$forma_pago}', '{$fecha_emision}', '{$fecha_vencimiento}', {$control1}, {$control2}, '{$fechaHoraActual}', 1, '{$observacion}', 1)";
+			// echo $query."<br><br>";
+			// $exec['ejecucion']=true;
+			// $exec['id']=2000;
+			$exec = $lider->registrar($query, "factura_despacho", "id_factura_despacho");
+			if($exec['ejecucion']==true){
+				$response = "1";
+				$pedido = $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = {$id_pedido}");
+				if(count($pedido)>1){
+					$pedid=$pedido[0];
+					// echo "<br><br>";
+					// print_r($pedid);
+					// echo "<br><br>";
+					$id_factura_despacho = $exec['id'];
+					$precioTotalDeuda = 0;
+					if($proceder){
+						foreach ($pedidosVariados as $pedidoVariado) {
+							foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = $pedidoVariado") as $key){
+								if(!empty($key['id_pedido'])){
+									$precioDeuda = (float) number_format($key['cantidad_aprobado_individual'] * $key['precio_coleccion'],2,'.','');
+									$precioTotalDeuda += $precioDeuda;
+								}
+							}
+							foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos, pedidos_secundarios, despachos_secundarios WHERE despachos.id_despacho=despachos_secundarios.id_despacho and pedidos_secundarios.id_despacho=despachos.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = pedidos_secundarios.id_pedido and pedidos.id_pedido = {$pedidoVariado}") as $key){
+								if(!empty($key['id_pedido'])){
+									$precioDeuda = (float) number_format($key['cantidad_aprobado_sec'] * $key['precio_coleccion_sec'],2,'.','');
+									$precioTotalDeuda += $precioDeuda;
 								}
 							}
 						}
-						
 					}
-
-
-
-					if(!empty($modulo) && !empty($accion)){
-						$fecha = date('Y-m-d');
-						$hora = date('H:i:a');
-						$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura De Despacho', 'Registrar', '{$fecha}', '{$hora}')";
-						$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+					// echo $precioTotalDeuda." | ";
+					if($precioTotalDeuda==0){
+						$precioDeuda = (float) number_format(($pedid['cantidad_aprobado_individual']*$pedid['precio_coleccion']),2,'.','');
+						$precioTotalDeuda += $precioDeuda;
+						// echo $precioTotalDeuda." | ";
+						// echo "<br><br><br>";
+						foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos, pedidos_secundarios, despachos_secundarios WHERE despachos.id_despacho=despachos_secundarios.id_despacho and pedidos_secundarios.id_despacho=despachos.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = pedidos_secundarios.id_pedido and pedidos.id_pedido = {$pedid['id_pedido']}") as $key){
+							if(!empty($key['id_pedido'])){
+								// print_r($key);
+								// echo "<br><br>";
+								$precioDeuda = (float) number_format($key['cantidad_aprobado_sec'] * $key['precio_coleccion_sec'],2,'.','');
+								$precioTotalDeuda += $precioDeuda;
+								// echo $precioTotalDeuda." | ";
+							}
+						}
 					}
-				}else{
-					$response = "2"; //echo 'Error en SQL, no se guardaron los cambios';
+					$totalVenta=$precioTotalDeuda;
+
+					$querys = "INSERT INTO factura_ventas (id_factura_ventas, id_factura_despacho, totalVenta, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$totalVenta}, 1)";
+					// echo $querys."<br><br>";
+					$exec = $lider->registrar($querys, "factura_ventas", "id_factura_ventas");
+					if($proceder){
+						foreach ($pedidosVariados as $pedidoVariado) {
+							$query = "INSERT INTO factura_despacho_variadas (id_factura_despacho_variada, id_factura_despacho, id_pedido_factura, estatus) VALUES (DEFAULT, {$id_factura_despacho}, {$pedidoVariado}, 1);";
+							$exec = $lider->registrar($query, "factura_despacho_variadas", "id_factura_despacho_variada");
+							if($exec['ejecucion']==true){
+								
+							}
+						}
+					}
+					
 				}
+
+				// die();
+
+				if(!empty($modulo) && !empty($accion)){
+					$fecha = date('Y-m-d');
+					$hora = date('H:i:a');
+					$query = "INSERT INTO bitacora (id_bitacora, id_usuario, modulo, accion, fecha, hora) VALUES (DEFAULT, {$_SESSION['id_usuario']}, 'Factura De Despacho', 'Registrar', '{$fecha}', '{$hora}')";
+					$exec = $lider->Registrar($query, "bitacora", "id_bitacora");
+				}
+			}else{
+				$response = "2"; //echo 'Error en SQL, no se guardaron los cambios';
 			}
 
 			// die();
@@ -205,6 +296,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			$pedidosFull = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.cantidad_aprobado > 0 and pedidos.id_despacho = $id_despacho ORDER BY pedidos.id_pedido DESC");
 			$query = "SELECT * FROM pedidos, factura_despacho WHERE pedidos.id_pedido = factura_despacho.id_pedido and pedidos.id_despacho = $id_despacho and factura_despacho.estatus = 1";
 			$facturas = $lider->consultarQuery($query);
+
+			$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

@@ -51,8 +51,8 @@
                      <label for="rif">R.I.F</label>
                      <div class="input-group" style="width:100%;">
                        <select class="input-group-addon form-control" id="codRif" name="codRif" style="width:20%;">
-                         <option <?php if($proveedor['codRif']=="V"){ echo "selected"; } ?>>V</option>
                          <option <?php if($proveedor['codRif']=="J"){ echo "selected"; } ?>>J</option>
+                         <option <?php if($proveedor['codRif']=="V"){ echo "selected"; } ?>>V</option>
                          <option <?php if($proveedor['codRif']=="G"){ echo "selected"; } ?>>G</option>
                          <option <?php if($proveedor['codRif']=="E"){ echo "selected"; } ?>>E</option>
                        </select>
@@ -82,6 +82,28 @@
                       <?php } ?>
                     </select>
                     <span id="error_tipoInv" class="errors"></span>
+                  </div>
+
+                  <div class="form-group col-sm-6">
+                    <label for="telefono">Nº de Telefono</label>
+                    <div class="input-group col-xs-12">
+                        <select id="cod_tlfn" name="cod_tlfn" class="form-control input-group-addon" style="width:25%">
+                            <option <?php if($proveedor['cod_tlfn']=="0412"){ echo "selected"; } ?>>0412</option>
+                            <option <?php if($proveedor['cod_tlfn']=="0414"){ echo "selected"; } ?>>0414</option>
+                            <option <?php if($proveedor['cod_tlfn']=="0424"){ echo "selected"; } ?>>0424</option>
+                            <option <?php if($proveedor['cod_tlfn']=="0416"){ echo "selected"; } ?>>0416</option>
+                            <option <?php if($proveedor['cod_tlfn']=="0426"){ echo "selected"; } ?>>0426</option>
+                            <option <?php if($proveedor['cod_tlfn']=="0251"){ echo "selected"; } ?>>0251</option>
+                          </select>  
+                        <input type="text" style="width:75%" maxlength="7" minlength="7" class="form-control" id="telefono" name="telefono" maxlength="9" placeholder="Numero de telefono" value="<?=$proveedor['telefono'];?>">
+                    </div>
+                    <span id="error_telefono" class="errors"></span>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-sm-6">
+                      <label for="direccion">Direccion</label>
+                      <textarea type="text" class="form-control" id="direccion" name="direccion" maxlength="200"><?=$proveedor['direccion'];?></textarea>
+                      <span id="error_direccion" class="errors"></span>
                   </div>
                 </div>
 
@@ -250,10 +272,40 @@ function validar(){
   /*===================================================================*/
 
 
+  var telefono = $("#telefono").val();
+  var rtelefono = checkInput(telefono, numberPattern);
+  if( rtelefono == false ){
+    if(telefono.length != 0){
+        $("#error_telefono").html("El telefono debe tener minimo 7 caracteres y solo de tipo numerico");
+    }else{
+      $("#error_telefono").html("Debe llenar el campo del telefono");      
+    }
+  }else{
+      if(telefono.length >= 7){
+        $("#error_telefono").html("");
+      }else{
+        $("#error_telefono").html("El telefono debe tener minimo 7 caracteres y solo de tipo numerico");
+      }
+  }
+
+  var direccion = $("#direccion").val();
+  var rdireccion = checkInput(direccion, alfanumericPattern3);
+  var rdireccion=false;
+  // if( rdireccion == false ){
+  if(direccion.length > 0){
+      // $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
+    // }else{
+    // }
+    rdireccion=true;
+    $("#error_direccion").html("");
+  }else{
+    rdireccion=false;
+    $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
+  }
   
   /*===================================================================*/
   var result = false;
-  if( rrif==true && rnombre==true ){
+  if( rrif==true && rnombre==true && rtelefono==true && rdireccion==true){
     result = true;
   }else{
     result = false;

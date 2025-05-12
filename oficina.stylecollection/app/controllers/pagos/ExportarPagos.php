@@ -173,6 +173,9 @@
 		}
 		$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPago1Puntual + $bonoCierrePuntual + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura;
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos;
+		if($pedido['total_pagar']>0){
+			$nuevoTotal=$pedido['total_pagar'];
+		}
 
 		$planes = $lider->consultarQuery("SELECT * FROm planes, planes_campana, tipos_colecciones, pedidos, despachos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id_cliente} and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_despacho = despachos.id_despacho and despachos.estatus = 1 and planes.estatus = 1 and pedidos.estatus = 1");
 

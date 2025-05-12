@@ -22,9 +22,13 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 		// echo count($res1);
 		if($res1['ejecucion']==true){
 			if(Count($res1)>1){
-				$response = "1";
+				if($res1[0]['id_factura_compra']==$_GET['id']){
+					$response = "1";
+				}else{
+					$response = "9";
+				}
 			}else{
-				$response = "9"; //echo "Registro ya guardado.";
+				$response = "1"; //echo "Registro ya guardado.";
 				// if($res1[0]['estatus']==0){
 				// 	$res3 = $lider->modificar("UPDATE factura_compras SET estatus = 1 WHERE id_proveedor_compras = {$idProveedor} and numeroFactura='{numeroFactura}' and totalCompra={$totalCompra}");
 				// 	if($res3['ejecucion']==true){

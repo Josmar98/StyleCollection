@@ -614,7 +614,7 @@
                                 $totalesPagos[$pagosR['id']] = 0;
                               }
 
-                              echo number_format($totalesPagos[$pagosR['id']],2,',','.'); 
+                              echo number_format($totalesPagos[$pagosR['id']],4,',','.'); 
 
                               // $precioInicial = $despacho['inicial_precio_coleccion'];
                               // if($equivalenciasAbonadasI!=0){
@@ -1053,7 +1053,7 @@
                               }else{
                                 $totalesPagos[$promos['id_promocion']] = 0;
                               }
-                              echo number_format($totalesPagos[$promos['id_promocion']],2,',','.'); 
+                              echo number_format($totalesPagos[$promos['id_promocion']],4,',','.'); 
 
                               // $precioInicial = $despacho['inicial_precio_coleccion'];
                               // if($equivalenciasAbonadasI!=0){

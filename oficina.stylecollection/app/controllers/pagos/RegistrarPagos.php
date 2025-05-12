@@ -67,9 +67,9 @@
 		2=>['id'=>2, 'name'=>'Pago Movil Banco a Banco', 'type'=>'banco'],
 		3=>['id'=>3, 'name'=>'Pago Movil de Otros Bancos', 'type'=>'banco'],
 
-		4=>['id'=>4, 'name'=>'Deposito En Dolares', 'type'=>'banco'],
-		5=>['id'=>5, 'name'=>'Divisas Dolares', 'type'=>'fisico'],
-		6=>['id'=>6, 'name'=>'Efectivo Bolivares', 'type'=>'fisico'],
+		4=>['id'=>4, 'name'=>'Efectivo Bolivares', 'type'=>'fisico'],
+		// 4=>['id'=>4, 'name'=>'Deposito En Dolares', 'type'=>'banco'],
+		// 5=>['id'=>5, 'name'=>'Divisas Dolares', 'type'=>'fisico'],
 		// 5=>['id'=>5, 'name'=>'Deposito En Bolivares', 'type'=>'banco'],
 		// 6=>['id'=>6, 'name'=>'Divisas Dolares', 'type'=>'fisico'],
 		// 7=>['id'=>7, 'name'=>'Divisas Euros', 'type'=>'fisico'],

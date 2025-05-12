@@ -36,6 +36,7 @@
     <!-- Main content -->
     <section class="content">
         <?php require_once 'public/views/assets/bloque_precio_dolar.php'; ?>
+        <?php require_once 'public/views/assets/bloque_precio_eficoin.php'; ?>
 
         <?php
           $estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
@@ -270,7 +271,7 @@
           </div>
 
 
-          <?php if($_SESSION['nombre_rol'] == "Administrativo" || $_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
+          <?php if($_SESSION['nombre_rol'] == "Administrativo" || $_SESSION['nombre_rol'] == "Administrador" || $_SESSION['nombre_rol'] == "Superusuario" || $_SESSION['nombre_rol'] == "Contable" || $_SESSION['nombre_rol'] == "Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"){ ?>
 
           <div class="box">
             <div class="box-header">
@@ -363,8 +364,8 @@
                               <td style="width:20%">
                                 <span class="contenido2">
                                   <?php
-                                    echo $data['cantidad_pedido']." Col Solicitadas";
-                                    $totalSolicitadas += $data['cantidad_pedido'];
+                                    echo $data['cantidad_pedido_total']." Col Solicitadas";
+                                    $totalSolicitadas += $data['cantidad_pedido_total'];
                                   ?>
                                 </span>
                               </td>                  

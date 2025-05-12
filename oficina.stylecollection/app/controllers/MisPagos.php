@@ -231,6 +231,9 @@ $_SESSION['tomandoEnCuentaLiderazgo'] = "1";
 		} } 
 		$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPagosPuntuales + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura + $liquidacion_gemas;
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos + $resultDeudaPorPromociones;
+		if($pedido['total_pagar']>0){
+			$nuevoTotal=$pedido['total_pagar'];
+		}
 
 		$bancos = $lider->consultarQuery("SELECT * FROM bancos WHERE estatus = 1");
 		$planes = $lider->consultarQuery("SELECT * FROm planes, planes_campana, tipos_colecciones, pedidos, despachos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id_cliente} and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and pedidos.id_despacho = despachos.id_despacho and despachos.estatus = 1 and planes.estatus = 1 and pedidos.estatus = 1 and planes_campana.id_despacho = {$id_despacho}");

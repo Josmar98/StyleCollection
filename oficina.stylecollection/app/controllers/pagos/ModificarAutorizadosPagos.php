@@ -7,6 +7,17 @@
 			$num_despacho = $_GET['dp'];
 			$menu3 = "campaing=".$id_campana."&n=".$numero_campana."&y=".$anio_campana."&dpid=".$id_despacho."&dp=".$num_despacho."&";
 		$estado_campana2 = $lider->consultarQuery("SELECT estado_campana FROM campanas WHERE estatus = 1 and id_campana = $id_campana");
+
+		$despachos = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and campanas.estatus = 1 and despachos.estatus = 1 and campanas.id_campana = {$id_campana} and campanas.numero_campana = {$numero_campana} and despachos.id_despacho = {$id_despacho} and despachos.numero_despacho = {$num_despacho}");
+	$pagos_despacho = $lider->consultarQuery("SELECT * FROM despachos, pagos_despachos WHERE despachos.id_despacho = pagos_despachos.id_despacho and despachos.id_campana = {$id_campana} and despachos.id_despacho = {$id_despacho} and despachos.estatus = 1 and pagos_despachos.estatus = 1");
+	$despacho = $despachos[0];
+	$cantidadPagosDespachosFild = [];
+	for ($i=0; $i < count($cantidadPagosDespachos); $i++) {
+		$key = $cantidadPagosDespachos[$i];
+		if($key['cantidad'] <= $despacho['cantidad_pagos']){
+			$cantidadPagosDespachosFild[$i] = $key;
+		}
+	}
     $estado_campana = $estado_campana2[0]['estado_campana'];
     if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrativo2"){
 		$estado_campana = "1";
@@ -217,6 +228,16 @@ if($estado_campana=="1"){
 			$promociones = $lider->consultarQuery("SELECT * FROM promocion, promociones WHERE promocion.id_promocion = promociones.id_promocion and promociones.id_cliente = {$id_cliente} and promocion.id_campana = {$id_campana} and promociones.id_despacho = {$id_despacho}");
 			$pago = $lider->consultarQuery("SELECT * FROM pedidos, pagos WHERE pedidos.id_pedido = pagos.id_pedido and pagos.estatus = 1 and pedidos.estatus = 1 and pagos.id_pago = '{$id}'");
 			$pago = $pago[0];
+			$despacho = $despacho[0];
+				if(!empty($pedido)&&Count($pedido)>1){
+					$pedido = $pedido[0];
+				}
+				if($numero_campana == 1){
+					$yL = date('Y')-1;
+					$limiteFechaMinimo = date($yL.'-01-01');
+				}else{
+					$limiteFechaMinimo = date('Y-01-01');				
+				}
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

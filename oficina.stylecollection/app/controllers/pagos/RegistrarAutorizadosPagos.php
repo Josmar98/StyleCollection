@@ -254,6 +254,21 @@ if($estado_campana=="1"){
 
 			$promociones = $lider->consultarQuery("SELECT * FROM promocion, promociones WHERE promocion.id_promocion = promociones.id_promocion and promociones.id_cliente = {$id_cliente} and promocion.id_campana = {$id_campana} and promociones.id_despacho = {$id_despacho}");
 			// echo $response;
+
+			$bancos = $lider->consultarQuery("SELECT * FROM bancos WHERE estatus = 1 and disponibilidad = 'Habilitado'");
+			$planes = $lider->consultarQuery("SELECT * FROM planes, planes_campana, campanas, despachos WHERE planes.estatus = 1 and campanas.estatus = 1 and despachos.estatus = 1 and planes.id_plan = planes_campana.id_plan and campanas.id_campana = planes_campana.id_campana and campanas.id_campana = despachos.id_campana planes_campana.id_despacho = {$id_despacho}");
+			$despacho = $lider->consultarQuery("SELECT * FROM campanas, despachos WHERE campanas.id_campana = despachos.id_campana and campanas.estatus = 1 and despachos.estatus = 1 and campanas.id_campana = {$id_campana} and campanas.numero_campana = {$numero_campana} and despachos.id_despacho = {$id_despacho} and despachos.numero_despacho = {$num_despacho}");
+
+			$despacho = $despacho[0];
+				if(!empty($pedido)&&Count($pedido)>1){
+					$pedido = $pedido[0];
+				}
+				if($numero_campana == 1){
+					$yL = date('Y')-1;
+					$limiteFechaMinimo = date($yL.'-01-01');
+				}else{
+					$limiteFechaMinimo = date('Y-01-01');				
+				}
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';

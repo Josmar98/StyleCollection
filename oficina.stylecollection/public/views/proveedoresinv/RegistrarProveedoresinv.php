@@ -51,8 +51,8 @@
                      <label for="rif">R.I.F</label>
                      <div class="input-group" style="width:100%;">
                        <select class="input-group-addon form-control" id="codRif" name="codRif" style="width:20%;">
-                         <option>V</option>
                          <option>J</option>
+                         <option>V</option>
                          <option>G</option>
                          <option>E</option>
                        </select>
@@ -74,6 +74,29 @@
                     <?php } ?>
                     </select>
                     <span id="error_tipoInv" class="errors"></span>
+                  </div>
+
+
+                  <div class="form-group col-sm-6">
+                    <label for="telefono">Nº de Telefono</label>
+                    <div class="input-group col-xs-12">
+                        <select id="cod_tlfn" name="cod_tlfn" class="form-control input-group-addon" style="width:25%">
+                            <option>0412</option>
+                            <option>0414</option>
+                            <option>0424</option>
+                            <option>0416</option>
+                            <option>0426</option>
+                            <option>0251</option>
+                          </select>  
+                        <input type="text" style="width:75%" maxlength="7" minlength="7" class="form-control" id="telefono" name="telefono" maxlength="9" placeholder="Numero de telefono">
+                    </div>
+                    <span id="error_telefono" class="errors"></span>
+                  </div>
+
+                  <div class="form-group col-xs-12 col-sm-6">
+                      <label for="direccion">Direccion</label>
+                      <textarea type="text" class="form-control" id="direccion" name="direccion" maxlength="200"></textarea>
+                      <span id="error_direccion" class="errors"></span>
                   </div>
                 </div>
 
@@ -251,9 +274,40 @@ function validar(){
     $("#error_tipoInv").html("");
   }
   
+  var telefono = $("#telefono").val();
+  var rtelefono = checkInput(telefono, numberPattern);
+  if( rtelefono == false ){
+    if(telefono.length != 0){
+        $("#error_telefono").html("El telefono debe tener minimo 7 caracteres y solo de tipo numerico");
+    }else{
+      $("#error_telefono").html("Debe llenar el campo del telefono");      
+    }
+  }else{
+      if(telefono.length >= 7){
+        $("#error_telefono").html("");
+      }else{
+        $("#error_telefono").html("El telefono debe tener minimo 7 caracteres y solo de tipo numerico");
+      }
+  }
+
+  var direccion = $("#direccion").val();
+  var rdireccion = checkInput(direccion, alfanumericPattern3);
+  var rdireccion=false;
+  // if( rdireccion == false ){
+  if(direccion.length > 0){
+      // $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
+    // }else{
+    // }
+    rdireccion=true;
+    $("#error_direccion").html("");
+  }else{
+    rdireccion=false;
+    $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
+  }
+
   /*===================================================================*/
   var result = false;
-  if( rrif==true && rnombre==true && rtipoInv==true){
+  if( rrif==true && rnombre==true && rtipoInv==true && rtelefono==true && rdireccion==true){
     result = true;
   }else{
     result = false;

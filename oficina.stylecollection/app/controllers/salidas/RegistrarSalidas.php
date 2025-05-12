@@ -7,7 +7,7 @@ $amInventarioE = 0;
 $amInventarioB = 0;
 foreach ($accesos as $access) {
   if(!empty($access['id_acceso'])){
-    if($access['nombre_modulo'] == "Productos"){
+    if($access['nombre_modulo'] == "Inventarios"){
       $amInventario = 1;
       if($access['nombre_permiso'] == "Registrar"){
         $amInventarioR = 1;
@@ -26,26 +26,61 @@ foreach ($accesos as $access) {
   }
 }
 if($amInventarioR == 1){
-  $limiteElementos=20;
+  $limiteElementos=50;
 
   if(!empty($_POST['tipoInv']) && !empty($_POST['transaccion']) && empty($_POST['validarData'])){
     // print_r($_POST);
-
+    
     $fecha_operacion = date('Y-m-d H:i:s');
     $tipo_operacion="Salida";
     $id_almacen = $_POST['almacen'];
     $tipo_inventario = $_POST['tipoInv'];
     $transaccion = $_POST['transaccion'];
+    $concepto_operacion="";
+    $leyendaVenta="";
+    $leyendaDes="";
+    $leyendaVenta=ucwords(mb_strtolower($_POST['leyenda']));
+    $leyendaDes=ucwords(mb_strtolower($_POST['leyendaDes']));
+    
     if($transaccion=="Venta"){
-      $id_persona = $_POST["proveedorClientes"];
-      $tipo_persona = "Cliente";
+      if($leyendaVenta=="Credito Style"){
+        $id_persona = $_POST["proveedorEmpleados"];
+        $tipo_persona = "Empleado";
+        $concepto_operacion="Credito Style";
+      }else if($leyendaVenta=="Obsequio a terceros" || $leyendaVenta=="Consumo Interno"){
+        $id_persona = $_POST["proveedorAutorizado"];
+        $tipo_persona = "Autorizado";
+        $concepto_operacion=$leyendaVenta;
+
+      }else if($leyendaVenta=="Venta" || $leyendaVenta=="Promociones"){
+        $id_persona = $_POST["proveedorClientes"];
+        $tipo_persona = "Cliente";
+        $concepto_operacion = "Venta A Lideres";
+      } else {
+        $id_persona = $_POST["proveedorClientesAutorizado"];
+        if($id_persona<0){
+          $tipo_persona = "Autorizado";
+          $concepto_operacion = $leyendaVenta;
+        }else if($id_persona>0){
+          $tipo_persona = "Cliente";
+          $concepto_operacion = "Venta A Lideres";
+        }
+      }
+      $leyenda=$leyendaVenta;
+    } else if($transaccion=="Reposicion"){
+      $concepto_operacion = "Reposicion De Averia";
+      $leyenda="";
     }else{
       $id_persona = 0;
       $tipo_persona = "";
+      $leyenda=$leyendaDes;
+      $concepto_operacion = $transaccion;
     }
     
     $fecha_documento = $_POST['fecha_documento'];
-    $numero_documento = $_POST['numero_documento'];
+    $numero_documento = "SA.".$_POST['numero_documento'];
+    $numero_control = $numero_documento;
+    
     
     $cantidad_elementos = $_POST['cantidad_elementos'];
     
@@ -54,6 +89,9 @@ if($amInventarioR == 1){
     $totales = $_POST['total'];
     
     $erroresEjecucion = 0;
+
+
+
     for ($i=0; $i < $cantidad_elementos; $i++) { 
       $stock = $stocks[$i];
       $id_elementoInv = $id_elementoInvs[$i];
@@ -103,7 +141,16 @@ if($amInventarioR == 1){
         $stock_totalAl -= $stock;
         $total_totalAl -= $total;
       }
-      $query = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, precio_venta, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, $precioVenta, 1)";
+      // $leyenda.=".";
+      $buscarCostos=$lider->consultarQuery("SELECT * FROM cartelera_costos WHERE id_inventario={$id_elementoInv} and tipo_inventario='{$tipo_inventario}' ORDER BY id_cartelera_costo DESC LIMIT 1");
+      if(count($buscarCostos)>1){
+        $costoHistorico = $buscarCostos[0]['costo_historico'];
+        $costoPromedio = $buscarCostos[0]['costo_promedio'];
+        $total=(float) number_format(($stock*$costoPromedio),2,'.','');
+        $total_totalAl=(float) number_format(($stock_totalAl*$costoPromedio),2,'.','');
+        $total_total=(float) number_format(($stock_total*$costoPromedio),2,'.','');
+      }
+      $query = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, concepto, leyenda, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, precio_venta, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion', '{$concepto_operacion}', '$leyenda', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, $precioVenta, 1)";
       // echo "<br><br>".$query."<br><br><br>";
       $exec = $lider->registrar($query, "operaciones", "id_operacion");
       if($exec['ejecucion']==true){
@@ -167,6 +214,9 @@ if($amInventarioR == 1){
       } }
       
     } }
+
+
+    $rutaPdfSalidas = "route=Salidas&action=GenerarOrden&cod=".$numero_documento;
     if(!empty($action)){
       if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
         require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -183,11 +233,58 @@ if($amInventarioR == 1){
     // print_r($exec);
   }
   if(empty($_POST)){
+    // $operaciones = $lider->consultarQuery("SELECT MAX(operaciones.numero_documento) as numero_documento FROM operaciones WHERE operaciones.transaccion='Venta';");
+    $operaciones = $lider->consultarQuery("SELECT DISTINCT operaciones.numero_documento as numero_documento FROM operaciones WHERE operaciones.transaccion='Venta' ORDER BY id_operacion DESC LIMIT 1;");
+    if(count($operaciones)>1){
+      $pos = strpos($operaciones[0]['numero_documento'], 'SA.');
+      if(strlen($pos)==0){
+        $numDoc = (float) $operaciones[0]['numero_documento'];
+      }else{
+        $numDoc = (float) substr($operaciones[0]['numero_documento'],3);
+      }
+      $numero_control_venta = ($numDoc+1);
+    }else{
+      $numero_control_venta = 1;
+    }
+
+    // $operaciones = $lider->consultarQuery("SELECT MAX(operaciones.numero_documento) as numero_documento FROM operaciones WHERE operaciones.transaccion='Desincorporacion';");
+    $operaciones = $lider->consultarQuery("SELECT DISTINCT operaciones.numero_documento as numero_documento FROM operaciones WHERE operaciones.transaccion='Desincorporacion' ORDER BY id_operacion DESC LIMIT 1;");
+    if(count($operaciones)>1){
+      $pos = strpos($operaciones[0]['numero_documento'], 'SA.');
+      if(strlen($pos)==0){
+        $numDoc = (float) $operaciones[0]['numero_documento'];
+      }else{
+        $numDoc = (float) substr($operaciones[0]['numero_documento'],3);
+      }
+      $numero_control_desincorporacion = ($numDoc+1);
+      // $numero_control_desincorporacion = ($operaciones[0]['numero_documento'])+1;
+    }else{
+      $numero_control_desincorporacion = 1;
+    }
+    
+    // $operaciones = $lider->consultarQuery("SELECT MAX(operaciones.numero_documento) as numero_documento FROM operaciones WHERE operaciones.transaccion='Reposicion';");
+    $operaciones = $lider->consultarQuery("SELECT DISTINCT operaciones.numero_documento as numero_documento FROM operaciones WHERE operaciones.transaccion='Reposicion' ORDER BY id_operacion DESC LIMIT 1;");
+    if(count($operaciones)>1){
+      $pos = strpos($operaciones[0]['numero_documento'], 'SA.');
+      if(strlen($pos)==0){
+        $numDoc = (float) $operaciones[0]['numero_documento'];
+      }else{
+        $numDoc = (float) substr($operaciones[0]['numero_documento'],3);
+      }
+      // $numDoc = substr($operaciones[0]['numero_documento'],3);
+      $numero_control_reposicion = ($numDoc+1);
+      // $numero_control_reposicion = ($operaciones[0]['numero_documento'])+1;
+    }else{
+      $numero_control_reposicion = 1;
+    }
+
+    // $lider->consultarQuery("SELECT * FROM")
     foreach($tipoInventarios as $tp){ if(!empty($tp['id'])){
       $proveedoress = $lider->consultarQuery("SELECT * FROM proveedores_inventarios WHERE proveedores_inventarios.tipoInventario LIKE '%{$tp['id']}%' and  proveedores_inventarios.estatus = 1 ORDER BY proveedores_inventarios.nombreProveedor ASC;");
       $proveedores[$tp['id']] = $proveedoress;
     } }
     $clientes = $lider->consultarQuery("SELECT * FROM clientes WHERE estatus=1");
+    $empleados = $lider->consultarQuery("SELECT * FROM empleados WHERE estatus=1");
     $productosAll = $lider->consultarQuery("SELECT * FROM productos WHERE estatus=1");
     $mercanciaAll = $lider->consultarQuery("SELECT * FROM mercancia WHERE estatus=1");
     $almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");

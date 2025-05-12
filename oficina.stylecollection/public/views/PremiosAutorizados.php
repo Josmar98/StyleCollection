@@ -18,7 +18,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <?php echo "Ver Premios Autorizados"; ?>
+        <?php echo "Ver ".$modulo; ?>
         <small><?php if(!empty($action)){echo $action;} echo "Premios"; ?></small>
       </h1>
       <ol class="breadcrumb">
@@ -27,12 +27,12 @@
         <!-- <li><a href="?<?php echo $menu ?>&route=<?php echo "Homing2" ?>"><?php echo "Despacho ".$num_despacho; ?></a></li> -->
         <li><a href="?<?php echo $menu ?>&route=<?php echo "Homing2" ?>"><?php echo "Home"; ?></a></li>
         <li><a href="?<?php echo $menu ?>&route=<?php echo $url ?>"><?php echo "Premios"; ?></a></li>
-        <li class="active"><?php if(!empty($action)){echo $action."  Premios Autorizados";}else{echo " Premios Autorizados";} ?></li>
+        <li class="active"><?php if(!empty($action)){echo $action." ".$modulo;}else{echo " ".$modulo;} ?></li>
       </ol>
     </section>
             <?php if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){ ?>
               <br>
-              <div style="width:100%;text-align:center;"><a href="?<?php echo $menu3; ?>route=<?php echo $url ?>&action=Registrar" class="color_btn_sweetalert" style="text-decoration-line:underline;">Registrar  Premios Autorizados</a></div>
+              <div style="width:100%;text-align:center;"><a href="?<?php echo $menu3; ?>route=<?php echo $url ?>&action=Registrar" class="color_btn_sweetalert" style="text-decoration-line:underline;">Registrar <?=$modulo; ?></a></div>
             <?php } ?>
     <!-- Main content -->
     <section class="content">
@@ -93,7 +93,7 @@
           <!-- general form elements -->
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title"><?php echo "Retos de lideres"; ?></h3>
+              <h3 class="box-title"><?php echo "".$modulo; ?></h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->

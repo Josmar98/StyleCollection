@@ -3,7 +3,7 @@
 	if($url=="Despachos"){ $modulo = "Pedidos"; }
 	else if($url=="PremiosCamp"){ $modulo = "Premios De Campaña"; }
 	else if($url=="Movimientos"){ $modulo = "Movimientos Bancarios"; }
-	else if($url=="FacturaDespacho"){ $modulo = "Factura de Despacho"; }
+	else if($url=="FacturaDespacho"){ $modulo = "Factura Fiscal"; }
 	else if($url=="FacturaDespachoConfiguracion"){ $modulo = "Configuracion de Factura"; }
 	else if($url=="DesperfectosNotif"){ $modulo = "Notificar Desperfectos"; }
 	else if($url=="LiderazgosCamp"){ $modulo = "Liderazgos de Campaña"; }
@@ -18,8 +18,18 @@
 	else if($url=="Retosinv"){ $modulo = "Retos"; }
 	else if($url=="RetosinvBorrados"){ $modulo = "Retos Borrados"; }
 	else if($url=="EmpleadosBorrados"){ $modulo = "Empleados"; }
+	else if($url=="EmpleadosBorrados"){ $modulo = "Empleados"; }
+	else if($url=="PreciosInventario"){ $modulo = "Precios de Venta"; }
+	else if($url=="PreciosNotas"){ $modulo = "Precios de Notas"; }
+	else if($url=="FacturaDespachoPerso"){ $modulo = "Factura Personalizada"; }
+	else if($url=="ReporteResumenGemas"){ $modulo = "Reporte de Resumen de Gemas"; }
+	else if($url=="Servicioss"){ $modulo = "Servicios"; }
+	else if($url=="ServiciosCamp"){ $modulo = "Servicios"; }
+	else if($url=="DevolucionVentas"){ $modulo = "Devolucion de Ventas"; }
+	else if($url=="CompraEfiCoin"){ $modulo = "EfiCoin"; }
+	else if($url=="PremiosAutorizados"){ $modulo = "Premios Autorizados"; }
 	else{ $modulo = $url; }
-
+	
 	if(!empty($action)){ if($action=="Registrar"){	$accion="Registrar"; }	if($action=="Modificar"){	$accion="Editar"; } } else{ $accion="Consultar"; }
 
 
@@ -38,20 +48,21 @@
 		if($action=="ModificarCompras"){ $nameaccion="Modificar"; }	
 		if($action=="ModificarVentas"){ $nameaccion="Modificar Ventas"; }	
 		if($action=="VerCompras"){	$nameaccion="Ver"; }	
+		if($action=="VerFiscal"){	$nameaccion="Ver"; }	
 	} else{ 
 		$nameaccion=""; 
 	}
 
 	if(is_file('app/models/indexModels.php')){
-		require_once'app/models/indexModels.php';
+		require_once 'app/models/indexModels.php';
 	} else if(is_file('../app/models/indexModels.php')){
-		require_once'../app/models/indexModels.php';
+		require_once '../app/models/indexModels.php';
 	}
 
 	if(is_file('app/models/indexModelss.php')){
-		require_once'app/models/indexModelss.php';
+		require_once 'app/models/indexModelss.php';
 	} else if(is_file('../app/models/indexModelss.php')){
-		require_once'../app/models/indexModelss.php';
+		require_once '../app/models/indexModelss.php';
 	}
 	$lider = new Models();
 	$lid3r = new Modelss();
@@ -62,6 +73,37 @@
 		// 1=>["id"=>"Insumos", "name"=>"Insumos"],
 		2=>["id"=>"Productos", "name"=>"Productos Terminados"],
 		3=>["id"=>"Mercancia", "name"=>"Mercancía"]
+	];
+
+	$infoInternos=[
+		'-1'=>[
+			'id_interno'=>"-1",
+			'cod_cedula'=>"V",
+			'cedula'=>"129634517",
+			'cod_rif'=>"V",
+			'rif'=>"129634517",
+			'primer_nombre'=>"Juan",
+			'segundo_nombre'=>"Carlos",
+			'primer_apellido'=>"Aguilar",
+			'segundo_apellido'=>"Cuellar",
+			'telefono'=>"",
+			'telefono2'=>"",
+			'direccion'=>"CR 1 Entre Calles 56 y 57 Casa Nro 56-29 Barrio Brisas Del Aeropuerto Barquisimeto Lara Zona Postal 3001",
+		],
+		'-2'=>[
+			'id_interno'=>"-2",
+			'cod_cedula'=>"V",
+			'cedula'=>"152650104",
+			'cod_rif'=>"V",
+			'rif'=>"152650104",
+			'primer_nombre'=>"Amarilis",
+			'segundo_nombre'=>"Annis",
+			'primer_apellido'=>"Rojas",
+			'segundo_apellido'=>"Escobar",
+			'telefono'=>"",
+			'telefono2'=>"",
+			'direccion'=>"CR 1 Entre Calles 56 y 57 Casa Nro 56-29 Barrio Brisas Del Aeropuerto Barquisimeto Lara Zona Postal 3001",
+		],
 	];
 	
 	// if(!empty($modulo) && !empty($accion)){

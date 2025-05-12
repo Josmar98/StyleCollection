@@ -17,7 +17,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <?php echo "Facturas de Despacho"; ?>
+        <?php echo "".$modulo; ?>
         <small><?php echo "Ver Facturas"; ?></small>
       </h1>
       <ol class="breadcrumb">
@@ -25,7 +25,7 @@
         <li><a href="?<?php echo $menu ?>&route=<?php echo "Homing2" ?>"><?php echo "Pedido"; ?></a></li>
         <!-- <li><a href="?<?php echo $menu ?>&route=<?php echo "Homing2" ?>"><?php echo "Despacho ".$num_despacho; ?></a></li> -->
         <li><a href="?<?php echo $menu ?>&route=<?php echo "Homing2" ?>"><?php echo "Home"; ?></a></li>
-        <li><a href="?<?php echo $menu ?>&route=<?php echo $url ?>"><?php echo "Facturas de Despacho"; ?></a></li>
+        <li><a href="?<?php echo $menu ?>&route=<?php echo $url ?>"><?php echo "".$modulo; ?></a></li>
         <li class="active"><?php if(!empty($action)){echo $action." Factura";}else{echo "Facturas";} ?></li>
       </ol>
     </section>
@@ -84,6 +84,7 @@
           if ($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superusuario"){
             $estado_campana = "1";
           }
+          $moduloFacturacion="Factura";
         ?>
 
         
@@ -91,7 +92,7 @@
           <!-- /.box -->
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title"><?php echo "Facturas de Despacho"; ?></h3>
+              <h3 class="box-title"><?php echo "".$modulo; ?></h3>
             </div>
             <!-- /.box-header -->
 
@@ -101,12 +102,13 @@
                 <thead>
                 <tr>
                   <th>Nº</th>
-                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
                   <th>---</th>
                   <?php } ?>
                   <th>Nombre y Apellido</th>
                   <th>Fecha de Facturacion</th>
                   <th>Colecciones</th>
+                  <th>Estado</th>
                   <th>---</th>
                 </tr>
                 </thead>
@@ -129,6 +131,11 @@
                   $continuar = true;
                 }
                 if($continuar == true){
+                  if($data['estado_factura']==1){
+                    $estado_factura = "Abierta";
+                  }else{
+                    $estado_factura = "Cerrada";
+                  }
                     ?>
                   <tr>
                     <td style="width:5%">
@@ -138,13 +145,15 @@
                     </td>
                     <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
                     <td style="width:20%">
+                      <?php if($data['estado_factura']==1){ ?>
                         <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?=$url; ?>&action=Modificar&id=<?=$data['id_factura_despacho']?>">
                           <span class="fa fa-wrench"></span>
                         </button>
                         <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
-                        <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu3; ?>route=<?=$url; ?>&id=<?=$data['id_factura_despacho']; ?>&permission=1">
-                          <span class="fa fa-trash"></span>
-                        </button>
+                          <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?=$menu3; ?>route=<?=$url; ?>&id=<?=$data['id_factura_despacho']; ?>&permission=1">
+                            <span class="fa fa-trash"></span>
+                          </button>
+                        <?php } ?>
                       <?php } ?>
                     </td>
                     <?php } ?>
@@ -190,7 +199,32 @@
                     </td>
                     <td style="width:20%">
                       <span class="contenido2">
-                        <?php echo $data['cantidad_aprobado']. " Colecciones"; ?>
+                        <?php
+                          if($data['estado_factura']==1){
+                            // $estado_factura = "Abierta";
+                            echo $data['cantidad_aprobado']. " Colecciones";
+                          }else{
+                            // $estado_factura = "Cerrada";
+                            $id_factura=$data['id_factura_despacho'];
+                            $coleccionesFacturadas = $lider->consultarQuery("SELECT * FROM despachos_facturados WHERE id_factura={$id_factura} and modulo_facturado='{$moduloFacturacion}'");
+                            $cantidadFacturada=0;
+                            foreach ($coleccionesFacturadas as $keys) {
+                                if(!empty($keys['id_despacho_facturado'])){
+                                  $cantidadFacturada+=$keys['cantidad_coleccion'];
+                                }
+                            }
+                            if($cantidadFacturada==0){
+                              $cantidadFacturada=$data['cantidad_aprobado'];
+                            }
+                            echo $cantidadFacturada. " Colecciones Facturadas";
+                          }
+
+                        ?>
+                      </span>
+                    </td>
+                    <td style="width:20%">
+                      <span class="contenido2">
+                        <?php echo $estado_factura; ?>
                       </span>
                     </td>
     
@@ -225,8 +259,11 @@
                                   Generar Factura Fiscal<br>Media Carta
                                 </a> -->
 
-                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>&t=2">
+                                <!-- <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarFiscal&id=<?php echo $data['id_factura_despacho'] ?>&t=2">
                                   Generar Factura Fiscal
+                                </a> -->
+                                <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF"  href="?<?php echo $menu ?>&route=<?=$url; ?>&action=VerFiscal&id=<?php echo $data['id_factura_despacho'] ?>&t=2">
+                                  Ver Factura Fiscal
                                 </a>
 
                                 <!-- <a class="btn" style="border:1px solid #fff;border-radius:5px;background:<?php echo $color_btn_sweetalert ?>;color:#FFF" target="_blank" href="?<?php echo $menu ?>&route=<?php echo $url ?>&action=GenerarSP&id=<?php echo $data['id_factura_despacho'] ?>&t=2">
@@ -253,12 +290,13 @@
                 <tfoot>
                 <tr>
                   <th>Nº</th>
-                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                  <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista2"){ ?>
                   <th>---</th>
                   <?php } ?>
                   <th>Nombre y Apellido</th>
                   <th>Fecha de Facturacion</th>
                   <th>Colecciones</th>
+                  <th>Estado</th>
                   <th>---</th>
                 </tr>
                 </tfoot>

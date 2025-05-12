@@ -286,7 +286,7 @@
                                   $cuotaConIVA=0;
                                   $coutasExentasIva=0;
                                   $autoConsumo=0;
-                                  $retencionIVa=0;
+                                  $retencionIVaVentas=0;
 
                                   $totalCuotaConIva = 0;
                                   $totalCuotaSinIva = 0;
@@ -332,7 +332,7 @@
                                     $cuotaConIVA = $cuotaSinIVA+$precioIVA;
                                     $coutasExentasIva=0;
                                     $autoConsumo=0;
-                                    $retencionIVa=0;
+                                    $retencionIVaVentas=0;
 
                                     
                                     if($estat){
@@ -341,7 +341,7 @@
                                       $totalPrecioIva+=$precioIVA;
                                       $totalCoutasExentasIva+=$coutasExentasIva;
                                       $totalAutoConsumo+=$autoConsumo;
-                                      $totalRetencionIVa+=$retencionIVa;
+                                      $totalRetencionIVa+=$retencionIVaVentas;
                                     }
 
                                     $classElement = "";
@@ -408,7 +408,7 @@
                                     <td class="textR"><?php if($estat){ echo number_format($cuotaSinIVA,2,',','.'); } ?></td>
                                     <td class="text-center"><?php if($estat){ echo $cantidadIVA."%"; } ?></td>
                                     <td class="textR"><?php if($estat){ echo number_format($precioIVA,2,',','.'); } ?></td>
-                                    <td class="textR"><?php if($estat){ echo number_format($retencionIVa,2,',','.'); } ?></td>
+                                    <td class="textR"><?php if($estat){ echo number_format($retencionIVaVentas,2,',','.'); } ?></td>
                                     <td class="bdr-black textR"></td>
                                   </tr>
                                 <?php } } } else{ ?>
@@ -431,7 +431,7 @@
                                     <td class="textR"><?php echo number_format($cuotaSinIVA,2,',','.'); ?></td>
                                     <td class="text-center"><?php echo $cantidadIVA."%"; ?></td>
                                     <td class="textR"><?php echo number_format($precioIVA,2,',','.'); ?></td>
-                                    <td class="textR"><?php echo number_format($retencionIVa,2,',','.'); ?></td>
+                                    <td class="textR"><?php echo number_format($retencionIVaVentas,2,',','.'); ?></td>
                                     <td class="bdr-black textR"></td>
                                   </tr>
                                 <?php } ?>
@@ -679,7 +679,7 @@
                                   $compraExentas=0;
                                   $comprasInternasGravadas=0;
                                   $ivaGeneral=0;
-                                  $retencionIVa=0;
+                                  $retencionIVaCompras=0;
 
 
 
@@ -693,6 +693,7 @@
                                 <?php if(count($compras)>1){ foreach ($compras as $compra){ if(!empty($compra['id_factura_compra'])){ ?>
                                   <?php  
                                     $opRetencion = $compra['opRetencion'];
+                                    $retencionIVaCompras=0;
                                     // $cantidadfactura = $digitosParaCodigo-strlen($compra['numeroFactura']);
                                     // $numero_factura = "";
                                     // for ($i=0; $i<$cantidadfactura; $i++){  $numero_factura.="0";}
@@ -705,7 +706,6 @@
                                     // for ($i=0; $i<$cantidadControl1; $i++){  $numero_control1.="0";}
                                     // $numero_control1 .= "".$fiscal['numero_control1'];
 
-
                                     $totalCompra = $compra['totalCompra'];
                                     $compraExentas = $compra['comprasExentas'];
                                     if($totalCompra==0){
@@ -715,14 +715,14 @@
                                     $precioIVA = $compra['iva'];
                                     $ivaGeneral = $compra['ivaGeneral'];
                                     if($opRetencion==1){
-                                      $retencionIVa=$compra['retencionIva'];
+                                      $retencionIVaCompras=$compra['retencionIva'];
                                     }
 
                                     $totalTotalCompra+=$totalCompra;
                                     $totalCompraExentas+=$compraExentas;
                                     $totalComprasInternasGravadas+=$comprasInternasGravadas;
                                     $totalIvaGeneral+=$ivaGeneral;
-                                    $totalRetencionIVa+=$retencionIVa;
+                                    $totalRetencionIVa+=$retencionIVaCompras;
                                   ?>
                                   <tr style="white-space:nowrap;">
                                     <td class="bdl-black"><?=$num++; ?></td>
@@ -741,7 +741,7 @@
                                     <td class="textR"><?=number_format($comprasInternasGravadas,2,',','.'); ?></td>
                                     <td class="text-center"><?=$precioIVA."%"; ?></td>
                                     <td class="textR"><?=number_format($ivaGeneral,2,',','.'); ?></td>
-                                    <td class="textR"><?=number_format($retencionIVa,2,',','.'); ?></td>
+                                    <td class="textR"><?=number_format($retencionIVaCompras,2,',','.'); ?></td>
                                     <td class="text-center"><?php if($opRetencion==1){ echo $compra['comprobante']; } else { echo ""; } ?></td>
                                     <td class="bdr-black text-center"><?php if($opRetencion==1){ echo str_replace("-","/",$lider->formatFecha($compra['fechaComprobante'])); } else { echo ""; } ?></td>
                                   </tr>
@@ -763,7 +763,7 @@
                                     <td class="textR"><?=number_format($comprasInternasGravadas,2,',','.'); ?></td>
                                     <td class="text-center"></td>
                                     <td class="textR"><?=number_format($ivaGeneral,2,',','.'); ?></td>
-                                    <td class="textR"><?=number_format($retencionIVa,2,',','.'); ?></td>
+                                    <td class="textR"><?=number_format($retencionIVaCompras,2,',','.'); ?></td>
                                     <td class="text-center"></td>
                                     <td class="bdr-black text-center"></td>
                                   </tr>
@@ -1026,7 +1026,7 @@
                           if(0>($totalDebitosFiscales-$totalCreditosFiscales)){
                             $totalCuotaTributaria=0;
                           }else{
-                            $totalCuotaTributaria = ($totalDebitosFiscales-$totalCreditosFiscales);
+                            $totalCuotaTributaria = (float) number_format(($totalDebitosFiscales-$totalCreditosFiscales),2,'.','');
                           }
                           if(0>($totalCreditosFiscales-$totalDebitosFiscales)){
                             $excedenteCreditoFiscalMesSiguiente=0;
@@ -1035,12 +1035,22 @@
                           }
                             # =================== # ========================= #
                           $retencionACumuladaPorDescontar=0;
-                          $retencionDelPeriodo=$totalRetencionIVa;
-                          $totalRetenciones = $retencionACumuladaPorDescontar+$retencionDelPeriodo;
+                          // $retencionDelPeriodo=$totalRetencionIVa;
+                          $retencionDelPeriodo= (float) number_format($retencionIVaVentas,2,'.','');
+                          
+                          $totalRetenciones =(float) number_format(($retencionACumuladaPorDescontar+$retencionDelPeriodo),2,'.','');
 
                           $retencionSoportadaDescontadaDeclaracion=0;
                           $retencionSoportadaDescontadaDeclaracionD=0;
-                          if($totalCuotaTributaria>$totalRetenciones){
+                          // echo "*".$totalCuotaTributaria."*<br>";
+                          // echo "*".$totalRetenciones."*<br>";
+                          // echo "<br>";
+                          // if($totalCuotaTributaria > $totalRetenciones){
+                          //   echo " || ".$totalRetenciones." || ";
+                          // }else{
+                          //   echo " || ".$totalCuotaTributaria." || ";
+                          // }
+                          if($totalCuotaTributaria > $totalRetenciones){
                             $retencionSoportadaDescontadaDeclaracionD=$totalRetenciones;
                           }else{
                             $retencionSoportadaDescontadaDeclaracionD=$totalCuotaTributaria;

@@ -129,18 +129,20 @@
                                       // echo $premiosInv[($z-1)]['tipo_inventario'];
                                       // echo $premiosInv[($z-1)]['id_premio_inventario'];
                                       if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
-                                        $nameTabla = "Productos";
+                                        $nameTabla = "productos";
                                         $idTabla = "id_producto";
                                       }
                                       if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
-                                        $nameTabla = "Mercancia";
+                                        $nameTabla = "mercancia";
                                         $idTabla = "id_mercancia";
                                       }
-                                      $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
-                                      // print_r($inventario);
+                                      $queryInv = "SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario";
+                                      // echo $queryInv;
+                                      $inventario = $lider->consultarQuery($queryInv);
                                     }else{
                                       $inventario = [];
                                     }
+                                    // print_r($inventario);
                                   ?>
                                   <div class="" style="width:15%;float:left;">
                                     <!-- <label for="unidad_inicial<?=$x.$z; ?>">Cantidad de Unidades #<?=$z; ?></label>                       -->
@@ -165,7 +167,7 @@
                                             }
                                           }
                                         ?>
-                                        >Productos: <?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                                        >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                                       <?php } } ?>
                                       <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
                                         <option value="m<?=$data['id_mercancia'] ?>"
@@ -179,7 +181,7 @@
                                             }
                                           }
                                         ?>
-                                        >Mercancia: <?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                                        >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                                       <?php } } ?>
                                     </select>
                                     <input type="hidden" id="tipoinicial<?=$x.$z; ?>" name="tipos[inicial][]" value="<?=$tipoInvOP; ?>">
@@ -267,21 +269,25 @@
                                     <?php for($z=1; $z<=$limitesElementos; $z++){ ?>
                                       <div style="width:100%;" id="box_tipo<?=$pagosDFill['id'];?><?=$x.$z; ?>" class="box_inventario_tipo box_inventario_tipo_<?=$pagosDFill['id'];?> <?php if($z>$elementosMostrar){ echo "d-none"; } ?>">
                                         <?php
-                                          if(!empty($premiosInv[($z-1)])){
+                                          // echo $x;
+                                          if(!empty($premiosInv[($x-1)]) && $x==1){
                                             // echo $premiosInv[($z-1)]['tipo_inventario'];
                                             // echo $premiosInv[($z-1)]['id_premio_inventario'];
                                             if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
-                                              $nameTabla = "Productos";
+                                              $nameTabla = "productos";
                                               $idTabla = "id_producto";
                                             }
                                             if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
-                                              $nameTabla = "Mercancia";
+                                              $nameTabla = "mercancia";
                                               $idTabla = "id_mercancia";
                                             }
-                                            $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
+                                            $queryInv = "SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario";
+                                            // echo $queryInv;
+                                            $inventario = $lider->consultarQuery($queryInv);
                                           }else{
                                             $inventario = [];
                                           }
+                                          // print_r($inventario);
                                         ?>
                                         <div class="" style="width:15%;float:left;">
                                           <!-- <label for="unidad_<?=$pagosDFill['id'];?><?=$x.$z; ?>">Cantidad de Unidades #<?=$z; ?></label> -->
@@ -306,7 +312,7 @@
                                                   }
                                                 }
                                               ?>
-                                              >Productos: <?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                                              >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                                             <?php } } ?>
                                             <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
                                               <option value="m<?=$data['id_mercancia'] ?>"
@@ -320,7 +326,7 @@
                                                   }
                                                 }
                                               ?>
-                                              >Mercancia: <?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                                              >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                                             <?php } } ?>
                                           </select>
                                           <input type="hidden" id="tipo<?=$pagosDFill['id'];?><?=$x.$z; ?>" name="tipos[<?=$pagosDFill['id'];?>][]" value="<?=$tipoInvOP; ?>">

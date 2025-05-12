@@ -34,6 +34,7 @@
 
       <div class="row">
         <?php require_once 'public/views/assets/bloque_precio_dolar.php'; ?>
+        <?php require_once 'public/views/assets/bloque_precio_eficoin.php'; ?>
 
         <?php 
               $amCampanas = 0;

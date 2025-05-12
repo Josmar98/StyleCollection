@@ -131,6 +131,11 @@
                                   <b style="color:<?=$fucsia?>"><?=$data['nombre_catalogo']?></b>
                                 </div>
                               </div>
+                                  <?php
+                                    if($data['id_premio']==0){
+                                      echo "<small style='font-size:0.7em;color:red;'><u>No vinculado a inventario</u></small>";
+                                    }
+                                  ?>
 
                               <div class="row" style="height:10%;">
                                 <div style="color:<?=$fucsia;?>;background:#fff;border:1px solid <?=$fucsia?>;" class="btn col-xs-8 col-xs-offset-2">
@@ -145,13 +150,13 @@
                               <?php endif; ?>
                               
 
-                              <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista" || $_SESSION['nombre_rol']=="Analista Supervisor"): ?>
+                              <?php if($amCatalogosE==1 || $amCatalogosB==1): ?>
                                
                                 <div class="row">
                                     
                                   <div class="col-xs-12" style="height:12.5%;width:100%;margin-top:2%;" >
                                           
-                                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <?php if($amCatalogosE==1): ?>
                                       <button class="modificarBtn btn" style="font-size:1em;border:0;background:none;background:#04a7c9;color:#FFF;width:40%;height:auto;margin-left:auto;margin-right:auto;display:inline-block;" value="?route=<?php echo $url; ?>&action=Modificar&id=<?php echo $data['id_catalogo'] ?>">
                                         <span class="fa fa-wrench">
                                           
@@ -159,7 +164,7 @@
                                       </button>
                                     <?php endif; ?>
 
-                                    <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                    <?php if($amCatalogosB==1): ?>
                                       <button class="eliminarBtn btn" style="font-size:1em;border:0;background:none;background:red;color:#FFF;width:40%;height:auto;margin-left:auto;margin-right:auto;display:inline-block;" value="?route=<?php echo $url; ?>&id=<?php echo $data['id_catalogo'] ?>&permission=1">
                                         <span class="fa fa-trash"></span>
                                       </button>

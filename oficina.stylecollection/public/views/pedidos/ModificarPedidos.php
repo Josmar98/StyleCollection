@@ -53,6 +53,29 @@
             <form action="" method="post" role="form" class="form_register">
               <div class="box-body">
                  <?php 
+                  $coleccionesFacturadas = $lider->consultarQuery("SELECT * FROM despachos_facturados WHERE id_pedido={$id}");
+                  $facturadas = [];
+                  foreach ($coleccionesFacturadas as $keys) {
+                    if(!empty($keys['id_despacho_facturado'])){
+                      $facturadas[mb_strtolower($keys['nombre_coleccion'])]=$keys;
+                      $facturadas[mb_strtolower($keys['nombre_coleccion'])]['cantidad_coleccion']=0;
+                    }
+                  }
+                  foreach ($coleccionesFacturadas as $keys) {
+                    if(!empty($keys['id_despacho_facturado'])){
+                      $facturadas[mb_strtolower($keys['nombre_coleccion'])]['cantidad_coleccion']+=$keys['cantidad_coleccion'];
+                    }
+                  }
+                  
+                  $coleccionesDevueltas = $lider->consultarQuery("SELECT * FROM orden_devolucion_colecciones WHERE id_pedido={$id}");
+                  foreach ($coleccionesDevueltas as $keys) {
+                    if(!empty($keys['id_orden_dev_col'])){
+                      $facturadas[mb_strtolower($keys['nombre_coleccion'])]['cantidad_coleccion']-=$keys['cantidad_colecciones'];
+                    }
+                  }
+                  
+
+
                   $pedidoOrAprob = "";
                   $cantidadDelPedido = 0;
                   if($pedido['cantidad_aprobado']==0){ 
@@ -68,9 +91,19 @@
                   ?>
                   <div class="row">
                     <div class="form-group col-xs-12">
+                      <?php
+                        $nameCol="Cosmeticos";
+                        // $limitarMinimos=false;
+                        $colMinimas=0;
+                        if(!empty($facturadas[mb_strtolower($nameCol)])){
+                          // $limitarMinimos=true;
+                          $colMinimas=$facturadas[mb_strtolower($nameCol)]['cantidad_coleccion'];
+                          // print_r($facturadas[mb_strtolower($nameCol)]);
+                        }
+                      ?>
                       <input type="hidden" class="maxOculto" value="<?php echo $numMax; ?>">
                       <label for="cantidad">Cantidad (Coleccion: Productos)</label>
-                      <input type="number" class="form-control cantidadesT" step="1" data-val="0" id="cantidad" value="<?php echo $cantidadDelPedido; ?>" name="cantidad" maxlength="30" placeholder="Ingresar cantidad de colecciones para el despacho">
+                      <input type="number" class="form-control cantidadesT" step="1" data-val="0" id="cantidad" value="<?php echo $cantidadDelPedido; ?>"  min="<?=$colMinimas; ?>" name="cantidad" maxlength="30" placeholder="Ingresar cantidad de colecciones para el despacho">
                       <!-- <span id="error_cantidad" class="errors"></span> -->
                     </div>
 
@@ -90,12 +123,18 @@
                             }
                           }
                         }
+                        $nameCol=$despSec['nombre_coleccion_sec'];
+                        $colMinimas=0;
+                        if(!empty($facturadas[mb_strtolower($nameCol)])){
+                          $colMinimas=$facturadas[mb_strtolower($nameCol)]['cantidad_coleccion'];
+                          // print_r($facturadas[mb_strtolower($nameCol)]); 
+                        }
                         ?>
-                      <div class="form-group col-xs-12">
-                        <label for="cantidad_sec">Cantidad (Coleccion: <?=$despSec['nombre_coleccion_sec']; ?>)</label>
-                        <input type="number" class="form-control cantidad_sec cantidadesT" data-val="<?=$despSec['id_despacho_sec']; ?>" id="cantidad_sec<?=$despSec['id_despacho_sec']; ?>" step="1" name="cantidadSec[]" min="0" value="<?=$valorColeccionSec; ?>">
-                        <input type="hidden" name="idColSec[]" value="<?=$despSec['id_despacho_sec']; ?>">
-                      </div>
+                          <div class="form-group col-xs-12">
+                            <label for="cantidad_sec">Cantidad (Coleccion: <?=$despSec['nombre_coleccion_sec']; ?>)</label>
+                            <input type="number" class="form-control cantidad_sec cantidadesT" data-val="<?=$despSec['id_despacho_sec']; ?>" id="cantidad_sec<?=$despSec['id_despacho_sec']; ?>" step="1" name="cantidadSec[]" min="<?=$colMinimas; ?>" value="<?=$valorColeccionSec; ?>">
+                            <input type="hidden" name="idColSec[]" value="<?=$despSec['id_despacho_sec']; ?>">
+                          </div>
                         <?php 
                       } }
                       }
@@ -245,8 +284,12 @@ $(document).ready(function(){
 
   $(".cantidadesT").on("change focusout keyup",function(){
     var cant = parseInt($(this).val());
+    var minimoLimitado=parseInt($(this).attr('min'));
     if(cant < 0){
       $(this).val(0);
+    }
+    if(cant < minimoLimitado){
+      $(this).val(minimoLimitado);
     }
     var minimaCol = $("#cantidad_minima").val();
     let totalcant = [];

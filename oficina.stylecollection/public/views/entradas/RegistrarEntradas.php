@@ -29,7 +29,7 @@
     </section>
           <br>
           <?php if($amInventarioC==1){ ?>
-            <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div>
+            <!-- <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div> -->
           <?php } ?>
     <!-- Main content -->
     <section class="content">
@@ -64,7 +64,12 @@
                         <option value=""></option>
                         <option class="transaccion_prod" value="Produccion">Producción</option>
                         <option class="transaccion_comp" value="Compra">Compra</option>
-                        <option value="Averia">Averia</option>
+                        <option class="" value="Averia">Avería</option>
+                        <?php if(mb_strtolower($_SESSION['nombre_rol'])==mb_strtolower("Superusuario") || mb_strtolower($_SESSION['nombre_rol'])==mb_strtolower("Contable")){ ?>
+                        <option class="transaccion_comp" value="Inventario Inicial">Inventario Inicial</option>
+                        <?php } ?>
+
+                        <!-- <option value="Averia">Averia</option> -->
                       </select>
                       <span id="error_transaccion" class="errors"></span>
                     </div>
@@ -84,14 +89,14 @@
 
                     <div class="form-group col-sm-12 col-md-6">
                       <label for="numero_documento">Número de documento</label>
-                      <input type="number" class="form-control" id="numero_documento" name="numero_documento" step="1" placeholder="Ingresar número de documento">
+                      <input type="text" class="form-control" id="numero_documento" name="numero_documento" placeholder="Ingresar número de documento">
                       <span id="error_numero_documento" class="errors"></span>
                     </div>
                   </div>
                   <div class="row">
                     <div class="form-group col-sm-12 col-md-6">
                       <label for="numero_lote">Número de lote</label>
-                      <input type="number" class="form-control" id="numero_lote" name="numero_lote" step="1" placeholder="Ingresar número de lote">
+                      <input type="text" class="form-control" id="numero_lote" name="numero_lote" placeholder="Ingresar número de lote">
                       <span id="error_numero_lote" class="errors"></span>
                     </div>
                     <div class="form-group col-sm-12 col-md-6">
@@ -103,7 +108,7 @@
                   <div class="row">
                     
 
-                    <div class="form-group col-sm-12 col-md-4 box-proveedores box-proveedoress">
+                    <div class="form-group col-sm-12 col-md-6 box-proveedores box-proveedoress">
                       <label for="proveedor">Seleccionar Proveedor / Cliente</label>
                       <select class="form-control select2 proveedores" id="proveedor" style="width:100%">
                         <option value=""></option>
@@ -111,7 +116,7 @@
                       <span id="error_proveedor" class="errors"></span>
                     </div>
                     <?php foreach($tipoInventarios as $tp){ if(!empty($tp['id'])){ ?>
-                      <div class="form-group col-sm-12 col-md-4 box-proveedores<?=$tp['id']; ?> box-proveedoress box-proveedoresx d-none">
+                      <div class="form-group col-sm-12 col-md-6 box-proveedores<?=$tp['id']; ?> box-proveedoress box-proveedoresx d-none">
                         <label for="proveedor<?=$tp['id']; ?>">Seleccionar Proveedor</label>
                         <select class="form-control select2 proveedores" id="proveedor<?=$tp['id']; ?>" name="proveedor<?=$tp['id']; ?>"  style="width:100%">
                           <option value=""></option>
@@ -123,7 +128,7 @@
                       </div>
                     <?php } } ?>
                     <?php if(!empty($clientes)){ ?>
-                      <div class="form-group col-sm-12 col-md-4 box-proveedoresClientes box-proveedoress box-proveedoresx d-none">
+                      <div class="form-group col-sm-12 col-md-6 box-proveedoresClientes box-proveedoress box-proveedoresx d-none">
                         <label for="proveedorClientes">Seleccionar Clientes</label>
                         <select class="form-control select2 proveedores" id="proveedorClientes" name="proveedorClientes"  style="width:100%;">
                           <option value=""></option>
@@ -135,7 +140,7 @@
                       </div>
                     <?php } ?>
                     
-                    <div class="form-group col-sm-12 col-md-4">
+                    <div class="form-group col-sm-12 col-md-6">
                       <label for="almacen">Seleccionar Almacen</label>
                       <select class="form-control select2 almacenes" id="almacen" name="almacen"  style="width:100%">
                         <option value=""></option>
@@ -147,13 +152,19 @@
                     </div>
                     
 
-                    <div class="form-group col-sm-12 col-md-4 box-descincorporar d-none">
+                    <div class="form-group col-sm-12 col-md-6 box-descincorporar d-none">
                       <label for="descincorporar">¿Desincorporar?</label>
                       <select class="form-control" id="descincorporar" name="descincorporar"  style="width:100%">
                         <option value="No">No</option>
                         <option value="Si">Si</option>
                       </select>
                       <span id="error_descincorporar" class="errors"></span>
+                    </div>
+
+                    <div class="form-group col-sm-12 col-md-6 box-leyenda d-none">
+                      <label for="leyenda">Leyenda</label>
+                      <input type="text" class="form-control" id="leyenda" name="leyenda" placeholder="Ingresar la leyenda de la operacion">
+                      <span id="error_leyenda" class="errors"></span>
                     </div>
                      
                   </div>
@@ -192,21 +203,24 @@
                     <div style="width:15%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
                       <label>Cantidad</label>
                     </div>
-                    <div style="width:65%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
+                    <div style="width:49%;float:left" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
                       <label>Descripcion</label>
                     </div>
-                    <div style="width:20%;float:right;" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
+                    <div style="width:18%;float:left;" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
+                      <label>Monto Unitario</label>
+                    </div>
+                    <div style="width:18%;float:left;" class=" box-inventariosProductos1 box-inventariosMercancia1 box-inventario d-none">
                       <label>Monto Total</label>
                     </div>
                   </div>
                   <?php for($z=1; $z<=$limiteElementos; $z++){ ?>
                     <div class="row" style="padding:0px 15px;">
                       <div style="width:15%;float:left;" class=" box-inventariosProductos<?=$z; ?> box-inventariosMercancia<?=$z; ?> box-inventario d-none">
-                        <input type="number" class="form-control" id="stock<?=$z; ?>" min="0" name="stock[]" step="1" placeholder="Cantidad (150)">
+                        <input type="number" class="form-control stocks" title="<?=$z; ?>" id="stock<?=$z; ?>" min="0" name="stock[]" step="1" placeholder="Cantidad (150)">
                         <span id="error_stock<?=$z; ?>" class="errors"></span>
                       </div>
-                      <div style="width:65%;float:left;" class=" box-inventariosProductos<?=$z; ?> box-inventario d-none">
-                        <select class="form-control select2 inventarios" id="inventarioProductos<?=$z; ?>" name="inventarioProductos[]"  style="width:100%">
+                      <div style="width:49%;float:left;" class=" box-inventariosProductos<?=$z; ?> box-inventario d-none">
+                        <select class="form-control select2 inventarios" data-z="<?=$z;?>" data-inv="productos" id="inventarioProductos<?=$z; ?>" name="inventarioProductos[]"  style="width:100%">
                           <option value=""></option>
                           <?php foreach($productos as $inv){ if(!empty($inv['id_producto'])){ ?>
                             <option value="<?php echo $inv['id_producto']; ?>"><?php echo $inv['codigo_producto']." ".$inv['producto']."(".$inv['cantidad'].") ".$inv['marca_producto']; ?></option>
@@ -215,8 +229,8 @@
                         <span id="error_inventarioProductos<?=$z; ?>" class="errors"></span>
                       </div>
     
-                      <div style="width:65%;float:left;" class=" box-inventariosMercancia<?=$z; ?> box-inventario d-none">
-                        <select class="form-control select2 inventarios" id="inventarioMercancia<?=$z; ?>" name="inventarioMercancia[]"  style="width:100%">
+                      <div style="width:49%;float:left;" class=" box-inventariosMercancia<?=$z; ?> box-inventario d-none">
+                        <select class="form-control select2 inventarios" data-z="<?=$z;?>" data-inv="mercancia" id="inventarioMercancia<?=$z; ?>" name="inventarioMercancia[]"  style="width:100%">
                           <option value=""></option>
                           <?php foreach($mercancia as $inv){ if(!empty($inv['id_mercancia'])){ ?>
                             <option value="<?php echo $inv['id_mercancia']; ?>"><?php echo $inv['codigo_mercancia']." ".$inv['mercancia']."(".$inv['medidas_mercancia'].") ".$inv['marca_mercancia']; ?></option>
@@ -225,8 +239,12 @@
                         <span id="error_inventarioMercancia<?=$z; ?>" class="errors"></span>
                       </div>
 
-                      <div style="width:20%;float:right;" class=" box-inventariosProductos<?=$z; ?> box-inventariosMercancia<?=$z; ?> box-inventario d-none">
-                        <input type="number" class="form-control" id="total<?=$z; ?>" name="total[]" step="1" placeholder="Monto ($.1500)">
+                      <div style="width:18%;float:left;" class=" box-inventariosProductos<?=$z; ?> box-inventariosMercancia<?=$z; ?> box-inventario d-none">
+                        <input type="number" class="form-control unitarios" title="<?=$z; ?>" id="unitario<?=$z; ?>" name="unitarios[]" step="0.001" placeholder="Monto ($.1500)">
+                        <span id="error_unitario<?=$z; ?>" class="errors"></span>
+                      </div>
+                      <div style="width:18%;float:left;" class=" box-inventariosProductos<?=$z; ?> box-inventariosMercancia<?=$z; ?> box-inventario d-none">
+                        <input type="number" class="form-control totales" title="<?=$z; ?>" id="total<?=$z; ?>" name="total[]" step="0.001" placeholder="Monto ($.1500)">
                         <span id="error_total<?=$z; ?>" class="errors"></span>
                       </div>
                     </div>
@@ -297,7 +315,6 @@ $(document).ready(function(){
 
   var response = $(".responses").val();
   if(response==undefined){
-
   }else{
     if(response == "1"){
       swal.fire({
@@ -305,7 +322,7 @@ $(document).ready(function(){
           title: '¡Datos guardados correctamente!',
           confirmButtonColor: "#ED2A77",
       }).then(function(){
-        window.location = "?route=Entradas";
+        window.location = "?route=Operaciones";
       });
     }
     if(response == "2"){
@@ -316,6 +333,53 @@ $(document).ready(function(){
       });
     }
   } 
+
+  
+  // stocks
+  // unitarios
+  // totales
+  $(".stocks").on('keyup change',function(){
+    var id = $(this).attr('title');
+    var stock = $("#stock"+id).val();
+    var unitario = $("#unitario"+id).val();
+    var total = $("#total"+id).val();
+    // if(unitario!="" && total!=""){
+    //   if(stock!="" && stock!=0){
+    //     $("#unitario"+id).val((parseFloat(total)/parseFloat(stock)));
+    //   }
+    // } else if(unitario=="" && total!=""){
+    //   if(stock!="" && stock!=0){
+    //       $("#unitario"+id).val((parseFloat(total)/parseFloat(stock)));
+    //   }
+    // } else if(unitario!="" && total==""){
+    //   if(stock!=""){
+    //     $("#total"+id).val((parseFloat(stock)*parseFloat(unitario)));
+    //   }
+    // }
+    if(unitario!=""){
+      if(stock!=""){
+        $("#total"+id).val((parseFloat(stock)*parseFloat(unitario)));
+      }
+    }
+  });
+  $(".unitarios").on('keyup change',function(){
+    var id = $(this).attr('title');
+    var stock = $("#stock"+id).val();
+    var unitario = $("#unitario"+id).val();
+    var total = $("#total"+id).val();
+    if(stock!=""){
+      $("#total"+id).val((parseFloat(stock)*parseFloat(unitario)));
+    }
+  });
+  $(".totales").on('keyup change',function(){
+    // var id = $(this).attr('title');
+    // var stock = $("#stock"+id).val();
+    // var unitario = $("#unitario"+id).val();
+    // var total = $("#total"+id).val();
+    // if(stock!="" && stock!=0){
+    //   $("#unitario"+id).val((parseFloat(total)/parseFloat(stock)));
+    // }
+  });
 
   $(".box-inventarios").hide();
   $(".box-inventarios").removeClass("d-none");
@@ -456,13 +520,70 @@ $(document).ready(function(){
   
   $(".box-descincorporar").hide();
   $(".box-descincorporar").removeClass('d-none');
+  $(".box-leyenda").hide();
+  $(".box-leyenda").removeClass('d-none');
+  
   $("#transaccion").on('change', function(){
     var op = $(this).val();
-    if(op=='Averia'){
+    if(op.toLowerCase()=='averia'){
       $(".box-descincorporar").slideDown();
     }else{
       $(".box-descincorporar").slideUp();
     }
+  });
+
+  $("#descincorporar").on('change', function(){
+    var val=$(this).val();
+    if(val.toLowerCase()=="si"){
+      $(".box-leyenda").slideDown();
+    }else{
+      $(".box-leyenda").slideUp();
+    }
+  });
+
+
+  $(".inventarios").change(function(){
+    var id_inventario=$(this).val();
+    var tipo_inventario=$(this).attr('data-inv');
+    var z=$(this).attr('data-z');
+
+    // alert(tipo_inventario+' '+id_inventario);
+    $.ajax({
+      url: '',
+      type: 'POST',
+      data: {
+        buscar_costo: true,
+        id_inventario: id_inventario,
+        tipo_inventario: tipo_inventario,
+      },
+      success: function(respuesta){
+        // alert(respuesta);
+        var data = JSON.parse(respuesta);
+        console.log(data);
+        if (data.msj == "1"){
+          var stockSelect = $("#stock"+z).val();
+          if(stockSelect==""){
+            var costo = data.costo;
+            $("#unitario"+z).val(costo);
+          }else{
+            var costo = data.costo;
+            var total = (data.costo*stockSelect);
+            $("#unitario"+z).val(costo);
+            $("#total"+z).val(costo);
+          }
+          // alert(costo);
+        }
+  
+        if (data.msj == "2"){
+          swal.fire({
+            type: 'error',
+            title: '¡Busqueda sin resultados!',
+            confirmButtonColor: "#ED2A77",
+          });
+          $("#unitario"+z).val(0);
+        }
+      }
+    });
   });
     
   $(".enviar").click(function(){
@@ -582,10 +703,10 @@ function validar(){
     $("#error_numero_documento").html("");
   }else{
     var numero_documento = $("#numero_documento").val();
-    var rnumero_documento = checkInput(numero_documento, numberPattern);
+    var rnumero_documento = checkInput(numero_documento, alfanumericPattern2);
     if( rnumero_documento == false ){
       if(numero_documento.length != 0){
-        $("#error_numero_documento").html("El numero de documento no debe contener letras o caracteres especiales");
+        $("#error_numero_documento").html("El numero de documento no acepta algunos caracteres especiales");
       }else{
         $("#error_numero_documento").html("Debe llenar el campo de numero de documento");      
       }
@@ -617,10 +738,10 @@ function validar(){
   var rnumero_lote=false;
   if(transaccion=="Produccion"){
     var numero_lote = $("#numero_lote").val();
-    rnumero_lote = checkInput(numero_lote, numberPattern);
+    rnumero_lote = checkInput(numero_lote, alfanumericPattern3);
     if( rnumero_lote == false ){
       if(numero_lote.length != 0){
-        $("#error_numero_lote").html("El numero de lote no debe contener letras o caracteres especiales");
+        $("#error_numero_lote").html("El numero de lote no debe contener algunos caracteres especiales");
       }else{
         $("#error_numero_lote").html("Debe llenar el campo de numero de lote");      
       }
@@ -636,12 +757,15 @@ function validar(){
   /*===================================================================*/
   var tpInvs = "";
   var provecliente = "";
-  if(transaccion=="Averia"){
+  var opDesincorporacion=false;
+  if(transaccion.toLowerCase()=="averia"){
     tpInvs = "Clientes";
     provecliente = "cliente";
+    opDesincorporacion=true;
   }else{
     tpInvs = tipoInv;
     provecliente = "proveedor";
+    opDesincorporacion=false;
   }
   var rproveedor = false;
   var proveedor = $("#proveedor"+tpInvs).val();
@@ -665,20 +789,41 @@ function validar(){
     $("#error_almacen").html("");
   }
   /*===================================================================*/
-  
-  
+  if(opDesincorporacion==true){
+    var opDes = $("#descincorporar").val();
+    if(opDes.toLowerCase()=="si"){
+      var rleyenda = false;
+      var leyenda = $("#leyenda").val();
+      if(leyenda==""){
+        rleyenda=false;
+        $("#error_leyenda").html("Debe ingresar la leyenda de la operacion");
+      }else{
+        rleyenda=true;
+        $("#error_leyenda").html("");
+      }
+    }else{
+      var rleyenda = true;
+    }
+  }else{
+    var rleyenda = true;
+  }
+  // descincorporar
+  // leyenda
 
   var cantidad_elementos = $("#cantidad_elementos").val();
   var rstocks = false;
   var rinventarios = false;
+  var runitarios = false;
   var rtotales = false;
   if(cantidad_elementos==0){
     var rstocks = false;
     var rinventarios = false;
+    var runitarios = false;
     var rtotales = false;
   }else{
     var erroresStock=0;
     var erroresInventario=0;
+    var erroresUnitarios=0;
     var erroresTotales=0;
     for (let i=1; i<=cantidad_elementos;i++) {
       /*===================================================================*/
@@ -710,32 +855,56 @@ function validar(){
       /*===================================================================*/
     
       /*===================================================================*/
-        if(transaccion=="Compra"){
-          var total = $("#total"+i).val();
-          var rtotal = checkInput(total, numberPattern);
-          if( rtotal == false ){
-            if(total.length != 0){
-              $("#error_total"+i).html("El total #"+i+" del documento debe ser un valor numerico");
-            }else{
-              $("#error_total"+i).html("Debe llenar el total #"+i+" del documento");      
-            }
-          }else{
-            $("#error_total"+i).html("");
-          }
-          if(rtotal==false){ erroresTotales++; }
+      var unitario = $("#unitario"+i).val();
+      var runitario = checkInput(unitario, numberPattern2);
+      if( runitario == false ){
+        if(unitario.length != 0){
+          $("#error_unitario"+i).html("El unitario #"+i+" del documento debe ser un valor numerico");
+        }else{
+          $("#error_unitario"+i).html("Debe llenar el unitario #"+i+" del documento");
+        }
+      }else{
+        if(unitario < 0.1){
+          $("#error_unitario"+i).html("El precio unitario #"+i+" debe ser mayor a 0.10");
+          runitario == false;
+        }else{
+          $("#error_unitario"+i).html("");
+        }
+      }
+
+      var total = $("#total"+i).val();
+      var rtotal = checkInput(total, numberPattern2);
+      if( rtotal == false ){
+        if(total.length != 0){
+          $("#error_total"+i).html("El total #"+i+" del documento debe ser un valor numerico");
+        }else{
+          $("#error_total"+i).html("Debe llenar el total #"+i+" del documento");      
+        }
+      }else{
+        if(total < 0.1){
+          $("#error_total"+i).html("El precio total #"+i+" debe ser mayor a 0.10");
+          rtotal == false;
         }else{
           $("#error_total"+i).html("");
         }
+      }
+      if(runitario==false){ erroresUnitarios++; }
+      if(rtotal==false){ erroresTotales++; }
+        // if(transaccion=="Compra"){
+        // }else{
+        //   $("#error_total"+i).html("");
+        // }
       /*===================================================================*/
     }
     if(erroresStock==0){ rstocks=true; }
     if(erroresInventario==0){ rinventarios=true; }
+    if(erroresUnitarios==0){ runitarios=true; }
     if(erroresTotales==0){ rtotales=true; }
   }
 
   /*===================================================================*/
     var result = false;
-    if( rfecha_doc==true && rnumero_documento==true && rnumero_lote==true && rfecha_vencimiento==true && rtipoInv==true && rproveedor==true && ralmacen==true && rtransaccion==true && rstocks==true && rinventarios==true && rtotales==true){
+    if( rfecha_doc==true && rnumero_documento==true && rnumero_lote==true && rfecha_vencimiento==true && rtipoInv==true && rproveedor==true && ralmacen==true && rtransaccion==true && rstocks==true && rinventarios==true && rtotales==true && rleyenda==true){
       result = true;
     }else{
       result = false;

@@ -108,6 +108,7 @@
                     <th>---</th>
                     <th>Líder</th>
                     <th>Fecha de Emision</th>
+                    <th>Estado</th>
                     <th>---</th>
                   </tr>
                 </thead>
@@ -131,72 +132,86 @@
                       $permitido=1;
                     }
                     if($permitido==1){
-                      ?>
-                      <tr >
-                        <td style="width:5%">
-                          <span class="contenido2">
-                            <?php echo $num++; ?>
-                          </span>
-                        </td>
-                        <td style="width:15%">
-                          <?php if($estado_campana=="1"){ ?>
-                              <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&nota=<?=$data['id_nota_entrega_personalizada']?>">
-                                <span class="fa fa-wrench"></span>
-                              </button>
-                              <?php if ($_SESSION['nombre_rol']!="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
-                                <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
-                                    <span class="fa fa-trash"></span>
-                                </button> -->
-                              <?php endif; ?>
-                          <?php } ?>
-                        </td>
-                        <td style="width:40%">
-                          <span class="contenido2">
-                            <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
-                            <br>
-                            <?php 
-                              switch (strlen($data['numero_nota_entrega'])) {
-                                case 1:
-                                  $numero_nota_entrega = "000000".$data['numero_nota_entrega'];
-                                  break;
-                                case 2:
-                                  $numero_nota_entrega = "00000".$data['numero_nota_entrega'];
-                                  break;
-                                case 3:
-                                  $numero_nota_entrega = "0000".$data['numero_nota_entrega'];
-                                  break;
-                                case 4:
-                                  $numero_nota_entrega = "000".$data['numero_nota_entrega'];
-                                  break;
-                                case 5:
-                                  $numero_nota_entrega = "00".$data['numero_nota_entrega'];
-                                  break;
-                                case 6:
-                                  $numero_nota_entrega = "0".$data['numero_nota_entrega'];
-                                  break;
-                                case 7:
-                                  $numero_nota_entrega = "".$data['numero_nota_entrega'];
-                                  break;
-                                default:
-                                  $numero_nota_entrega = "".$data['numero_nota_entrega'];
-                                  break; 
-                              }
-                             ?>
-                            <?php echo $numero_nota_entrega; ?>
-                          </span>
-                        </td>
-                        <td>
-                          <span class="contenido2">
-                            <?=$lider->formatFecha($data['fecha_emision']);?>
-                          </span>
-                        </td>
-                        <td style="">
-                          <span class="contenido2">
-                            <a href="?<?=$menu?>&route=<?=$url; ?>&action=Ver&nota=<?=$data['id_nota_entrega_personalizada']?>"> Ver nota de entrega</a>
-                          </span>
-                        </td>
-                      </tr>
-                      <?php
+                      $estado_nota = "";
+                      if($data['estado_nota_personalizada']==1){
+                        $estado_nota = "Abierta";
+                      }
+                      if($data['estado_nota_personalizada']==0){
+                        $estado_nota = "Cerrada";
+                      }
+                      if(mb_strtolower($data['leyenda'])!="credito style"){
+                        ?>
+                        <tr >
+                          <td style="width:5%">
+                            <span class="contenido2">
+                              <?php echo $num++; ?>
+                            </span>
+                          </td>
+                          <td style="width:15%">
+                            <?php if($estado_campana=="1" && $data['estado_nota_personalizada']==1){ ?>
+                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&nota=<?=$data['id_nota_entrega_personalizada']?>">
+                                  <span class="fa fa-wrench"></span>
+                                </button>
+                                <?php if ($_SESSION['nombre_rol']!="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                  <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                  </button> -->
+                                <?php endif; ?>
+                            <?php } ?>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                              <br>
+                              <?php 
+                                switch (strlen($data['numero_nota_entrega'])) {
+                                  case 1:
+                                    $numero_nota_entrega = "000000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 2:
+                                    $numero_nota_entrega = "00000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 3:
+                                    $numero_nota_entrega = "0000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 4:
+                                    $numero_nota_entrega = "000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 5:
+                                    $numero_nota_entrega = "00".$data['numero_nota_entrega'];
+                                    break;
+                                  case 6:
+                                    $numero_nota_entrega = "0".$data['numero_nota_entrega'];
+                                    break;
+                                  case 7:
+                                    $numero_nota_entrega = "".$data['numero_nota_entrega'];
+                                    break;
+                                  default:
+                                    $numero_nota_entrega = "".$data['numero_nota_entrega'];
+                                    break; 
+                                }
+                              ?>
+                              <?php echo $numero_nota_entrega; ?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?=$lider->formatFecha($data['fecha_emision']);?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?=$estado_nota; ?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <a href="?<?=$menu?>&route=<?=$url; ?>&action=Ver&nota=<?=$data['id_nota_entrega_personalizada']?>"> Ver nota de entrega</a>
+                            </span>
+                          </td>
+                        </tr>
+                        <?php
+                      }
                     }
                   } }
                 ?>
@@ -207,6 +222,7 @@
                     <th>---</th>
                     <th>Líder</th>
                     <th>Fecha de Emision</th>
+                    <th>Estado</th>
                     <th>---</th>
                   </tr>
                 </tfoot>
@@ -215,6 +231,132 @@
             </div>
               
           </div>
+
+          <?php if(count($notasE)>1){ ?>
+          <div class="box">
+            <div class="box-header with-border">
+              <h3 class="box-title"><?php echo "Crédito Style"; ?></h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <!-- <form action="" method="post" role="form" class="form_register"> -->
+            <div class="box-body">
+
+              <table id="datatable" class="table table-bordered table-striped" style="text-align:center;width:100%;">
+                <thead>
+                  <tr>
+                    <th>Nº</th>
+                    <th>---</th>
+                    <th>Empleado</th>
+                    <th>Fecha de Emision</th>
+                    <th>Estado</th>
+                    <th>---</th>
+                  </tr>
+                </thead>
+                <tbody>
+                <?php 
+                $num = 1;
+                foreach ($notasE as $data){
+                  if(!empty($data['id_nota_entrega_personalizada'])){
+                      $estado_nota = "";
+                      if($data['estado_nota_personalizada']==1){
+                        $estado_nota = "Abierta";
+                      }
+                      if($data['estado_nota_personalizada']==0){
+                        $estado_nota = "Cerrada";
+                      }
+                      if(mb_strtolower($data['leyenda'])=="credito style"){
+                        ?>
+                        <tr >
+                          <td style="width:5%">
+                            <span class="contenido2">
+                              <?php echo $num++; ?>
+                            </span>
+                          </td>
+                          <td style="width:15%">
+                            <?php if($estado_campana=="1" && $data['estado_nota_personalizada']==1){ ?>
+                                <button class="btn modificarBtn" style="border:0;background:none;color:#04a7c9" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&action=Modificar&nota=<?=$data['id_nota_entrega_personalizada']?>">
+                                  <span class="fa fa-wrench"></span>
+                                </button>
+                                <?php if ($_SESSION['nombre_rol']!="Superusuario" || $_SESSION['nombre_rol']=="Administrador"): ?>
+                                  <!-- <button class="btn eliminarBtn" style="border:0;background:none;color:red" value="?<?php echo $menu ?>&route=<?php echo $url; ?>&id=<?php echo $data['id_pedido'] ?>&permission=1">
+                                      <span class="fa fa-trash"></span>
+                                  </button> -->
+                                <?php endif; ?>
+                            <?php } ?>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?php echo $data['primer_nombre']." ".$data['primer_apellido']; ?>
+                              <br>
+                              <?php 
+                                switch (strlen($data['numero_nota_entrega'])) {
+                                  case 1:
+                                    $numero_nota_entrega = "000000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 2:
+                                    $numero_nota_entrega = "00000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 3:
+                                    $numero_nota_entrega = "0000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 4:
+                                    $numero_nota_entrega = "000".$data['numero_nota_entrega'];
+                                    break;
+                                  case 5:
+                                    $numero_nota_entrega = "00".$data['numero_nota_entrega'];
+                                    break;
+                                  case 6:
+                                    $numero_nota_entrega = "0".$data['numero_nota_entrega'];
+                                    break;
+                                  case 7:
+                                    $numero_nota_entrega = "".$data['numero_nota_entrega'];
+                                    break;
+                                  default:
+                                    $numero_nota_entrega = "".$data['numero_nota_entrega'];
+                                    break; 
+                                }
+                              ?>
+                              <?php echo $numero_nota_entrega; ?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?=$lider->formatFecha($data['fecha_emision']);?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <?=$estado_nota; ?>
+                            </span>
+                          </td>
+                          <td style="width:20%">
+                            <span class="contenido2">
+                              <a href="?<?=$menu?>&route=<?=$url; ?>&action=Ver&nota=<?=$data['id_nota_entrega_personalizada']?>"> Ver nota de entrega</a>
+                            </span>
+                          </td>
+                        </tr>
+                        <?php
+                      }
+                  } }
+                ?>
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Nº</th>
+                    <th>---</th>
+                    <th>Líder</th>
+                    <th>Fecha de Emision</th>
+                    <th>Estado</th>
+                    <th>---</th>
+                  </tr>
+                </tfoot>
+              </table>
+
+            </div>
+              
+          </div>
+          <?php } ?>
 
         </div>
         <!--/.col (left) -->

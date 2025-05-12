@@ -3,6 +3,7 @@
 	$digitosParaCodigo = 6;
 	$digitosParaCodigo2 = 8;
 	$cantidadIVA = 16;
+	// if($_SESSION['nombre_rol']!="Superusuario"){ die(); }
 	
 if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo" || $_SESSION['nombre_rol']=="Contable"){
 	$meses = ['01'=>"Enero", '02'=>"Febrero", '03'=>"Marzo", '04'=>"Abril", '05'=>"Mayo", '06'=>"Junio", '07'=>"Julio", '08'=>"Agosto", '09'=>"Septiembre", '10'=>"Octubre", '11'=>"Noviembre", '12'=>"Diciembre"];

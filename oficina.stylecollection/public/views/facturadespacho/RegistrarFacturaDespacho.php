@@ -18,8 +18,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <?php echo "Factura de Despacho"; ?>
-        <small><?php if(!empty($action)){echo $action;} echo " Factura de Despacho"; ?></small>
+        <?php echo "".$modulo; ?>
+        <small><?php if(!empty($action)){echo $action;} echo " ".$modulo; ?></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="?<?php echo $menu2 ?>&route=<?php echo "Homing" ?>"><i class="fa fa-dashboard"></i> Campaña <?php echo $n."/".$y; ?> </a></li>
@@ -72,7 +72,7 @@
           <!-- general form elements -->
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Agregar <?php echo "Factura de Despacho"; ?></h3>
+              <h3 class="box-title">Agregar <?php echo "".$modulo; ?></h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -126,10 +126,13 @@
                                     if($struct['id_cliente']==$data['id_cliente']){
                                         ?>
                                       <option value="<?php echo $data['id_pedido'] ?>" 
-                                            <?php foreach ($facturas as $key): if (!empty($key['id_pedido'])):
-                                              if ($data['id_pedido'] == $key['id_pedido']): ?>
-                                                disabled
-                                            <?php endif; endif; endforeach; ?> 
+                                            <?php 
+                                              foreach ($facturas as $key){ if (!empty($key['id_pedido'])){
+                                                if ($data['id_pedido'] == $key['id_pedido']){
+                                                  // echo "disabled";
+                                                }
+                                              } }
+                                            ?> 
                                       ><!-- Aqui cierra el Option de apertura  -->
                                             <?php echo $data['cedula']." ".$data['primer_nombre']." ".$data['primer_apellido']. " Pedido: ". $data['cantidad_aprobado'] . " colecciones"; ?>
                                         <?php 
@@ -141,10 +144,13 @@
                                 ?>
 
                               <option value="<?php echo $data['id_pedido'] ?>" 
-                                    <?php foreach ($facturas as $key): if (!empty($key['id_pedido'])):
-                                      if ($data['id_pedido'] == $key['id_pedido']): ?>
-                                        disabled
-                                    <?php endif; endif; endforeach; ?> 
+                                    <?php 
+                                      foreach ($facturas as $key){ if (!empty($key['id_pedido'])){
+                                        if ($data['id_pedido'] == $key['id_pedido']){
+                                          // echo "disabled";
+                                        }
+                                      } }
+                                    ?> 
                               ><!-- Aqui cierra el Option de apertura  -->
                                     <?php echo $data['cedula']." ".$data['primer_nombre']." ".$data['primer_apellido']. " Pedido: ". $data['cantidad_aprobado'] . " colecciones"; ?>
 
@@ -190,6 +196,29 @@
                        <label for="control2">Numero de control #2 (<small>En talonario</small>)</label>
                        <input type="number" class="form-control" id="control2" name="control2" min="<?=$numero_control2; ?>" value="<?=$numero_control2; ?>">
                        <span id="error_control2" class="errors"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-sm-12">
+                       <label for="almacen">Selecciona el almacen</label>
+                       <select name="almacen" id="almacen" class="form-control select2" style="width:100%;">
+                       <option value=""></option>
+                       <?php
+                          foreach ($almacenes as $alm) { if(!empty($alm[0])){
+                            ?>
+                            <option value="<?=$alm['id_almacen']; ?>"><?=$alm['nombre_almacen']; ?></option>
+                            <?php                            
+                          } }
+                        ?>
+                       </select>
+                       <span id="error_almacen" class="errors"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-sm-12">
+                       <label for="observacion">Observación</label>
+                       <textarea class="form-control observaciones" name="observacion" id="observacion" maxlength="400" style="min-width:100%;max-width:100%;min-height:60px;max-height:60px;"></textarea>
+                       <span id="error_observacion" class="errors"></span>
                     </div>
                   </div>
                 
@@ -435,12 +464,19 @@ function validarLiderazgos(){
     $("#error_control2").html("");
   }
   /*===================================================================*/
-
-
+  var almacen = $("#almacen").val();
+  var ralmacen = false;
+  if(almacen!=""){
+    $("#error_almacen").html("");
+    ralmacen = true;
+  }else{
+    $("#error_almacen").html("Debe seleccionar un almacen");
+    ralmacen = false;
+  }
 
   /*===================================================================*/
   var result = false;
-  if( rpedido==true && rfecha1==true && rfecha2==true && rcontrol1==true && rcontrol2==true){
+  if( rpedido==true && rfecha1==true && rfecha2==true && rcontrol1==true && rcontrol2==true && ralmacen==true){
     result = true;
   }else{
     result = false;

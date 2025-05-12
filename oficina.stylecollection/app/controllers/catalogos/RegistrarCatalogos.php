@@ -134,29 +134,14 @@ if($amCatalogosR == 1){
     }
     $errores=0;
     $nombre_premio = $nombre;
-    $query="INSERT INTO premios (id_premio, nombre_premio, precio_premio, descripcion_premio, estatus) VALUES (DEFAULT, '{$nombre_premio}', 0, '{$nombre_premio}', 1)";
-    // echo "<br><br>".$query."<br><br>"; $execPremio=['ejecucion'=>true, 'id'=>10005];
-    $execPremio = $lider->registrar($query, "premios", "id_premio");
-    if($execPremio['ejecucion']==true){
-      $id_premio = $execPremio['id'];
-      for ($z=0; $z < $cantidad_elementos; $z++){
-        $unidad = $stocks[$z];
-        $id_inventario = $inventarios[$z];
-        $tipo = $tipos_inventarios[$z];
-        $posMercancia = strpos($id_inventario,'m');
-        if(strlen($posMercancia)==0){
-          $id_element = $id_inventario;
-        }else{
-          $id_element = preg_replace("/[^0-9]/", "", $id_inventario);
-        }
-        $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidad}, '{$tipo}', 1)";
-        // echo "<br><br>".$query."<br><br>"; $execPI=['ejecucion'=>true, 'id'=>10005];
-        $execPI = $lider->registrar($query, "premios_inventario", "id_premio_inventario");
-        if($execPI['ejecucion']==true){
-        }else{
-          $errores++;
-        }
+    $servicioss = false;
+    foreach ($tipos_inventarios as $types) {
+      if(mb_strtolower("$types")==mb_strtolower("Servicio")){
+        $servicioss = true;
       }
+    }
+    if($servicioss == true){
+      $id_premio=-1;
       $query = "INSERT INTO catalogos (id_catalogo, id_premio, nombre_catalogo, codigo_catalogo, marca_catalogo, color_catalogo, voltaje_catalogo, caracteristicas_catalogo, puestos_catalogo, otros_catalogo, cantidad_gemas, imagen_catalogo, estatus) VALUES (DEFAULT, {$id_premio}, '{$nombre}', '{$codigo}', '{$marca}', '{$color}', '{$voltaje}', '{$caracteristicas}', '{$puestos}', '{$otros}', '{$cantidad}', '{$imagen}', 1)";
       // echo "<br><br>".$query."<br><br>"; $exec=['ejecucion'=>true, 'id'=>10005];
       $exec = $lider->registrar($query, "catalogos", "id_catalogo");
@@ -165,8 +150,41 @@ if($amCatalogosR == 1){
         $errores++;
       }
     }else{
-      $errores++;
+      $query="INSERT INTO premios (id_premio, nombre_premio, precio_premio, descripcion_premio, estatus) VALUES (DEFAULT, '{$nombre_premio}', 0, '{$nombre_premio}', 1)";
+      // echo "<br><br>".$query."<br><br>"; $execPremio=['ejecucion'=>true, 'id'=>10005];
+      $execPremio = $lider->registrar($query, "premios", "id_premio");
+      if($execPremio['ejecucion']==true){
+        $id_premio = $execPremio['id'];
+        for ($z=0; $z < $cantidad_elementos; $z++){
+          $unidad = $stocks[$z];
+          $id_inventario = $inventarios[$z];
+          $tipo = $tipos_inventarios[$z];
+          $posMercancia = strpos($id_inventario,'m');
+          if(strlen($posMercancia)==0){
+            $id_element = $id_inventario;
+          }else{
+            $id_element = preg_replace("/[^0-9]/", "", $id_inventario);
+          }
+          $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidad}, '{$tipo}', 1)";
+          // echo "<br><br>".$query."<br><br>"; $execPI=['ejecucion'=>true, 'id'=>10005];
+          $execPI = $lider->registrar($query, "premios_inventario", "id_premio_inventario");
+          if($execPI['ejecucion']==true){
+          }else{
+            $errores++;
+          }
+        }
+        $query = "INSERT INTO catalogos (id_catalogo, id_premio, nombre_catalogo, codigo_catalogo, marca_catalogo, color_catalogo, voltaje_catalogo, caracteristicas_catalogo, puestos_catalogo, otros_catalogo, cantidad_gemas, imagen_catalogo, estatus) VALUES (DEFAULT, {$id_premio}, '{$nombre}', '{$codigo}', '{$marca}', '{$color}', '{$voltaje}', '{$caracteristicas}', '{$puestos}', '{$otros}', '{$cantidad}', '{$imagen}', 1)";
+        // echo "<br><br>".$query."<br><br>"; $exec=['ejecucion'=>true, 'id'=>10005];
+        $exec = $lider->registrar($query, "catalogos", "id_catalogo");
+        if($exec['ejecucion']==true){
+        }else{
+          $errores++;
+        }
+      }else{
+        $errores++;
+      }
     }
+
     
     if($errores==0){
       $response = "1";

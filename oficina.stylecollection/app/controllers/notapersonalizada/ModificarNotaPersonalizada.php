@@ -55,11 +55,11 @@ if($estado_campana=="1"){
 		if(!empty($_POST['nombreanalista'])){
 			$nameAnalista = ucwords(mb_strtolower($_POST['nombreanalista']));
 		}
-
+		
 		$id_nota = $_GET['nota'];
 		$notaP = $lider->consultarQuery("SELECT * FROM notasentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 		$notaP = $notaP[0];
-
+		
 		$id_lider = $notaP['id_cliente'];
 		$pedidoss = $lider->consultarQuery("SELECT * FROM pedidos WHERE id_cliente = {$id_lider} and id_despacho = {$id_despacho}");
 		$id_pedido = $pedidoss[0]['id_pedido'];
@@ -76,25 +76,35 @@ if($estado_campana=="1"){
 		if(!empty($_POST['productos'])){
 			$productos = $_POST['productos'];
 		}
-		$premios = [];
-		if(!empty($_POST['premios'])){
-			$premios = $_POST['premios'];
+		$mercancia = [];
+		if(!empty($_POST['mercancia'])){
+			$mercancia = $_POST['mercancia'];
 		}
 		$conceptos = [];
 		if(!empty($_POST['conceptos'])){
 			$conceptos = $_POST['conceptos'];
 		}
+		$precios_venta = [];
+		if(!empty($_POST['precios_venta'])){
+			$precios_venta = $_POST['precios_venta'];
+		}
+		$precios_nota = [];
+		if(!empty($_POST['precios_nota'])){
+			$precios_nota = $_POST['precios_nota'];
+		}
 		$opts = [];
 		if(!empty($_POST['opts'])){
 			$opts = $_POST['opts'];
 		}
-
+		$id_almacen = ucwords(mb_strtolower($_POST['almacen']));
+		$detalleObservacion = ucwords(mb_strtolower($_POST['detalleObservacion']));
+		
 		$max = count($opts);
 		if($max!=$cantidad_registros){
 			$max = $cantidad_registros;
 		}
 
-		$query = "UPDATE notasentregapersonalizada SET direccion_emision='{$direccion}', lugar_emision='{$lugar}', fecha_emision='{$fecha}', numero_nota_entrega={$num}, nombreanalista='{$nameAnalista}' WHERE id_nota_entrega_personalizada = {$id_nota}";
+		$query = "UPDATE notasentregapersonalizada SET direccion_emision='{$direccion}', lugar_emision='{$lugar}', fecha_emision='{$fecha}', numero_nota_entrega={$num}, nombreanalista='{$nameAnalista}', observacion='{$detalleObservacion}', id_almacen={$id_almacen} WHERE id_nota_entrega_personalizada = {$id_nota}";
 		$exec = $lider->modificar($query);
 		if($exec['ejecucion']==true){
 			$nume = 0;
@@ -107,17 +117,21 @@ if($estado_campana=="1"){
 					$cantidadAct = $cantidades[$i];
 					$tipoAct = $tipos[$i];
 					$productoAct = $productos[$i];
-					$premioAct = $premios[$i];
+					$mercanciaAct = $mercancia[$i];
 					$conceptoAct = ucwords(mb_strtolower($conceptos[$i]));
+					$precioVentaAct = $precios_venta[$i];
+					$precioNotaAct = $precios_nota[$i];
 					$optsAct = $opts[$i];
 					if($tipoAct=="Productos"){
 						$premio_producto_act = $productoAct;
 					}
-					if($tipoAct=="Premios"){
-						$premio_producto_act = $premioAct;
+					if($tipoAct=="Mercancia"){
+						$premio_producto_act = $mercanciaAct;
 					}
-					if($cantidadAct!="" && $tipoAct && $premio_producto_act!=""){
-						$query2 = "INSERT INTO opcionesentregapersonalizada (id_opcion_entrega_personalizada, id_nota_entrega_personalizada, cantidad, tipo, producto_premio, concepto, opcion, estatus) VALUES (DEFAULT, {$id_nota}, {$cantidadAct}, '{$tipoAct}', {$premio_producto_act}, '{$conceptoAct}', '{$optsAct}', 1)";
+					// if($cantidadAct!="" && $tipoAct && $premio_producto_act!=""){
+					if($cantidadAct!="" && $tipoAct && $premio_producto_act!="" && $conceptoAct!="" && $precioVentaAct!="" && $precioNotaAct!=""){
+						// $query2 = "INSERT INTO opcionesentregapersonalizada (id_opcion_entrega_personalizada, id_nota_entrega_personalizada, cantidad, tipo, producto_premio, concepto, opcion, estatus) VALUES (DEFAULT, {$id_nota}, {$cantidadAct}, '{$tipoAct}', {$premio_producto_act}, '{$conceptoAct}', '{$optsAct}', 1)";
+						$query2 = "INSERT INTO opcionesentregapersonalizada (id_opcion_entrega_personalizada, id_nota_entrega_personalizada, cantidad, tipo, producto_premio, concepto, precios_venta, precios_nota, opcion, estatus) VALUES (DEFAULT, {$id_nota}, {$cantidadAct}, '{$tipoAct}', {$premio_producto_act}, '{$conceptoAct}', {$precioVentaAct}, {$precioNotaAct}, '{$optsAct}', 1)";
 						$exec2 = $lider->registrar($query2, "opcionesentregapersonalizada", "id_opcion_entrega_personalizada");
 						if($exec2['ejecucion']==true){
 							$sum++;
@@ -139,8 +153,20 @@ if($estado_campana=="1"){
 			$response = "2";
 		}
 
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
+		$id_nota=$_GET['nota'];
+		$notaP = $lider->consultarQuery("SELECT * FROM notasentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 		if(count($notaP)>1){
+			$notaP = $notaP[0];
 			$id_cliente = $notaP['id_cliente'];
+			if(mb_strtolower($notaP['leyenda'])=="credito style"){
+				$persona = $lider->consultarQuery("SELECT * FROM empleados WHERE id_empleado={$id_cliente}");
+			}else{
+				$persona = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente={$id_cliente}");
+			}
+			if(count($persona)>1){
+				$persona=$persona[0];
+			}
 			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and pedidos.id_cliente = $id_cliente");
 			$pedido = $pedidos[0];
 			$id_pedido = $pedido['id_pedido'];
@@ -172,11 +198,12 @@ if($estado_campana=="1"){
 			}
 			$nombreanalista = $notaP['nombreanalista'];
 			$nume = $notaP['numero_nota_entrega'];
-			$productos = $lider->consultarQuery("SELECT * FROM productos");
-			$premios = $lider->consultarQuery("SELECT * FROM premios");
+			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE estatus=1");
+			// $premios = $lider->consultarQuery("SELECT * FROM premios");
+			$mercancia = $lider->consultarQuery("SELECT * FROM mercancia WHERE estatus=1");
 
 			$opcionesEntregas = $lider->consultarQuery("SELECT * FROM opcionesentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
-			if(empty($_GET['cant'])){
+			// if(empty($_GET['cant'])){
 				$_SESSION['cargaTemporalNotaPersonalizadaMod'] = [];
 				$nx = 0;
 				foreach ($opcionesEntregas as $key) {
@@ -185,18 +212,22 @@ if($estado_campana=="1"){
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['tipos'][$nx] = $key['tipo'];
 						if($key['tipo']=="Productos"){
 							$_SESSION['cargaTemporalNotaPersonalizadaMod']['productos'][$nx] = $key['producto_premio'];
-							$_SESSION['cargaTemporalNotaPersonalizadaMod']['premios'][$nx] = "";
+							$_SESSION['cargaTemporalNotaPersonalizadaMod']['mercancia'][$nx] = "";
 						}
-						if($key['tipo']=="Premios"){
-							$_SESSION['cargaTemporalNotaPersonalizadaMod']['premios'][$nx] = $key['producto_premio'];
+						if($key['tipo']=="Mercancia"){
+							$_SESSION['cargaTemporalNotaPersonalizadaMod']['mercancia'][$nx] = $key['producto_premio'];
 							$_SESSION['cargaTemporalNotaPersonalizadaMod']['productos'][$nx] = "";
 						}
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['conceptos'][$nx] = $key['concepto'];
+						$_SESSION['cargaTemporalNotaPersonalizadaMod']['precios_venta'][$nx] = $key['precios_venta'];
+						$_SESSION['cargaTemporalNotaPersonalizadaMod']['precios_nota'][$nx] = $key['precios_nota'];
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['opts'][$nx] = $key['opcion'];
 						$nx++;
 					}
 				}
-			}
+			// }
+
+			// print_r($_SESSION['cargaTemporalNotaPersonalizadaMod']);
 			if(!empty($action)){
 				if (is_file('public/views/' .strtolower($url).'/'.$action.$url.'.php')) {
 					require_once 'public/views/' .strtolower($url).'/'.$action.$url.'.php';
@@ -211,16 +242,25 @@ if($estado_campana=="1"){
 				}
 			}	
 		}else{
-			require_once 'public/views/error404.php';
+			    require_once 'public/views/error404.php';
 		}
 
 	}
 	if(empty($_POST)){
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
 		$id_nota=$_GET['nota'];
 		$notaP = $lider->consultarQuery("SELECT * FROM notasentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 		if(count($notaP)>1){
 			$notaP = $notaP[0];
 			$id_cliente = $notaP['id_cliente'];
+			if(mb_strtolower($notaP['leyenda'])=="credito style"){
+				$persona = $lider->consultarQuery("SELECT * FROM empleados WHERE id_empleado={$id_cliente}");
+			}else{
+				$persona = $lider->consultarQuery("SELECT * FROM clientes WHERE id_cliente={$id_cliente}");
+			}
+			if(count($persona)>1){
+				$persona=$persona[0];
+			}
 			$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and pedidos.id_cliente = $id_cliente");
 			$pedido = $pedidos[0];
 			$id_pedido = $pedido['id_pedido'];
@@ -252,8 +292,9 @@ if($estado_campana=="1"){
 			}
 			$nombreanalista = $notaP['nombreanalista'];
 			$nume = $notaP['numero_nota_entrega'];
-			$productos = $lider->consultarQuery("SELECT * FROM productos");
-			$premios = $lider->consultarQuery("SELECT * FROM premios");
+			$productos = $lider->consultarQuery("SELECT * FROM productos WHERE estatus=1");
+			// $premios = $lider->consultarQuery("SELECT * FROM premios WHERE estatus=1");
+			$mercancia = $lider->consultarQuery("SELECT * FROM mercancia WHERE estatus=1");
 
 			$opcionesEntregas = $lider->consultarQuery("SELECT * FROM opcionesentregapersonalizada WHERE id_nota_entrega_personalizada = {$id_nota}");
 			// if(empty($_GET['cant'])){
@@ -265,13 +306,15 @@ if($estado_campana=="1"){
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['tipos'][$nx] = $key['tipo'];
 						if($key['tipo']=="Productos"){
 							$_SESSION['cargaTemporalNotaPersonalizadaMod']['productos'][$nx] = $key['producto_premio'];
-							$_SESSION['cargaTemporalNotaPersonalizadaMod']['premios'][$nx] = "";
+							$_SESSION['cargaTemporalNotaPersonalizadaMod']['mercancia'][$nx] = "";
 						}
-						if($key['tipo']=="Premios"){
-							$_SESSION['cargaTemporalNotaPersonalizadaMod']['premios'][$nx] = $key['producto_premio'];
+						if($key['tipo']=="Mercancia"){
+							$_SESSION['cargaTemporalNotaPersonalizadaMod']['mercancia'][$nx] = $key['producto_premio'];
 							$_SESSION['cargaTemporalNotaPersonalizadaMod']['productos'][$nx] = "";
 						}
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['conceptos'][$nx] = $key['concepto'];
+						$_SESSION['cargaTemporalNotaPersonalizadaMod']['precios_venta'][$nx] = $key['precios_venta'];
+						$_SESSION['cargaTemporalNotaPersonalizadaMod']['precios_nota'][$nx] = $key['precios_nota'];
 						$_SESSION['cargaTemporalNotaPersonalizadaMod']['opts'][$nx] = $key['opcion'];
 						$nx++;
 					}

@@ -128,8 +128,28 @@
                     </div>
                     </form>
                   </div>
-                <?php } ?>
-                <br>
+                  <?php } ?>
+                  <br>
+                  <?php
+                    if(!empty($_GET['admin']) && !empty($_GET['select']) && !empty($_GET['lider'])){
+                      if($tieneEl100){
+                        if(!empty($_GET['allPremios'])){
+                          $mensaje = "Calculo real";
+                          $rutaUrl = $menu3."&route=".$_GET['route']."&action=".$_GET['action']."&admin=".$_GET['admin']."&select=".$_GET['select']."&lider=".$_GET['lider']."";
+                        }else{
+                          $mensaje = "100% Alcanzado";
+                          $rutaUrl = $menu3."&route=".$_GET['route']."&action=".$_GET['action']."&admin=".$_GET['admin']."&select=".$_GET['select']."&lider=".$_GET['lider']."&allPremios=100";
+                        }
+                        ?>
+                          <div class="row">
+                            <div class="form-group col-xs-12" style="text-align:right;">
+                              <a href="?<?=$rutaUrl; ?>" class="btn enviar2"><?=$mensaje; ?></a>
+                            </div>
+                          </div>
+                        <?php
+                      }
+                    }
+                  ?>
 
                 <form action="" method="post" role="form" class="form_register">
                   <?php
@@ -225,6 +245,34 @@
                                                     ?>
                                                     <div class="form-group col-xs-12">
                                                       <label><?=$data3['nombre_premio'];?></label>
+                                                      <?php
+                                                        $id_premios_busqueda = $data3['id_premio'];
+                                                        $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                                        $iter = 1;
+                                                        echo " => <b><small>[";
+                                                        foreach($premiosinv as $pinv){
+                                                          if(!empty($pinv['id_premio_inventario'])){
+                                                            if($pinv['tipo_inventario']=="Productos"){
+                                                              $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                            }
+                                                            if($pinv['tipo_inventario']=="Mercancia"){
+                                                              $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                                            }
+                                                            $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                                            foreach ($inventariosMos as $invm) {
+                                                              if(!empty($invm[0])){
+                                                                echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                                                if($iter < (count($premiosinv)-1)){
+                                                                  echo " | ";
+                                                                }
+
+                                                              }
+                                                            }
+                                                          }
+                                                          $iter++;
+                                                        }
+                                                        echo "]</small></b>";
+                                                      ?>
                                                       <div class="input-group">
                                                         <span class="input-group-addon"><?=$data3['cantidad_premios_plan'];?></span>
 
@@ -270,7 +318,6 @@
 
                               <br>
                               <?php
-
                                 foreach ($planesCol as $data2){
                                   if(!empty($data2['nombre_plan'])){
                                     if($data['id_pedido'] == $data2['id_pedido']){
@@ -294,7 +341,7 @@
                                               $idPlanesTemp = $data2['id_plan'];
                                               $namePlanesTemp = $data2['nombre_plan'];
 
-                                              if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Productos")){ 
+                                              // if(mb_strtolower($nameTPlanesTemp)==mb_strtolower("Premios")){ 
                                                 ?>
 
                                                 <!-- Activo ACA -->
@@ -321,7 +368,7 @@
                                                 </div>
                                                 <?php 
                                                   
-                                              }
+                                              // }
                                               ?>
 
 
@@ -833,7 +880,7 @@ function validadPerdidos(){
         if(cant==""){
           results[x][i] = false;
           number++;
-          $(".error_"+clase).html("Debe llenar la cantidad de premios pedidos.");
+          $(".error_"+clase).html("Debe llenar la cantidad de premios perdidos.");
         }else{
           results[x][i] = true;
           $(".error_"+clase).html("");
@@ -925,7 +972,7 @@ function validadPerdidos(){
 //     // alert(cant);
 //     if(cant==""){
 //       results[i] = false;
-//       $(".error_"+clase).html("Debe llenar la cantidad de premios pedidos.");
+//       $(".error_"+clase).html("Debe llenar la cantidad de premios perdidos.");
 //     }else{
 //       results[i] = true;
 //       $(".error_"+clase).html("");

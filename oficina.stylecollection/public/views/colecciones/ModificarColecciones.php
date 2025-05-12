@@ -110,7 +110,7 @@
                                       $valueIdProduct = false;
                                         foreach ($coleccionesSec as $key){
                                           if(!empty($key['id_despacho_sec'])){
-                                            if($data['id_producto']==$key['id_producto']){
+                                            if( ($data['id_producto']==$key['id_producto']) && ($key['tipo_inventario_coleccion_sec']=="Productos") ){
                                               $valuePrecio=$key['precio_producto'];       
                                               $valueCantidad=$key['cantidad_productos'];       
                                               $valueIdProduct = true;
@@ -164,7 +164,7 @@
                                       $valueIdProduct = false;
                                       foreach ($coleccionesSec as $key){
                                         if(!empty($key['id_despacho_sec'])){
-                                          if($data['id_mercancia']==$key['id_producto']){
+                                          if( ($data['id_mercancia']==$key['id_producto']) && ($key['tipo_inventario_coleccion_sec']=="Mercancia") ){
                                             $valuePrecio=$key['precio_producto'];       
                                             $valueCantidad=$key['cantidad_productos'];       
                                             $valueIdProduct = true;

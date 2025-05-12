@@ -28,6 +28,7 @@
 			$colecciones[count($colecciones)]=$key;
 		}
 	}
+
 	$colecciones[count($colecciones)]=['ejecucion'=>true];
 	// die();
 

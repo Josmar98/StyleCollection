@@ -59,16 +59,11 @@
                         <?php 
                           foreach ($retosInv as $data) {
                             if(!empty($data['id_retoinv'])){
-                              // foreach ($retos_campana as $data2){if(!empty($data2['id_reto_campana'])){ if($data['id_premio']==$data2['id_premio']){  echo "disabled";  } }}
-                              foreach ($retos_campana as $data2){
-                                if(!empty($data2['id_reto_campana'])){
-                                  if($data['id_retoinv']==$data2['id_retoinv']){
-                                  ?>
+                              if($rcp[0]['id_retoinv']==$data['id_retoinv']){
+                                ?>
                                   <option value="<?php echo $data['id_retoinv'] ?>" selected><?=$data['nombre_retoinv']; ?></option>
-                                  <?php
-                                  }
-                                }
-                              } 
+                                <?php
+                            }
                           }
                         }
                         ?>
@@ -136,7 +131,7 @@
                                   }
                                 }
                               ?>
-                              >Productos: <?php echo $data['producto']." - (".$data['cantidad'].")"; ?></option>
+                              >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
                             <?php } } ?>
                             <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
                               <option value="m<?=$data['id_mercancia'] ?>"
@@ -150,7 +145,7 @@
                                   }
                                 }
                               ?>
-                              >Mercancia: <?php echo $data['mercancia']." - (".$data['medidas_mercancia'].")"; ?></option>
+                              >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
                             <?php } } ?>
                           </select>
                           <input type="hidden" id="tipo<?=$z; ?>" name="tipos[]" value="<?=$tipoInvOP; ?>">

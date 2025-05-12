@@ -312,6 +312,76 @@ if(!empty($_POST['verificarFechaLimitePlanes'])){
 	}
 	echo json_encode($array);
 }
+if(!empty($_POST['actualizarInventarioInicial'])){
+	$anioBuscado = date('Y');
+	// $anioBuscado = "2024";
+	$fechaAp = $anioBuscado."-01-01 00:00:00";
+	$fechaCi = $anioBuscado."-12-31 11:59:59";
+	$query="SELECT * FROM operaciones WHERE fecha_operacion BETWEEN '{$fechaAp}' and '{$fechaCi}'";
+	$result = $lider->consultarQuery($query);
+	$listaInicial = [];
+	if(count($result)<2){
+		$query="SELECT DISTINCT id_inventario, tipo_inventario, id_almacen FROM operaciones;";
+		$listaInventario = $lider->consultarQuery($query);
+		$veces=1;
+		foreach ($listaInventario as $list) {
+			if(!empty($list['id_inventario'])){
+				// echo $veces." = ALM ".$list['id_almacen']." || ".$list['tipo_inventario'].": ".$list['id_inventario']." <br> ";
+				$veces++;
+				$newQuery="SELECT * FROM operaciones WHERE tipo_inventario='{$list['tipo_inventario']}' and id_inventario={$list['id_inventario']} and id_almacen={$list['id_almacen']} ORDER BY id_operacion DESC LIMIT 1";
+				$busqueda = $lider->consultarQuery($newQuery);
+				$code = $list['id_almacen'].$list['tipo_inventario'].$list['id_inventario'];
+				foreach ($busqueda as $invs) {
+					if(!empty($invs['id_inventario'])){
+						if($invs['stock_operacion_almacen']>0){
+							$listaInicial[$code]=$invs;
+						}
+						// print_r($invs);
+						// echo "<br><br><br><br>";
+					}
+				}
+			}
+		}
+		$fecha_operacion=date('Y-m-d H:i:s');
+		$number = 1;
+		$errores = 0;
+		foreach ($listaInicial as $key) {
+			// print_r($key);
+			// echo "<br><br>";
+			// echo "<br><br><br>";
+			$precio_venta = (float) number_format(($key['total_operacion']/$key['stock_operacion']),2,'.','');
+			$total_operacion = (float) $precio_venta*$key['stock_operacion_almacen'];
+			$total_almacen = (float) $precio_venta*$key['stock_operacion_almacen'];
+			$total_total = (float) $precio_venta*$key['stock_operacion_total'];
+			$transaccion="Inventario Inicial";
+			$concepto="Inventario Inicial";
+			$queryOperaciones = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, concepto, leyenda, id_inventario, id_almacen, tipo_inventario, fecha_operacion, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, precio_venta, estatus) VALUES (DEFAULT, 'Entrada', '{$transaccion}', '{$concepto}', '', {$key['id_inventario']}, {$key['id_almacen']}, '{$key['tipo_inventario']}', '{$fecha_operacion}', {$key['stock_operacion_almacen']}, {$total_operacion}, {$key['stock_operacion_almacen']}, {$total_almacen}, {$key['stock_operacion_total']}, {$total_total}, {$precio_venta}, 1); ";
+			// echo "<br>N° {$number} = ".$queryOperaciones."<br><br>";
+			$exec = $lider->registrar($queryOperaciones,"operaciones","id_operacion");
+			if($exec['ejecucion']==true){
+			}else{
+				$errores++;
+				// echo "ERROR EN: ".$errores."<br>";
+				// print_r($exec);
+				// echo "<br><br>";
+				// echo "<br><br>";
+				// echo "<br><br>";
+			}
+			
+			$number++;
+		}
+		if($errores==0){
+			$resultssResponse=1;
+		}else{
+			$resultssResponse=2;
+		}
+		echo "INVENTARIO ACTUALIZADO A INVENTARIO INICIAL CON STATUS: ".$resultssResponse;
+		// print_r($listaInicial);
+	}else{
+		echo "OPERACION YA REALIZADA";
+	}
+	// echo json_encode($result);
+}
 // if(!empty($_POST['verificarActualizarGemasFacturaPedidosBloq'])){
 // 	$fecha = date('Y-m-d');
 // 	$query = "SELECT * FROM pedidos, clientes, despachos, campanas WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = despachos.id_despacho and despachos.id_campana = campanas.id_campana and pedidos.estatus = 1 and campanas.estatus = 1 and campanas.visibilidad = 1 and '{$fecha}' BETWEEN despachos.limite_pedido and despachos.fecha_segunda_senior ORDER BY pedidos.id_pedido ASC";

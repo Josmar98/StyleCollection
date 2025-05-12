@@ -1,4 +1,7 @@
 <style>
+*{
+	text-transform: uppercase !important;
+}
 <?php $marginLeft="40"; ?>
 .perfil-banner-box1{
 	margin-left:<?=$marginLeft."%"?>;

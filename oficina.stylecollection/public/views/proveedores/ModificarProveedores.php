@@ -65,6 +65,8 @@
                      <input type="text" class="form-control" id="nombre" name="nombre" value="<?=$proveedor['nombreProveedor']; ?>" placeholder="Nombre de proveedor">
                      <span id="error_nombre" class="errors"></span>
                   </div>
+
+                  
                 </div>
 
               </div>
@@ -230,6 +232,7 @@ function validar(){
       $("#error_nombre").html("");
   }
   /*===================================================================*/
+
 
 
   

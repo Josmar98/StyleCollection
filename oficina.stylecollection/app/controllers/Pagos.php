@@ -514,7 +514,9 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos + $resultDeudaPorPromociones;
 		
-
+		if($pedido['total_pagar']>0){
+			$nuevoTotal=$pedido['total_pagar'];
+		}
 
 		//$planes = $lider->consultarQuery("SELECT * FROm planes, planes_campana, tipos_colecciones, pedidos WHERE planes.id_plan = planes_campana.id_plan and planes_campana.id_plan_campana = tipos_colecciones.id_plan_campana and tipos_colecciones.id_pedido = pedidos.id_pedido and pedidos.id_cliente = {$id_cliente} and planes.estatus = 1 and pedidos.estatus = 1");
 

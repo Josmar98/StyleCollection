@@ -53,86 +53,132 @@
                     
                   <div class="row">
 
-                    <div class="form-group col-xs-12 col-sm-6">
-                      <label for="nombre">Nombre de promoción</label>
-                      <input type="text" class="form-control nombre" name="nombre" maxlength="40" id="nombre" value="<?=$promocion['nombre_promocion']; ?>" >
-                      <span id="error_nombre" class="errors"></span>
-                    </div>
-
-                    <div class="form-group col-xs-12 col-sm-6">
-                      <label for="precio">Precio de promoción</label>
-                      <div class="input-group">
-                        <span class="input-group-addon">$</span>                      
-                        <input type="number" class="form-control precio" name="precio" id="precio" value="<?=$promocion['precio_promocion']; ?>">
-                      </div>
-                      <span id="error_precio" class="errors"></span>
+                    <div class="form-group col-xs-12">
+                      <label for="promo">Promocion para campaña <?php echo $n."/".$y ?></label>
+                      <select class="form-control select2" id="promo" name="promo">
+                        <option value=""></option>
+                        <?php 
+                          
+                          foreach ($promocionesinv as $data) {
+                            if(!empty($data['id_promocioninv'])){
+                              if($promocion['id_promocioninv']==$data['id_promocioninv']){
+                              ?>
+                              <option value="<?php echo $data['id_promocioninv'] ?>" selected>
+                                <?php echo $data['nombre_promocioninv']; ?>
+                              </option>
+                              <?php
+                              }
+                          }
+                        }
+                        ?>
+                      </select>
+                      <span id="error_promo" class="errors"></span>
                     </div>
 
                     <div class="form-group col-xs-12">
                       <hr>
                     </div>
-
-                    <div class="form-group col-xs-12">
-                       <label for="productos">Productos para conformar la promoción</label>
-                       <select class="form-control select2" id="productos" name="productos[]" multiple="multiple">
-                        <option value=""></option>
-                        <?php 
-                          foreach ($productos as $data) {
-                            if(!empty($data['id_producto'])){
-                              ?>
-                              <option <?php foreach ($promocion_productos as $promoProd){ if(!empty($promoProd['id_producto'])){ if($promoProd['tipo_producto']=="Producto"){ if($data['id_producto']==$promoProd['id_producto']){ echo "selected"; } } } } ?> value="<?php echo "Producto-".$data['id_producto'] ?>">Producto: <?php echo $data['producto']." (<small>".$data['cantidad']."</small>)"; ?></option>
-                              <?php
-                            }
+                  </div>
+                  <div class="row" style="padding:0px 15px;">
+                    <div class="col-xs-12" style="width:100%;border:1px solid #cdcdcd;padding:;">
+                      <br>
+                      <label for="name_opcion" style="font-size:1.3em;width:15%;float:left;"><u>Nombre Premio</u></label>
+                      <input type="text" class="form-control" style="width:64%;float:left;" id="name_opcion" name="name_opcion" placeholder="Coloque nombre de premio"  value="<?php if(!empty($promocion['nombre_premio'])){ echo $promocion['nombre_premio']; } ?>">
+                      <input type="number" class="form-control" style="width:20%;float:left;" id="precio_opcion" name="precio_opcion" readonly value="<?=$promocion['precio_promocion']; ?>">
+                      <div style="clear:both;"></div>
+                      <span id="error_name_opcion" class="errors" style="margin-left:16%;"></span>
+                      <div style="clear:both;"></div>
+                      <br>
+                      <?php
+                        $elementosMostrar=1;
+                        // $retos_campana_premio
+                        if(!empty($promocion)){
+                          $premiosInv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$promocion['id_premio']}");
+                          if(count($premiosInv)>1){
+                            $elementosMostrar = count($premiosInv)-1;
+                          }else{
+                            $elementosMostrar=1;
                           }
-                          foreach ($premios as $data) {
-                            if(!empty($data['id_premio'])){
-                              ?>
-                              <option <?php foreach ($promocion_productos as $promoProd){ if(!empty($promoProd['id_producto'])){ if($promoProd['tipo_producto']=="Premio"){ if($data['id_premio']==$promoProd['id_producto']){ echo "selected"; } } } } ?> value="<?php echo "Premio-".$data['id_premio'] ?>">Premio: <?php echo $data['nombre_premio']; ?></option>
-                              <?php
+                        }
+                      ?>
+                      <?php for($z=1; $z<=$limitesElementos; $z++){ ?>
+                        <div style="width:100%;" id="box_tipo<?=$z; ?>" class="box_inventario_tipo box_inventario_tipo<?=$z; ?> <?php if($z>$elementosMostrar){ echo "d-none"; } ?>">
+                          <?php
+                            if(!empty($premiosInv[($z-1)])){
+                              // echo $premiosInv[($z-1)]['tipo_inventario'];
+                              // echo $premiosInv[($z-1)]['id_premio_inventario'];
+                              if($premiosInv[($z-1)]['tipo_inventario']=="Productos"){
+                                $nameTabla = "productos";
+                                $idTabla = "id_producto";
+                              }
+                              if($premiosInv[($z-1)]['tipo_inventario']=="Mercancia"){
+                                $nameTabla = "mercancia";
+                                $idTabla = "id_mercancia";
+                              }
+                              $inventario = $lider->consultarQuery("SELECT * FROM premios_inventario, {$nameTabla} WHERE premios_inventario.estatus=1 and premios_inventario.id_premio={$premiosInv[($z-1)]['id_premio']} and premios_inventario.id_premio_inventario={$premiosInv[($z-1)]['id_premio_inventario']} and {$nameTabla}.{$idTabla} = premios_inventario.id_inventario");
+                            }else{
+                              $inventario = [];
                             }
-                          }
-                        ?>
-                       </select>
-                       <span id="error_productos" class="errors"></span>
-                    </div>
-
-                    <!-- <div class="form-group col-xs-12 col-sm-6">
-                       <label for="fechaA">Fecha apertura de selección de promoción</label>
-                        <input type="date" class="form-control fechaA" name="fechaA" id="fechaA">
-                       <span id="error_fechaA" class="errors"></span>
-                    </div>
-
-                    <div class="form-group col-xs-12 col-sm-6">
-                       <label for="fechaC">Fecha limite de selección de promoción</label>
-                        <input type="date" class="form-control fechaC" name="fechaC" id="fechaC">
-                       <span id="error_fechaC" class="errors"></span>
-                    </div> -->
-                    <div class="form-group col-xs-12">
-                      <hr>
-                    </div>
-                    
-                    <div class="form-group col-xs-12">
-                       <label for="premios">Premios de ganancia de la promoción</label>
-                       <select class="form-control select2" id="premios" name="premios[]" multiple="multiple">
-                        <option value=""></option>
-                        <?php 
-                          foreach ($productos as $data) {
-                            if(!empty($data['id_producto'])){
-                              ?>
-                              <option <?php foreach ($promocion_premios as $promoPrem){ if(!empty($promoPrem['id_premio'])){ if($promoPrem['tipo_premio']=="Producto"){ if($data['id_producto']==$promoPrem['id_premio']){ echo "selected"; } } } } ?> value="<?php echo "Producto-".$data['id_producto'] ?>">Producto: <?php echo $data['producto']." (<small>".$data['cantidad']."</small>)"; ?></option>
-                              <?php
-                            }
-                          }
-                          foreach ($premios as $data) {
-                            if(!empty($data['id_premio'])){
-                              ?>
-                              <option <?php foreach ($promocion_premios as $promoPrem){ if(!empty($promoPrem['id_premio'])){ if($promoPrem['tipo_premio']=="Premio"){ if($data['id_premio']==$promoPrem['id_premio']){ echo "selected"; } } } } ?> value="<?php echo "Premio-".$data['id_premio'] ?>">Premio: <?php echo $data['nombre_premio']; ?></option>
-                              <?php
-                            }
-                          }
-                        ?>
-                       </select>
-                       <span id="error_premios" class="errors"></span>
+                          ?>
+                          <div class="" style="width:15%;float:left;">
+                            <!-- <label for="unidad_inicial<?=$x.$z; ?>">Cantidad de Unidades #<?=$z; ?></label>                       -->
+                            <input type="number" class="form-control unidades" data-indexOne="<?=$z; ?>" id="unidad<?=$z; ?>" name="unidades[]" value="<?php if(!empty($inventario[0])){ echo $inventario[0]['unidades_inventario']; } ?>">
+                            <span id="error_unidad<?=$z; ?>" class="errors"></span>
+                          </div>
+                          <div class="" style="width:64%;float:left;">    
+                            <!-- <label for="seleccioninicial<?=$$z; ?>">Seleccionar de Inventarios #<?=$z; ?></label>                       -->
+                            <select class="select2 seleccion_inventario" min="<?=$z; ?>" style="width:100%;" id="inventario<?=$z; ?>" name="inventarios[]">
+                              <option value=""></option>
+                              <?php $tipoInvOP=""; ?>
+                              <?php foreach ($productos as $data){ if( !empty($data['id_producto']) ){ ?>
+                                <option value="<?=$data['id_producto'] ?>"
+                                <?php
+                                  if(!empty($inventario[0])){
+                                    if($inventario[0]['tipo_inventario']=="Productos"){
+                                      if($inventario[0]['id_producto']==$data['id_producto']){
+                                        echo "selected";
+                                        $tipoInvOP="Productos";
+                                      }
+                                    }
+                                  }
+                                ?>
+                                >Productos: <?php echo "(".$data['codigo_producto'].") ".$data['producto']." - (".$data['cantidad'].") ".$data['marca_producto']; ?></option>
+                              <?php } } ?>
+                              <?php foreach ($mercancia as $data){ if( !empty($data['id_mercancia']) ){ ?>
+                                <option value="m<?=$data['id_mercancia'] ?>"
+                                <?php
+                                  if(!empty($inventario[0])){
+                                    if($inventario[0]['tipo_inventario']=="Mercancia"){
+                                      if($inventario[0]['id_mercancia']==$data['id_mercancia']){
+                                        echo "selected";
+                                        $tipoInvOP="Mercancia";
+                                      }
+                                    }
+                                  }
+                                ?>
+                                >Mercancia: <?php echo "(".$data['codigo_mercancia'].") ".$data['mercancia']." - (".$data['medidas_mercancia'].") ".$data['marca_mercancia']; ?></option>
+                              <?php } } ?>
+                            </select>
+                            <input type="hidden" id="tipo<?=$z; ?>" name="tipos[]" value="<?=$tipoInvOP; ?>">
+                            <span id="error_inventario<?=$z; ?>" class="errors"></span>
+                          </div>
+                          <div class="" style="width:20%;float:left;">
+                            <!-- <label for="precio">Precio de promoción</label> -->
+                            <input type="number" class="form-control precios" step="0.01" data-indexOne="<?=$z; ?>" id="precio<?=$z; ?>" name="precio[]" value="<?php if(!empty($inventario[0])){ echo $inventario[0]['precio_inventario']; } ?>">
+                            <span id="error_precio<?=$z; ?>" class="errors"></span>
+                          </div>
+                          <div style="clear:both;"></div>
+                          <div class="form-group col-xs-12 w-100" style="position:relative;margin-top:-10px;margin-left:90%;">
+                            <?php if($z<$limitesElementos){ ?>
+                              <span id="addMore<?=$z; ?>" min="<?=$z; ?>" class="addMore btn btn-success" <?php if($z<$elementosMostrar){ ?> style="display:none;" <?php } ?>><b>+</b></span>
+                            <?php  } ?>
+                            <?php if($z>=2){ ?>
+                              <span id="addMenos<?=$z; ?>" min="<?=$z; ?>" class="addMenos btn btn-danger" <?php if($z<$elementosMostrar){ ?> style="display:none;" <?php } ?>><b>-</b></span>
+                            <?php  } ?>
+                          </div>
+                        </div>
+                      <?php } ?>
+                      <input type="hidden" name="cantidad_elementos" id="cantidad_elementosOp" value="<?=$elementosMostrar; ?>">
                     </div>
 
                   </div>
@@ -141,6 +187,7 @@
               <!-- /.box-body -->
 
               <div class="box-footer">
+              <input type="hidden" id="limiteElementos" value="<?=$limitesElementos; ?>">
                 
                 <span type="submit" class="btn enviar">Enviar</span>
                 <input type="color" class="d-none color-button-sweetalert" value="<?php echo $color_btn_sweetalert ?>">
@@ -182,6 +229,11 @@
 .d-none{
   display:none;
 }
+.addMore, .addMenos{
+  border-radius:40px;
+  border:1px solid #CCC;
+  margin-top:15px;
+}
 </style>
 <script>
 $(document).ready(function(){
@@ -210,6 +262,96 @@ $(document).ready(function(){
       });
     }
   }
+
+  $(".box_inventario_tipo.d-none").hide();
+  $(".box_inventario_tipo.d-none").removeClass("d-none");
+  $(".addMore").click(function(){
+    var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    // var num=$(this).attr('max');
+    alimentarFormInventario();
+  });
+
+  $(".addMenos").click(function(){
+    var id=$(this).attr('id');
+    // var index=$(this).attr('min');
+    retroalimentarFormInventario();
+  });
+
+  function alimentarFormInventario(){
+    var limite = parseInt($("#limiteElementos").val());
+    var cant = parseInt($("#cantidad_elementosOp").val());
+    $("#addMore"+cant).hide();
+    $("#addMenos"+cant).hide();
+    cant++;
+    $("#box_tipo"+cant).show();
+    $("#cantidad_elementosOp").val(cant);
+  }
+  function retroalimentarFormInventario(){
+    var cant = parseInt($("#cantidad_elementosOp").val());
+    $("#box_tipo"+cant).hide();
+    cant--;
+    $("#addMore"+cant).show();
+    $("#addMenos"+cant).show();
+    $("#cantidad_elementosOp").val(cant);
+  }
+
+  $(".seleccion_inventario").on('change', function(){
+    var value = $(this).val();
+    var index = $(this).attr('min');
+    if(value!=""){
+      var pos = value.indexOf('m');
+      if(pos>=0){ //Mercancia
+        $("#tipo"+index).val('Mercancia');
+      }else if(pos < 0){ //Productos
+        $("#tipo"+index).val('Productos');
+      }
+    }else{
+      $("#tipo"+index).val('');
+    }
+  });
+
+  $(".unidades").on('change keyup', function(){
+    var cant = parseInt($("#cantidad_elementosOp").val());
+    var total = 0;
+    for (let z=1; z <= cant; z++) {
+      var stocks = $("#unidad"+z).val();
+      if(stocks!=""){
+        stocks = parseFloat(stocks);
+      }
+      var precios = $("#precio"+z).val();
+      if(precios!=""){
+        precios = parseFloat(precios);
+      }
+      if(stocks!="" && precios!=""){
+        var operation = stocks*precios;
+        total = total+operation;
+      }
+    }
+    total = parseFloat(total.toFixed(2));
+    $("#precio_opcion").val(total);
+  });
+  $(".precios").on('change keyup', function(){
+    var cant = parseInt($("#cantidad_elementosOp").val());
+    var total = 0;
+    for (let z=1; z <= cant; z++) {
+      var stocks = $("#unidad"+z).val();
+      if(stocks!=""){
+        stocks = parseFloat(stocks);
+      }
+      var precios = $("#precio"+z).val();
+      if(precios!=""){
+        precios = parseFloat(precios);
+      }
+      if(stocks!="" && precios!=""){
+        var operation = stocks*precios;
+        total = total+operation;
+      }
+    }
+    total = parseFloat(total.toFixed(2));
+    $("#precio_opcion").val(total);
+  });
+
     
   $(".enviar").click(function(){
     var response = validar();
@@ -231,36 +373,36 @@ $(document).ready(function(){
           if (isConfirm.value){
             // $(".btn-enviar").removeAttr("disabled");
             // $(".btn-enviar").click();
-              $.ajax({
-                    url: '',
-                    type: 'POST',
-                    data: {
-                      validarData: true,
-                      nombre: $("#nombre").val(),
-                      precio: $("#precio").val(),
-                    },
-                    success: function(respuesta){
-                      // alert(respuesta);
-                      if (respuesta == "1"){
+              // $.ajax({
+              //       url: '',
+              //       type: 'POST',
+              //       data: {
+              //         validarData: true,
+              //         nombre: $("#nombre").val(),
+              //         precio: $("#precio").val(),
+              //       },
+              //       success: function(respuesta){
+              //         // alert(respuesta);
+              //         if (respuesta == "1"){
                           $(".btn-enviar").removeAttr("disabled");
                           $(".btn-enviar").click();
-                      }
-                      if (respuesta == "9"){
-                        swal.fire({
-                            type: 'error',
-                            title: '¡Los datos ingresados estan repetidos!',
-                            confirmButtonColor: "#ED2A77",
-                        });
-                      }
-                      if (respuesta == "5"){ 
-                        swal.fire({
-                            type: 'error',
-                            title: '¡Error de conexion con la base de datos, contacte con el soporte!',
-                            confirmButtonColor: "#ED2A77",
-                        });
-                      }
-                    }
-                });
+                //       }
+                //       if (respuesta == "9"){
+                //         swal.fire({
+                //             type: 'error',
+                //             title: '¡Los datos ingresados estan repetidos!',
+                //             confirmButtonColor: "#ED2A77",
+                //         });
+                //       }
+                //       if (respuesta == "5"){ 
+                //         swal.fire({
+                //             type: 'error',
+                //             title: '¡Error de conexion con la base de datos, contacte con el soporte!',
+                //             confirmButtonColor: "#ED2A77",
+                //         });
+                //       }
+                //     }
+                // });
               
           }else { 
               swal.fire({
@@ -283,60 +425,68 @@ $(document).ready(function(){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var nombre = $("#nombre").val();
-  var rnombre = checkInput(nombre, alfanumericPattern2);
-  if( rnombre == false ){
-    if(nombre.length != 0){
-      $("#error_nombre").html("El nombre no debe contener caracteres especiales");
-    }else{
-      $("#error_nombre").html("Debe llenar el nombre de la promoción");      
-    }
+  var promo = $("#promo").val();
+  // var rnombre = checkInput(nombre, alfanumericPattern2);
+  // if( rnombre == false ){
+  if(promo==""){
+    rpromo=false;
+    $("#error_promo").html("Debe seleccionar la promoción");      
   }else{
-    $("#error_nombre").html("");
+    rpromo=true;
+    $("#error_promo").html("");
   }
-  /*===================================================================*/
-  var precio = $("#precio").val();
-  var rprecio = checkInput(precio, numberPattern2);
-  if( rprecio == false ){
-    if(precio.length != 0){
-      $("#error_precio").html("EL precio solo debe contener numeros");
-    }else{
-      $("#error_precio").html("Debe llenar el precio de la promoción");      
-    }
+  
+  // /*===================================================================*/
+  var errores = 0;
+  var nombre = $("#name_opcion").val();
+  if(nombre==""){
+    errores++;
+    $("#error_name_opcion").html("Debe agregar un nombre para el premio");
   }else{
-    $("#error_precio").html("");
+    $("#error_name_opcion").html("");
   }
-  /*===================================================================*/
-  var productos = $("#productos").val();
-  // alert(productos);
-  var rproductos = false;
-  if(productos == ""){
-    rproductos = false;
-    $("#error_productos").html("Debe seleccionar los productos de la promoción");
-  }else{
-    rproductos = true;
-    $("#error_productos").html("");
-  }
-  /*===================================================================*/
 
-  /*===================================================================*/
-  var premios = $("#premios").val();
-  // alert(premios);
-  var rpremios = false;
-  if(premios == ""){
-    rpremios = false;
-    $("#error_premios").html("Debe seleccionar los premios para la promoción");
-  }else{
-    rpremios = true;
-    $("#error_premios").html("");
-  }
-  /*===================================================================*/
+  var elementos = $("#cantidad_elementosOp").val();
+  for (let z=1; z<=elementos; z++) {
+    var stock = $("#unidad"+z).val();
+    if(stock==""){
+      errores++;
+      $("#error_unidad"+z).html("Debe agregar las unidades #"+z+" del inventario");
+    }else{
+      $("#error_unidad"+z).html("");
+    }
+    var inventario = $("#inventario"+z).val();
+    if(inventario==""){
+      errores++;
+      $("#error_inventario"+z).html("Debe seleccionar el elemento del inventario #"+z);
+    }else{
+      $("#error_inventario"+z).html("");
+    }
 
+    var precio = $("#precio"+z).val();
+    if(precio==""){
+      errores++;
+      $("#error_precio"+z).html("Debe agregar un precio por cada unidad #"+z);
+    }else{
+      $("#error_precio"+z).html("");
+    }
+  }
+
+
+
+  var runidades = false;
+  var rinventarios = false;
+  var rprecios = false;
+  if(errores==0){
+    runidades = true;
+    rinventarios = true;
+    rprecios = true;
+  }
 
 
   /*===================================================================*/
   var result = false;
-  if( rnombre==true && rprecio==true && rproductos==true && rpremios==true){
+  if( rpromo==true && runidades==true && rinventarios==true && rprecios==true){
     result = true;
   }else{
     result = false;

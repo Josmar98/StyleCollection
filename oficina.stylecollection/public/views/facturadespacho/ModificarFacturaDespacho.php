@@ -18,8 +18,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
-        <?php echo "Factura de Despacho"; ?>
-        <small><?php if(!empty($action)){echo $action;} echo " Factura de Despacho"; ?></small>
+        <?php echo "".$modulo; ?>
+        <small><?php if(!empty($action)){echo $action;} echo " ".$modulo; ?></small>
       </h1>
       <ol class="breadcrumb">
         <li><a href="?<?php echo $menu2 ?>&route=<?php echo "Homing" ?>"><i class="fa fa-dashboard"></i> Campaña <?php echo $n."/".$y; ?> </a></li>
@@ -72,7 +72,7 @@
           <!-- general form elements -->
           <div class="box">
             <div class="box-header with-border">
-              <h3 class="box-title">Editar <?php echo "Factura de Despacho"; ?></h3>
+              <h3 class="box-title">Editar <?php echo "".$modulo; ?></h3>
             </div>
             <!-- /.box-header -->
             <!-- form start -->
@@ -217,6 +217,30 @@
                        <label for="control2">Numero de control #2 (<small>En talonario</small>)</label>
                        <input type="number" class="form-control" id="control2" name="control2" value="<?=$factura['numero_control2']; ?>">
                        <span id="error_control2" class="errors"></span>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="form-group col-sm-12">
+                       <label for="almacen">Selecciona el almacen</label>
+                       <select name="almacen" id="almacen" class="form-control select2" style="width:100%;">
+                       <option value=""></option>
+                       <?php
+                          foreach ($almacenes as $alm) { if(!empty($alm[0])){
+                            ?>
+                            <option value="<?=$alm['id_almacen']; ?>" <?php if($factura['id_almacen']==$alm['id_almacen']){ echo "selected"; } ?>><?=$alm['nombre_almacen']; ?></option>
+                            <?php                            
+                          } }
+                        ?>
+                       </select>
+                       <span id="error_almacen" class="errors"></span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="form-group col-sm-12">
+                       <label for="observacion">Observación</label>
+                       <textarea class="form-control observaciones" name="observacion" id="observacion" maxlength="400" style="min-width:100%;max-width:100%;min-height:60px;max-height:60px;"><?=$factura['observacion']; ?></textarea>
+                       <span id="error_observacion" class="errors"></span>
                     </div>
                   </div>
                 
@@ -462,12 +486,22 @@ function validarLiderazgos(){
     $("#error_control2").html("");
   }
   /*===================================================================*/
+  var almacen = $("#almacen").val();
+  var ralmacen = false;
+  if(almacen!=""){
+    $("#error_almacen").html("");
+    ralmacen = true;
+  }else{
+    $("#error_almacen").html("Debe seleccionar un almacen");
+    ralmacen = false;
+  }
+  /*===================================================================*/
 
 
 
   /*===================================================================*/
   var result = false;
-  if( rpedido==true && rfecha1==true && rfecha2==true && rcontrol1==true && rcontrol2==true){
+  if( rpedido==true && rfecha1==true && rfecha2==true && rcontrol1==true && rcontrol2==true && ralmacen==true){
     result = true;
   }else{
     result = false;

@@ -21,6 +21,10 @@ define('ROOTURL', '/StyleCollection/oficina.stylecollection');
 $fucsia = "#EA018C";
 $negro = "#000000";
 $blanco = "#FFFFFF";
+
+
+$valorIva=16;
+$valorIgtf=3;
 //"#2B73F7"
 // 237
 // 42

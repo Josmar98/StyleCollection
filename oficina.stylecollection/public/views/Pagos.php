@@ -328,7 +328,7 @@
                     }
                     foreach ($cantidadPagosDespachosFild as $key) {
                       foreach ($pagos_despacho as $pagosD){ if(!empty($pagosD['id_despacho'])){
-                        if($pagosD['tipo_pago_despacho']==$key['name']){
+                        if(mb_strtolower($pagosD['tipo_pago_despacho'])==mb_strtolower($key['name'])){
                           // print_r($pagosD['pago_precio_coleccion']);
 
                           if($nIndx < $despacho['cantidad_pagos']-1){
@@ -792,7 +792,7 @@
                               $permitido = "1";
                             }
                             if($permitido=="1"){
-                              if(ucwords(mb_strtolower($data['tipo_pago']))==$pagosR['name']){ ?>
+                              if(mb_strtolower($data['tipo_pago'])==mb_strtolower($pagosR['name'])){ ?>
                                 <?php
                                   if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){ if($data['estado']=="Diferido"){
                                     $montosPagos[$pagosR['id']] += $data['monto_pago'];
@@ -966,7 +966,7 @@
                                         <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
                                         <br>
                                         <?php
-                                          if(ucwords(mb_strtolower($data['tipo_pago']))==$pagosR['name']){
+                                          if(mb_strtolower($data['tipo_pago'])==mb_strtolower($pagosR['name'])){
                                             $restriccion = $pagosR['fecha_pago'];
                                           }
                                           $temporalidad = "";
@@ -1175,7 +1175,7 @@
                                 $totalesPagos[$pagosR['id']] = 0;
                               }
 
-                              echo number_format($totalesPagos[$pagosR['id']],2,',','.');
+                              echo number_format($totalesPagos[$pagosR['id']],4,',','.');
                               // print_r($abonadosPagosPuntuales);
                               if($pagosR['name']!="Contado" && $pagosR['name']!="Inicial"){
                                 if(!empty($_GET['lider'])){
@@ -1669,7 +1669,8 @@
                               $permitido = "1";
                             }
                             if($permitido=="1"){
-                              if(ucwords(mb_strtolower($data['tipo_pago']))==$promos['nombre_promocion']){ ?>
+                              if( mb_strtolower($data['tipo_pago']) == mb_strtolower($promos['nombre_promocion']) ){ 
+                                ?>
                                 <?php
                                   if(!empty($_GET['Diferido']) && $_GET['Diferido']=="Diferido"){ if($data['estado']=="Diferido"){
                                     $montosPagos[$promos['id_promocion']] += $data['monto_pago'];
@@ -1843,7 +1844,7 @@
                                         <span class='contenido_fecha_pago'><?php echo $lider->formatFecha($data['fecha_pago']); ?></span>
                                         <br>
                                         <?php
-                                          if(ucwords(mb_strtolower($data['tipo_pago']))==$promos['nombre_promocion']){
+                                          if(trim(mb_strtolower($data['tipo_pago']))==trim(mb_strtolower($promos['nombre_promocion']))){
                                             if(!empty($fechasPromociones['fecha_pago_promocion'])){
                                               $restriccion = $fechasPromociones['fecha_pago_promocion'];
                                             }
@@ -2051,7 +2052,7 @@
                               }else{
                                 $totalesPagos[$promos['id_promocion']] = 0;
                               }
-                              echo number_format($totalesPagos[$promos['id_promocion']],2,',','.');
+                              echo number_format($totalesPagos[$promos['id_promocion']],4,',','.');
                               // print_r($abonadosPagosPuntuales);
                               // if($promos['nombre_promocion']!="Contado" && $promos['nombre_promocion']!="Inicial"){
                               //   if(!empty($_GET['lider'])){

@@ -273,7 +273,7 @@
             foreach ($canjeosPersonales as $canje) {
               if(!empty($canje['cantidad_gemas'])){
                 // $gemasCanjeadas += $canje['cantidad_gemas'];
-                $gemasCanjeadas += ($canje['unidades'] * $canje['cantidad_gemas']);
+                $gemasCanjeadas += ($canje['unidades'] * $canje['precio_gemas']);
               }
             }
 

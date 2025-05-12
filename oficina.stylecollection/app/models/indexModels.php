@@ -141,6 +141,14 @@
 	  		$fecha = $day."-".$month."-".$year;
 	  		return $fecha;
 		}
+		public function formatFechaSlash($val){
+			$fecha = $val;
+			$year = substr($fecha, 0, 4);
+			$month = substr($fecha, 5, 2);
+			$day = substr($fecha, 8, 2);
+	  		$fecha = $day."/".$month."/".$year;
+	  		return $fecha;
+		}
 		public function formatFechaExtract($val){
 			$fecha = $val;
 			$year = substr($fecha, 0, 4);

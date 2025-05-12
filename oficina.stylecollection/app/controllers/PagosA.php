@@ -360,7 +360,9 @@ if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administ
 		}
 		$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPago1Puntual + $bonoCierrePuntual + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura + $liquidacion_gemas;
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos;
-
+		if($pedido['total_pagar']>0){
+			$nuevoTotal=$pedido['total_pagar'];
+		}
 		// echo $descuentosTotales;
 		// echo "Deuda: ".$deudaTotal."<br>";
 		// echo "Descuentos: ".$descuentosTotales."<br>";

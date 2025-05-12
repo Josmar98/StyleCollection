@@ -68,7 +68,12 @@ if(!empty($_POST['validarData'])){
 }
 
 
-if(!empty($_POST['cantidad'])){
+if(
+  // !empty($_POST['cantidad'])
+  !empty($_POST['cantidad']) && isset($_POST['cantidadSec']) 
+  || 
+  !empty($_POST['cantidadSec']) && isset($_POST['cantidad']) 
+){
   // print_r($_POST);
 
   $cantidad = $_POST['cantidad'];
@@ -100,35 +105,68 @@ if(!empty($_POST['cantidad'])){
     $query = "UPDATE pedidos SET cantidad_aprobado = {$totalCantidadColecciones}, cantidad_aprobado_individual = {$cantidad}, visto_admin = 1, visto_cliente = 2, estatus = 1 WHERE id_pedido = $id";
     $indexOf = 0;
 
+    // $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
     $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
     if(count($busquedaPedidoSecundario)>1){
-      foreach ($cantidadSec as $cantidad_sec) {
-        $querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
-        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
-        $indexOf++;
+      $borrarAnteriores = $lider->eliminar("DELETE FROM pedidos_secundarios WHERE id_pedido={$id}");      
+    }
+    // if(count($busquedaPedidoSecundario)>1){
+    //   // foreach ($cantidadSec as $cantidad_sec) {
+    //   //   $querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+    //   //   $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+    //   //   $indexOf++;
+    //   // }
+    //   $lider->eliminar("DELETE FROM pedidos_secundarios WHERE id_pedido={$id}");
+    //   foreach ($cantidadSec as $cantidad_sec) {
+    //     $idColeccionSec = $ids[$indexOf];
+    //     $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+    //     $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+    //     if($execSec['ejecucion']==true){
+    //     }else{
+    //       $erroresSec++;
+    //     }
+    //     $indexOf++;
+    //   }
+    // }else{
+    //   // echo "No hay pedido Secundario";
+    //   // print_r($_POST);
+    // }
+    $id_user = $pedidos[0]['id_cliente'];
+    // print_r($pedidos[0]['id_cliente']);
+    $fecha_pedido = date('d-m-Y');
+    $hora_pedido = date('g:ia');
+    $id_pedido = $id;
+    $indexOf = 0;
+    $erroresSec = 0;
+    // foreach ($cantidadSec as $cantidad_sec) {
+    //   $idColeccionSec = $ids[$indexOf];
+    //   $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, 0, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+    //   // echo "<br><br>".$querySec;
+    //   $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+    //   if($execSec['ejecucion']==true){
+    //   }else{
+    //     $erroresSec++;
+    //   }
+    //   $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+    //   $indexOf++;
+    // }
+    foreach ($cantidadSec as $cantidad_sec) {
+      $idColeccionSec = $ids[$indexOf];
+      $cantidad_solicitada_sec=0;
+      foreach ($busquedaPedidoSecundario as $busq) {
+        if(!empty($busq['id_despacho_sec'])){
+          if($busq['id_despacho_sec']==$idColeccionSec){
+            $cantidad_solicitada_sec=$busq['cantidad_pedido_sec'];
+          }
+        }
       }
-    }else{
-      // echo "No hay pedido Secundario";
-      // print_r($_POST);
-      $id_user = $pedidos[0]['id_cliente'];
-      // print_r($pedidos[0]['id_cliente']);
-      $fecha_pedido = date('d-m-Y');
-      $hora_pedido = date('g:ia');
-      $id_pedido = $id;
-      $indexOf = 0;
-      $erroresSec = 0;
-      foreach ($cantidadSec as $cantidad_sec) {
-        $idColeccionSec = $ids[$indexOf];
-        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, 0, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
-        // echo "<br><br>".$querySec;
-        // $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
-        // if($execSec['ejecucion']==true){
-        // }else{
-        //   $erroresSec++;
-        // }
-        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
-        $indexOf++;
+      $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_solicitada_sec, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+      $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+      if($execSec['ejecucion']==true){
+      }else{
+        $erroresSec++;
       }
+      $indexOf++;
     }
     // die();
   }else{
@@ -139,39 +177,62 @@ if(!empty($_POST['cantidad'])){
     // print_r($busquedaPedidoSecundario);
     $busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
     if(count($busquedaPedidoSecundario)>1){
-      foreach ($cantidadSec as $cantidad_sec) {
-        $querySec = "UPDATE pedidos_secundarios SET cantidad_pedido_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
-        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
-        $indexOf++;
+      $borrarAnteriores = $lider->eliminar("DELETE FROM pedidos_secundarios WHERE id_pedido={$id}");      
+    }
+    // if(count($busquedaPedidoSecundario)>1){
+    //   // foreach ($cantidadSec as $cantidad_sec) {
+    //   //   $querySec = "UPDATE pedidos_secundarios SET cantidad_pedido_sec={$cantidad_sec}, estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+    //   //   $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+    //   //   $indexOf++;
+    //   // }
+    //   $lider->eliminar("DELETE FROM pedidos_secundarios WHERE id_pedido={$id}");
+    //   foreach ($cantidadSec as $cantidad_sec) {
+    //     $idColeccionSec = $ids[$indexOf];
+    //     $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
+    //     $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+    //     if($execSec['ejecucion']==true){
+    //     }else{
+    //       $erroresSec++;
+    //     }
+    //     $indexOf++;
+    //   }
+    // }else{
+    //   // echo "NOOO";      
+      
+    //   // foreach ($sentencesSecundary as $key) {
+    //     // echo "<br><br>";
+    //     // print_r($key);
+    //     // echo "<br><br>";
+    //     //   // code...
+    //     // }
+    // }
+    
+    $id_user = $pedidos[0]['id_cliente'];
+    // print_r($pedidos[0]['id_cliente']);
+    $fecha_pedido = date('d-m-Y');
+    $hora_pedido = date('g:ia');
+    $id_pedido = $id;
+    $indexOf = 0;
+    $erroresSec = 0;
+    foreach ($cantidadSec as $cantidad_sec) {
+      $idColeccionSec = $ids[$indexOf];
+      $cantidad_solicitada_sec=0;
+      foreach ($busquedaPedidoSecundario as $busq) {
+        if(!empty($busq['id_despacho_sec'])){
+          if($busq['id_despacho_sec']==$idColeccionSec){
+            $cantidad_solicitada_sec=$busq['cantidad_pedido_sec'];
+          }
+        }
       }
-    }else{
-      // echo "NOOO";      
-      $id_user = $pedidos[0]['id_cliente'];
-      // print_r($pedidos[0]['id_cliente']);
-      $fecha_pedido = date('d-m-Y');
-      $hora_pedido = date('g:ia');
-      $id_pedido = $id;
-      $indexOf = 0;
-      $erroresSec = 0;
-      foreach ($cantidadSec as $cantidad_sec) {
-        $idColeccionSec = $ids[$indexOf];
-        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
-        // echo "<br><br>".$querySec;
-        // $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
-        // if($execSec['ejecucion']==true){
-        // }else{
-        //   $erroresSec++;
-        // }
-        $sentencesSecundary[count($sentencesSecundary)]=$querySec;
-        $indexOf++;
+      $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_solicitada_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
+      // echo "<br><br>".$querySec;
+      $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+      if($execSec['ejecucion']==true){
+      }else{
+        $erroresSec++;
       }
-
-      // foreach ($sentencesSecundary as $key) {
-      // echo "<br><br>";
-      // print_r($key);
-      // echo "<br><br>";
-      //   // code...
-      // }
+      $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+      $indexOf++;
     }
     // die();
 

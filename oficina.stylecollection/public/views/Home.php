@@ -33,7 +33,8 @@
     <!-- Main content -->
     <section class="content">
       <div class="row">
-        <?php require_once 'public/views/assets/bloque_precio_dolar.php'; ?>
+      <?php require_once 'public/views/assets/bloque_precio_dolar.php'; ?>
+      <?php require_once 'public/views/assets/bloque_precio_eficoin.php'; ?>
 
         <div class="col-xs-12">
           <!-- /.box -->

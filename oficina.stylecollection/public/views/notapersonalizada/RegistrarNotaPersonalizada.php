@@ -74,6 +74,28 @@
 
             <div class="box-body">
               <div class="row">
+                <form action="" method="GET" class="form_selectt">
+                  <div class="form-group col-xs-12">
+                    <label for="lider">Seleccione Opción</label>
+                    <input type="hidden" value="<?=$id_campana;?>" name="campaing">
+                    <input type="hidden" value="<?=$numero_campana;?>" name="n">
+                    <input type="hidden" value="<?=$anio_campana;?>" name="y">
+                    <input type="hidden" value="<?=$id_despacho;?>" name="dpid">
+                    <input type="hidden" value="<?=$num_despacho;?>" name="dp">
+                    <input type="hidden" value="NotaPersonalizada" name="route">
+                    <input type="hidden" value="Registrar" name="action">
+                    <input type="hidden" value="1" name="admin">
+                    <select class="form-control select2 selectt" id="select" name="select" style="width:100%;">
+                      <option></option>
+                      <option <?php if(!empty($_GET['select'])){ if($_GET['select']=="1"){ echo "selected"; } } ?> value="1">Venta</option>
+                      <option <?php if(!empty($_GET['select'])){ if($_GET['select']=="2"){ echo "selected"; } } ?> value="2">Promociones</option>
+                      <option <?php if(!empty($_GET['select'])){ if($_GET['select']=="3"){ echo "selected"; } } ?> value="3">Crédito Style</option>
+                    </select>
+                  </div>
+                </form>
+              </div>
+              <?php if (!empty($_GET['admin']) && !empty($_GET['select'])){ ?>
+              <div class="row">
                 <form action="" method="GET" class="form_select_lider">
                   <div class="form-group col-xs-12">
                     <label for="lider">Seleccione al Lider</label>
@@ -84,12 +106,14 @@
                     <input type="hidden" value="<?=$num_despacho;?>" name="dp">
                     <input type="hidden" value="NotaPersonalizada" name="route">
                     <input type="hidden" value="Registrar" name="action">
-                    <input type="hidden" value="1" name="admin">
-                    <input type="hidden" value="1" name="select">
-                    <select class="form-control select2 selectLider" id="lider" name="lider" style="width:100%;">
+                    <input type="hidden" value="<?=$_GET['admin']; ?>" name="admin">
+                    <input type="hidden" value="<?=$_GET['select']; ?>" name="select">
+                    <!-- multiple='multiple' -->
+                    <select class="form-control select2 selectLider" id="lider" style="width:100%;" <?php if($_GET['select']=="2"){ echo "multiple='multiple' name='lider[]'"; }else{ ?>  name="lider" <?php } ?> >
                       <option></option>
-                        <?php foreach ($lideres as $data): ?>
-                          <?php if (!empty($data['id_cliente'])): ?>
+                      <?php if($_GET['select']=="1"){ ?>
+                        <?php foreach ($lideres as $data){ ?>
+                          <?php if (!empty($data['id_cliente'])){ ?>
                             <?php
                               if($accesoBloqueo=="1"){
                                 if(!empty($accesosEstructuras)){
@@ -109,14 +133,50 @@
                                   <?php
                               }
                             ?>
-                            
-                      
-                          <?php endif ?>
-                        <?php endforeach ?>
+                          <?php } ?>
+                        <?php } ?>
+                      <?php } ?>
+                      <?php if($_GET['select']=="2"){ ?>
+                        <?php foreach ($lideres as $data){ ?>
+                          <?php if (!empty($data['id_cliente'])){ ?>
+                            <?php if ($data['cantidad_aprobada_promocion']>0){ ?>
+                            <?php
+                              if($accesoBloqueo=="1"){
+                                if(!empty($accesosEstructuras)){
+                                  foreach ($accesosEstructuras as $struct) {
+                                    if(!empty($struct['id_cliente'])){
+                                      if($struct['id_cliente']==$data['id_cliente']){
+                                          ?>
+                                        <option <?php if (!empty($_GET['lider'])){ foreach($_GET['lider'] as $lid){ if($data['id_promociones']==$lid){ ?> selected="selected" <?php } } } ?> value="<?=$data['id_promociones']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']." (".$data['cantidad_aprobada_promocion']." ".$data['nombre_promocion'].")"; ?></option>
+                                          <?php 
+                                      }
+                                    }
+                                  }
+                                }
+                              }else if($accesoBloqueo=="0"){
+                                
+                                  ?>
+                                <option <?php if (!empty($_GET['lider'])){ foreach($_GET['lider'] as $lid){ if($data['id_promociones']==$lid){ ?> selected="selected" <?php } } } ?> value="<?=$data['id_promociones']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']." (".$data['cantidad_aprobada_promocion']." ".$data['nombre_promocion'].")"; ?></option>
+                                  <?php
+                                
+                              }
+                            ?>
+                            <?php } ?>
+                          <?php } ?>
+                        <?php } ?>
+                      <?php } ?>
+                      <?php if($_GET['select']=="3"){ ?>
+                        <?php foreach ($empleados as $data){ ?>
+                          <?php if (!empty($data['id_empleado'])){ ?>
+                              <option <?php if (!empty($_GET['lider'])){ if($data['id_empleado']==$_GET['lider']){ ?> selected="selected" <?php } } ?> value="<?=$data['id_empleado']?>"><?=$data['primer_nombre']." ".$data['primer_apellido']." ".$data['cedula']; ?></option>
+                          <?php } ?>
+                        <?php } ?>
+                      <?php } ?>
                     </select>
                   </div>
                 </form>
               </div>
+              <?php } ?>
             </div>
 
             <?php if (!empty($_GET['admin']) && !empty($_GET['select']) && !empty($_GET['lider'])){ ?>
@@ -134,9 +194,28 @@
                     <input type="hidden" value="Registrar" name="action">
                     <input type="hidden" value="<?=$_GET['admin']; ?>" name="admin">
                     <input type="hidden" value="<?=$_GET['select']; ?>" name="select">
-                    <input type="hidden" value="<?=$_GET['lider']; ?>" name="lider">
+                    <?php 
+                      if($_GET['select']=="2"){
+                        foreach($_GET['lider'] as $lid){
+                        ?>
+                          <input type="hidden" value="<?=$lid; ?>" name="lider[]">
+                        <?php
+                        }
+                      }else{
+                        ?>
+                          <input type="hidden" value="<?=$_GET['lider']; ?>" name="lider">
+                        <?php
+                      }
+                    ?>
                     <?php 
                       $cantRegistros = 5;
+                      if($_GET['select']=="2"){
+                        if(!empty($premiosInv)){
+                          if($cantRegistros < count($premiosInv)){
+                            $cantRegistros = count($premiosInv);
+                          }
+                        }
+                      }
                       if (!empty($_GET['cant'])){
                         $cantRegistros = $_GET['cant'];
                       }
@@ -186,7 +265,7 @@
                         <input type="number" class="form-control" name="numero" step="1" value="<?=$nume?>" onfocusout="$(this).val(parseInt($(this).val()))" style="display:inline-block;font-size:1.6em;float:right;width:85%;margin:0;">
                       </div>
                     </div>
-                    <input type="hidden" name="id_cliente" value="<?=$_GET['lider']?>">
+                    <input type="hidden" name="id_cliente" value="<?=$pedido['id_persona']; ?>">
                   </div> 
 
                   <div class="col-xs-12 text-center">
@@ -199,7 +278,21 @@
                         Campaña <?=$numero_campana?>/<?=$anio_campana?>
                       </div>
                       <div class="col-xs-5" style="font-size:1.1em">
-                        Analista: <input type="text" style="width:60%" placeholder="Nombre del analista" name="nombreanalista" maxlength="50">
+                        <?php $nameMostrar = ""; if($_GET['select']=="3"){ $nameMostrar="Supervisor"; }else{ $nameMostrar="Analista"; } ?> 
+                        <?=$nameMostrar; ?>:
+                        <select style="width:60%" name="nombreanalista"  id="nombreanalista">
+                          <option value=""></option>
+                          <?php 
+                            foreach($analistasList as $ana){
+                              if(!empty($ana['primer_nombre'])){
+                                ?>
+                                <option value="<?=$ana['primer_nombre']." ".$ana['primer_apellido'];?>"><?=$ana['primer_nombre']." ".$ana['primer_apellido'];?></option>
+                                <?php
+                              }
+                            }
+                          ?>
+                        </select>
+                        <!-- <input type="text"  placeholder="Nombre del <?=$nameMostrar; ?>" maxlength="50"> -->
                       </div>
                       <div class="col-xs-4" style="font-size:1.2em">
                         <?php if ($numFactura != ""): ?>
@@ -245,21 +338,53 @@
                               ?> 
                             </td>
                           </tr>
+                          <tr>
+                            <td colspan="5">
+                              Almacenes:
+                              <span style="margin-left:10px;margin-right:10px;"></span>
+                              <select class="form-control select2 almacenes" name="almacen" id="almacen" style="width:100%;">
+                                <option value=""></option>
+                                <?php
+                                  foreach ($almacenes as $alm) { 
+                                    if(!empty($alm['id_almacen'])){
+                                      ?>
+                                      <option value="<?=$alm['id_almacen']; ?>"><?=$alm['nombre_almacen']; ?></option>
+                                      <?php
+                                    }
+                                  }
+                                ?>
+                              </select>
+                              <span class="errors" id="error_almacen"></span>
+                            </td>
+                            
+                          </tr>
+                          <tr>
+                              <td colspan="5">
+                                <span style="text-align:center;display:block;font-size:0.8em;">
+                                  <label for="detalleObservacion" style='text-align:left;display:block;'>Observación</label>
+                                  <input type="text" class="form-control" id="detalleObservacion" name="detalleObservacion" maxlength="400" value="<?=$detalleObservacion; ?>">
+                                  <!-- <small> -->
+                                  <!-- </small> -->
+                                </span>
+                              </td>
+                            </tr>
                         </table>
                       <!-- </div> -->
                     </div>
                   </div>
                   <div class="">
                     <div class="col-xs-12">
-                      <span><b style="color:<?=$fucsia; ?>;">Nota:</b> <b>Deberá llenar todas las opciones del renglón, pidiendo omitir únicamente el concepto, de lo contrario no se guardará el registro.</b></span>
+                      <span><b style="color:<?=$fucsia; ?>;">Nota:</b> <b>Deberá llenar todas las opciones del renglón, de lo contrario no se guardará el registro.</b></span>
                       <div class="table-responsive">
                         <table class="table table-bordered text-left table-striped table-hover" id="">
                           <thead style="background:#DDD;font-size:1.05em;">
                             <tr>
                               <th style="text-align:center;width:8%;">Cantidad</th>
                               <th style="text-align:center;width:14%;">Tipo de Premio</th>
-                              <th style="text-align:left;width:34%;">Descripcion</th>
-                              <th style="text-align:left;width:38%;">Concepto</th>
+                              <th style="text-align:left;width:25%;">Descripcion</th>
+                              <th style="text-align:left;width:25%;">Concepto</th>
+                              <th style="text-align:left;width:15%;">Precios Venta</th>
+                              <th style="text-align:left;width:15%;">Precios Nota</th>
                               <th style="text-align:left;width:6%;"></th>
                             </tr>
                             <style>
@@ -275,8 +400,10 @@
                                 $cantidadTemp = "";
                                 $tipoTemp = "";
                                 $productoTemp = "";
-                                $premioTemp = "";
+                                $mercanciaTemp = "";
                                 $conceptoTemp = "";
+                                $preciosVentaTemp = "";
+                                $preciosNotaTemp = "";
                                 $opcionTemp = "";
                                 if(!empty($_GET['cant'])){
                                   if(!empty($_SESSION['cargaTemporalNotaPersonalizada'])){
@@ -299,16 +426,28 @@
                                         $productoTemp=$prodT[$i];
                                       }
                                     }
-                                    if(!empty($sessionTemp['premios'])){
-                                      $premT = $sessionTemp['premios'];
-                                      if(!empty($premT[$i])){
-                                        $premioTemp=$premT[$i];
+                                    if(!empty($sessionTemp['mercancia'])){
+                                      $mer = $sessionTemp['mercancia'];
+                                      if(!empty($mer[$i])){
+                                        $mercanciaTemp=$mer[$i];
                                       }
                                     }
                                     if(!empty($sessionTemp['conceptos'])){
                                       $concepT = $sessionTemp['conceptos'];
                                       if(!empty($concepT[$i])){
                                         $conceptoTemp=$concepT[$i];
+                                      }
+                                    }
+                                    if(!empty($sessionTemp['precios_venta'])){
+                                      $precioV = $sessionTemp['precios_venta'];
+                                      if(!empty($precioV[$i])){
+                                        $preciosVentaTemp=$precioV[$i];
+                                      }
+                                    }
+                                    if(!empty($sessionTemp['precios_nota'])){
+                                      $precioN = $sessionTemp['precios_nota'];
+                                      if(!empty($precioN[$i])){
+                                        $preciosNotaTemp=$precioN[$i];
                                       }
                                     }
                                     if(!empty($sessionTemp['opciones'])){
@@ -319,6 +458,47 @@
                                     }
                                   }
                                 }
+                                if($_GET['select']=="2"){
+                                  if($cantidadTemp==""){
+                                    if(!empty($premiosInv[$i]['unidades_inventario'])){
+                                      $cantidadTemp=($premiosInv[$i]['unidades_inventario']*$cantPromos);
+                                    }
+                                  }
+                                  if($tipoTemp==""){
+                                    if(!empty($premiosInv[$i]['tipo_inventario'])){
+                                      $tipoTemp=$premiosInv[$i]['tipo_inventario'];
+                                    }
+                                  }
+                                  if($productoTemp==""){
+                                    if(!empty($premiosInv[$i]['id_inventario'])){
+                                      $productoTemp=$premiosInv[$i]['id_inventario'];
+                                    }
+                                  }
+                                  if($mercanciaTemp==""){
+                                    if(!empty($premiosInv[$i]['id_inventario'])){
+                                      $mercanciaTemp=$premiosInv[$i]['id_inventario'];
+                                    }
+                                  }
+                                  if($conceptoTemp==""){
+                                    if(!empty($premiosInv[$i]['id_inventario'])){
+                                      $conceptoTemp="Promocion ".$pedido['nombre_promocion'];
+                                    }
+                                  }
+                                  if($preciosVentaTemp==""){
+                                    if(!empty($premiosInv[$i]['precio_inventario'])){
+                                      // $preciosVentaTemp=($premiosInv[$i]['precio_inventario']*$cantPromos);
+                                      $preciosVentaTemp=$premiosInv[$i]['precio_inventario'];
+                                    }
+                                  }
+                                  if($preciosNotaTemp==""){
+                                    $preciosNotaTemp=0;
+                                    if(!empty($premiosInv[$i]['precio_inventario'])){
+                                      // $preciosNotaTemp=($premiosInv[$i]['precio_inventario']*$cantPromos);
+                                      $preciosNotaTemp=$premiosInv[$i]['precio_inventario'];
+                                    }
+                                  }
+                                  // echo "Precio: ".$preciosNotaTemp."<br>";
+                                }
                               ?>
                               <tr class="codigo<?=$i; ?>">
                                 <td class="col1">
@@ -328,7 +508,7 @@
                                   <select class="form-control tipos tipo<?=$i; ?> texts<?=$i; ?>" id="<?=$i; ?>" name="tipos[]">
                                     <option value=""></option>
                                     <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Productos"){ ?> selected <?php } } ?>>Productos</option>
-                                    <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Premios"){ ?> selected <?php } } ?>>Premios</option>
+                                    <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Mercancia"){ ?> selected <?php } } ?>>Mercancia</option>
                                   </select>
                                 </td>
                                 <td class="col3">
@@ -337,23 +517,29 @@
                                   <div class="box-productos box-producto<?=$i; ?> <?php if($tipoTemp=="Productos"){}else{ echo "d-none"; } ?>">
                                     <select class="form-control select2 productos producto<?=$i; ?> textsOp<?=$i; ?>" style="width:100%;" name="productos[]" >
                                       <option value=""></option>
-                                      <?php foreach ($productos as $prod){ ?>
+                                      <?php foreach ($productosAll as $prod){ if(!empty($prod['id_producto'])){ ?>
                                         <option <?php if($prod['id_producto']==$productoTemp){ echo "selected"; } ?> value="<?=$prod['id_producto']; ?>"><?=$prod['producto']; ?></option>
-                                      <?php } ?>
+                                      <?php } } ?>
                                     </select>
                                   </div>
 
-                                  <div class="box-premios box-premio<?=$i; ?> <?php if($tipoTemp=="Premios"){}else{ echo "d-none"; } ?>">
-                                    <select class="form-control select2 premios premio<?=$i; ?> textsOp<?=$i; ?>" style="width:100%;" name="premios[]">
+                                  <div class="box-mercancias box-mercancia<?=$i; ?> <?php if($tipoTemp=="Mercancia"){}else{ echo "d-none"; } ?>">
+                                    <select class="form-control select2 mercancias mercancia<?=$i; ?> textsOp<?=$i; ?>" style="width:100%;" name="mercancia[]">
                                       <option value=""></option>
-                                      <?php foreach ($premios as $prem){ ?>
-                                        <option <?php if($prem['id_premio']==$premioTemp){ echo "selected"; } ?> value="<?=$prem['id_premio']; ?>"><?=$prem['nombre_premio']; ?></option>
-                                      <?php } ?>
+                                      <?php foreach ($mercanciaAll as $mer){ if(!empty($mer['id_mercancia'])){ ?>
+                                        <option <?php if($mer['id_mercancia']==$mercanciaTemp){ echo "selected"; } ?> value="<?=$mer['id_mercancia']; ?>"><?=$mer['mercancia']; ?></option>
+                                      <?php } } ?>
                                     </select>
                                   </div>
                                 </td>
                                 <td class="col4">
-                                  <input type="text" class="form-control conceptos concepto<?=$i; ?> texts<?=$i; ?>" name="conceptos[]" <?php if(!empty($_GET['cant'])){ if(!empty($_SESSION['cargaTemporalNotaPersonalizada']['conceptos'][$i])){ ?> value="<?=$_SESSION['cargaTemporalNotaPersonalizada']['conceptos'][$i]; ?>" <?php } } ?> maxlength="250">
+                                  <input type="text" class="form-control conceptos concepto<?=$i; ?> texts<?=$i; ?>" name="conceptos[]" <?php if($conceptoTemp!=""){ ?> value="<?=$conceptoTemp; ?>" <?php } ?> maxlength="250">
+                                </td>
+                                <td class="col5">
+                                  <input type="number" step="0.01" class="form-control preciosVenta precioVenta<?=$i; ?> texts<?=$i; ?>" name="precios_venta[]" <?php if(!empty($preciosVentaTemp) && $preciosVentaTemp!=""){ ?> value="<?=$preciosVentaTemp; ?>" <?php } ?>>
+                                </td>
+                                <td class="col6">
+                                  <input type="number" step="0.01" class="form-control preciosNota precioNota<?=$i; ?> texts<?=$i; ?>" name="precios_nota[]" <?php if((!empty($cantidadTemp) && $cantidadTemp!="") && (!empty($tipoTemp) && $tipoTemp!="")){ ?> value="<?=$preciosNotaTemp; ?>" <?php } ?>>
                                 </td>
                                 <td>
                                   <select class="opciones opcion<?=$i; ?>" name="opts[<?=$i; ?>]" id="<?=$i; ?>">
@@ -447,6 +633,13 @@ $(document).ready(function(){
   // $(".productos").hide();
   // $(".premios").hide();
 
+  $(".selectt").change(function(){
+    var select = $(this).val();
+    // alert(select);
+    if(select!=""){
+      $(".form_selectt").submit();
+    }
+  });
   $(".selectLider").change(function(){
     var select = $(this).val();
     // alert(select);
@@ -459,15 +652,15 @@ $(document).ready(function(){
     var val = $(this).val();
     $(".ids"+id).hide();
     $(".box-producto"+id).hide();
-    $(".box-premio"+id).hide();
+    $(".box-mercancia"+id).hide();
     if(val==""){
       $(".ids"+id).show();
     }
     if(val=="Productos"){
       $(".box-producto"+id).show();
     }
-    if(val=="Premios"){
-      $(".box-premio"+id).show();
+    if(val=="Mercancia"){
+      $(".box-mercancia"+id).show();
     }
   });
   $(".cargarCantidad").click(function(){
@@ -481,17 +674,30 @@ $(document).ready(function(){
     var cantidades = Array();
     var tipos = Array();
     var productos = Array();
-    var premios = Array();
+    var mercancia = Array();
     var conceptos = Array();
+
+    var precioV = Array();
+    var precioN = Array();
     var opciones = Array();
     for (var i = 0; i < cant; i++) {
       cantidades[i] = $(".cantidad"+i).val();
       tipos[i] = $(".tipo"+i).val();
       productos[i] = $(".producto"+i).val();
-      premios[i] = $(".premio"+i).val();
+      mercancia[i] = $(".mercancia"+i).val();
       conceptos[i] = $(".concepto"+i).val();
+      precioV[i] = $(".precioVenta"+i).val();
+      precioN[i] = $(".precioNota"+i).val();
       opciones[i] = $(".opcion"+i).val();
     }
+    // alert(cantidades);
+    // alert(tipos);
+    // alert(productos);
+    // alert(mercancia);
+    // alert(precioV);
+    // alert(precioN);
+    // alert(conceptos);
+    // alert(opciones);
     $.ajax({
       url: "",
       type: "POST",
@@ -500,8 +706,10 @@ $(document).ready(function(){
         cantidades: cantidades,
         tipos: tipos,
         productos: productos,
-        premios: premios,
+        mercancia: mercancia,
         conceptos: conceptos,
+        precios_venta: precioV,
+        precios_nota: precioN,
         opciones: opciones,
       },
       success: function(response){
@@ -556,7 +764,7 @@ $(document).ready(function(){
 
   $(".enviar").click(function(){
     var response = validar();
-    var response = true;
+    // var response = true;
 
     if(response == true){
       $(".btn-enviar").attr("disabled");
@@ -636,19 +844,27 @@ function Capitalizar(str){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var selected = parseInt($("#selectedPedido").val());
-  var rselected = false;
-  if(selected > 0){
-    rselected = true;
-    $(".error_selected_pedido").html("");
+  // var selected = parseInt($("#selectedPedido").val());
+  // var rselected = false;
+  // if(selected > 0){
+  //   rselected = true;
+  //   $(".error_selected_pedido").html("");
+  // }else{
+  //   rselected = false;
+  //   $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+  // }
+  /*===================================================================*/
+
+  /*===================================================================*/
+  var almacen = $("#almacen").val();
+  var ralmacen = false;
+  if(almacen==""){
+    ralmacen=false;
+    $("#error_almacen").html("Debe seleccionar un almacén");
   }else{
-    rselected = false;
-    $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+    ralmacen=true;
+    $("#error_almacen").html("");
   }
-  /*===================================================================*/
-
-  /*===================================================================*/
-
   // var cantidad = $("#cantidad").val();
   // var rcantidad = checkInput(cantidad, numberPattern);
   // if( rcantidad == false ){
@@ -661,16 +877,16 @@ function validar(){
   //   $("#error_cantidad").html("");
   // }
 
-
   /*===================================================================*/
   var result = false;
-  if( rselected==true){
+  // if( rselected==true && ralmacen==true){
+  if(ralmacen==true){
+
     result = true;
   }else{
     result = false;
   }
   /*===================================================================*/
-  // alert(result);
   return result;
 }
 

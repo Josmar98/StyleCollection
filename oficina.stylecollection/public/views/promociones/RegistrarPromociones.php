@@ -163,17 +163,53 @@
             <form action="" method="post" role="form" class="form_register">
               <div class="box-body">
                   <div class="row">
-                    <div class="form-group col-xs-12 col-sm-6">
+                    <div class="form-group col-xs-12">
                       <label for="promocion">Promoción</label>
                       <select class="form-control select2" id="promocion" name="promocion" style="width:100%;" <?php if(!empty($_GET['admin']) && empty($_GET['lider'])){ echo "disabled"; } ?>>
                         <option value="">Seleccione una promoción</option>
                         <?php foreach ($promociones as $data){ if(!empty($data['id_promocion'])){ ?>
-                          <option value="<?=$data['id_promocion']; ?>"><?=$data['nombre_promocion']; ?></option>
+                          <option value="<?=$data['id_promocion']; ?>">
+                            <?=$data['nombre_promocion']; ?>
+                            <?php
+                              $id_promo = $data['id_promocion'];
+                              foreach ($lider->consultarQuery("SELECT * FROM productos_promocion WHERE id_promocion = {$id_promo}") as $key){
+                                if(!empty($key[0])){
+                                  // echo $key['id_producto'];
+                                  $id_premios_busqueda = $key['id_producto'];
+                                  $premiosinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus = 1 and id_premio = {$id_premios_busqueda}");
+                                  $iter = 1;
+                                  echo " => <b><small>[";
+                                  foreach($premiosinv as $pinv){
+                                    if(!empty($pinv['id_premio_inventario'])){
+                                      if($pinv['tipo_inventario']=="Productos"){
+                                        $queryMosInv = "SELECT *, productos.producto as elemento FROM premios_inventario, productos WHERE premios_inventario.id_inventario=productos.id_producto and productos.id_producto={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                      }
+                                      if($pinv['tipo_inventario']=="Mercancia"){
+                                        $queryMosInv = "SELECT *, mercancia.mercancia as elemento FROM premios_inventario, mercancia WHERE premios_inventario.id_inventario=mercancia.id_mercancia and mercancia.id_mercancia={$pinv['id_inventario']} and premios_inventario.id_premio={$id_premios_busqueda}";
+                                      }
+                                      $inventariosMos = $lider->consultarQuery($queryMosInv);
+                                      foreach ($inventariosMos as $invm) {
+                                        if(!empty($invm[0])){
+                                          echo $invm['unidades_inventario']." ".$invm['elemento'];
+                                          if($iter < (count($premiosinv)-1)){
+                                            echo " | ";
+                                          }
+    
+                                        }
+                                      }
+                                    }
+                                    $iter++;
+                                  }
+                                  echo "]</small></b>";
+                                }
+                              }
+                            ?>
+                          </option>
                         <?php } } ?>
                       </select>
                       <span id="error_promocion" class="errors"></span>
                     </div>
-                    <div class="form-group col-xs-12 col-sm-6">
+                    <div class="form-group col-xs-12">
                       <?php if(!empty($_GET['admin']) && !empty($_GET['lider'])){ ?>
                       <input type="hidden" name="cliente" value="<?=$_GET['lider']; ?>">
                       <?php } ?>

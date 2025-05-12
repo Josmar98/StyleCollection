@@ -62,9 +62,21 @@
                       <span id="error_nombre_mercancia" class="errors"></span>
                     </div>
 
+                  </div>
+                  <div class="row">
+
                     <div class="form-group col-sm-6">
                       <label for="medidas_mercancia">Unidad de medida</label>
-                      <input type="text" class="form-control" id="medidas_mercancia" name="medidas_mercancia" maxlength="20" placeholder="Medida de mercancía. (400ml, 50g, 2lts)">
+                      <!-- <input type="text" class="form-control" id="medidas_mercancia" name="medidas_mercancia" maxlength="20" placeholder="Medida de mercancía. (400ml, 50g, 2lts)"> -->
+                      <select class="form-control select2" id="medidas_mercancia" name="medidas_mercancia" style="width:100%;">
+                      <option value=""></option>
+                      <option value="Unidad">Unidad</option>
+                      <option value="Litros">Litros</option>
+                      <option value="Kilos">Kilos</option>
+                      <option value="Gramos">Gramos</option>
+                      <option value="Metros">Metros</option>
+                      <option value="Centimetros">Centimetros</option>
+                      </select>
                       <span id="error_medidas_mercancia" class="errors"></span>
                     </div>
                     
@@ -73,6 +85,9 @@
                       <input type="text" class="form-control" id="marca_mercancia" name="marca_mercancia" maxlength="150" placeholder="Ingresar la marca de mercancía">
                       <span id="error_marca_mercancia" class="errors"></span>
                     </div>
+                  
+                  </div>
+                  <div class="row">
 
                     <div class="form-group col-sm-6">
                       <label for="tam_mercancia">Tamaño de mercancia (mm, cm, m)</label>
@@ -85,6 +100,9 @@
                       <input type="color" class="form-control" id="color_mercancia" name="color_mercancia" maxlength="150" placeholder="Ingresar color de mercancía">
                       <span id="error_color_mercancia" class="errors"></span>
                     </div>
+
+                  </div>
+                  <div class="row">
 
                       <div class="form-group col-sm-12">
                         <label for="descripcion">Descripcion de mercancia</label>

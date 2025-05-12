@@ -87,13 +87,16 @@ if(!empty($_POST['cantidad']) && empty($_POST['validarData'])){
       $erroresSec = 0;
       foreach ($cantidadSec as $cantidad_sec) {
         $idColeccionSec = $ids[$indexOf];
-        $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
-        $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
-        if($execSec['ejecucion']==true){
-        }else{
-          $erroresSec++;
+        $buscarRepetidos = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id_pedido} and id_cliente={$id_user} and id_despacho={$id_despacho} and id_despacho_sec={$idColeccionSec}");
+        if(count($buscarRepetidos)>1){}else{
+          $querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 0, 1)";
+          $execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+          if($execSec['ejecucion']==true){
+          }else{
+            $erroresSec++;
+          }
+          $indexOf++;
         }
-        $indexOf++;
       }
       if($erroresSec==0){
         $response="1";

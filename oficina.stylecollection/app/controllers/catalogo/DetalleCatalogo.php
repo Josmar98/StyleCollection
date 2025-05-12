@@ -20,8 +20,9 @@
 			// echo "Hora: ". $hora." - ";
 			// echo "Costo: ".$costo." - ";
 			$cant = $_POST['cantidad'];
+			$precio=$catalogo['cantidad_gemas'];
 
-			$query = "INSERT INTO canjeos (id_canjeo, id_catalogo, id_cliente, unidades, fecha_canjeo, hora_canjeo, estatus) VALUES (DEFAULT, $id, $id_cliente, {$cant}, '$fecha', '$hora', 1)";
+			$query = "INSERT INTO canjeos (id_canjeo, id_catalogo, id_cliente, unidades, precio_gemas, fecha_canjeo, hora_canjeo, estatus) VALUES (DEFAULT, $id, $id_cliente, {$cant}, {$precio}, '$fecha', '$hora', 1)";
 			$exec = $lider->registrar($query, "canjeos", "id_canjeo");
 			if($exec['ejecucion']==true){
 				$response = "1";

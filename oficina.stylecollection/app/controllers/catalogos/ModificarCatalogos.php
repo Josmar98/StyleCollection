@@ -128,35 +128,21 @@ if($amCatalogosE == 1){
         }
       }
     }
+    // echo $catalogo['id_premio'];
     $id_premioB = $catalogo['id_premio'];
     $errores=0;
     $borrado = $lider->eliminar("DELETE FROM premios WHERE id_premio={$id_premioB}");
     $borradoxd = $lider->eliminar("DELETE FROM premios_inventario WHERE id_premio={$id_premioB}");
     if($borrado['ejecucion']==true){
       $nombre_premio = $nombre;
-      $query="INSERT INTO premios (id_premio, nombre_premio, precio_premio, descripcion_premio, estatus) VALUES (DEFAULT, '{$nombre_premio}', 0, '{$nombre_premio}', 1)";
-      // echo "<br><br>".$query."<br><br>"; $execPremio=['ejecucion'=>true, 'id'=>10005];
-      $execPremio = $lider->registrar($query, "premios", "id_premio");
-      if($execPremio['ejecucion']==true){
-        $id_premio = $execPremio['id'];
-        for ($z=0; $z < $cantidad_elementos; $z++){
-          $unidad = $stocks[$z];
-          $id_inventario = $inventarios[$z];
-          $tipo = $tipos_inventarios[$z];
-          $posMercancia = strpos($id_inventario,'m');
-          if(strlen($posMercancia)==0){
-            $id_element = $id_inventario;
-          }else{
-            $id_element = preg_replace("/[^0-9]/", "", $id_inventario);
-          }
-          $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidad}, '{$tipo}', 1)";
-          // echo "<br><br>".$query."<br><br>"; $execPI=['ejecucion'=>true, 'id'=>10005];
-          $execPI = $lider->registrar($query, "premios_inventario", "id_premio_inventario");
-          if($execPI['ejecucion']==true){
-          }else{
-            $errores++;
-          }
+      $servicioss = false;
+      foreach ($tipos_inventarios as $types) {
+        if(mb_strtolower("$types")==mb_strtolower("Servicio")){
+          $servicioss = true;
         }
+      }
+      if($servicioss == true){
+        $id_premio=-1;
         $query = "UPDATE catalogos SET id_premio={$id_premio}, nombre_catalogo='$nombre', codigo_catalogo='$codigo', marca_catalogo='$marca', color_catalogo='$color', voltaje_catalogo='$voltaje', caracteristicas_catalogo='$caracteristicas', puestos_catalogo='$puestos', otros_catalogo='$otros', cantidad_gemas='$cantidad', imagen_catalogo='$imagen', estatus=1 WHERE id_catalogo = $id";
         // echo "<br><br>".$query."<br><br>"; $exec=['ejecucion'=>true, 'id'=>10005];
         $exec = $lider->modificar($query);
@@ -165,7 +151,39 @@ if($amCatalogosE == 1){
           $errores++;
         }
       }else{
-        $errores++;
+        $query="INSERT INTO premios (id_premio, nombre_premio, precio_premio, descripcion_premio, estatus) VALUES (DEFAULT, '{$nombre_premio}', 0, '{$nombre_premio}', 1)";
+        // echo "<br><br>".$query."<br><br>"; $execPremio=['ejecucion'=>true, 'id'=>10005];
+        $execPremio = $lider->registrar($query, "premios", "id_premio");
+        if($execPremio['ejecucion']==true){
+          $id_premio = $execPremio['id'];
+          for ($z=0; $z < $cantidad_elementos; $z++){
+            $unidad = $stocks[$z];
+            $id_inventario = $inventarios[$z];
+            $tipo = $tipos_inventarios[$z];
+            $posMercancia = strpos($id_inventario,'m');
+            if(strlen($posMercancia)==0){
+              $id_element = $id_inventario;
+            }else{
+              $id_element = preg_replace("/[^0-9]/", "", $id_inventario);
+            }
+            $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidad}, '{$tipo}', 1)";
+            // echo "<br><br>".$query."<br><br>"; $execPI=['ejecucion'=>true, 'id'=>10005];
+            $execPI = $lider->registrar($query, "premios_inventario", "id_premio_inventario");
+            if($execPI['ejecucion']==true){
+            }else{
+              $errores++;
+            }
+          }
+          $query = "UPDATE catalogos SET id_premio={$id_premio}, nombre_catalogo='$nombre', codigo_catalogo='$codigo', marca_catalogo='$marca', color_catalogo='$color', voltaje_catalogo='$voltaje', caracteristicas_catalogo='$caracteristicas', puestos_catalogo='$puestos', otros_catalogo='$otros', cantidad_gemas='$cantidad', imagen_catalogo='$imagen', estatus=1 WHERE id_catalogo = $id";
+          // echo "<br><br>".$query."<br><br>"; $exec=['ejecucion'=>true, 'id'=>10005];
+          $exec = $lider->modificar($query);
+          if($exec['ejecucion']==true){
+          }else{
+            $errores++;
+          }
+        }else{
+          $errores++;
+        }
       }
     }else{
       $errores++;

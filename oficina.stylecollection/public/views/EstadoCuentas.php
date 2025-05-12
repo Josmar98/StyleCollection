@@ -84,8 +84,8 @@
 
                 $canjeosPersonalesCliente = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1");
                 foreach ($canjeosPersonalesCliente as $canje) {
-                  if(!empty($canje['cantidad_gemas'])){
-                    $gemasCanjeadasCliente += $canje['cantidad_gemas'];
+                  if(!empty($canje['precio_gemas'])){
+                    $gemasCanjeadasCliente += $canje['precio_gemas'];
                   }
                 }
                 $canjeosGemasCliente = $lider->consultarQuery("SELECT * FROM canjeos_gemas WHERE canjeos_gemas.estatus = 1");
@@ -242,36 +242,47 @@
                                     </td>
                                     <td>
                                       
-                                  <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColAct)){ echo "$".number_format($precioColAct,2,',','.'); } ?></span> * <?php echo "(".$cantidad_colecciones.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                  <b><span style="font-size:1.2em;color:#44CC00;margin-left:5px;"><?php if(!empty($precioColAct)){ echo "$".number_format($precioColAct,2,',','.'); } ?></span> * <?php echo "(".$cantidad_colecciones.") = "; ?> <span style="font-size:1.2em;color:#44CC00;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
                                     </td>
                                   </tr>
-                                  <!-- <span style="font-size:1.2em;color:#0C0;"><b><?php if(!empty($precioColAct)){ echo number_format($precioColAct,2,',','.'); } ?>$</b></span> -->
+                                  <!-- <span style="font-size:1.2em;color:#44CC00;"><b><?php if(!empty($precioColAct)){ echo number_format($precioColAct,2,',','.'); } ?>$</b></span> -->
 
 
                                   <br>
                                   <?php
                                   $pedidosSecund = $lider->consultarQuery("SELECT * FROM pedidos_secundarios as pedSec, despachos_secundarios as desSec WHERE pedSec.id_despacho_sec=desSec.id_despacho_sec and pedSec.estatus=1 and desSec.id_despacho = {$key['id_despacho']}");
-                                  // print_r($pedidosSecund);
-                                    foreach ($pedidosSecund as $pedSec) {
-                                      if(!empty($pedSec['id_pedido_sec'])){
-                                        $precioColeccionSec = $pedSec['precio_coleccion_sec'];
-                                        $cantColeccionSec = $pedSec['cantidad_aprobado_sec'];
-                                        $precioColGen = ($precioColeccionSec*$cantColeccionSec);
-                                        $precio_coleccion+=$precioColGen;
-                                        $totalesCostos[$key['numero_pedido']]['precioCol']+=$precioColGen;
-                                        ?>
-                                        <tr>
-                                          <td>
-                                            <b><?=$pedSec['nombre_coleccion_sec'] ?>: </b>
-                                          </td>
-                                          <td>
-                                            <b><span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
-                                            <!-- <span style="font-size:1.2em;color:#0C0;margin-left:5px;"><b><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?> * <?php echo "(".$cantColeccionSec.") = "."$".number_format($precioColGen,2,',','.'); ?></b></span><br> -->
-                                          </td>
-                                        </tr>
-                                      <?php
+                                  $coleccionesss=[];
+                                  foreach ($pedidosSecund as $pedSec) {
+                                    if(!empty($pedSec['id_pedido_sec'])){
+                                      
+                                      if(!empty($coleccionesss[$pedSec['nombre_coleccion_sec']])){
+                                        $coleccionesss[$pedSec['nombre_coleccion_sec']]['pedidos']+=$pedSec['cantidad_aprobado_sec'];
+                                      }else{
+                                        $coleccionesss[$pedSec['nombre_coleccion_sec']]['nombre']=$pedSec['nombre_coleccion_sec'];
+                                        $coleccionesss[$pedSec['nombre_coleccion_sec']]['precio']=$pedSec['precio_coleccion_sec'];
+                                        $coleccionesss[$pedSec['nombre_coleccion_sec']]['pedidos']=$pedSec['cantidad_aprobado_sec'];
                                       }
+                                      
                                     }
+                                  }
+                                  foreach ($coleccionesss as $pedSec) {
+                                    $precioColeccionSec = $pedSec['precio'];
+                                    $cantColeccionSec = $pedSec['pedidos'];
+                                    $precioColGen = ($precioColeccionSec*$cantColeccionSec);
+                                    $precio_coleccion+=$precioColGen;
+                                    $totalesCostos[$key['numero_pedido']]['precioCol']+=$precioColGen;
+                                    ?>
+                                      <tr>
+                                        <td>
+                                          <b><?=$pedSec['nombre'] ?>: </b>
+                                        </td>
+                                        <td>
+                                          <b><span style="font-size:1.2em;color:#44CC00;margin-left:5px;"><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?></span> * <?php echo "(".$cantColeccionSec.") = "; ?> <span style="font-size:1.2em;color:#44CC00;margin-left:5px;"><?php echo "$".number_format($precioColGen,2,',','.'); ?></span></b><br>
+                                          <!-- <span style="font-size:1.2em;color:#44CC00;margin-left:5px;"><b><?php if(!empty($precioColeccionSec)){ echo "$".number_format($precioColeccionSec,2,',','.'); } ?> * <?php echo "(".$cantColeccionSec.") = "."$".number_format($precioColGen,2,',','.'); ?></b></span><br> -->
+                                        </td>
+                                      </tr>
+                                    <?php
+                                  }
                                   // $clientesPedidosS = $lider->consultarQuery($query);
                                   // foreach ($clientesPedidosS as $pedidoCol) {
                                     // if(!empty($pedidoCol['id_pedido'])){
@@ -283,7 +294,7 @@
                               <tr>
                                 <td colspan="2">
                                   <span style="font-size:1.2em;color:#000;"><b>Precio Colección Total: </b></span>
-                                  <span style="font-size:1.4em;color:#0C0;"><b><?php if(!empty($precio_coleccion)){ echo number_format($precio_coleccion,2,',','.'); } ?>$</b></span>
+                                  <span style="font-size:1.4em;color:#44CC00;"><b><?php if(!empty($precio_coleccion)){ echo number_format($precio_coleccion,2,',','.'); } ?>$</b></span>
                                 </td>
                               </tr>
                               </table>
@@ -419,7 +430,7 @@
                             </div>
 
                             <div class="col-md-5">
-                              <div style="border:1px solid #434343;padding:5px;width:100%;" class="container">
+                              <div style="border:1px solid #434343;padding:5px;width:100%;background:#EEEEEE;" class="container">
                               <?php
                                 $gemasDisponibles = $lider->consultarQuery("SELECT * FROM gemas WHERE id_campana={$id_campana}");
                                 $sumatoriaGemasOtorgada=0;
@@ -435,12 +446,21 @@
                                 // echo " | ".$sumatoriaGemasOtorgada." | ".
                                 //            $sumatoriaGemasDisponibles." | ".
                                 //            $sumatoriaGemasBloqueadas." | ";
+                                $preciosGemas = $lider->consultarQuery("SELECT * FROM precio_gema WHERE id_campana={$id_campana}");
+                                $precioGemas=5;
+                                if (!empty($preciosGemas[0])) {
+                                  $precioGemas=$preciosGemas[0]['precio_gema'];
+                                }
+
                                 $configGemas = $lider->consultarQuery("SELECT * FROM configgemas WHERE id_configgema=1");
                                 foreach ($configGemas as $conffig) {
                                   if(!empty($conffig['id_configgema'])){
                                     $cantidadGemasCorrespondiente = $conffig['cantidad_correspondiente'];
                                     $totalDescuentoEnGemas=0;
                                     $resultt=($cantidad_aprobado/$cantidadGemasCorrespondiente);
+                                    $resulttGemas = ($resultt*$precioGemas);
+                                    // echo $cantidadGemasCorrespondiente;
+                                    // $precioGemas
                                   ?>
                                   <span style="font-size:1.1em;color:#000;"><b>Cantidad de Gemas</b></span>
                                   <br>
@@ -450,11 +470,24 @@
                                         <td><b>Gemas Otorgadas</b></td>
                                         <td><b style="color:#ED2A77;"><?php echo $cantidad_aprobado; ?> <small>Col.</small></b></td>
                                         <td><?php echo " / "; ?></td>
-                                        <td><b> <?php echo "$".number_format($cantidadGemasCorrespondiente,2,',','.'); ?></b></td>
+                                        <td><b> <?php echo "".number_format($cantidadGemasCorrespondiente,2,',','.')." G."; ?></b></td>
                                         <td><?php echo " = "; ?></td>
-                                        <td><b style="color:#0c0;">
-                                          <?php $totalDescuentoEnGemas+=$resultt; ?>
-                                          <?php echo "$".number_format($resultt,2,',','.'); ?>
+                                        <td><b style="color:#00C;">
+                                          <?php echo "".number_format($resultt,2,',','.')." G."; ?>
+                                        </b></td>
+                                      </tr>
+                                      <tr>
+                                        <td colspan="7" style="border-bottom:1px solid #777"></td>
+                                      </tr>
+                                      <tr>
+                                        <td><b>Gemas Otorgadas en $</b></td>
+                                        <td><b style="color:#ED2A77;"><?php echo $resultt; ?> <small>G.</small></b></td>
+                                        <td><?php echo " * "; ?></td>
+                                        <td><b> <?php echo "$".number_format($precioGemas,2,',','.').""; ?></b></td>
+                                        <td><?php echo " = "; ?></td>
+                                        <td><b style="color:#00C;">
+                                          <?php $totalDescuentoEnGemas+=$resulttGemas; ?>
+                                          <?php echo "$".number_format($resulttGemas,2,',','.').""; ?>
                                         </b></td>
                                       </tr>
                                       <tr>
@@ -537,7 +570,7 @@
                                       </td>
                                       <td> <span style="padding-right:5px;padding-left:5px">=</span> </td>
                                       <td>
-                                        <b style="color:#0c0;">
+                                        <b style="color:#44CC00;">
                                           <?php 
                                             $t = $data['descuento_coleccion']*$totalColecciones; 
                                             echo "$".number_format($t,2,',','.');
@@ -565,7 +598,7 @@
                                     </span> 
                                   </td>
                                   <td colspan="">
-                                    <span style="font-size:1.5em;color:#0C0">
+                                    <span style="font-size:1.5em;color:#44CC00">
                                       <b>$<?php echo number_format($total_descuento_distribucion,2,',','.') ?></b>
                                     </span>
                                   </td>
@@ -602,7 +635,7 @@
                                             <td><?php echo " x "; ?></td>
                                             <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
                                             <td><?php echo " = "; ?></td>
-                                            <td><b style="color:#0c0;">
+                                            <td><b style="color:#44CC00;">
                                               <?php $resulttDescuentoContado+=$resultt; ?>
                                               <?php echo "$".number_format($resultt,2,',','.'); ?>
                                             </b></td>
@@ -628,7 +661,7 @@
                                         </span> 
                                       </td>
                                       <td colspan="">
-                                        <span style="font-size:1.5em;color:#0C0">
+                                        <span style="font-size:1.5em;color:#44CC00">
                                           <b>$<?php echo number_format($resulttDescuentoContado,2,',','.') ?></b>
                                         </span>
                                       </td>
@@ -659,7 +692,7 @@
                                               <td><?php echo " x "; ?></td>
                                               <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
                                               <td><?php echo " = "; ?></td>
-                                              <td><b style="color:#0c0;">
+                                              <td><b style="color:#44CC00;">
                                                 <?php $resulttDescuentoDirecto+=$resultt; ?>
                                                 <?php echo "$".number_format($resultt,2,',','.'); ?>
                                               </b></td>
@@ -687,7 +720,7 @@
                                         </span> 
                                       </td>
                                       <td colspan="">
-                                        <span style="font-size:1.5em;color:#0C0">
+                                        <span style="font-size:1.5em;color:#44CC00">
                                           <b>$<?php echo number_format($resulttDescuentoDirecto,2,',','.') ?></b>
                                         </span>
                                       </td>
@@ -732,7 +765,7 @@
                                                     <td><?php echo " x "; ?></td>
                                                     <td><b style="color:#ED2A77;"><?php echo $multi; ?> <small>Col.</small></b></td>
                                                     <td><?php echo " = "; ?></td>
-                                                    <td><b style="color:#0c0;">
+                                                    <td><b style="color:#44CC00;">
                                                       <?php $resultadoDescuentosPagosPuntual[$key['id']]+=$resultt; ?>
                                                       <?php echo "$".number_format($resultt,2,',','.'); ?>
                                                     </b></td>
@@ -761,7 +794,7 @@
                                             </span> 
                                           </td>
                                           <td colspan="">
-                                            <span style="font-size:1.5em;color:#0C0">
+                                            <span style="font-size:1.5em;color:#44CC00">
                                               <b>$<?php echo number_format($resultadoDescuentosPagosPuntual[$key['id']],2,',','.') ?></b>
                                             </span>
                                           </td>
@@ -780,7 +813,7 @@
                                 $resulttDescuentoCierreEstructura = 0;
                                 if($lidera['id_liderazgo'] > $lidSenior['id_liderazgo']){
                                     ?>
-                                  <div style="border:1px solid #434343;padding:5px;width:100%;" class="container">
+                                  <div style="border:1px solid #434343;padding:5px;width:100%;background:#EEEEEE;" class="container">
 
                                   <span style="font-size:1.1em;color:#000;"><b>Descuentos por cierre de estructura</b></span>
                                   <br>
@@ -835,7 +868,7 @@
                                             </td>
                                             <td> <span style="padding-right:5px;padding-left:5px">=</span> </td>
                                             <td>
-                                              <b style="color:#0c0;">
+                                              <b style="color:#00C;">
                                                 <?php 
                                                   $resulttDescuentoCierreEstructura += $data['descuento_coleccion']*$acumColeccionesBonoCierre;
                                                   $t = $data['descuento_coleccion']*$acumColeccionesBonoCierre; 
@@ -901,7 +934,7 @@
                                         <td><?php echo " x "; ?></td>
                                         <td><b style="color:#ED2A77;"><?php echo number_format($liquid['cantidad_descuento_gemas'],2,',','.');; ?> <small>Gemas.</small></b></td>
                                         <td><?php echo " = "; ?></td>
-                                        <td><b style="color:#0c0;">
+                                        <td><b style="color:#44CC00;">
                                           <?php $resultLiquidacionGemas = $liquid['total_descuento_gemas']; ?>
                                           <?php $resulttDescuentoLiquidacion+=$resultLiquidacionGemas; ?>
                                           <?php echo "$".number_format($resultLiquidacionGemas,2,',','.'); ?>
@@ -924,7 +957,7 @@
                                           </span> 
                                         </td>
                                         <td colspan="">
-                                          <span style="font-size:1.5em;color:#0C0">
+                                          <span style="font-size:1.5em;color:#44CC00">
                                             <b>$<?php echo number_format($resulttDescuentoLiquidacion,2,',','.') ?></b>
                                           </span>
                                         </td>
@@ -933,6 +966,7 @@
                                   </table>
                                   <?php
                                 }
+
                                 $totalDescuentoVendedor = $total_descuento_distribucion + 
                                                           $resulttDescuentoContado +
                                                           $resulttDescuentoDirecto + 
@@ -941,10 +975,165 @@
                                                           $resultLiquidacionGemas;
                               ?>
                               <br>
-                              <span style="font-size:1.3em"><b>Total Descuento = </b><b style="color:#0c0"><?php  echo"$".number_format($totalDescuentoVendedor,2,',','.'); ?></b></span>
+                              <span style="font-size:1.3em"><b>Total Descuento = </b><b style="color:#44CC00"><?php  echo"$".number_format($totalDescuentoVendedor,2,',','.'); ?></b></span>
+                              <br>
+
+
+
+                              <?php
+                                $totalDeudasAdquiridas = 0;
+                              ?>
+                              <br>
+                              <div style="border:1px solid #434343;padding:5px;width:100%;" class="container">
+                                <span style="font-size:1.1em;color:#000;"><b>(-) Promociones Adquiridas</b></span>
+                                <br>
+                                <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                  <tbody>
+                                    <?php 
+                                      $promociones = $lider->consultarQuery("SELECT * FROM promociones, promocion WHERE promociones.id_promocion = promocion.id_promocion and promociones.estatus=1 and promocion.estatus=1 and promociones.id_campana={$id_campana}");
+                                      $totalPromociones=0;
+                                      $promocionesAdquiridas=[];
+                                      foreach ($promociones as $promo){
+                                        if(!empty($promo['id_promocion'])){
+                                          if(!empty($promocionesAdquiridas[$promo['id_promocion']]['cantidad'])){
+                                            $promocionesAdquiridas[$promo['id_promocion']]['cantidad']+=$promo['cantidad_aprobada_promocion'];
+                                          }else{
+                                            $promocionesAdquiridas[$promo['id_promocion']]['nombre']=$promo['nombre_promocion'];
+                                            $promocionesAdquiridas[$promo['id_promocion']]['precio']=$promo['precio_promocion'];
+                                            $promocionesAdquiridas[$promo['id_promocion']]['cantidad']=$promo['cantidad_aprobada_promocion'];
+                                          }
+                                        }
+                                      }
+                                      foreach ($promocionesAdquiridas as $promo){
+                                        if(!empty($promo['nombre'])){
+                                          $resultPromos = ((float) $promo['precio'])*((float) $promo['cantidad']);
+                                          ?>
+                                          <tr>
+                                            <td><b style='font-size:0.9em;'><?=$promo['nombre']; ?></b></td>
+                                            <td><b> <?php echo "$".number_format($promo['precio'],2,',','.'); ?></b></td>
+                                            <td><?php echo " x "; ?></td>
+                                            <td><b style="color:#ED2A77;"><?php echo $promo['cantidad']; ?> <small>PRomo.</small></b></td>
+                                            <td><?php echo " = "; ?></td>
+                                            <td><b style="color:#CC0000;">
+                                              <?php 
+                                                echo "$".number_format($resultPromos,2,',','.'); 
+                                                $totalPromociones+=$resultPromos;
+                                              ?>
+                                            </b></td>
+                                          </tr>
+                                          <?php 
+                                        }
+                                      }
+                                    ?>
+                                    <tr>
+                                      <td colspan="7" style="border-bottom:1px solid #777"></td>
+                                    </tr>
+                                    <tr>
+                                      <td></td>
+                                      <td colspan="3">
+                                        <span style="font-size:1.2em">
+                                          <b>Total</b>
+                                        </span>
+                                      </td>
+                                      <td> 
+                                        <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                          <b>=</b>
+                                        </span> 
+                                      </td>
+                                      <td colspan="">
+                                        <span style="font-size:1.5em;color:#CC0000">
+                                          <b>$<?php echo number_format($totalPromociones,2,',','.') ?></b>
+                                          <?php
+                                            $totalDeudasAdquiridas+=$totalPromociones;
+                                          ?>
+                                        </span>
+                                      </td>
+                                    </tr>
+
+                                  </tbody>
+                                </table>
+                              </div>
+
+                              <br>
+                              <div style="border:1px solid #434343;padding:5px;width:100%;" class="container">
+                                <span style="font-size:1.1em;color:#000;"><b>(-) Servicios Adquiridos</b></span>
+                                <br>
+                                <table class="table-stripped" style="text-align:center;width:100%;font-size:.9em;">
+                                  <tbody>
+                                    <?php 
+                                      $servicios = $lider->consultarQuery("SELECT * FROM servicios, servicio, servicioss WHERE servicios.id_servicio = servicio.id_servicio and servicio.id_servicioss=servicioss.id_servicioss and servicios.estatus=1 and servicio.estatus=1 and servicios.id_campana={$id_campana}");
+                                      $totalServicios=0;
+                                      $serviciosAdquiridos=[];
+                                      foreach ($servicios as $serv){
+                                        if(!empty($serv['id_servicio'])){
+                                          if(!empty($serviciosAdquiridos[$serv['id_servicio']]['cantidad'])){
+                                            $serviciosAdquiridos[$serv['id_servicio']]['cantidad']+=$serv['cantidad_servicio'];
+                                          }else{
+                                            $serviciosAdquiridos[$serv['id_servicio']]['nombre']=$serv['nombre_servicio'];
+                                            $serviciosAdquiridos[$serv['id_servicio']]['precio']=$serv['precio_servicio'];
+                                            $serviciosAdquiridos[$serv['id_servicio']]['cantidad']=$serv['cantidad_servicio'];
+                                          }
+                                        }
+                                      }
+                                      foreach ($serviciosAdquiridos as $serv){
+                                        if(!empty($serv['nombre'])){
+                                          $resultServ = ((float) $serv['precio'])*((float) $serv['cantidad']);
+                                          ?>
+                                          <tr>
+                                            <td><b style='font-size:0.9em;'><?=$serv['nombre']; ?></b></td>
+                                            <td><b> <?php echo "$".number_format($serv['precio'],2,',','.'); ?></b></td>
+                                            <td><?php echo " x "; ?></td>
+                                            <td><b style="color:#ED2A77;"><?php echo $serv['cantidad']; ?></b></td>
+                                            <td><?php echo " = "; ?></td>
+                                            <td><b style="color:#CC0000;">
+                                              <?php 
+                                                echo "$".number_format($resultServ,2,',','.'); 
+                                                $totalServicios+=$resultServ;
+                                              ?>
+                                            </b></td>
+                                          </tr>
+                                          <?php 
+                                        }
+                                      }
+                                    ?>
+                                    <tr>
+                                      <td colspan="7" style="border-bottom:1px solid #777"></td>
+                                    </tr>
+                                    <tr>
+                                      <td></td>
+                                      <td colspan="3">
+                                        <span style="font-size:1.2em">
+                                          <b>Total</b>
+                                        </span>
+                                      </td>
+                                      <td> 
+                                        <span style="font-size:1.2em;padding-right:5px;padding-left:5px;">
+                                          <b>=</b>
+                                        </span> 
+                                      </td>
+                                      <td colspan="">
+                                        <span style="font-size:1.5em;color:#CC0000">
+                                          <b>$<?php echo number_format($totalServicios,2,',','.') ?></b>
+                                          <?php
+                                            $totalDeudasAdquiridas+=$totalServicios;
+                                          ?>
+                                        </span>
+                                      </td>
+                                    </tr>
+
+                                  </tbody>
+                                </table>
+                              </div>
+
+
                             </div>
                           </div>
+
+                          
+                              
                           <br>
+
+
 
 
 
@@ -957,8 +1146,13 @@
                               $excedente_descripcion = [];
                               $iterador = 0;
 
-                                $total_responsabilidad = $total_costo - $totalDescuentoVendedor;
-                                $restaTotalResponsabilidad = $total_responsabilidad-$abonado + $cantidad_excedente;
+                              $total_responsabilidad = $total_costo - $totalDescuentoVendedor + $totalDeudasAdquiridas;
+                              // echo "total_costo: ".$total_costo."<br>";
+                              // echo "totalDescuentoVendedor: ".$totalDescuentoVendedor."<br>";
+                              // echo "totalDeudasAdquiridas: ".$totalDeudasAdquiridas."<br>";
+                              // echo "total_responsabilidad: ".$total_responsabilidad."<br>";
+                              
+                              $restaTotalResponsabilidad = $total_responsabilidad-$abonado + $cantidad_excedente;
                             ?>
                             <div class="col-md-4" style="background:<?php echo $bg_debe_haber; ?>;position:relative;top:5px">
                               <br>
@@ -1005,7 +1199,7 @@
                               <br>
                               <span style="font-size:1.3em;color:#222;"><b><u>Abonado</u></b></span>    
                               <br>
-                              <span style="font-size:2em;color:#0C0;">
+                              <span style="font-size:2em;color:#44CC00;">
                                 <b>$<?php echo number_format($abonado,2,',','.') ?></b>
                               </span>
                             <br>

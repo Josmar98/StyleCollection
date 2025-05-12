@@ -132,7 +132,7 @@
 	</div>
 <?php require_once 'public/views/assets/footered.php'; ?>
 <?php require_once 'public/views/assets/footer.php'; ?>
-<?php require_once 'public/views/assets/stylesheet.php'; ?>
+<?php require_once 'public/views/assets/stylesheet2.24.php'; ?>
 <style type="text/css">
 .expandAccess{
 	background:#e5007e;color:#FFF;margin-top:-2px;

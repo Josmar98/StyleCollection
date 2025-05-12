@@ -29,7 +29,7 @@
     </section>
           <br>
           <?php if($amInventarioC==1){ ?>
-            <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div>
+            <!-- <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div> -->
           <?php } ?>
     <!-- Main content -->
     <section class="content">
@@ -97,21 +97,24 @@
                   
                   <input type="hidden" id="limiteElementos" value="<?=$limiteElementos; ?>">
                   <div class="row" style="padding:0px 17px;">
-                    <div style="width:20%;float:left" class=" box-inventarios1 box-inventario d-none">
+                    <div style="width:15%;float:left" class=" box-inventarios1 box-inventario d-none">
                       <label>Cantidad</label>
                     </div>
-                    <div style="width:80%;float:left" class=" box-inventarios1 box-inventario d-none">
+                    <div style="width:65%;float:left" class=" box-inventarios1 box-inventario d-none">
                       <label>Descripcion</label>
+                    </div>
+                    <div style="width:20%;float:left" class=" box-inventarios1 box-inventario d-none">
+                      <label>Precio Unitario</label>
                     </div>
                   </div>
                   <?php for($z=1; $z<=$limiteElementos; $z++){ ?>
                     <div class="row" style="padding:0px 15px;">
-                      <div style="width:20%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario d-none">
+                      <div style="width:15%;float:left;" class=" box-inventarios<?=$z; ?> box-inventario d-none">
                         <input type="number" class="form-control" id="stock<?=$z; ?>" min="0" name="stock[]" step="1" placeholder="Cantidad (150)">
                         <span id="error_stock<?=$z; ?>" class="errors"></span>
                       </div>
                       <?php foreach($almacenes as $almacen){ if(!empty($almacen['id_almacen'])){ $idAl = $almacen['id_almacen']; ?>
-                        <div style="width:80%;float:left;" class=" box-inventarioProductos<?=$z; ?> box-inventariosProductos<?=$z.$idAl; ?> box-inventario d-none">
+                        <div style="width:65%;float:left;" class=" box-inventarioProductos<?=$z; ?> box-inventariosProductos<?=$z.$idAl; ?> box-inventario d-none">
                           <select class="form-control select2 inventarios" id="inventarioProductos<?=$z.$idAl; ?>" name="inventarioProductos<?=$idAl;?>[]"  style="width:100%">
                             <option value=""></option>
                             <?php foreach($productos[$idAl] as $inv){ if(!empty($inv['id_producto'])){ ?>
@@ -121,7 +124,7 @@
                           <span id="error_inventarioProductos<?=$z.$idAl; ?>" class="errors"></span>
                         </div>
       
-                        <div style="width:80%;float:left;" class=" box-inventariosMercancia<?=$z.$idAl; ?> box-inventario d-none">
+                        <div style="width:65%;float:left;" class=" box-inventariosMercancia<?=$z.$idAl; ?> box-inventario d-none">
                           <select class="form-control select2 inventarios" id="inventarioMercancia<?=$z.$idAl; ?>" name="inventarioMercancia<?=$idAl;?>[]"  style="width:100%">
                             <option value=""></option>
                             <?php foreach($mercancia[$idAl] as $inv){ if(!empty($inv['id_mercancia'])){ ?>
@@ -131,6 +134,11 @@
                           <span id="error_inventarioMercancia<?=$z.$idAl; ?>" class="errors"></span>
                         </div>
                       <?php } } ?>
+
+                      <div style="width:20%;float:right;" class=" box-inventarios<?=$z; ?> box-inventario d-none">
+                        <input type="number" class="form-control" id="precio<?=$z; ?>" name="precio[]" step="0.01" placeholder="Precio ($.150)">
+                        <span id="error_precio<?=$z; ?>" class="errors"></span>
+                      </div>
                     </div>
                     <div style='width:100%;'>
                       <span style='float:left' id="addMore<?=$z; ?>" min="<?=$z; ?>" class="addMore btn btn-success box-inventario d-none"><b>+</b></span>
@@ -146,6 +154,10 @@
                       
                     </div>
                   </div> -->
+                  <span class="d-none"><?=json_encode($productos); ?></span>
+                  <!-- <br><br> -->
+                  <!-- <br><br><br> -->
+                  <span class="d-none"><?=json_encode($mercancia); ?></span>
 
               </div>
               <!-- /.box-body -->
@@ -181,6 +193,10 @@
 <?php if(!empty($response)): ?>
 <input type="hidden" class="responses" value="<?php echo $response ?>">
 <?php endif; ?>
+<?php if(!empty($rutaPdfTraslados)): ?>
+<input type="hidden" class="rutaTraslado" value="<?php echo $rutaPdfTraslados ?>">
+<?php endif; ?>
+
 
 <style>
 .errors{
@@ -199,7 +215,6 @@ $(document).ready(function(){
 
   var response = $(".responses").val();
   if(response==undefined){
-
   }else{
     if(response == "1"){
       swal.fire({
@@ -207,7 +222,15 @@ $(document).ready(function(){
           title: '¡Datos guardados correctamente!',
           confirmButtonColor: "#ED2A77",
       }).then(function(){
-        window.location = "?route=Entradas";
+        
+        var rutaTraslado = $(".rutaTraslado").val();
+        if(rutaTraslado==undefined){
+        }else{
+          // alert(rutaTraslado);
+          window.open(`?${rutaTraslado}`, '_blank');
+        }
+
+        window.location = "?route=Operaciones";
       });
     }
     if(response == "2"){
@@ -217,7 +240,8 @@ $(document).ready(function(){
           confirmButtonColor: "#ED2A77",
       });
     }
-  } 
+  }
+
 
   $(".box-inventarios").hide();
   $(".box-inventarios").removeClass("d-none");
@@ -401,11 +425,9 @@ $(document).ready(function(){
 
   }); // Fin Evento
 
-
   // $("body").hide(500);
-
-
 });
+
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/

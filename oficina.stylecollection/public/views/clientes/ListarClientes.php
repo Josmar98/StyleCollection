@@ -55,7 +55,7 @@
                   <!-- <th>Apellidos</th> -->
                   <!-- <th>Fecha de Nacimiento</th> -->
                   <!-- <th>Telefono</th> -->
-                  <!-- <th>Direccion</th> -->
+                  <th>Direccion</th>
                   <!-- <th>Correo</th> -->
                 </tr>
                 </thead>
@@ -76,22 +76,27 @@
                       <?php echo $data['id_cliente']; ?>
                     </span>
                   </td>
-                  <td style="width:20%">
+                  <td style="width:15%">
                     <span class="contenido2">
                       <?php echo $data['cedula']; ?>
                     </span>
                   </td>
-                  <td style="width:20%">
+                  <td style="width:15%">
                     <span class="contenido2">
                       <?php echo mb_strtoupper($data['cod_rif'].$data['rif']); ?>
                     </span>
                   </td>
-                  <td style="width:40%;text-align:left;padding-left:15px;">
+                  <td style="width:20%;text-align:left;padding-left:15px;">
                     <span class="contenido2">
                     <?php echo mb_strtoupper($data['primer_nombre']." ".$data['segundo_nombre']." ".$data['primer_apellido']." ".$data['segundo_apellido']); ?>
-                    </span>
-                  </td>
-
+                  </span>
+                </td>
+                <td style="width:30%">
+                  <span class="contenido2">
+                    <?php echo $data['direccion']; ?>
+                  </span>
+                </td>
+                
                  <!--  <td style="width:10%">
                     <span class="contenido2">
                       <?php
@@ -116,11 +121,6 @@
                       ?>
                     </span>
                   </td>
-                  <td style="width:40%">
-                    <span class="contenido2">
-                      <?php //echo $data['direccion']; ?>
-                    </span>
-                  </td>
                   <td style="width:15%">
                     <span class="contenido2">
                       <?php //echo $data['correo']; ?>
@@ -143,8 +143,8 @@
                   <!-- <th>Apellidos</th> -->
                   <!-- <th>Fecha de Nacimiento</th>
                   <th>Telefono</th>
-                  <th>Direccion</th>
                   <th>Correo</th> -->
+                  <th>Direccion</th>
 
                 </tr>
                 </tfoot>

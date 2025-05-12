@@ -415,7 +415,9 @@ if($_SESSION['nombre_rol']!="Vendedor"){
 		//echo $resultDeudaPorPromociones;
 		$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPagosPuntuales + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura + $liquidacion_gemas;
 		$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos + $resultDeudaPorPromociones;
-
+		if($pedido['total_pagar']>0){
+			$nuevoTotal=$pedido['total_pagar'];
+		}
 		// echo $descuentosTotales;
 		// echo "Deuda: ".$deudaTotal."<br>";
 		// echo "Descuentos: ".$descuentosTotales."<br>";

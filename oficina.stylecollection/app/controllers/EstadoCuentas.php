@@ -78,7 +78,7 @@ if($permitir=="1"){
 	 	$liquidacion_gemas = $lider->consultarQuery("SELECT * FROM descuentos_gemas, despachos, pedidos WHERE despachos.id_despacho = pedidos.id_despacho and pedidos.id_pedido = descuentos_gemas.id_pedido and despachos.id_campana = {$id_campana}");
 		$precio_gema = $lider->consultarQuery("SELECT * FROM precio_gema WHERE estatus = 1 and id_campana = {$id_campana}");
 
-		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1";
+		$query = "SELECT * FROM liderazgos, liderazgos_campana WHERE liderazgos_campana.id_liderazgo = liderazgos.id_liderazgo and liderazgos_campana.id_campana = {$id_campana} and liderazgos_campana.estatus = 1 ORDER BY liderazgos.id_liderazgo ASC;";
 
 		$liderazgosAll = $lider->consultarQuery($query);
 

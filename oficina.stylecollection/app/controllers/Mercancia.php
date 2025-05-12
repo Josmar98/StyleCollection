@@ -53,7 +53,41 @@ if($amPremiosC == 1){
 
 
 	if(empty($_POST)){
-		// $fragancias = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
+
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
+		for ($i=0; $i < count($mercancia)-1; $i++) { 
+			$mer = $mercancia[$i];
+			// print_r($mer);
+			// echo "<br><br>";
+			$sumaTotal = 0;
+			foreach($almacenes as $alm){
+				if(!empty($alm['id_almacen'])){
+					// echo "<br> ----- =>".$alm['nombre_almacen'].": ";
+					$operacionesInv = $lider->consultarQuery("SELECT * FROM `operaciones` WHERE estatus=1 and id_inventario = {$mer['id_mercancia']} and id_almacen={$alm['id_almacen']} and tipo_inventario='Mercancia' ORDER BY id_operacion DESC");
+					if(count($operacionesInv)>1){
+						// echo $operacionesInv[0]['stock_operacion_almacen'];
+						$mercancia[$i]['stock_almacen'.$alm['id_almacen']]=$operacionesInv[0]['stock_operacion_almacen'];
+						$sumaTotal+=$operacionesInv[0]['stock_operacion_almacen'];
+					}else{
+						$mercancia[$i]['stock_almacen'.$alm['id_almacen']]=0;
+						$sumaTotal+=0;
+						// echo 0;
+						
+					}
+					
+				}
+			}
+			$mercancia[$i]['stock_total']=$sumaTotal;
+			// echo "<br><br><br>";
+		}
+
+
+
+
+		// foreach($mercancia as $mer){
+		// 	print_r($mer);
+		// 	echo "<br><br>";
+		// }
 		
 		if($mercancia['ejecucion']==1){
 			if(!empty($action)){

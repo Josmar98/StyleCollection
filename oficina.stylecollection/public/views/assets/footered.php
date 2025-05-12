@@ -92,7 +92,10 @@
 th{font-size:.85em !important;}
 </style>
 <script>
+
 $(document).ready(function(){
+  
+  
           // var inFormOrLink;
     // $('a[href]:not([target]),a[href][target=_self]').live('click', function(){ inFormOrLink = true; });
     // $('form').bind('submit', function(){ inFormOrLink = true; });
@@ -243,6 +246,7 @@ $(document).ready(function(){
     verTiempoDeDesperfectos();
 
     calendarioVerificarDia();
+    actualizarInventarioInicial();
 
     <?php if($_SESSION['nombre_rol']=="Superusuario" && $actualizargemasfacturaD=="1"){ ?>
       //actualizarGemasFacturaPedidosD();
@@ -749,6 +753,19 @@ function actualizarGemasFacturaPedidosB(){
     type: 'POST',
     data: {
       verificarActualizarGemasFacturaPedidosBloq: "openorclose",
+    },
+    success: function(respuesta){
+      // alert(respuesta);
+      console.log(respuesta);
+    }
+  });
+}
+function actualizarInventarioInicial(){
+  $.ajax({
+    url: '?route=Notificaciones&action=Generar',
+    type: 'POST',
+    data: {
+      actualizarInventarioInicial: "openorclose",
     },
     success: function(respuesta){
       // alert(respuesta);

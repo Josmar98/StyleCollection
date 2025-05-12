@@ -408,8 +408,15 @@ if($permitir=="1"){
 		require_once 'app/controllers/pedidos/codigoLlamadaVista.php';
 	}
 
-	if(!empty($_POST['cantidad'])){
+	// print_r($_POST);
+	if(
+		!empty($_POST['cantidad']) && isset($_POST['cantidadSec']) 
+		|| 
+		!empty($_POST['cantidadSec']) && isset($_POST['cantidad']) 
+	){
 		// print_r($_POST);  // APROBAR PEDIDOS
+		// echo "XDDDDDD";
+		// die();
 		$cantidad = $_POST['cantidad'];
 		if(!empty($_POST['cantidadSec'])){
 			$cantidadSec = $_POST['cantidadSec'];
@@ -446,41 +453,52 @@ if($permitir=="1"){
 			$indexOf = 0;
 			$erroresSec = 0;
 			$busquedaPedidoSecundario = $lider->consultarQuery("SELECT * FROM pedidos_secundarios WHERE id_pedido={$id}");
-			// print_r($busquedaPedidoSecundario);
+			// // print_r($busquedaPedidoSecundario);
 			if(count($busquedaPedidoSecundario)>1){
-				foreach ($cantidadSec as $cantidad_sec) {
-					$querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, fecha_aprobado_sec = '{$fecha_aprobado}', hora_aprobado_sec = '{$hora_aprobado}', estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
-					// $sentencesSecundary[count($sentencesSecundary)]=$querySec;
-					$indexOf++;
-
-					$execSec = $lider->modificar($querySec);
-					if($exec['ejecucion']==true){}else{
-						$erroresSec++;
+				$borrado = $lider->consultarQuery("DELETE FROM pedidos_secundarios WHERE id_pedido={$id}");
+			}
+			$id_user = $pedidos[0]['id_cliente'];
+			$fecha_pedido = date('d-m-Y');
+			$hora_pedido = date('g:ia');
+			$id_pedido = $id;
+			$indexOf = 0;
+			$erroresSec = 0;
+			foreach ($cantidadSec as $cantidad_sec) {
+				$idColeccionSec = $ids[$indexOf];
+				$cantidad_solicitada_sec=0;
+				foreach ($busquedaPedidoSecundario as $busq) {
+					if(!empty($busq['id_despacho_sec'])){
+						if($busq['id_despacho_sec']==$idColeccionSec){
+							$cantidad_solicitada_sec=$busq['cantidad_pedido_sec'];
+						}
 					}
 				}
-			}else{
-				// echo "No se encontro para UPDATE se debe hacer INSERT INTO";
-				// echo "No hay pedido Secundario";
-				// print_r($_POST);
-			// die();
-				$id_user = $pedidos[0]['id_cliente'];
-				$fecha_pedido = date('d-m-Y');
-				$hora_pedido = date('g:ia');
-				$id_pedido = $id;
-				$indexOf = 0;
-				$erroresSec = 0;
-				foreach ($cantidadSec as $cantidad_sec) {
-					$idColeccionSec = $ids[$indexOf];
-					$querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, 0, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
-					// echo "<br><br>".$querySec;
-					$execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
-					if($execSec['ejecucion']==true){
-					}else{
-						$erroresSec++;
-					}
-					$indexOf++;
-			      }
+				$querySec = "INSERT INTO pedidos_secundarios (id_pedido_sec, id_pedido, id_cliente, id_despacho, id_despacho_sec, cantidad_pedido_sec, fecha_pedido_sec, hora_pedido_sec, cantidad_aprobado_sec, fecha_aprobado_sec, hora_aprobado_sec, estatus) VALUES (DEFAULT, $id_pedido, $id_user, $id_despacho, $idColeccionSec, {$cantidad_solicitada_sec}, '{$fecha_pedido}', '{$hora_pedido}', $cantidad_sec, '{$fecha_pedido}', '{$hora_pedido}', 1)";
+				// echo "<br><br>".$querySec;
+				$execSec = $lider->registrar($querySec, "pedidos_secundarios", "id_pedido_sec");
+				if($execSec['ejecucion']==true){
+				}else{
+					$erroresSec++;
+				}
+				$indexOf++;
 			}
+			// if(count($busquedaPedidoSecundario)>1){
+			// 	foreach ($cantidadSec as $cantidad_sec) {
+			// 		$querySec = "UPDATE pedidos_secundarios SET cantidad_aprobado_sec={$cantidad_sec}, fecha_aprobado_sec = '{$fecha_aprobado}', hora_aprobado_sec = '{$hora_aprobado}', estatus=1 WHERE id_pedido={$id} and id_despacho_sec={$ids[$indexOf]}";
+			// 		// $sentencesSecundary[count($sentencesSecundary)]=$querySec;
+			// 		$indexOf++;
+
+			// 		$execSec = $lider->modificar($querySec);
+			// 		if($exec['ejecucion']==true){}else{
+			// 			$erroresSec++;
+			// 		}
+			// 	}
+			// }else{
+			// 	// echo "No se encontro para UPDATE se debe hacer INSERT INTO";
+			// 	// echo "No hay pedido Secundario";
+			// 	// print_r($_POST);
+			// // die();
+			// }
 			if($erroresSec==0){
 
 				$query2 = "INSERT INTO pedidos_historicos (id_pedidos_historicos, id_despacho, id_pedido, id_usuario, cantidad_aprobado, fecha_aprobado, hora_aprobado, estatus) VALUES (DEFAULT, {$id_despacho}, {$id}, {$_SESSION['id_usuario']}, {$cantidad}, '{$fecha_aprobado}', '{$hora_aprobado}', 1)";

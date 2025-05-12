@@ -72,7 +72,6 @@ if(!empty($_POST['pedidos_historicos']) && !empty($_POST['id_pedido'])){
 
 
 if(empty($_POST)){
-	// print_r($promociones);
 	if($promociones['ejecucion']==1){
 		if(count($fechasPromociones)>1){
 			$fechasPromo = $fechasPromociones[0];
@@ -267,6 +266,9 @@ if(empty($_POST)){
 												}
 												$descuentosTotales = $resulttDescuentoNivelLider + $resulttDescuentoDirecto + $bonoContado1Puntual + $bonoPagosPuntuales + $totalTraspasoRecibido + $bonoAcumuladoCierreEstructura + $liquidacion_gemas;
 												$nuevoTotal = $deudaTotal-$descuentosTotales + $totalTraspasoEmitidos;
+												if($pedido['total_pagar']>0){
+													$nuevoTotal=$pedido['total_pagar'];
+												}
 
 												$porcentajeAbonadoPuntual = ($abonado_lider_gemas*100)/$nuevoTotal;
 												// echo "<br>".$porcentajeAbonadoPuntual."<br>";

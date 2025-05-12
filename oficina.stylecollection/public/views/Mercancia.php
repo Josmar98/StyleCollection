@@ -43,6 +43,12 @@
             <!-- /.box-header -->
 
             <div class="box-body">
+              <div class="row">
+                <div class="col-xs-12" style="text-align:right;">
+                    <a href="?route=<?=$_GET['route']; ?>&action=GenerarReporteInventario" target="_blank"><button class="btn btn-success" style="color:#FFF;">Generar Excel</button></a>
+                </div>
+              </div>
+              <br>
               <table id="datatable" class="table table-bordered table-striped" style="text-align:center;width:100%;">
                 <thead>
                 <tr>
@@ -50,9 +56,11 @@
                 <?php if($amPremiosE==1 || $amPremiosB==1){ ?>
                   <th style="width:10%;">---</th>
                 <?php } ?>
-                  <th style="width:25%;">Mercancia</th>
-                  <th style="width:15%;">Marca</th>
-                  <th style="width:45%;">Descripcion</th>
+                  <th style="width:15%;">Mercancia</th>
+                  <th style="width:10%;">Marca</th>
+                  <th style="width:25%;">Descripcion</th>
+                  <th style="width:10%;">Stock Total</th>
+                  <th style="width:20%;">Stock x Almacen</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -100,6 +108,22 @@
                           <?php echo $data['descripcion_mercancia']; ?>
                         </span>
                       </td>
+                      <td>
+                        <span class="contenido2">
+                          <?php echo $data['stock_total']; ?>
+                        </span>
+                      </td>
+                      <td>
+                        <span class="contenido2">
+                          <?php
+                            foreach($almacenes as $alm){
+                              if(!empty($alm['id_almacen'])){
+                                echo $alm['nombre_almacen'].": ".$data['stock_almacen'.$alm['id_almacen']]."<br>"; 
+                              }
+                            }
+                          ?>
+                        </span>
+                      </td>
                           
                     </tr>
                     <?php
@@ -115,6 +139,8 @@
                   <th>Mercancia</th>
                   <th>Marca</th>
                   <th>Descripcion</th>
+                  <th>Stock Total</th>
+                  <th>Stock x Almacen</th>
                 </tr>
                 </tfoot>
               </table>

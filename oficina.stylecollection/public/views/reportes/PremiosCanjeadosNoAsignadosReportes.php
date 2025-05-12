@@ -76,7 +76,14 @@
               <div class="box-body">
                     
                   <div class="row">
-
+                    <div class="form-group col-sm-12">
+                      <label for="fechaDesde">Fecha de Canjeo (DESDE)</label>
+                      <input type="date" class="form-control" id="fechaDesde" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                    </div>
+                    <div class="form-group col-sm-12">
+                      <label for="fechaHasta">Fecha de Canjeo (HASTA)</label>
+                      <input type="date" class="form-control" id="fechaHasta" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
+                    </div>
                     <div class="form-group col-sm-12">
                       <label for="tipoElemento"><b style="color:#000;">Seleccionar Tipo de Elemento del catálogo</b></label>
                       <select id="tipoElemento" class="form-control select2" style="width:100%;">
@@ -87,47 +94,50 @@
                       <span class="errors error_tipoElemento"></span>
                     </div>
 
-                    
-                  <form action="" method="get" role="form" class="form_register formgemasCatalogo">
-                    <input type="hidden" name="route" value="Reportes">
-                    <input type="hidden" name="action" value="PremiosCanjeadosNoAsignados">
-                    <input type="hidden" name="T" value="1">
-                    <div class="form-group col-sm-12 boxgemasCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="1" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
-                        <label for="gemasCatalogo"><b style="color:#000;">Cantidad de Gemas del catálogo </b></label>
-                        <select id="gemasCatalogo" name="C" class="form-control select2" style="width:100%;">
-                            <option value="0" id="C0">Todas</option>
-                            <?php  if(count($gemasCatalogo)>1){ foreach ($gemasCatalogo as $key) { if(!empty($key['cantidad_gemas'])){ ?>
-                            <option value="<?=$key['cantidad_gemas']?>" 
-                              <?php if(!empty($_GET['C'])){if($key['cantidad_gemas']==$_GET['C']){echo "selected='1'";}} ?> >
-                              <?php 
-                                if($key['cantidad_gemas']=="1"){ $str = " Gema"; }else{ $str = " Gemas"; }
-                                echo $key['cantidad_gemas'].$str;
-                              ?>
-                            </option>
-                            <?php } } } ?>
-                        </select>
-                        <span class="errors error_gemasCatalogo"></span>
-                    </div>
-                  </form>
+                    <form action="" method="get" role="form" class="form_register formgemasCatalogo">
+                      <input type="hidden" name="route" value="Reportes">
+                      <input type="hidden" name="action" value="PremiosCanjeadosNoAsignados">
+                      <input type="hidden" name="FA" class="fechaa" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                      <input type="hidden" name="FC" class="fechac" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
+                      <input type="hidden" name="T" value="1">
+                      <div class="form-group col-sm-12 boxgemasCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="1" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
+                          <label for="gemasCatalogo"><b style="color:#000;">Cantidad de Gemas del catálogo </b></label>
+                          <select id="gemasCatalogo" name="C" class="form-control select2" style="width:100%;">
+                              <option value="0" id="C0">Todas</option>
+                              <?php  if(count($gemasCatalogo)>1){ foreach ($gemasCatalogo as $key) { if(!empty($key['cantidad_gemas'])){ ?>
+                              <option value="<?=$key['cantidad_gemas']?>" 
+                                <?php if(!empty($_GET['C'])){if($key['cantidad_gemas']==$_GET['C']){echo "selected='1'";}} ?> >
+                                <?php 
+                                  if($key['cantidad_gemas']=="1"){ $str = " Gema"; }else{ $str = " Gemas"; }
+                                  echo $key['cantidad_gemas'].$str;
+                                ?>
+                              </option>
+                              <?php } } } ?>
+                          </select>
+                          <span class="errors error_gemasCatalogo"></span>
+                      </div>
+                    </form>
 
-                  <form action="" method="get" role="form" class="form_register formelementosCatalogo">
-                    <input type="hidden" name="route" value="Reportes">
-                    <input type="hidden" name="action" value="PremiosCanjeadosNoAsignados">
-                    <input type="hidden" name="T" value="2">
-                    <div class="form-group col-sm-12 boxelementosCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="2" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
-                        <label for="elementosCatalogo"><b style="color:#000;">Premios del catálogo </b></label>
-                        <select id="elementosCatalogo" name="ID" class="form-control select2" style="width:100%;">
-                            <option value="0" id="ID0">Todas</option>
-                            <?php if(count($elementosCatalogo)>1){ foreach ($elementosCatalogo as $key) { if(!empty($key['nombre_catalogo'])){ ?>
-                            <option value="<?=$key['id_catalogo']?>" 
-                              <?php if(!empty($_GET['ID'])){if($key['id_catalogo']==$_GET['ID']){echo "selected='1'";}} ?> >
-                              <?php echo $key['nombre_catalogo'];?>
-                            </option>
-                            <?php } } } ?>
-                        </select>
-                        <span class="errors error_elementosCatalogo"></span>
-                    </div>
-                  </form>
+                    <form action="" method="get" role="form" class="form_register formelementosCatalogo">
+                      <input type="hidden" name="route" value="Reportes">
+                      <input type="hidden" name="action" value="PremiosCanjeadosNoAsignados">
+                      <input type="hidden" name="FA" class="fechaa" value="<?php if(!empty($_GET['FA'])){ echo $_GET['FA']; } ?>">
+                      <input type="hidden" name="FC" class="fechac" value="<?php if(!empty($_GET['FC'])){ echo $_GET['FC']; } ?>">
+                      <input type="hidden" name="T" value="2">
+                      <div class="form-group col-sm-12 boxelementosCatalogo" <?php if (( isset($_GET['T']) && $_GET['T']!="2" ) || ( empty($_GET['T']) )): ?> style="display:none;" <?php endif; ?> >
+                          <label for="elementosCatalogo"><b style="color:#000;">Premios del catálogo </b></label>
+                          <select id="elementosCatalogo" name="ID" class="form-control select2" style="width:100%;">
+                              <option value="0" id="ID0">Todas</option>
+                              <?php if(count($elementosCatalogo)>1){ foreach ($elementosCatalogo as $key) { if(!empty($key['nombre_catalogo'])){ ?>
+                              <option value="<?=$key['id_catalogo']?>" 
+                                <?php if(!empty($_GET['ID'])){if($key['id_catalogo']==$_GET['ID']){echo "selected='1'";}} ?> >
+                                <?php echo $key['nombre_catalogo'];?>
+                              </option>
+                              <?php } } } ?>
+                          </select>
+                          <span class="errors error_elementosCatalogo"></span>
+                      </div>
+                    </form>
 
 
               
@@ -189,6 +199,9 @@
                       <div class="col-xs-12 col-sm-6" style="text-align:right;">
                         <?php
                           $rutaReporte = "?route=Reportes&action=GenerarPremiosCanjeadosNoAsignados";
+                          if(!empty($_GET['FA']) && !empty($_GET['FC'])){
+                            $rutaReporte .= "&FA=".$_GET['FA']."&FC=".$_GET['FC']; 
+                          }
                           if(!empty($_GET['T']) && isset($_GET['C'])){
                             $rutaReporte .= "&T=".$_GET['T']."&C=".$_GET['C'];
                           }
@@ -339,7 +352,7 @@
 </style>
 <script>
 $(document).ready(function(){
-
+  
   var response = $(".responses").val();
   if(response==undefined){
 
@@ -361,7 +374,14 @@ $(document).ready(function(){
       });
     }
   }
-    
+  $("#fechaDesde").change(function(){
+    var fa = $(this).val();
+    $(".fechaa").val(fa);
+  });
+  $("#fechaHasta").change(function(){
+    var fh = $(this).val();
+    $(".fechac").val(fh);
+  });
   $("#tipoElemento").change(function(){
     var tipo = $(this).val();
     $(".boxgemasCatalogo").slideUp(500);

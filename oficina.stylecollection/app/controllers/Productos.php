@@ -58,6 +58,32 @@ if($amProductosC == 1){
 
 
 	if(empty($_POST)){
+
+		$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
+		for ($i=0; $i < count($productos)-1; $i++) { 
+			$mer = $productos[$i];
+			$sumaTotal = 0;
+			foreach($almacenes as $alm){
+				if(!empty($alm['id_almacen'])){
+					$operacionesInv = $lider->consultarQuery("SELECT * FROM `operaciones` WHERE estatus=1 and id_inventario = {$mer['id_producto']} and id_almacen={$alm['id_almacen']} and tipo_inventario='Productos' ORDER BY id_operacion DESC");
+					if(count($operacionesInv)>1){
+						$productos[$i]['stock_almacen'.$alm['id_almacen']]=$operacionesInv[0]['stock_operacion_almacen'];
+						$sumaTotal+=$operacionesInv[0]['stock_operacion_almacen'];
+					}else{
+						$productos[$i]['stock_almacen'.$alm['id_almacen']]=0;
+						$sumaTotal+=0;
+					}
+					
+				}
+			}
+			$productos[$i]['stock_total']=$sumaTotal;
+		}
+		
+
+		// foreach($productos as $mer){
+		// 	print_r($mer);
+		// 	echo "<br><br>";
+		// }
 		// $fragancias = $lider->consultarQuery("SELECT * FROM productos_fragancias, fragancias WHERE fragancias.id_fragancia = productos_fragancias.id_fragancia");
 		
 		if($productos['ejecucion']==1){

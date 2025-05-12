@@ -72,8 +72,8 @@ class Excel{
 			$bonoscontado = $dat['bonoscontado'];
 
 			$coleccionesContado = 0;
-      $varCont = 0;
-      foreach ($bonoscontado as $bono) {
+			$varCont = 0;
+			foreach ($bonoscontado as $bono) {
 				if(!empty($bono['id_bonocontado'])){
 					$coleccionesContado += $bono['colecciones_bono'];
 				}
@@ -191,23 +191,23 @@ class Excel{
 		$num++;
 
 		$montosPagos = [];
-    $equivalenciasPagos = [];
-    $equivalenciasAbonadasPagos = [];
+    	$equivalenciasPagos = [];
+    	$equivalenciasAbonadasPagos = [];
 
 
-    $abonado = 0;
+    	$abonado = 0;
 		$diferido = 0;
 		$reportado = 0;
 
-    $totalAcumMonto = 0;
+    	$totalAcumMonto = 0;
 		$totalAcumEqv = 0;
 
-    $reportadosPagos = [];
-    $diferidosPagos = [];
-    $abonadosPagos = [];
+		$reportadosPagos = [];
+		$diferidosPagos = [];
+		$abonadosPagos = [];
 
-    $totalesPagos = [];
-    foreach ($pagosRecorridos as $pagosR) {
+		$totalesPagos = [];
+    	foreach ($pagosRecorridos as $pagosR) {
 
 									$sheetInicial->setCellValue('B'.$num, 'Abonos de '.$pagosR['name']);
 									$sheetInicial->getStyle('A'.$num.':J'.$num)->getFont()->setBold(true)->setSize(15);
@@ -864,7 +864,7 @@ class Excel{
 			$cuotaConIVA=0;
 			$coutasExentasIva=0;
 			$autoConsumo=0;
-			$retencionIVa=0;
+			$retencionIVaVentas=0;
 
 			$totalPrecioIva = 0;
 			$totalCoutasExentasIva=0;
@@ -907,7 +907,7 @@ class Excel{
 				$cuotaConIVA = "=O".$numL1."+Q".$numL1;
 				$coutasExentasIva=0;
 				$autoConsumo=0;
-				$retencionIVa=0;
+				$retencionIVaVentas=0;
 				if($estat){
 					$totalCuotaConIva.="+L".$numL1;
 					$totalCoutasExentasIva.="+M".$numL1;
@@ -947,7 +947,7 @@ class Excel{
 				if($estat){ $sheet->setCellValue('O'.$numL1, $cuotaSinIVA); }
 				if($estat){ $sheet->setCellValue('P'.$numL1, $cantidadIVA."%"); }
 				if($estat){ $sheet->setCellValue('Q'.$numL1, $precioIVA); }
-				if($estat){ $sheet->setCellValue('R'.$numL1, $retencionIVa); }
+				if($estat){ $sheet->setCellValue('R'.$numL1, $retencionIVaVentas); }
 				if($estat){ $sheet->setCellValue('S'.$numL1, ""); }
 
 
@@ -979,7 +979,7 @@ class Excel{
 				$sheet->setCellValue('O'.$numL1, number_format($cuotaSinIVA,2,',','.'));
 				$sheet->setCellValue('P'.$numL1, $cantidadIVA."%");
 				$sheet->setCellValue('Q'.$numL1, number_format($precioIVA,2,',','.'));
-				$sheet->setCellValue('R'.$numL1, number_format($retencionIVa,2,',','.'));
+				$sheet->setCellValue('R'.$numL1, number_format($retencionIVaVentas,2,',','.'));
 				$sheet->setCellValue('S'.$numL1, "");
 				$indx++;
 				$numL1++;
@@ -1187,7 +1187,7 @@ class Excel{
 			$compraExentas=0;
 			$comprasInternasGravadas=0;
 			$ivaGeneral=0;
-			$retencionIVa=0;
+			$retencionIVaCompras=0;
 			// $totalTotalCompra = 0;
 			// $totalCompraExentas=0;
 			// $totalComprasInternasGravadas = 0;
@@ -1203,7 +1203,7 @@ class Excel{
 			$numInicialL2=$numL2;
 			if(count($compras)>1){ foreach ($compras as $compra){ if(!empty($compra['id_factura_compra'])){
 				$opRetencion = $compra['opRetencion'];
-
+				$retencionIVaCompras=0;
 				$totalCompra = $compra['totalCompra'];
 				$compraExentas = $compra['comprasExentas'];
 				// $comprasInternasGravadas = $compra['comprasInternasGravadas'];
@@ -1218,8 +1218,8 @@ class Excel{
 
 				if($opRetencion==1){
 					$porcentReten=$compra['porcentajeRetencion'];
-					// $retencionIVa=$compra['retencionIva'];
-					$retencionIVa="=P".$numL2."*".($porcentReten/100);
+					// $retencionIVaCompras=$compra['retencionIva'];
+					$retencionIVaCompras="=P".$numL2."*".($porcentReten/100);
 				}
 
 				// $cuotaSinIVA = $fiscal['totalVenta'];
@@ -1227,7 +1227,7 @@ class Excel{
 				// $cuotaConIVA = "=O".$numL2."+Q".$numL2;
 				// $coutasExentasIva=0;
 				// $autoConsumo=0;
-				// $retencionIVa=0;
+				// $retencionIVaCompras=0;
 				$totalTotalCompra.="+L".$numL2;
 				$totalCompraExentas.="+M".$numL2;
 				$totalComprasInternasGravadas.="+N".$numL2;
@@ -1263,7 +1263,7 @@ class Excel{
 				$sheet->setCellValue('N'.$numL2, $comprasInternasGravadas);
 				$sheet->setCellValue('O'.$numL2, $precioIVA."%");
 				$sheet->setCellValue('P'.$numL2, $ivaGeneral);
-				$sheet->setCellValue('Q'.$numL2, $retencionIVa);
+				$sheet->setCellValue('Q'.$numL2, $retencionIVaCompras);
 				if($opRetencion==1){ $sheet->setCellValue('R'.$numL2, $compra['comprobante']); } else { $sheet->setCellValue('R'.$numL2, ""); }
 				if($opRetencion==1){ $sheet->setCellValue('S'.$numL2, $compra['fechaComprobante']); } else { $sheet->setCellValue('R'.$numL2, ""); }
 
@@ -1297,7 +1297,7 @@ class Excel{
 				$sheet->setCellValue('N'.$numL2, $comprasInternasGravadas);
 				$sheet->setCellValue('O'.$numL2, $precioIVA."%");
 				$sheet->setCellValue('P'.$numL2, $ivaGeneral);
-				$sheet->setCellValue('Q'.$numL2, $retencionIVa);
+				$sheet->setCellValue('Q'.$numL2, $retencionIVaCompras);
 				$sheet->setCellValue('R'.$numL2, "");
 				$sheet->setCellValue('S'.$numL2, "");
 				$indx++;
@@ -2105,7 +2105,7 @@ class Excel{
 			$autoTotalCuotaTributaria="=MAX(0,E".$numTotalDebitosPeriodo."-E".$numTotalCreditosFiscales.")";
 			$autoExcedentesDeCreditoSigMes="=MAX(0,E".$numTotalCreditosFiscales."-E".$numTotalDebitosPeriodo.")";
 			$autoRetencionesAcumuladas="=0";
-			$autoRetencionPeriodo="='".$nameLibro2."'!Q".$numTotalizadorL2;
+			$autoRetencionPeriodo="='".$nameLibro1."'!R".$numTotalizadorL1;
 			$autoTotalRetenciones = "=0";
 
 			$autoRetencionesSoportadaDescont1="=0";
@@ -2193,7 +2193,7 @@ class Excel{
 			$condicionSoportada1="E{$numPosTotalCuotaTributaria}";
 			$condicionSoportada2="D{$numPosTotalRetenciones}";
 			$contentAutoSoportada="{$condicionSoportada1} > {$condicionSoportada2}";
-			$autoRetencionesSoportadaDescont2="SI({$contentAutoSoportada};{$condicionSoportada2};{$condicionSoportada1})";
+			$autoRetencionesSoportadaDescont2="=SI({$contentAutoSoportada} , {$condicionSoportada2} , {$condicionSoportada1})";
 			// $autoRetencionesSoportadaDescont2="=SI({$contentAutoSoportada};{$condicionSoportada2};{$condicionSoportada1})";
 
 			$numL3++;
@@ -2248,6 +2248,651 @@ class Excel{
 		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
 		$writer->setPreCalculateFormulas(true);
 		$writer->save('php://output');
+	}
+	
+	public function exportarResumenGemas($dat, $lider){
+		$resumenCuentas = $dat['resumenCuentas'];
+		if(!empty($dat['mes'])){
+			$mes = $dat['mes'];
+		}
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0);
+
+		$sheetInicial = $spreadsheet->getActiveSheet()->setTitle('Reporte de Gemas');
+		$sheetInicial->getColumnDimension('A')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('B')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('C')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('D')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('E')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('F')->setAutoSize(true);
+		$sheetInicial->getStyle('A1:Z30')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
+		
+		$num2 = 1;
+		$num = 2;
+		
+
+		// $sheetInicial->setCellValue('B'.$num, 'Contado');
+		// $sheetInicial->getStyle('A'.$num.':J'.$num)->getFont()->setBold(true)->setSize(15);
+		// // $sheetInicial->getStyle('A'.$num.':I'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('9FD5D1');
+		// $sheetInicial->getStyle('A'.$num.':J'.$num)->getAlignment()->setHorizontal('center');
+		
+		// $sheetInicial->setCellValue('A'.$num, 'N°');
+		// $sheetInicial->setCellValue('B'.$num, 'Fecha');
+		// $sheetInicial->setCellValue('C'.$num, 'Forma de Pago');
+		// $sheetInicial->setCellValue('D'.$num, 'Banco');
+		// $sheetInicial->setCellValue('E'.$num, 'Referencia');
+		// $sheetInicial->setCellValue('F'.$num, 'Monto');
+		// 	$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setBold(true)->setSize(13);
+		// $sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('9FD5D1');
+		// $sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+		
+				
+			
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+			$sheetInicial->getStyle('B'.$num.':E'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+			$sheetInicial->getStyle('B'.$num.':E'.$num)->getFont()->setBold(true)->setSize(15);
+			$sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('right');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+
+			if(!empty($mes)){
+				$datetitle = "MES ".$mes." DEL ".date('Y');
+			}else{
+				$datetitle = "AÑO ".date('Y');
+			}
+			$sheetInicial->setCellValue('B'.$num, 'REPORTE DE');
+			$sheetInicial->setCellValue('C'.$num, 'GEMAS DEL');
+			$sheetInicial->setCellValue('D'.$num, mb_strtoupper($datetitle));
+			$num++;
+			
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+
+			$inicial = $resumenCuentas['inicial'];
+			$formulaDisponible="";
+			foreach ($inicial as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setBold(true)->setSize(16);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, $key['cantidad']);
+				if($formulaDisponible!=""){
+					$formulaDisponible.="+";
+				}
+				$formulaDisponible.="D".$num;
+				
+				$num++;
+			}
+
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+
+
+			$sumatoria = $resumenCuentas['sumatoria'];
+			$formulaSuma="";
+			foreach ($sumatoria as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, $key['cantidad']);
+				if($formulaSuma!=""){
+					$formulaSuma.="+";
+				}
+				$formulaSuma.="D".$num;
+				
+				$num++;
+			}
+			
+			// $sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			// $sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			// $sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			// $sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			// $sheetInicial->getStyle('A'.$num.':E'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			// $num++;
+
+
+			$total_sumatoria = $resumenCuentas['total_sumatoria'];
+			foreach ($total_sumatoria as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setBold(true)->setSize(14);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, "={$formulaSuma}");
+				$sheetInicial->setCellValue('E'.$num, "(+)");
+				if($formulaDisponible!=""){
+					$formulaDisponible.="+";
+				}
+				$formulaDisponible.="D".$num;
+
+				$num++;
+			}
+
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+
+
+			$ganadas = $resumenCuentas['ganadas'];
+			foreach ($ganadas as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, $key['cantidad']);
+
+				$num++;
+			}
+
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+
+
+			$restas = $resumenCuentas['restas'];
+			$formulaResta="";
+			foreach ($restas as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, $key['cantidad']);
+				if($formulaResta!=""){
+					$formulaResta.="+";
+				}
+				$formulaResta.="D".$num;
+
+				$num++;
+			}
+
+			// $sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			// $sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			// $sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			// $sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			// $sheetInicial->getStyle('A'.$num.':E'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			// $num++;
+
+
+			$total_resta = $resumenCuentas['total_resta'];
+			foreach ($total_resta as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setBold(true)->setSize(14);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, "={$formulaResta}");
+				$sheetInicial->setCellValue('E'.$num, "(-)");
+				
+				if($formulaDisponible!=""){
+					$formulaDisponible.="-";
+				}
+				$formulaDisponible.="D".$num;
+				
+				$num++;
+			}
+
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':E'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			$num++;
+
+
+			$total_disponible = $resumenCuentas['total_disponible'];
+			foreach ($total_disponible as $key) {
+				$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setBold(true)->setSize(16);
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+				
+				$sheetInicial->setCellValue('B'.$num, $key['name1']);
+				$sheetInicial->setCellValue('C'.$num, $key['name2']);
+				$sheetInicial->setCellValue('D'.$num, "={$formulaDisponible}");
+				
+				$num++;
+			}
+
+			$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="Reporte de Gemas.xlsx"');
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->save('php://output');
+
+	}
+
+	public function exportarAlcanzadoFacturadoTotal($dat, $lider){
+		$campana = $dat['campana'];
+		$despacho = $dat['despacho'];
+		$facturado = $dat['facturado'];
+		$cantRegistros=count($facturado);
+
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0);
+
+		$sheetInicial = $spreadsheet->getActiveSheet()->setTitle('Total Premios Facturados');
+		$sheetInicial->getColumnDimension('A')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('B')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('C')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('D')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('E')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('F')->setAutoSize(true);
+		$sheetInicial->getStyle('A1:Z'.($cantRegistros+50))->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
+		
+		$num2 = 1;
+		$num = 2;
+		
+		$sheetInicial->getStyle('B'.$num.':E'.$num)->getFont()->setSize(15);
+		$sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('right');
+		$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->setCellValue('B'.$num, "RESUMEN");
+		$sheetInicial->setCellValue('C'.$num, 'PREMIOS FACTURADOS');
+		$sheetInicial->setCellValue('D'.$num, '');
+		$sheetInicial->setCellValue('E'.$num, '');
+		$num++;
+
+		$num++;
+		$sheetInicial->getStyle('B'.$num.':E'.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+		$sheetInicial->getStyle('B'.$num.':E'.$num)->getFont()->setBold(true)->setSize(15);
+		$sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('right');
+		$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+		$sheetInicial->getStyle('B'.$num.':E'.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+
+		$sheetInicial->setCellValue('B'.$num, "CANTIDAD");
+		$sheetInicial->setCellValue('C'.$num, 'DESCRIPCIÓN');
+		$sheetInicial->setCellValue('D'.$num, '');
+		$sheetInicial->setCellValue('E'.$num, 'FACTURAS');
+		$num++;
+		
+		$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('center');
+		$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+		
+		$numi=$num;
+		foreach ($facturado as $key) {
+			$conceptos = [];
+			$comparar2=mb_strtolower("premios de");
+			foreach ($key['conceptos'] as $con) {
+				$comparar1=mb_strtolower($con);
+				if(strlen(strpos($comparar1, $comparar2))>0){
+					$con=substr($con, strlen(mb_strtolower("premios de"))+1);
+				}
+				$comparar1=mb_strtolower($con);
+				if(strlen(strpos($comparar1, $comparar2)) > 0){
+					$con=substr($con, strlen(mb_strtolower("premios de"))+1);
+				}
+				$conceptos[count($conceptos)]=$con;
+			}
+			$conceptosNR=[];
+			foreach ($conceptos as $conc) {
+				if(empty($conceptosNR[$conc])){
+					$conceptosNR[$conc]=$conc;
+				}
+			}
+			$limiteConceptos=count($conceptosNR);
+			$index=1;
+			$key['concepto']="";
+			foreach ($conceptosNR as $concep) {
+				$key['concepto'].=$concep;
+				if($index<$limiteConceptos){
+					$key['concepto'].=", ";
+				}
+				$index++;
+			}
+			$sheetInicial->getStyle('B'.$num)->getNumberFormat()->setFormatCode('#,##0');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFont()->setSize(13);
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getAlignment()->setHorizontal('left');
+			$sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('center');
+			$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+			
+			$sheetInicial->setCellValue('B'.$num, $key['cantidad']);
+			$sheetInicial->setCellValue('C'.$num, mb_strtoupper($key['descripcion']));
+			$sheetInicial->setCellValue('D'.$num, mb_strtoupper("Premios de ".$key['concepto']));
+			$sheetInicial->setCellValue('E'.$num, mb_strtoupper("N° Doc: ".$key['id_factura']));
+			
+			$num++;
+		}
+		$numf=$num-1;
+		$sheetInicial->getStyle('B'.$numi.':E'.$numf)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+			
+		$nameDocument = "Reporte de Total Premios Facturados en Pedido {$despacho['numero_despacho']} de Campaña {$campana['numero_campana']}/{$campana['anio_campana']}.xlsx";
+		// echo $nameDocument;
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$nameDocument.'"');
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->save('php://output');
+
+	}
+	public function exportarInventarioProductos($dat, $lider){
+		$almacenes = $dat['almacenes'];
+		$productos = $dat['productos'];
+		
+		$cantRegistros=count($productos)-1;
+		// $cantAlmacenes=count($almacenes)-1;
+		$letraAlmacenes = [
+			'0'=>'G',
+			'1'=>'H',
+			'2'=>'I',
+			'3'=>'J',
+			'4'=>'K',
+			'5'=>'L',
+			'6'=>'M',
+			'7'=>'N',
+			'8'=>'O',
+			'9'=>'P',
+			'10'=>'Q',
+			'11'=>'R',
+			'12'=>'S',
+			'13'=>'T',
+			'14'=>'U',
+			'15'=>'V',
+			'16'=>'W',
+			'17'=>'X',
+			'18'=>'Y',
+			'19'=>'Z',
+		];
+		
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0);
+		
+		$sheetInicial = $spreadsheet->getActiveSheet()->setTitle('INVENTARIO PRODUCTOS');
+		$sheetInicial->getColumnDimension('A')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('B')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('C')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('D')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('E')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('F')->setAutoSize(true);
+		$indexletraAlmacenes=0;
+		foreach ($almacenes as $alm) {
+			$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+			$sheetInicial->getColumnDimension($idLetra)->setAutoSize(true);
+			$indexletraAlmacenes++;
+		}
+		$indexLetraF = $letraAlmacenes[$indexletraAlmacenes-1];
+		$sheetInicial->getStyle('A1:Z'.($cantRegistros+50))->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
+		
+		$num2 = 1;
+		$num = 2;
+		
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFont()->setBold(true)->setSize(15);
+		$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('right');
+		$sheetInicial->getStyle('D'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->setCellValue('C'.$num, "RESUMEN INVENTARIO DE");
+		$sheetInicial->setCellValue('D'.$num, 'PRODUCTOS');
+		$num++;
+
+		$num++;
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFont()->setBold(true)->setSize(13);
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('left');
+		// $sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('right');
+		// $sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+
+		$sheetInicial->setCellValue('B'.$num, 'CODIGO');
+		$sheetInicial->setCellValue('C'.$num, "PRODUCTO");
+		$sheetInicial->setCellValue('D'.$num, 'MARCA');
+		$sheetInicial->setCellValue('E'.$num, 'DESCRIPCION');
+		$sheetInicial->setCellValue('F'.$num, 'STOCK TOTAL');
+		$indexletraAlmacenes = 0;
+		foreach ($almacenes as $alm) {
+			if(!empty($alm['id_almacen'])){
+				$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+				$sheetInicial->setCellValue($idLetra.$num, mb_strtoupper($alm['nombre_almacen']));
+				$indexletraAlmacenes++;
+			}
+		}
+		$num++;
+		
+		$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFont()->setSize(13);
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('center');
+		// $sheetInicial->getStyle('C'.$num.':F'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+
+		
+		$numi=$num;
+		
+		$numberRegistros=1;
+		foreach ($productos as $key) {
+			if(!empty($key['id_producto'])){$colorLine="";
+				if(($numberRegistros%2)==0){
+					$colorLine="dfdfeb";#dfdfeb
+				}else{
+					$colorLine="FFFFFF";
+				}
+				$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($colorLine);
+				$sheetInicial->getStyle('B'.$num)->getNumberFormat()->setFormatCode('#,##0');
+				$sheetInicial->getStyle('F'.$num.':'.$indexLetraF.$num)->getNumberFormat()->setFormatCode('#,##0');
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFont()->setSize(13);
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('F'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('right');
+				// $sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				
+				$sheetInicial->setCellValue('B'.$num, mb_strtoupper($key['codigo_producto']));
+				$sheetInicial->setCellValue('C'.$num, $key['producto']);
+				$sheetInicial->setCellValue('D'.$num, mb_strtoupper($key['marca_producto']));
+				$sheetInicial->setCellValue('E'.$num, mb_strtoupper($key['descripcion']));
+				$sheetInicial->setCellValue('F'.$num, $key['stock_total']);
+				$indexletraAlmacenes = 0;
+				foreach ($almacenes as $alm) {
+					if(!empty($alm['id_almacen'])){
+						$id_cant_almacen = 'stock_almacen'.$alm['id_almacen'];
+						$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+						// $sheetInicial->setCellValue($idLetra.$num, $id_cant_almacen);
+						$sheetInicial->setCellValue($idLetra.$num, $key[$id_cant_almacen]);
+						$indexletraAlmacenes++;
+					}
+				}
+				$num++;
+				$numberRegistros++;
+			}
+		}
+		$numf=$num-1;
+		$sheetInicial->getStyle('B'.$numi.':'.$indexLetraF.$numf)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+			
+		$nameDocument = "Reporte de Inventarios - Productos.xlsx";
+		// echo $nameDocument;
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$nameDocument.'"');
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->save('php://output');
+
+	}
+	public function exportarInventarioMercancia($dat, $lider){
+		$almacenes = $dat['almacenes'];
+		$mercancia = $dat['mercancia'];
+		
+		$cantRegistros=count($mercancia)-1;
+		// $cantAlmacenes=count($almacenes)-1;
+		$letraAlmacenes = [
+			'0'=>'G',
+			'1'=>'H',
+			'2'=>'I',
+			'3'=>'J',
+			'4'=>'K',
+			'5'=>'L',
+			'6'=>'M',
+			'7'=>'N',
+			'8'=>'O',
+			'9'=>'P',
+			'10'=>'Q',
+			'11'=>'R',
+			'12'=>'S',
+			'13'=>'T',
+			'14'=>'U',
+			'15'=>'V',
+			'16'=>'W',
+			'17'=>'X',
+			'18'=>'Y',
+			'19'=>'Z',
+		];
+		
+		$spreadsheet = new Spreadsheet();
+		$spreadsheet->setActiveSheetIndex(0);
+		
+		$sheetInicial = $spreadsheet->getActiveSheet()->setTitle('INVENTARIO PRODUCTOS');
+		$sheetInicial->getColumnDimension('A')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('B')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('C')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('D')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('E')->setAutoSize(true);
+		$sheetInicial->getColumnDimension('F')->setAutoSize(true);
+		$indexletraAlmacenes=0;
+		foreach ($almacenes as $alm) {
+			$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+			$sheetInicial->getColumnDimension($idLetra)->setAutoSize(true);
+			$indexletraAlmacenes++;
+		}
+		$indexLetraF = $letraAlmacenes[$indexletraAlmacenes-1];
+		$sheetInicial->getStyle('A1:Z'.($cantRegistros+50))->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('FFFFFF');
+		
+		$num2 = 1;
+		$num = 2;
+		
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFont()->setBold(true)->setSize(15);
+		$sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('right');
+		$sheetInicial->getStyle('D'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->setCellValue('C'.$num, "RESUMEN INVENTARIO DE");
+		$sheetInicial->setCellValue('D'.$num, 'MERCANCIA');
+		$num++;
+
+		$num++;
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB('DDDDDD');
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFont()->setBold(true)->setSize(13);
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('left');
+		// $sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('right');
+		// $sheetInicial->getStyle('C'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':F'.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+		$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+
+		$sheetInicial->setCellValue('B'.$num, 'CODIGO');
+		$sheetInicial->setCellValue('C'.$num, "MERCANCIA");
+		$sheetInicial->setCellValue('D'.$num, 'MARCA');
+		$sheetInicial->setCellValue('E'.$num, 'DESCRIPCION');
+		$sheetInicial->setCellValue('F'.$num, 'STOCK TOTAL');
+		$indexletraAlmacenes = 0;
+		foreach ($almacenes as $alm) {
+			if(!empty($alm['id_almacen'])){
+				$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+				$sheetInicial->setCellValue($idLetra.$num, mb_strtoupper($alm['nombre_almacen']));
+				$indexletraAlmacenes++;
+			}
+		}
+		$num++;
+		
+		$sheetInicial->getStyle('D'.$num)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1);
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFont()->setSize(13);
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('center');
+		// $sheetInicial->getStyle('C'.$num.':F'.$num)->getAlignment()->setHorizontal('left');
+		$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+
+		
+		$numi=$num;
+		$numberRegistros=1;
+		foreach ($mercancia as $key) {
+			if(!empty($key['id_mercancia'])){
+				$colorLine="";
+				if(($numberRegistros%2)==0){
+					$colorLine="dfdfeb";  #dfdfeb
+				}else{
+					$colorLine="FFFFFF";
+				}
+				$sheetInicial->getStyle('B'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setARGB($colorLine);
+				$sheetInicial->getStyle('B'.$num)->getNumberFormat()->setFormatCode('#,##0');
+				$sheetInicial->getStyle('F'.$num.':'.$indexLetraF.$num)->getNumberFormat()->setFormatCode('#,##0');
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFont()->setSize(13);
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('left');
+				$sheetInicial->getStyle('F'.$num.':'.$indexLetraF.$num)->getAlignment()->setHorizontal('right');
+				// $sheetInicial->getStyle('B'.$num)->getAlignment()->setHorizontal('center');
+				$sheetInicial->getStyle('A'.$num.':'.$indexLetraF.$num)->getFill()->setFillType(Fill::FILL_SOLID);
+				
+				$sheetInicial->setCellValue('B'.$num, mb_strtoupper($key['codigo_mercancia']));
+				$sheetInicial->setCellValue('C'.$num, $key['mercancia']);
+				$sheetInicial->setCellValue('D'.$num, mb_strtoupper($key['marca_mercancia']));
+				$sheetInicial->setCellValue('E'.$num, mb_strtoupper($key['descripcion_mercancia']));
+				$sheetInicial->setCellValue('F'.$num, $key['stock_total']);
+				$indexletraAlmacenes = 0;
+				foreach ($almacenes as $alm) {
+					if(!empty($alm['id_almacen'])){
+						$id_cant_almacen = 'stock_almacen'.$alm['id_almacen'];
+						$idLetra=$letraAlmacenes[$indexletraAlmacenes];
+						// $sheetInicial->setCellValue($idLetra.$num, $id_cant_almacen);
+						$sheetInicial->setCellValue($idLetra.$num, $key[$id_cant_almacen]);
+						$indexletraAlmacenes++;
+					}
+				}
+				$numberRegistros++;
+				$num++;
+			}
+		}
+		$numf=$num-1;
+		$sheetInicial->getStyle('B'.$numi.':'.$indexLetraF.$numf)->getBorders()->getOutline()->setBorderStyle(Border::BORDER_MEDIUM)->setColor(new Color('000000'));
+			
+		$nameDocument = "Reporte de Inventarios - Mercancia.xlsx";
+		// echo $nameDocument;
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="'.$nameDocument.'"');
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$writer->save('php://output');
+
 	}
 
 	public function LeerExcel($page, $filas, $colum, $opt){

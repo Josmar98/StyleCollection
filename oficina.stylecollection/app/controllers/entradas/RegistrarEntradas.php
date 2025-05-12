@@ -7,7 +7,7 @@ $amInventarioE = 0;
 $amInventarioB = 0;
 foreach ($accesos as $access) {
   if(!empty($access['id_acceso'])){
-    if($access['nombre_modulo'] == "Productos"){
+    if($access['nombre_modulo'] == "Inventarios"){
       $amInventario = 1;
       if($access['nombre_permiso'] == "Registrar"){
         $amInventarioR = 1;
@@ -34,12 +34,19 @@ if($amInventarioR == 1){
     $tipo_operacion="Entrada";
     $tipo_inventario = $_POST['tipoInv'];
     $transaccion = $_POST['transaccion'];
+    $concepto_operacion=$transaccion;
     if($transaccion=="Averia"){
       $id_persona = $_POST["proveedorClientes"];
       $tipo_persona = "Cliente";
     }else{
       $id_persona = $_POST["proveedor{$tipo_inventario}"];
       $tipo_persona = "Proveedor";
+    }
+    if($transaccion=="Produccion"){
+      $concepto_operacion="Produccion Laboratorio";
+    }
+    if($transaccion=="Compra"){
+      $concepto_operacion="Compra De Mercancia";
     }
     
     $id_almacen = $_POST['almacen'];
@@ -53,17 +60,34 @@ if($amInventarioR == 1){
 
     $stocks = $_POST['stock'];
     $id_elementoInvs = $_POST["inventario{$tipo_inventario}"];
+    $unitarios = $_POST['unitarios'];
     $totales = $_POST['total'];
     $erroresEjecucion = 0;
     for ($i=0; $i < $cantidad_elementos; $i++){
       // echo "<br><br>".$i.":<br>";
       $stock = $stocks[$i];
       $id_elementoInv = $id_elementoInvs[$i];
-      if($totales[$i]==""){
-        $total = -1;
-      }else{
-        $total = $totales[$i];
-      }
+      $costo_unitario = $unitarios[$i];
+      $total = $totales[$i];
+      $totalNuevo = $totales[$i];
+      // if($totales[$i]==""){
+      //   $total = -1;
+      // }else{
+      //   $total = $totales[$i];
+      // }
+      // if(mb_strtolower($tipo_inventario)=="productos"){
+      //   $productsCosto = $lider->consultarQuery("SELECT * FROM productos WHERE id_producto={$id_elementoInv}");
+      //   foreach ($productsCosto as $costoProducto) {
+      //     if(!empty($costoProducto['costo_producto'])){
+      //       $costoActual = $costoProducto['costo_producto'];
+      //       // $nuevoCosto = ()
+      //     }
+      //   }
+      // }
+      // if(mb_strtolower($tipo_inventario)=="mercancia"){
+        
+      // }
+
       $buscar = $lider->consultarQuery("SELECT * FROM operaciones WHERE id_inventario={$id_elementoInv} and tipo_inventario='{$tipo_inventario}' and estatus=1 ORDER BY id_operacion DESC;");
       $stock_total = 0;
       $total_total = 0;
@@ -74,10 +98,17 @@ if($amInventarioR == 1){
           $total_total = $lasted['total_operacion_total'];
           if($total==(-1)){
             $total = ($total_total/$stock_total);
+            $totalNuevo = ($total_total/$stock_total);
             $total = $total*$stock;
           }
         }
       }
+      
+      $costoPromedio = (($totalNuevo+$total_total) / ($stock+$stock_total));
+      $costoHistorico = $costo_unitario;
+      $queryCarteleraCostos = "INSERT INTO cartelera_costos (id_cartelera_costo, tipo_inventario, id_inventario, fecha_operacion, costo_historico, costo_promedio, estatus) VALUES (DEFAULT, '{$tipo_inventario}', {$id_elementoInv}, '{$fecha_operacion}', {$costoHistorico}, {$costoPromedio}, 1)";
+      $execCostos = $lider->registrar($queryCarteleraCostos, "cartelera_costos", "id_cartelera_costo");
+
       if($tipo_operacion=="Entrada"){
         $stock_total += $stock;
         $total_total += $total;
@@ -96,10 +127,21 @@ if($amInventarioR == 1){
         $stock_totalAl += $stock;
         $total_totalAl += $total;
       }
-      $query = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, numero_lote, fecha_vencimiento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', '$numero_lote', '$fecha_vencimiento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, 1)";
-      // echo $query."<br><br>";
+
+      // $concepto_operacion="Desincorporacion";
+      // echo "<br><br>";
+      // $query = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, concepto, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, numero_lote, fecha_vencimiento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion',  '{$concepto_operacion}', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', '$numero_lote', '$fecha_vencimiento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, 1)";
+      // echo "<br><br>".$query."<br><br>";
+
+      
+      $total=(float) number_format(($stock*$costoHistorico),2,'.','');
+      $total_totalAl=(float) number_format(($stock_totalAl*$costoHistorico),2,'.','');
+      $total_total=(float) number_format(($stock_total*$costoHistorico),2,'.','');
+      $query = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, concepto, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, numero_lote, fecha_vencimiento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion',  '{$concepto_operacion}', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', '$numero_lote', '$fecha_vencimiento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, 1)";
+      // echo "<br><br>".$query."<br><br>";
       // $exec = ['ejecucion'=>true];
       // $descincorporar="Si";
+
       $exec = $lider->registrar($query, "operaciones", "id_operacion");
       if($exec['ejecucion']==true){
         $responseR = "1";
@@ -135,7 +177,13 @@ if($amInventarioR == 1){
             $stock_totalAl += $stock;
             $total_totalAl += $total;
           }
-          $query2 = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, numero_lote, fecha_vencimiento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', '$numero_lote', '$fecha_vencimiento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, 1)";
+          $leyenda=$_POST['leyenda'];
+          $concepto_operacion="Desincorporacion";
+
+          $total=(float) number_format(($stock*$costoPromedio),2,'.','');
+          $total_totalAl=(float) number_format(($stock_totalAl*$costoPromedio),2,'.','');
+          $total_total=(float) number_format(($stock_total*$costoPromedio),2,'.','');
+          $query2 = "INSERT INTO operaciones (id_operacion, tipo_operacion, transaccion, concepto, leyenda, tipo_persona, id_personal, id_inventario, id_almacen, tipo_inventario, fecha_operacion, fecha_documento, numero_documento, numero_lote, fecha_vencimiento, stock_operacion, total_operacion, stock_operacion_almacen, total_operacion_almacen, stock_operacion_total, total_operacion_total, estatus) VALUES (DEFAULT, '$tipo_operacion', '$transaccion', '{$concepto_operacion}', '{$leyenda}', '$tipo_persona', $id_persona, $id_elementoInv, $id_almacen, '$tipo_inventario', '$fecha_operacion', '$fecha_documento', '$numero_documento', '$numero_lote', '$fecha_vencimiento', $stock, $total, $stock_totalAl, $total_totalAl, $stock_total, $total_total, 1)";
           // echo "<br><br>".$query2."<br>";
           $exec2 = $lider->registrar($query2, "operaciones", "id_operacion");
           if($exec2['ejecucion']==true){
@@ -150,6 +198,10 @@ if($amInventarioR == 1){
         $erroresEjecucion++;
       }
     }
+    
+    // die();
+    
+
     if($erroresEjecucion==0){
       $response="1";
       if(!empty($modulo) && !empty($accion)){
@@ -186,6 +238,24 @@ if($amInventarioR == 1){
       }
     } 
     // print_r($exec);
+  }
+  if(!empty($_POST['buscar_costo']) && !empty($_POST['id_inventario']) && !empty($_POST['tipo_inventario'])){
+    $id_inv = $_POST['id_inventario'];
+    $tipo_inv = $_POST['tipo_inventario'];
+    $inventarios = $lider->consultarQuery("SELECT * FROM operaciones WHERE id_inventario={$id_inv} and tipo_inventario='{$tipo_inv}' and total_operacion>0 ORDER BY id_operacion DESC LIMIT 1");
+    $results=[];
+    if(count($inventarios)>1){
+      $inventario=$inventarios[0];
+      $st = (int) $inventario['stock_operacion'];
+      $to = (float) number_format($inventario['total_operacion'],2,'.','');
+      $costo = ($to/$st);
+      $results['msj']="1";
+      $results['costo']=$costo;
+    }else{
+      $results['msj']="2";
+    }
+    // Aqui mismo sera, EL COSTO HISTORICO SERA EL QUE SE DEVUELVA AL BUSCAR EN LA TABLA cartelera_costos
+    echo json_encode($results);
   }
   if(empty($_POST)){
     foreach($tipoInventarios as $tp){ if(!empty($tp['id'])){

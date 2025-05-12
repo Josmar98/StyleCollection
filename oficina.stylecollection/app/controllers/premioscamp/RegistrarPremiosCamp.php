@@ -87,6 +87,7 @@ if($amPremioscampR == 1){
     //   echo "<br>";
     //   print_r($value);
     // }
+    // die();
     $plan = ucwords(mb_strtolower($_POST['plan']));
     $tipos_premios_id = $_POST['tipos_premios_id'];
     $tipos_premios = $_POST['tipos_premios'];
@@ -99,10 +100,19 @@ if($amPremioscampR == 1){
     $inventarios = $_POST['inventarios'];
     $tipos_inventario = $_POST['tipos'];
     
+
+    // foreach($inventarios as $inv){
+    //   print_r($inv);
+    //   echo "<br><br>";
+    // }
+    // echo "<br><br><br>";
+
     // die();
-    $id_pr = 555;
+    // $id_pr = 555; /// BORRAR
+
     $errores = 0;
     foreach($tipos_premios_id as $key1){
+      $y=0;
       $tipo_premioActual = $tipos_premios[$key1];
       // echo $key1." - ";
       // echo "<br><br>".$tipo_premioActual."<br>";
@@ -111,48 +121,55 @@ if($amPremioscampR == 1){
       // echo "tipo de Pago: ".$tipo_premioActual."<br>";
       // $ppc = 15512;
       $query = "INSERT INTO premios_planes_campana (id_ppc, id_plan_campana, tipo_premio) VALUES (DEFAULT, {$plan}, '{$tipo_premioActual}')";
-      // echo "".$query."<br>";
+      // echo "".$query."<br>"; // BORRAR
+      // $execPPC=['ejecucion'=>true, 'id'=>$id_pr++]; // BORRAR
       $execPPC = $lider->registrar($query, "premios_planes_campana", "id_ppc");
       if($execPPC['ejecucion']==true){
         $id_ppc = $execPPC['id'];
         for ($x=0; $x < $cantidad_opciones[$key1]; $x++){
           // echo $cantidad_opciones[$key1]." OPCIONES DE ".$key1."<br>";
           // echo $cantidad_elementos[$key1][$x]." ELEMENTOS DE ".$key1."<br>";
-          // echo "<u>REGISTRAR PREMIOS Y OBTENER ID</u><br>";
+          // echo "<br><u>REGISTRAR PREMIOS Y OBTENER ID</u><br>";
           // echo "Nombre: ".$name_opcion[$key1][$x]."<br>";
           $nombre_premio = ucwords(mb_strtolower($name_opcion[$key1][$x]));
           $query="INSERT INTO premios (id_premio, nombre_premio, precio_premio, descripcion_premio, estatus) VALUES (DEFAULT, '{$nombre_premio}', 0, '{$nombre_premio}', 1)";
           // echo $query."<br>";
+          // $execPremio=['ejecucion'=>true, 'id'=>$id_pr++]; // BORRAR
+          
           $execPremio = $lider->registrar($query, "premios", "id_premio");
-          // $execPremio=['ejecucion'=>true, 'id'=>$id_pr++];
           if($execPremio['ejecucion']==true){
             $id_premio = $execPremio['id'];
-            
             $tipo_premio_producto = "Premios";
-            // echo "<u>REGISTRAR TIPO DE PREMIOS DE PLANES DE CAMPAÑA</u><br>";
+            // echo "<br><u>REGISTRAR TIPO DE PREMIOS DE PLANES DE CAMPAÑA</u><br>";
             // echo "id_premio_plan_campaña: ".$ppc."<br>";
             // echo "PREMIO: ".$id_premio."<br>";
             // echo "tipo de Pago: Premios<br>";
             $query = "INSERT INTO tipos_premios_planes_campana (id_tppc, id_ppc, id_premio, tipo_premio_producto) VALUES (DEFAULT, {$id_ppc}, {$id_premio}, '{$tipo_premio_producto}')";
+            // echo $query."<br>"; /// BORRAR
             $execTPPC = $lider->registrar($query, "tipos_premios_planes_campana", "id_tppc");
             if($execTPPC['ejecucion']==true){
             }else{
               $errores++;
             }
+
             for ($z=0; $z < $cantidad_elementos[$key1][$x]; $z++){
-              $id_inventario = $inventarios[$key1][$z];
+              $alfa = $z+$y;
+              $id_inventario = $inventarios[$key1][$alfa];
               $posMercancia = strpos($id_inventario,'m');
               if(strlen($posMercancia)==0){
                 $id_element = $id_inventario;
               }else{
                 $id_element = preg_replace("/[^0-9]/", "", $id_inventario);
               }
-              // echo "<u>REGISTRAR PREMIOS DE INVENTARIO</u><br>";
+              
+              $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidades[$key1][$alfa]}, '{$tipos_inventario[$key1][$alfa]}', 1)";
+              // echo " | Z: ".$z." | Y: ".$y." | ALFA: ".$alfa."<br><br>";
+              // echo "<br><u>REGISTRAR PREMIOS DE INVENTARIO</u><br>";
               // echo "Id PREMIO: ".$id_premio."<br>";
-              // echo "Id_Inventario: ".$inventarios[$key1][$z]."<br>";
-              // echo "Cantidad: ".$unidades[$key1][$z]."<br>";
-              // echo "Tipo de Inventario: ".$tipos_inventario[$key1][$z]."<br>";
-              $query = "INSERT INTO premios_inventario (id_premio_inventario, id_premio, id_inventario, unidades_inventario, tipo_inventario, estatus) VALUES (DEFAULT, {$id_premio}, {$id_element}, {$unidades[$key1][$z]}, '{$tipos_inventario[$key1][$z]}', 1)";
+              // echo "Id_Inventario: ".$inventarios[$key1][$alfa]."<br>";
+              // echo "Cantidad: ".$unidades[$key1][$alfa]."<br>";
+              // echo "Tipo de Inventario: ".$tipos_inventario[$key1][$alfa]."<br>";
+              // echo $query."<br>";
               $execPI = $lider->registrar($query, "premios_inventario", "id_premio_inventario");
               if($execPI['ejecucion']==true){
               }else{
@@ -164,8 +181,10 @@ if($amPremioscampR == 1){
           }else{
             $errores++;
           }
+          $y+=$limitesElementos;
         }
         // echo "<br>";
+
       }else{
         $errores++;
       }

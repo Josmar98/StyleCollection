@@ -66,6 +66,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 
 			$control1 = $_POST['control1'];
 			$control2 = $_POST['control2'];
+			$id_almacen = $_POST['almacen'];
+			$observacion = ucwords(mb_strtolower($_POST['observacion']));
 
 			$proceder = false;
 			if(count($_POST['pedidoss'])>0){
@@ -119,7 +121,7 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 						// echo "No han pasado 24 horas, Puede actualizar monto.";
 					}
 				}
-				$query = "UPDATE factura_despacho SET id_pedido={$id_pedido}, numero_factura=$numero_factura, tipo_factura='$forma_pago', fecha_emision='$fecha_emision', fecha_vencimiento='$fecha_vencimiento', numero_control1={$control1}, numero_control2={$control2} WHERE id_factura_despacho={$id}";
+				$query = "UPDATE factura_despacho SET id_pedido={$id_pedido}, id_almacen={$id_almacen}, numero_factura={$numero_factura}, tipo_factura='{$forma_pago}', fecha_emision='{$fecha_emision}', fecha_vencimiento='{$fecha_vencimiento}', numero_control1={$control1}, numero_control2={$control2}, observacion='{$observacion}' WHERE id_factura_despacho={$id}";
 				// echo $query;
 				$exec = $lider->modificar($query);
 				if($exec['ejecucion']==true){
@@ -130,21 +132,39 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 
 						if($permitirActualizar){
 							$precioTotalDeuda = 0;
+							$precioDeuda=0;
 							if($proceder){
 								foreach ($pedidosVariados as $pedidoVariado) {
 									foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos WHERE pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = $pedidoVariado") as $key){
 										if(!empty($key['id_pedido'])){
-											$precioDeuda = (float) number_format($key['cantidad_aprobado'] * $key['precio_coleccion'],2,'.','');
+											$precioDeuda = (float) number_format($key['cantidad_aprobado_individual'] * $key['precio_coleccion'],2,'.','');
+											$precioTotalDeuda += $precioDeuda;
+										}
+									}
+									foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos, pedidos_secundarios, despachos_secundarios WHERE despachos.id_despacho=despachos_secundarios.id_despacho and pedidos_secundarios.id_despacho=despachos.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = pedidos_secundarios.id_pedido and pedidos.id_pedido = {$pedidoVariado}") as $key){
+										if(!empty($key['id_pedido'])){
+											$precioDeuda = (float) number_format($key['cantidad_aprobado_sec'] * $key['precio_coleccion_sec'],2,'.','');
 											$precioTotalDeuda += $precioDeuda;
 										}
 									}
 								}
 							}
 							if($precioTotalDeuda==0){
-								$totalVenta = (float) number_format(($pedid['cantidad_aprobado']*$pedid['precio_coleccion']),2,'.','');
-							}else{
-								$totalVenta=$precioTotalDeuda;
+								$totalVenta = (float) number_format(($pedid['cantidad_aprobado_individual']*$pedid['precio_coleccion']),2,'.','');
+								$precioTotalDeuda += $precioDeuda;
+								// echo $precioTotalDeuda." | ";
+								// echo "<br><br><br>";
+								foreach( $lider->consultarQuery("SELECT * FROM pedidos, despachos, pedidos_secundarios, despachos_secundarios WHERE despachos.id_despacho=despachos_secundarios.id_despacho and pedidos_secundarios.id_despacho=despachos.id_despacho and pedidos_secundarios.id_despacho_sec=despachos_secundarios.id_despacho_sec and pedidos.id_despacho = despachos.id_despacho and pedidos.id_pedido = pedidos_secundarios.id_pedido and pedidos.id_pedido = {$pedid['id_pedido']}") as $key){
+									if(!empty($key['id_pedido'])){
+										// print_r($key);
+										// echo "<br><br>";
+										$precioDeuda = (float) number_format($key['cantidad_aprobado_sec'] * $key['precio_coleccion_sec'],2,'.','');
+										$precioTotalDeuda += $precioDeuda;
+										// echo $precioTotalDeuda." | ";
+									}
+								}
 							}
+							$totalVenta=$precioTotalDeuda;
 
 							$querys = "UPDATE factura_ventas SET totalVenta={$totalVenta} WHERE id_factura_despacho={$id}";
 							$exec = $lider->modificar($querys);
@@ -215,6 +235,8 @@ if($_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Superus
 			$pedidosFull = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.cantidad_aprobado > 0 and pedidos.id_despacho = $id_despacho ORDER BY pedidos.id_pedido DESC");
 			$query = "SELECT * FROM pedidos, factura_despacho WHERE pedidos.id_pedido = factura_despacho.id_pedido and pedidos.id_despacho = $id_despacho and factura_despacho.estatus = 1 and id_factura_despacho={$id}";
 			$facturas = $lider->consultarQuery($query);
+
+			$almacenes = $lider->consultarQuery("SELECT * FROM almacenes WHERE estatus=1");
 			// print_r($facturas);
 			if(count($facturas)>1){
 				$factura = $facturas[0];

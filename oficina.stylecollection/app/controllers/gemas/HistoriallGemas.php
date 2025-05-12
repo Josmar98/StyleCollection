@@ -89,7 +89,11 @@ if(empty($_POST)){
 			if(!empty($data['id_canjeo'])){
 				$historialx[$num] = $data;
 				$unidades = $data['unidades'];
-				$precio = $data['cantidad_gemas'];
+				if(!empty($data['precio_gemas'])){
+					$precio = $data['precio_gemas'];
+				}else{
+					$precio = $data['cantidad_gemas'];
+				}
 				$historialx[$num]['cantidad_gemas'] = ($unidades*$precio);
 				$num++;
 			}

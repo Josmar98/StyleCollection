@@ -1,6 +1,30 @@
 <?php 
-
-if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2" ){
+$amCatalogos = 0;
+$amCatalogosR = 0;
+$amCatalogosC = 0;
+$amCatalogosE = 0;
+$amCatalogosB = 0;
+foreach ($accesos as $access) {
+	if(!empty($access['id_acceso'])){
+	  if($access['nombre_modulo'] == "Catalogos"){
+		$amCatalogos = 1;
+		if($access['nombre_permiso'] == "Registrar"){
+		  $amCatalogosR = 1;
+		}
+		if($access['nombre_permiso'] == "Ver"){
+		  $amCatalogosC = 1;
+		}
+		if($access['nombre_permiso'] == "Editar"){
+		  $amCatalogosE = 1;
+		}
+		if($access['nombre_permiso'] == "Borrar"){
+		  $amCatalogosB = 1;
+		}
+	  }
+	}
+  }
+if($amCatalogosC){
+// if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista2" || $_SESSION['nombre_rol']=="Analista Supervisor2" ){
 
 	$catalogos=$lider->consultarQuery("SELECT * FROM catalogos WHERE estatus = 1 ORDER BY cantidad_gemas ASC;");
 

@@ -1,16 +1,18 @@
 <?php
 
 
-// if(is_file('../../app/models/modelsIndex.php')){
-// 	require_once '../../app/models/modelsIndex.php';
-// }
+if(is_file('../../app/models/modelsIndex.php')){
+	require_once '../../app/models/modelsIndex.php';
+}
 
-// $lider = new Models();
-
+$lider = new Models();
 
 $TOKEN = "7518790072:AAEOeX9wIUn0Dzygbqy8dAa-e3jVWisR6IU";
 $webSite = "https://api.telegram.org/bot{$TOKEN}"; 
 $webSiteFile = "https://api.telegram.org/file/bot{$TOKEN}";
+$url = "https://api.telegram.org/bot{TOKEN}/sendMessage?chat_id={id_chat}&parse_mode=HTML&text={urlencode($ variable_texto)}";
+echo $url;
+// return file_get_contents($url);
 
 // echo "https://api.telegram.org/bot{$TOKEN}/setwebhook?url=";
 
@@ -30,6 +32,8 @@ $lastName = $update['message']['chat']['last_name'];
 $userName = $update['message']['chat']['username'];
 $language = $update['message']['from']['language_code'];
 
+saveChat($lider, $chatId, $firstName, $lastName, $userName, $language);
+
 $typeCommand = "";
 if(!empty($update['message']['text'])){
 	$typeCommand = "text";
@@ -45,75 +49,84 @@ else if(!empty($update['message']['photo'])){
 }
 
 if($typeCommand=="text"){
-	switch (mb_strtolower($command)) {
-		case '/start': {
-			$response = "Iniciado";
-			$r = sendMessage($chatId, $response);
-			// sendMessage($chatId, $r);
-			break;
-		}
-		case '/stop': {
-			$response = "Detenido";
-			$r = sendMessage($chatId, $response);
-			// sendMessage($chatId, $r);
-			break;
-		}
+	// switch (mb_strtolower($command)) {
+	// 	case '/start': {
+	// 		$response = "Iniciado para {$userName} con id: {$chatId}, nombre: {$firstName} {$lastName}";
+	// 		$r = sendMessage($chatId, $response);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
+	// 	case '/stop': {
+	// 		$response = "Detenido";
+	// 		$r = sendMessage($chatId, $response);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
 
 
-		case '/info': {
-			$response = "Hola, soy un Bot de ayuda de Josmar, Programador";
-			$r = sendMessage($chatId, $response);
-			// sendMessage($chatId, $r);
-			break;
-		}
+	// 	case '/info': {
+	// 		$response = "Hola, soy un Bot de ayuda de Josmar, Programador";
+	// 		$r = sendMessage($chatId, $response);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
 
-		case '/help': {
-			$response = "Escribe /start : para iniciar el bot. \n";
-			$response .= "Escribe /stop : para detener el bot. \n";
-			$response .= "Escribe /info : para solicitar informacion del bot. \n";
-			$response .= "Escribe /foto : para solicitar una foto. \n";
-			$r = sendMessage($chatId, $response);
-			// sendMessage($chatId, $r);
-			break;
-		}
+	// 	case '/help': {
+	// 		$response = "Escribe /start : para iniciar el bot. \n";
+	// 		$response .= "Escribe /stop : para detener el bot. \n";
+	// 		$response .= "Escribe /info : para solicitar informacion del bot. \n";
+	// 		$response .= "Escribe /foto : para solicitar una foto. \n";
+	// 		$r = sendMessage($chatId, $response);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
 
-		case '/foto': {
-			$response = "Enviando Foto";
-			$r = sendMessage($chatId, $response);
+	// 	case '/foto': {
+	// 		$response = "Enviando Foto";
+	// 		$r = sendMessage($chatId, $response);
 
-			$img = "https://stylecollection.org/public/assets/img/logo.jpg";
-			$r = sendPhoto($chatId, $img);
-			// sendMessage($chatId, $r);
-			break;
-		}
+	// 		$img = "https://stylecollection.org/public/assets/img/logo.jpg";
+	// 		$r = sendPhoto($chatId, $img);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
 		
-		default: {
-			$response = "No te he entendido, puedes probar a colocar '/help' para ver los comandos que puedes usar.";
-			$r = sendMessage($chatId, $response);
-			// sendMessage($chatId, $r);
-			break;
-		}
-	}
+	// 	default: {
+	// 		$response = "No te he entendido, puedes probar a colocar '/help' para ver los comandos que puedes usar.";
+	// 		$r = sendMessage($chatId, $response);
+	// 		// sendMessage($chatId, $r);
+	// 		break;
+	// 	}
+	// }
 }
+
 
 if($typeCommand=="photo"){
-	if(mb_strtolower($caption) == "/guardar"){
-		foreach ($command as $key) {
-			$file_id = $key['file_id'];
-		}
-		$response = getPhoto($file_id);
-		$file_path = $response->result->file_path;
-		savePhoto($file_path);
-		sendMessage($chatId, "Imagen guardada");
-	}
-	else{
-		sendMessage($chatId, "Imagen recibida, pero no se hara nada con ella");
-	}
+	// if(mb_strtolower($caption) == "/guardar"){
+	// 	foreach ($command as $key) {
+	// 		$file_id = $key['file_id'];
+	// 	}
+	// 	$response = getPhoto($file_id);
+	// 	$file_path = $response->result->file_path;
+	// 	savePhoto($file_path);
+	// 	sendMessage($chatId, "Imagen guardada");
+	// }
+	// else{
+	// 	sendMessage($chatId, "Imagen recibida, pero no se hara nada con ella");
+	// }
 }
 
 
 
-
+function saveChat($lider, $chatId, $firstName, $lastName, $userName, $language){
+	$query = "SELECT * FROM contact_bot WHERE id='{$chatId}'";
+	$busqueda = $lider->consultarQuery($query);
+	if(count($busqueda)>1){}else{
+		$lvl = "ST01";
+		$query = "INSERT INTO contact_bot (id, first_name, last_name, username, lang, lvl, estatus) VALUES ('{$chatId}','{$firstName}','{$lastName}','{$userName}','{$language}','$lvl', 1)";
+		$response = $lider->registrar($query, 'contact_bot', 'id');
+	}
+}
 #==========================================================================================#
 ### ENVIAR MENSAJE ###
 #==========================================================================================#

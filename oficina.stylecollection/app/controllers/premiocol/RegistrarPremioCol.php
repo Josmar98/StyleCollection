@@ -82,10 +82,27 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 	if(isset($_POST['existenciaNew'])){
 		$existenciaNew = $_POST['existenciaNew'];
 	}
+	
+	if(isset($_POST['id_tipo_coleccion1'])){
+		$id_tipo_opcion = $_POST['id_tipo_coleccion1'];
+	}else{
+		$id_tipo_opcion=[];
+	}
+	if(isset($_POST['id_tppc1'])){
+		$id_tppc_opcion = $_POST['id_tppc1'];
+	}else{
+		$id_tppc_opcion=[];
+	}
+	if(isset($_POST['cantidad_premios_plan1'])){
+		$cantidad_opcion = $_POST['cantidad_premios_plan1'];
+	}else{
+		$cantidad_opcion=[];
+	}
 
-	$id_tipo_opcion = $_POST['id_tipo_coleccion1'];
-	$id_tppc_opcion = $_POST['id_tppc1'];
-	$cantidad_opcion = $_POST['cantidad_premios_plan1'];
+	// $id_tipo_opcion = $_POST['id_tipo_coleccion1'];
+	// $id_tppc_opcion = $_POST['id_tppc1'];
+	// $cantidad_opcion = $_POST['cantidad_premios_plan1'];
+
 	// echo "<br><br>id_tipo: ";
 	// print_r($id_tipo);
 	// echo "<br><br>id_tipo_opcion: ";
@@ -204,8 +221,7 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 		if($buscar['ejecucion'] == 1 && Count($buscar)>1){
 			$response = "1";
 		}else{
-			$query = "INSERT INTO premio_coleccion_opcion (id_premio_coleccion_opcion, id_tipo_coleccion, id_tppc, cantidad_premios_plan, estatus) VALUES (DEFAULT, {$id_tipo[$x]}, {$id_t1}, {$cantidad_opcion[$x]}, 1)";
-
+			$query = "INSERT INTO premio_coleccion_opcion (id_premio_coleccion_opcion, id_tipo_coleccion, id_tppc, cantidad_premios_plan, estatus) VALUES (DEFAULT, {$id_tipo_opcion[$x]}, {$id_t1}, {$cantidad_opcion[$x]}, 1)";
 			$exec = $lider->registrar($query, "premio_coleccion_opcion", "id_premio_coleccion_opcion");
 			if($exec['ejecucion']==true){
 				$response_opcion = "1";
@@ -217,7 +233,7 @@ if(!empty($_POST['premios']) && !empty($_POST['id_tppc']) && !empty($_POST['id_t
 	}
 	// ======================== Registro de segunda opcion ======================== ========================
 
-
+	// die();
 	if($response=="1"){
 		if(!empty($modulo) && !empty($accion)){
           $fecha = date('Y-m-d');

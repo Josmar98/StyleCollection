@@ -15,7 +15,6 @@ if($amReportesC == 1){
 
   if(isset($_GET['C']) || isset($_GET['ID'])){
 
-
     $configuraciones=$lider->consultarQuery("SELECT * FROM configuraciones WHERE estatus = 1");
     $accesoBloqueo = "0";
     $superAnalistaBloqueo="1";
@@ -59,22 +58,26 @@ if($amReportesC == 1){
       }
     }
 
-
-
+    $queryFechas="";
+    if(!empty($_GET['FA']) && !empty($_GET['FC'])){
+      $fechaAp=$_GET['FA'];
+      $fechaCi=$_GET['FC'];
+      $queryFechas=" and canjeos.fecha_canjeo BETWEEN '{$fechaAp}' and '{$fechaCi}' ";
+    }
     if(isset($_GET['C'])){
       if($_GET['C'] == 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and canjeos.estado_canjeo IS NOT NULL");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and canjeos.estado_canjeo IS NOT NULL");
       }
       if($_GET['C'] > 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and canjeos.estado_canjeo IS NOT NULL and catalogos.cantidad_gemas = {$_GET['C']}");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and canjeos.estado_canjeo IS NOT NULL and catalogos.cantidad_gemas = {$_GET['C']}");
       }
     }
     if(isset($_GET['ID'])){
       if($_GET['ID'] == 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and canjeos.estado_canjeo IS NOT NULL");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and canjeos.estado_canjeo IS NOT NULL");
       }
       if($_GET['ID'] > 0){
-        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1 and canjeos.estado_canjeo IS NOT NULL and catalogos.id_catalogo = {$_GET['ID']}");
+        $listado = $lider->consultarQuery("SELECT * FROM canjeos, catalogos WHERE catalogos.id_catalogo = canjeos.id_catalogo and canjeos.estatus = 1{$queryFechas} and canjeos.estado_canjeo IS NOT NULL and catalogos.id_catalogo = {$_GET['ID']}");
       }
       
     }

@@ -331,18 +331,18 @@
                                     </td>
                                     <td style="width:20%">
                                       <!-- <input type="number" min="0" class="preciosid<?php echo $data['id_producto'] ?>" name="precios[]" value="<?php echo $data['precio_producto'] ?>"> -->
-                                      <input type="number" step="0.10" min="0" name="precios[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){if($data['id_producto'] == $key['id_producto']){ ?> value="<?php echo $key['precio_producto']; ?>" readonly="" <?php }}} ?> class="precio_productos preciosid<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
+                                      <input type="number" step="0.10" min="0" name="precios[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){if( ($data['id_producto'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Productos") ){ ?> value="<?php echo $key['precio_producto']; ?>" readonly="" <?php }}} ?> class="precio_productos preciosid<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px">
                                       <input type="hidden" name="precioid[]" value="<?php echo $data['id_producto'] ?>">
                                       <!-- <span class="contenido2">
                                         <?php echo "$".$data['precio_producto']; ?>
                                       </span> -->
                                     </td>
                                     <td style="width:20%">
-                                      <input type="number" min="0" name="cantidad_productos[]" class="cantidad_productos cantidad<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px" <?php foreach ($colecciones as $key){ if(!empty($key['id_coleccion'])){ if($data['id_producto'] == $key['id_producto']){ ?> value="<?php echo $key['cantidad_productos'] ?>" readonly="" <?php }else{ ?>  <?php }}} ?> >
+                                      <input type="number" min="0" name="cantidad_productos[]" class="cantidad_productos cantidad<?php echo $data['id_producto'] ?> form-control" style="width:50%;padding:0px 5px" <?php foreach ($colecciones as $key){ if(!empty($key['id_coleccion'])){ if( ($data['id_producto'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Productos") ){ ?> value="<?php echo $key['cantidad_productos'] ?>" readonly="" <?php }else{ ?>  <?php }}} ?> >
                                       <input type="hidden" name="elementosid[]" value="<?php echo $data['id_producto'] ?>">
                                     </td>
                                     <td style="width:10%">
-                                      <input type="checkbox" class="cheking check<?php echo $data['id_producto'] ?>" value="<?php echo $data['id_producto'] ?>" name="cheking[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){if($data['id_producto'] == $key['id_producto']){ echo "checked=''"; }}} ?>>
+                                      <input type="checkbox" class="cheking check<?php echo $data['id_producto'] ?>" value="<?php echo $data['id_producto'] ?>" name="cheking[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){ if( ($data['id_producto'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Productos") ){ echo "checked=''"; }}} ?>>
 
                                     </td>
                                   </tr>
@@ -376,18 +376,18 @@
                                     </td>
                                     <td style="width:20%">
                                       <!-- <input type="number" min="0" class="preciosid<?php echo $data['id_mercancia'] ?>" name="precios[]" value="<?php echo $data['precio_producto'] ?>"> -->
-                                      <input type="number" step="0.10" min="0" name="precios[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){if($data['id_mercancia'] == $key['id_producto']){ ?> value="<?=$key['precio_producto']; ?>" readonly="" <?php }}} ?> class="precio_productos preciosidm<?=$data['id_mercancia'] ?> form-control" style="width:50%;padding:0px 5px">
+                                      <input type="number" step="0.10" min="0" name="precios[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){ if( ($data['id_mercancia'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Mercancia") ){ ?> value="<?=$key['precio_producto']; ?>" readonly="" <?php }}} ?> class="precio_productos preciosidm<?=$data['id_mercancia'] ?> form-control" style="width:50%;padding:0px 5px">
                                       <input type="hidden" name="precioid[]" value="m<?=$data['id_mercancia'] ?>">
                                       <!-- <span class="contenido2">
                                         <?php echo "$".$data['precio_producto']; ?>
                                       </span> -->
                                     </td>
                                     <td style="width:20%">
-                                      <input type="number" min="0" name="cantidad_productos[]" class="cantidad_productos cantidadm<?=$data['id_mercancia']; ?> form-control" style="width:50%;padding:0px 5px" <?php foreach ($colecciones as $key){ if(!empty($key['id_coleccion'])){ if($data['id_mercancia'] == $key['id_producto']){ ?> value="<?=$key['cantidad_productos'] ?>" readonly="" <?php }else{ ?>  <?php }}} ?> >
+                                      <input type="number" min="0" name="cantidad_productos[]" class="cantidad_productos cantidadm<?=$data['id_mercancia']; ?> form-control" style="width:50%;padding:0px 5px" <?php foreach ($colecciones as $key){ if(!empty($key['id_coleccion'])){ if( ($data['id_mercancia'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Mercancia") ){ ?> value="<?=$key['cantidad_productos'] ?>" readonly="" <?php }else{ ?>  <?php }}} ?> >
                                       <input type="hidden" name="elementosid[]" value="m<?=$data['id_mercancia'] ?>">
                                     </td>
                                     <td style="width:10%">
-                                      <input type="checkbox" class="cheking check<?=$data['id_mercancia'] ?>" value="m<?=$data['id_mercancia'] ?>" name="cheking[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){if($data['id_mercancia'] == $key['id_producto']){ echo "checked=''"; }}} ?>>
+                                      <input type="checkbox" class="cheking check<?=$data['id_mercancia'] ?>" value="m<?=$data['id_mercancia'] ?>" name="cheking[]" <?php foreach ($colecciones as $key){if(!empty($key['id_coleccion'])){ if( ($data['id_mercancia'] == $key['id_producto']) && ($key['tipo_inventario_coleccion']=="Mercancia") ){ echo "checked=''"; }}} ?>>
 
                                     </td>
                                   </tr>

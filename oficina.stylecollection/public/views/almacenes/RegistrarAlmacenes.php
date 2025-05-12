@@ -214,19 +214,25 @@ function validar(){
     $("#error_nombre").html("");
   }
   /*===================================================================*/
-
   var direccion = $("#direccion").val();
-  var rdireccion = checkInput(direccion, alfanumericPattern3);
-  if( rdireccion == false ){
-    if(direccion.length != 0){
-      $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
-    }else{
-      $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
-    }
-  }else{
+  var rdireccion = false;
+  if(direccion.length != 0){
+    rdireccion = true;
     $("#error_direccion").html("");
+  }else{
+    rdireccion = false;
+    $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
   }
-
+  // var rdireccion = checkInput(direccion, alfanumericPattern3);
+  // if( rdireccion == false ){
+  //   if(direccion.length != 0){
+  //     $("#error_direccion").html("La direccion del almacen no debe contener algunos caracteres especiales");
+  //   }else{
+  //     $("#error_direccion").html("Debe llenar el campo de direccion del almacen");      
+  //   }
+  // }else{
+  //   $("#error_direccion").html("");
+  // }
   /*===================================================================*/
 
   /*===================================================================*/

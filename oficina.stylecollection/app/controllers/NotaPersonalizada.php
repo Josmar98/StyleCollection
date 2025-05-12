@@ -37,7 +37,7 @@ function separateDatosCuentaTel($num){
 if(empty($_POST)){
 	// if(!empty($_GET['admin']) && !empty($_GET['lider']) && ($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Analista Supervisor" || $_SESSION['nombre_rol']=="Analista")){
 	// 	$id = $_GET['lider'];
-	// 	$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_cliente = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = $id");
+	// 	$pedidos = $lider->consultarQuery("SELECT * FROM pedidos, clientes WHERE pedidos.id_empleado = clientes.id_cliente and pedidos.id_despacho = $id_despacho and clientes.id_cliente = $id");
 	// 	$pedido = $pedidos[0];
 	// 	$id_pedido = $pedido['id_pedido'];
 	// 	$premios_perdidos = $lider->consultarQuery("SELECT * FROM premios_perdidos WHERE id_pedido = $id_pedido and estatus = 1");
@@ -55,6 +55,9 @@ if(empty($_POST)){
 	$lideres = $lider->consultarQuery("SELECT * FROM clientes, pedidos WHERE clientes.id_cliente = pedidos.id_cliente and pedidos.id_despacho = {$id_despacho} and pedidos.estatus = 1 and clientes.estatus = 1 ORDER BY clientes.id_cliente ASC");
 
 	$notas = $lider->consultarQuery("SELECT * FROM clientes, notasentregapersonalizada, pedidos WHERE notasentregapersonalizada.id_pedido = pedidos.id_pedido and clientes.id_cliente = notasentregapersonalizada.id_cliente and clientes.estatus=1 and notasentregapersonalizada.estatus=1 and notasentregapersonalizada.id_campana = {$id_campana} and pedidos.id_despacho = {$id_despacho}");
+	
+	$notasE = $lider->consultarQuery("SELECT * FROM empleados, notasentregapersonalizada WHERE empleados.id_empleado = notasentregapersonalizada.id_cliente and empleados.estatus=1 and notasentregapersonalizada.estatus=1 and notasentregapersonalizada.id_campana = {$id_campana}");
+	// print_r($notasE);
 	if($notas['ejecucion']==true){
 
 		if(!empty($action)){

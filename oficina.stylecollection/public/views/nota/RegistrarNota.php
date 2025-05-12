@@ -222,6 +222,25 @@
                                 ?> 
                               </td>
                             </tr>
+                            <tr>
+                              <td colspan='5'>
+                                <label for="almacen">Almacen</label>                                
+                                <select class="form-control almacenes" name="almacen" id="almacen">
+                                  <option value=""></option>
+                                  <?php foreach($almacenes as $alm){ if(!empty($alm['id_almacen'])){ ?>
+                                    <option value="<?=$alm['id_almacen']; ?>"><?=$alm['nombre_almacen']; ?></option>
+                                  <?php } } ?>
+                                </select>
+                                <span class="errors error_almacen"></span>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td colspan='5'>
+                                <label for="observacion">Observación</label>                                
+                                <textarea class="form-control" name="observacion" id="observacion" maxlength="200" style='max-width:100%;min-width:100%;max-height:60px;min-height:60px;'></textarea>
+                                <span class="errors error_observacion"></span>
+                              </td>
+                            </tr>
                           </table>
                         <!-- </div> -->
                       </div>
@@ -233,9 +252,9 @@
                             <tr>
                               <th style="text-align:center;width:4%;">Cantidad</th>
                               <th style="text-align:left;width:38%;">Descripcion</th>
-                              <th style="text-align:left;width:38%;">Concepto</th>
-                              <th style="text-align:left;width:10%;"></th>
-                              <th style="text-align:left;width:10%;"></th>
+                              <th style="text-align:left;width:58%;">Concepto</th>
+                              <!-- <th style="text-align:left;width:10%;"></th> -->
+                              <!-- <th style="text-align:left;width:10%;"></th> -->
                               <th style="text-align:left;width:10%;"></th>
                             </tr>
                             <style>
@@ -249,7 +268,8 @@
                           <tbody>
                             <?php
                               $num = 1;
-                              
+                              $premiosNotaEntrega=[];
+                              $index=0;
                               foreach ($pedidos as $data){ 
                                 if(!empty($data['id_pedido'])){
                                   // ========================== // =============================== // ============================== //
@@ -333,32 +353,75 @@
                                                         foreach ($premios_perdidos as $dataperdidos) {
                                                           if(!empty($dataperdidos['id_premio_perdido'])){
                                                             if(($dataperdidos['id_tipo_coleccion'] == $data3['id_tipo_coleccion']) && ($dataperdidos['id_tppc'] == $data3['id_tppc'])){
-                                                              $nuevoResult = $data3['cantidad_premios_plan'] - $dataperdidos['cantidad_premios_perdidos'];
-                                                              // ========================== // =============================== // ============================== //
-                                                              $nuevoTSelected += $nuevoResult;
-                                                              // ========================== // =============================== // ============================== //
-                                                              if($nuevoResult>0){ ?>
-                                                                  <tr class="codigoP<?=$data3['id_plan'].$data3['id_premio']; ?>" <?php if($data2['opcion']==0){ ?> style='color:#DDD;' <?php } ?>> <!-- PRIMER PAGO -->
-                                                                    <td class="col1">
-                                                                      <?php echo $nuevoResult; ?>
-                                                                    </td>
-                                                                    <td class="col2">
-                                                                      <?php echo $data3['nombre_premio']; ?>
-                                                                    </td>
-                                                                    <td class="col3">
-                                                                      Premio de <?=$pagosR['name']; ?> <small style="font-size:.8em;">(Plan <?=$data3['nombre_plan']; ?>)</small>
-                                                                    </td>
-                                                                    <td class="col4"></td>
-                                                                    <td class="col5"></td>
-                                                                    <td>
-                                                                      <select class="opciones" name="opts[P<?=$data3['id_plan'].$data3['id_premio']; ?>]" id="P<?=$data3['id_plan'].$data3['id_premio']; ?>">
-                                                                        <option <?php if($data2['opcion']=="1"){ ?> selected <?php  } ?> value="Y">SI</option>
-                                                                        <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">NO</option>
-                                                                      </select>
-                                                                    </td>
-                                                                  </tr>
-                                                                <?php 
+                                                              $prinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$data3['id_premio']}");
+                                                              for ($i=0; $i < count($prinv)-1; $i++) { 
+                                                                if($prinv[$i]['tipo_inventario']=="Productos"){
+                                                                  $inventario = $lider->consultarQuery("SELECT *, producto as elemento FROM productos WHERE id_producto={$prinv[$i]['id_inventario']}");
+                                                                }
+                                                                if($prinv[$i]['tipo_inventario']=="Mercancia"){
+                                                                  $inventario = $lider->consultarQuery("SELECT *, mercancia as elemento FROM mercancia WHERE id_mercancia={$prinv[$i]['id_inventario']}");
+                                                                }
+                                                                foreach ($inventario as $key) {
+                                                                  if(!empty($key['elemento'])){
+                                                                    $prinv[$i]['elemento']=$key['elemento'];
+                                                                  }
+                                                                }
                                                               }
+
+                                                              foreach($prinv as $key){
+                                                                if(!empty($key['id_premio_inventario'])){
+
+                                                                  $nuevoResult = ($data3['cantidad_premios_plan'] - $dataperdidos['cantidad_premios_perdidos'])*$key['unidades_inventario'];
+                                                                  // ========================== // =============================== // ============================== //
+                                                                  $nuevoTSelected += $nuevoResult;
+                                                                  // ========================== // =============================== // ============================== //
+                                                                  if($nuevoResult>0){
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['cantidad']=$nuevoResult;
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['descripcion']=$key['elemento'];
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['concepto']="Premio de ".$pagosR['name']."(Plan ".$data3['nombre_plan'].")";
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['codigo']="codigo".$key['id_premio_inventario'];
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio']=$key['id_premio'];
+                                                                    // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio_inventario']=$key['id_premio_inventario'];
+                                                                    // $index++;
+                                                                    $premiosNotaEntrega[$index]['cantidad']=$nuevoResult;
+                                                                    $premiosNotaEntrega[$index]['descripcion']=$key['elemento'];
+                                                                    $premiosNotaEntrega[$index]['concepto']="Premios de ".$pagosR['name'];;
+                                                                    $premiosNotaEntrega[$index]['conceptoadd']=$data3['nombre_plan'];
+                                                                    $premiosNotaEntrega[$index]['conceptoaddc']="Planes";
+                                                                    $premiosNotaEntrega[$index]['codigo']="codigo".$key['id_premio_inventario'];
+                                                                    $premiosNotaEntrega[$index]['id_premio']=$key['id_premio'];
+                                                                    $premiosNotaEntrega[$index]['tipo_inventario']=$key['tipo_inventario'];
+                                                                    $premiosNotaEntrega[$index]['id_inventario']=$key['id_inventario'];
+                                                                    $premiosNotaEntrega[$index]['id_premio_inventario']=$key['id_premio_inventario'];
+                                                                    $index++;
+                                                                    
+                                                                    ?>
+                                                                      <!-- PRIMER PAGO -->
+                                                                      <!-- <tr class="codigoP<?=$data3['id_plan'].$data3['id_premio']; ?>" <?php if($data2['opcion']==0){ ?> style='color:#DDD;' <?php } ?>>
+                                                                        <td class="col1">
+                                                                          <?php echo $nuevoResult; ?>
+                                                                        </td>
+                                                                        <td class="col2">
+                                                                          <?php echo $key['elemento']; ?>
+                                                                        </td>
+                                                                        <td class="col3">
+                                                                          Premio de <?=$pagosR['name']; ?> <small style="font-size:.8em;">(Plan <?=$data3['nombre_plan']; ?>)</small>
+                                                                        </td>
+                                                                        <td class="col4"></td>
+                                                                        <td class="col5"></td>
+                                                                        <td>
+                                                                          <select class="opciones" name="opts[P<?=$data3['id_plan'].$data3['id_premio']; ?>]" id="P<?=$data3['id_plan'].$data3['id_premio']; ?>">
+                                                                            <option <?php if($data2['opcion']=="1"){ ?> selected <?php  } ?> value="Y">SI</option>
+                                                                            <option <?php if($data2['opcion']=="0"){ ?> selected <?php  } ?> value="N">NO</option>
+                                                                          </select>
+                                                                        </td>
+                                                                      </tr> -->
+                                                                    <?php 
+                                                                  }
+
+                                                                }
+                                                              }
+
                                                             }
                                                           }
                                                         }
@@ -445,7 +508,7 @@
                                           }else{
                                             $dataComparar = $dataNamePerdido;
                                           }
-
+                                          
                                           if(($dataComparar == $pagosR['id'])){
                                             if($dataNamePerdidoIdPlan==""){
                                               $nuevoResult = $data['cantidad_aprobado'] - $dataperdidos['cantidad_premios_perdidos'];
@@ -458,6 +521,7 @@
                                                 //   }
                                                 // }
                                               }
+
                                               // ========================== // =============================== // ============================== //
                                               if(!empty($dataperdidos['id_premio_perdido'])){
                                                 if($nuevoResult>0){
@@ -509,6 +573,7 @@
                                               }
                                             }else{
                                               // $arrayMostrarNota = [];
+                                              
                                               foreach ($planesCol as $data2){ if(!empty($data2['id_cliente'])){
                                                 if ($data['id_pedido'] == $data2['id_pedido']){
                                                   if ($data2['cantidad_coleccion_plan']>0){
@@ -525,55 +590,137 @@
                                                           //   }
                                                           // }
                                                         }
+                                                        
                                                         // ========================== // =============================== // ============================== //
                                                         // echo $data2['cantidad_coleccion_plan']." - ".$dataperdidos['cantidad_premios_perdidos']."=";
                                                         // echo $nuevoResult;
                                                         // echo $data2['cantidad_coleccion'];
                                                         if($nuevoResult>0){
-                                                          foreach ($premios_planes3 as $premiosP) {
-                                                            if(!empty($premiosP['nombre_plan'])){
-                                                              if($data2['nombre_plan']==$premiosP['nombre_plan']){
-                                                                if($pagosR['name']==$premiosP['tipo_premio']){
-                                                                  $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
-                                                                  $codigoPagoAdd = $pagosR['cod'].$premiosP['id_premio'];
+                                                          if(count($premios_planes3)>1){
+                                                            foreach ($premios_planes3 as $premiosP) {
+                                                              // print_r($premiosP);
+                                                              if(!empty($premiosP['nombre_plan'])){
+                                                                if($data2['nombre_plan']==$premiosP['nombre_plan']){
+                                                                  if($pagosR['name']==$premiosP['tipo_premio']){
+                                                                    $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
+                                                                    $codigoPagoAdd = $pagosR['cod'].$premiosP['id_premio'];
 
-                                                                  if(!empty($arrayMostrarNota[$pagosR['name']][$premiosP['producto']])){
-                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
-                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['planes'].=" | ".$premiosP['nombre_plan'];
-                                                                  }else{
-                                                                    $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]=[
-                                                                      'id'=>$premiosP['id_premio'],
-                                                                      'nombre'=>$premiosP['producto'],
-                                                                      'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
-                                                                      'tipo'=>$premiosP['tipo_premio'],
-                                                                      'planes'=>$premiosP['nombre_plan'],
-                                                                      'cod'=>$codigoPagoAdd,
-                                                                    ];
+                                                                    if(!empty($arrayMostrarNota[$pagosR['name']][$premiosP['producto']])){
+                                                                      $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['cantidad']+=($nuevoResult*$data2['cantidad_coleccion']);
+                                                                      $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]['planes'].=" | ".$premiosP['nombre_plan'];
+                                                                    }else{
+                                                                      $arrayMostrarNota[$pagosR['name']][$premiosP['producto']]=[
+                                                                        'id'=>$premiosP['id_premio'],
+                                                                        'nombre'=>$premiosP['producto'],
+                                                                        'cantidad'=>($nuevoResult*$data2['cantidad_coleccion']),
+                                                                        'tipo'=>$premiosP['tipo_premio'],
+                                                                        'planes'=>$premiosP['nombre_plan'],
+                                                                        'cod'=>$codigoPagoAdd,
+                                                                      ];
+                                                                    }
+                                                                    // echo $codigoPagoAdd."<br>";
+                                                                    ?>
+                                                                      <!-- <tr class="codigo<?=$codigoPagoAdd; ?>">
+                                                                        <td class="col1">
+                                                                          <?php //echo ($nuevoResult*$data2['cantidad_coleccion']); ?>
+                                                                        </td>
+                                                                        <td class="col2">
+                                                                          <?php echo $premiosP['producto']; ?>
+                                                                        </td>
+                                                                        <td class="col3">
+                                                                          Premio de <?php //echo $premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']; ?>
+                                                                        </td>
+                                                                        <td class="col4">
+                                                                        </td>
+                                                                        <td class="col5">
+                                                                        </td>
+                                                                        <td>
+                                                                          <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
+                                                                            <option value="Y">SI</option>
+                                                                            <option value="N">NO</option>
+                                                                          </select>
+                                                                        </td>
+                                                                      </tr> -->
+                                                                    <?php 
                                                                   }
-                                                                  // echo $codigoPagoAdd."<br>";
-                                                                  ?>
-                                                                    <!-- <tr class="codigo<?=$codigoPagoAdd; ?>">
-                                                                      <td class="col1">
-                                                                        <?php //echo ($nuevoResult*$data2['cantidad_coleccion']); ?>
-                                                                      </td>
-                                                                      <td class="col2">
-                                                                        <?php echo $premiosP['producto']; ?>
-                                                                      </td>
-                                                                      <td class="col3">
-                                                                        Premio de <?php //echo $premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']; ?>
-                                                                      </td>
-                                                                      <td class="col4">
-                                                                      </td>
-                                                                      <td class="col5">
-                                                                      </td>
-                                                                      <td>
-                                                                        <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
-                                                                          <option value="Y">SI</option>
-                                                                          <option value="N">NO</option>
-                                                                        </select>
-                                                                      </td>
-                                                                    </tr> -->
-                                                                  <?php 
+                                                                }
+                                                              }
+                                                            }
+                                                          }
+                                                          if(count($premios_planes4)>1){
+                                                            foreach ($premios_planes4 as $premiosP) {
+                                                              // print_r($premiosP);
+                                                              if(!empty($premiosP['nombre_plan'])){
+                                                                if($data2['nombre_plan']==$premiosP['nombre_plan']){
+                                                                  if($pagosR['name']==$premiosP['tipo_premio']){
+                                                                    $codigoPagoAdd = $pagosR['cod'].$premiosP['id_plan']."-".$premiosP['id_premio'];
+                                                                    $codigoPagoAdd = $pagosR['cod'].$premiosP['id_premio'];
+
+
+                                                                    $prinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$premiosP['id_premio']}");
+                                                                    for ($i=0; $i < count($prinv)-1; $i++) { 
+                                                                      if($prinv[$i]['tipo_inventario']=="Productos"){
+                                                                        $inventario = $lider->consultarQuery("SELECT *, producto as elemento FROM productos WHERE id_producto={$prinv[$i]['id_inventario']}");
+                                                                      }
+                                                                      if($prinv[$i]['tipo_inventario']=="Mercancia"){
+                                                                        $inventario = $lider->consultarQuery("SELECT *, mercancia as elemento FROM mercancia WHERE id_mercancia={$prinv[$i]['id_inventario']}");
+                                                                      }
+                                                                      foreach ($inventario as $key) {
+                                                                        if(!empty($key['elemento'])){
+                                                                          $prinv[$i]['elemento']=$key['elemento'];
+                                                                        }
+                                                                      }
+                                                                    }
+
+                                                                    // print_r($prinv[0]);
+                                                                    // echo "<br><br>";
+                                                                    foreach ($prinv as $key) {
+                                                                      if(!empty($key['id_premio_inventario'])){
+                                                                        if(!empty($arrayMostrarNota[$pagosR['name']][$key['id_premio_inventario']])){
+                                                                          $arrayMostrarNota[$pagosR['name']][$key['id_premio_inventario']]['cantidad']+=($nuevoResult*$key['unidades_inventario']);
+                                                                          $arrayMostrarNota[$pagosR['name']][$key['id_premio_inventario']]['planes'].=" | ".$premiosP['nombre_plan'];
+                                                                        }else{
+                                                                          $arrayMostrarNota[$pagosR['name']][$key['id_premio_inventario']]=[
+                                                                            'id'=>$premiosP['id_premio'],
+                                                                            'nombre'=>$premiosP['nombre_premio'],
+                                                                            'elemento'=>$key['elemento'],
+                                                                            'cantidad'=>($nuevoResult*$key['unidades_inventario']),
+                                                                            'tipo'=>$premiosP['tipo_premio'],
+                                                                            'planes'=>$premiosP['nombre_plan'],
+                                                                            'id_premio_inventario'=>$key['id_premio_inventario'],
+                                                                            'id_premio'=>$key['id_premio'],
+                                                                            'tipo_inventario'=>$key['tipo_inventario'],
+                                                                            'id_inventario'=>$key['id_inventario'],
+                                                                            'cod'=>$codigoPagoAdd,
+                                                                          ];
+                                                                        }
+                                                                      }
+                                                                    }
+                                                                    // echo $codigoPagoAdd."<br>";
+                                                                    ?>
+                                                                      <!-- <tr class="codigo<?=$codigoPagoAdd; ?>">
+                                                                        <td class="col1">
+                                                                          <?php //echo ($nuevoResult*$data2['cantidad_coleccion']); ?>
+                                                                        </td>
+                                                                        <td class="col2">
+                                                                          <?php echo $premiosP['producto']; ?>
+                                                                        </td>
+                                                                        <td class="col3">
+                                                                          Premio de <?php //echo $premiosP['tipo_premio']." P. ".$premiosP['nombre_plan']; ?>
+                                                                        </td>
+                                                                        <td class="col4">
+                                                                        </td>
+                                                                        <td class="col5">
+                                                                        </td>
+                                                                        <td>
+                                                                          <select class="opciones" name="opts[<?=$codigoPagoAdd; ?>]" id="<?=$codigoPagoAdd; ?>">
+                                                                            <option value="Y">SI</option>
+                                                                            <option value="N">NO</option>
+                                                                          </select>
+                                                                        </td>
+                                                                      </tr> -->
+                                                                    <?php 
+                                                                  }
                                                                 }
                                                               }
                                                             }
@@ -596,19 +743,39 @@
                                       // echo $pagosR['name']."<br>";
                                       // echo "<br><br>";
                                       foreach ($arrayMostrarNota[$pagosR['name']] as $key) {
+                                        $nameTPlan = "";
+                                        $posiposi = strpos($key['planes'], "|");
+                                        $nameTPlan = ($posiposi=='') ? 'Plan' : 'Planes';
+                                        
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['cantidad']=$key['cantidad'];
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['descripcion']=$key['elemento'];
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['concepto']="Premio de ".$key['tipo']."(".$nameTPlan.": ".$key['planes'].")";
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['codigo']="codigo".$key['id_premio_inventario'];
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio']=$key['id_premio'];
+                                        // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio_inventario']=$key['id_premio_inventario'];
+                                        // $index++;
+                                        $premiosNotaEntrega[$index]['cantidad']=$key['cantidad'];
+                                        $premiosNotaEntrega[$index]['descripcion']=$key['elemento'];
+                                        $premiosNotaEntrega[$index]['concepto']="Premios de ".$key['tipo'];;
+                                        $premiosNotaEntrega[$index]['conceptoadd']=$key['planes'];
+                                        $premiosNotaEntrega[$index]['conceptoaddc']="Planes";
+                                        $premiosNotaEntrega[$index]['codigo']="codigo".$key['id_premio_inventario'];
+                                        $premiosNotaEntrega[$index]['id_premio']=$key['id_premio'];
+                                        $premiosNotaEntrega[$index]['tipo_inventario']=$key['tipo_inventario'];
+                                        $premiosNotaEntrega[$index]['id_inventario']=$key['id_inventario'];
+                                        $premiosNotaEntrega[$index]['id_premio_inventario']=$key['id_premio_inventario'];
+                                        $index++;
                                         ?>
-                                          <tr class="codigo<?=$key['cod']; ?>"> <!-- INICIAL -->
+                                            <!-- INICIAL -->
+                                          <!-- <tr class="codigo<?=$key['cod']; ?>">
                                             <td class="col1">
                                               <?php echo $key['cantidad']; ?>
                                             </td>
                                             <td class="col2">
-                                              <?php echo $key['nombre']; ?>
+                                              <?php echo $key['elemento']; ?>
                                             </td>
                                             <td class="col3">
                                               <?php
-                                                $nameTPlan = "";
-                                                $posiposi = strpos($key['planes'], "|");
-                                                $nameTPlan = ($posiposi=='') ? 'Plan' : 'Planes';
                                               ?>
                                               Premio de <?=$key['tipo']." <small style='font-size:.8em;'>(".$nameTPlan.": ".$key['planes'].")</small>"; ?>
                                             </td>
@@ -622,7 +789,7 @@
                                                 <option value="N">NO</option>
                                               </select>
                                             </td>
-                                          </tr>
+                                          </tr> -->
                                         <?php 
                                       }
 
@@ -632,16 +799,54 @@
                                   foreach ($retos as $reto){
                                     if (!empty($reto['id_reto'])){
                                       if ($reto['id_pedido']==$data['id_pedido']){
-                                        if ($reto['cantidad_retos']){ ?>
-                                              <tr class="codigoR<?=$reto['id_premio']?>"> <!-- retos -->
+                                        $prinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$reto['id_premio']}");
+                                        for ($i=0; $i < count($prinv)-1; $i++) { 
+                                          if($prinv[$i]['tipo_inventario']=="Productos"){
+                                            $inventario = $lider->consultarQuery("SELECT *, producto as elemento FROM productos WHERE id_producto={$prinv[$i]['id_inventario']}");
+                                          }
+                                          if($prinv[$i]['tipo_inventario']=="Mercancia"){
+                                            $inventario = $lider->consultarQuery("SELECT *, mercancia as elemento FROM mercancia WHERE id_mercancia={$prinv[$i]['id_inventario']}");
+                                          }
+                                          foreach ($inventario as $key) {
+                                            if(!empty($key['elemento'])){
+                                              $prinv[$i]['elemento']=$key['elemento'];
+                                            }
+                                          }
+                                        }
+                                        if ($reto['cantidad_retos'] > 0){
+                                          foreach ($prinv as $key) {
+                                            if(!empty($key['id_premio_inventario'])){
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['cantidad']=($reto['cantidad_retos']*$key['unidades_inventario']);
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['descripcion']=$key['elemento'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['concepto']="Premio de Reto Junior por ".$reto['cantidad_coleccion']." colecciones";
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['codigo']="codigo".$key['id_premio_inventario'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio']=$key['id_premio'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio_inventario']=$key['id_premio_inventario'];
+                                              // $index++;
+                                              $premiosNotaEntrega[$index]['cantidad']=($reto['cantidad_retos']*$key['unidades_inventario']);
+                                              $premiosNotaEntrega[$index]['descripcion']=$key['elemento'];
+                                              $premiosNotaEntrega[$index]['concepto']="Premios de Reto Junior";
+                                              $premiosNotaEntrega[$index]['conceptoadd']=$reto['cantidad_coleccion']." colecciones";
+                                              $premiosNotaEntrega[$index]['conceptoaddc']="Por";
+                                              $premiosNotaEntrega[$index]['codigo']="codigo".$key['id_premio_inventario'];
+                                              $premiosNotaEntrega[$index]['id_premio']=$key['id_premio'];
+                                              $premiosNotaEntrega[$index]['tipo_inventario']=$key['tipo_inventario'];
+                                              $premiosNotaEntrega[$index]['id_inventario']=$key['id_inventario'];
+                                              $premiosNotaEntrega[$index]['id_premio_inventario']=$key['id_premio_inventario'];
+                                              $index++;
+                                              ?>
+                                                <!-- retos -->
+                                              <!-- <tr class="codigoR<?=$reto['id_premio']?>">
                                                 <td class="col1">
-                                                  <?php echo $reto['cantidad_retos']; ?>
+                                                  <?php echo ($reto['cantidad_retos']*$key['unidades_inventario']); ?>
                                                 </td>
                                                 <td class="col2">
-                                                  <?php echo $reto['nombre_premio']; ?>
+                                                  <?php
+                                                    echo $key['elemento'];
+                                                    ?>
                                                 </td>
                                                 <td class="col3">
-                                                    Premio de Reto Junior
+                                                    Premio de Reto Junior por <?=$reto['cantidad_coleccion']; ?> colecciones
                                                 </td>
                                                 <td class="col4">
                                                 </td>
@@ -653,8 +858,11 @@
                                                     <option value="N">NO</option>
                                                   </select>
                                                 </td>
-                                              </tr>
-                                          <?php 
+                                              </tr> -->
+                                              <?php 
+
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -715,75 +923,90 @@
                                     } }
                                   }
 
-
-                                  foreach ($premios_autorizados as $premiosAutorizados){
-                                    if (!empty($premiosAutorizados['id_PA'])){
-                                      if ($premiosAutorizados['id_pedido']==$data['id_pedido']){
-                                        if ($premiosAutorizados['cantidad_PA']){ ?>
-                                              <tr class="codigoPA<?=$premiosAutorizados['id_PA']?>"> <!-- retos -->
-                                                <td class="col1">
-                                                  <?php echo $premiosAutorizados['cantidad_PA']; ?>
-                                                </td>
-                                                <td class="col2">
-                                                  <?php echo $premiosAutorizados['nombre_premio']; ?>
-                                                </td>
-                                                <td class="col3">
-                                                  <?php
-                                                    if($premiosAutorizados['descripcion_PA']==""){
-                                                      echo $premiosAutorizados['firma_PA'];
-                                                    }else{
-                                                      echo $premiosAutorizados['descripcion_PA'];
-                                                    }
-                                                  ?>
-                                                </td>
-                                                <td class="col4">
-                                                </td>
-                                                <td class="col5">
-                                                </td>
-                                                <td>
-                                                  <select class="opciones" name="opts[PA<?=$premiosAutorizados['id_PA']?>]" id="PA<?=$premiosAutorizados['id_PA']?>">
-                                                    <option value="Y">SI</option>
-                                                    <option value="N">NO</option>
-                                                  </select>
-                                                </td>
-                                              </tr>
-                                          <?php 
-                                        }
-                                      }
-                                    }
-                                  }
                                   foreach ($premios_autorizados_obsequio as $premiosAutorizados){
                                     if (!empty($premiosAutorizados['id_PA'])){
                                       if ($premiosAutorizados['id_pedido']==$data['id_pedido']){
-                                        if ($premiosAutorizados['cantidad_PA']){ ?>
-                                              <tr class="codigoPA<?=$premiosAutorizados['id_PA']?>"> <!-- retos -->
-                                                <td class="col1">
-                                                  <?php echo $premiosAutorizados['cantidad_PA']; ?>
-                                                </td>
-                                                <td class="col2">
-                                                  <?php echo $premiosAutorizados['nombre_premio']; ?>
-                                                </td>
-                                                <td class="col3">
-                                                  <?php
-                                                    if($premiosAutorizados['descripcion_PA']==""){
-                                                      echo $premiosAutorizados['firma_PA'];
-                                                    }else{
-                                                      echo $premiosAutorizados['descripcion_PA'];
-                                                    }
-                                                  ?>
-                                                </td>
-                                                <td class="col4">
-                                                </td>
-                                                <td class="col5">
-                                                </td>
-                                                <td>
-                                                  <select class="opciones" name="opts[PA<?=$premiosAutorizados['id_PA']?>]" id="PA<?=$premiosAutorizados['id_PA']?>">
-                                                    <option value="Y">SI</option>
-                                                    <option value="N">NO</option>
-                                                  </select>
-                                                </td>
-                                              </tr>
-                                          <?php 
+                                        $prinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$premiosAutorizados['id_premio']}");
+                                        for ($i=0; $i < count($prinv)-1; $i++) { 
+                                          if($prinv[$i]['tipo_inventario']=="Productos"){
+                                            $inventario = $lider->consultarQuery("SELECT *, producto as elemento FROM productos WHERE id_producto={$prinv[$i]['id_inventario']}");
+                                          }
+                                          if($prinv[$i]['tipo_inventario']=="Mercancia"){
+                                            $inventario = $lider->consultarQuery("SELECT *, mercancia as elemento FROM mercancia WHERE id_mercancia={$prinv[$i]['id_inventario']}");
+                                          }
+                                          foreach ($inventario as $key) {
+                                            if(!empty($key['elemento'])){
+                                              $prinv[$i]['elemento']=$key['elemento'];
+                                            }
+                                          }
+                                        }
+
+                                        if ($premiosAutorizados['cantidad_PA'] > 0){ 
+                                          foreach ($prinv as $key) {
+                                            if(!empty($key['id_premio_inventario'])){
+                                              $concepto = "";
+                                              if($premiosAutorizados['descripcion_PA']==""){
+                                                $concepto= $premiosAutorizados['firma_PA'];
+                                              }else{
+                                                $concepto= $premiosAutorizados['descripcion_PA'];
+                                              }
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['cantidad']=($premiosAutorizados['cantidad_PA']*$key['unidades_inventario']);
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['descripcion']=$key['elemento'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['concepto']=$concepto;
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['codigo']="codigo".$key['id_premio_inventario'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio']=$key['id_premio'];
+                                              // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio_inventario']=$key['id_premio_inventario'];
+                                              // $index++;
+                                              $premiosNotaEntrega[$index]['cantidad']=($premiosAutorizados['cantidad_PA']*$key['unidades_inventario']);
+                                              $premiosNotaEntrega[$index]['descripcion']=$key['elemento'];
+                                              if(!empty($premiosAutorizados['descripcion_PA'])){
+                                                $premiosNotaEntrega[$index]['concepto']=$premiosAutorizados['descripcion_PA'];
+                                              }else{
+                                                $premiosNotaEntrega[$index]['concepto']="Premios autorizados";
+                                              }
+                                              $premiosNotaEntrega[$index]['conceptoadd']=$concepto;
+                                              $premiosNotaEntrega[$index]['conceptoaddc']="";
+                                              $premiosNotaEntrega[$index]['codigo']="codigo".$key['id_premio_inventario'];
+                                              $premiosNotaEntrega[$index]['id_premio']=$key['id_premio'];
+                                              $premiosNotaEntrega[$index]['tipo_inventario']=$key['tipo_inventario'];
+                                              $premiosNotaEntrega[$index]['id_inventario']=$key['id_inventario'];
+                                              $premiosNotaEntrega[$index]['id_premio_inventario']=$key['id_premio_inventario'];
+                                              $index++;
+                                              ?>
+                                                <!-- Premios Autorizados -->
+                                                <!-- <tr class="codigoPA<?=$premiosAutorizados['id_PA']?>">
+                                                  <td class="col1">
+                                                    <?php echo ($premiosAutorizados['cantidad_PA']*$key['unidades_inventario']); ?>
+                                                  </td>
+                                                  <td class="col2">
+                                                    <?php
+                                                      echo $key['elemento']; 
+                                                    ?>
+                                                  </td>
+                                                  <td class="col3">
+                                                    <?php
+                                                      if($premiosAutorizados['descripcion_PA']==""){
+                                                        echo $premiosAutorizados['firma_PA'];
+                                                      }else{
+                                                        echo $premiosAutorizados['descripcion_PA'];
+                                                      }
+                                                    ?>
+                                                  </td>
+                                                  <td class="col4">
+                                                  </td>
+                                                  <td class="col5">
+                                                  </td>
+                                                  <td>
+                                                    <select class="opciones" name="opts[PA<?=$premiosAutorizados['id_PA']?>]" id="PA<?=$premiosAutorizados['id_PA']?>">
+                                                      <option value="Y">SI</option>
+                                                      <option value="N">NO</option>
+                                                    </select>
+                                                  </td>
+                                                </tr> -->
+                                              <?php 
+                                              
+                                            }
+                                          }
                                         }
                                       }
                                     }
@@ -795,6 +1018,7 @@
                                       $arrayt[$numCC]['nombre'] = $canUnic['nombre_catalogo'];
                                       $arrayt[$numCC]['cantidad'] = 0;
                                       $arrayt[$numCC]['id_catalogo'] = $canUnic['id_catalogo']; 
+                                      $arrayt[$numCC]['id_premio'] = $canUnic['id_premio']; 
                                       $numCC++;
                                     }
                                   }
@@ -803,6 +1027,7 @@
                                       if ($canje['id_cliente']==$data['id_cliente']){
                                         for ($i=0; $i < count($arrayt); $i++) { 
                                           if($canje['nombre_catalogo']==$arrayt[$i]['nombre']){
+                                            // print_r($canjeos);
                                             $arrayt[$i]['cantidad']+=$canje['unidades'];
                                             // $arrayt[$i]['cantidad']++;
                                           }
@@ -812,34 +1037,147 @@
                                   }
                                   foreach ($arrayt as $canjeos){
                                     if (!empty($canjeos['id_catalogo'])){
-                                        if ($canjeos['cantidad']){  ?>
-                                          <tr class="codigoCG<?=$canjeos['id_catalogo']?>"> <!-- canjeoss -->
-                                            <td class="col1">
-                                              <?php echo $canjeos['cantidad']; ?>
-                                            </td>
-                                            <td class="col2">
-                                              <?php echo $canjeos['nombre']; ?>
-                                            </td>
-                                            <td class="col3">
-                                                Premios Canjeados
-                                            </td>
-                                            <td class="col4">
-                                            </td>
-                                            <td class="col5">
-                                            </td>
-                                            <td>
-                                              <select class="opciones" name="opts[CG<?=$canjeos['id_catalogo']?>]" id="CG<?=$canjeos['id_catalogo']?>">
-                                                <option value="Y">SI</option>
-                                                <option value="N">NO</option>
-                                              </select>
-                                            </td>
-                                          </tr>
-                                          <?php 
+                                      
+                                      $prinv = $lider->consultarQuery("SELECT * FROM premios_inventario WHERE estatus=1 and id_premio={$canjeos['id_premio']}");
+                                      for ($i=0; $i < count($prinv)-1; $i++) { 
+                                        if($prinv[$i]['tipo_inventario']=="Productos"){
+                                          $inventario = $lider->consultarQuery("SELECT *, producto as elemento FROM productos WHERE id_producto={$prinv[$i]['id_inventario']}");
                                         }
+                                        if($prinv[$i]['tipo_inventario']=="Mercancia"){
+                                          $inventario = $lider->consultarQuery("SELECT *, mercancia as elemento FROM mercancia WHERE id_mercancia={$prinv[$i]['id_inventario']}");
+                                        }
+                                        foreach ($inventario as $key) {
+                                          if(!empty($key['elemento'])){
+                                            $prinv[$i]['elemento']=$key['elemento'];
+                                          }
+                                        }
+                                      }
+                                      if($canjeos['id_premio']==-1){
+                                        $prinv[0]['elemento']=$canjeos['nombre'];
+                                        $prinv[0]['unidades_inventario']=1;
+                                        $prinv[0]['id_premio_inventario']=$canjeos['id_catalogo'];
+                                        $prinv[0]['id_premio']=$canjeos['id_catalogo'];
+                                        $prinv[0]['tipo_inventario']="Catalagos";
+                                        $prinv[0]['id_inventario']=$canjeos['id_catalogo'];
+                                      }
+                                      if ($canjeos['cantidad'] > 0){
+                                        foreach ($prinv as $key) {
+                                          if(!empty($key['id_premio_inventario'])){
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['cantidad']=($canjeos['cantidad']*$key['unidades_inventario']);
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['descripcion']=$key['elemento'];
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['concepto']="Premios Canjeados";
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['codigo']="codigo".$key['id_premio_inventario'];
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio']=$key['id_premio'];
+                                            // $premiosNotaEntrega[$index][$key['id_premio_inventario']]['id_premio_inventario']=$key['id_premio_inventario'];
+                                            // $index++;
+                                            $premiosNotaEntrega[$index]['cantidad']=($canjeos['cantidad']*$key['unidades_inventario']);
+                                            $premiosNotaEntrega[$index]['descripcion']=$key['elemento'];
+                                            $premiosNotaEntrega[$index]['concepto']="Premios Canjeados";
+                                            $premiosNotaEntrega[$index]['conceptoadd']="";
+                                            $premiosNotaEntrega[$index]['conceptoaddc']="";
+                                            $premiosNotaEntrega[$index]['codigo']="codigo".$key['id_premio_inventario'];
+                                            $premiosNotaEntrega[$index]['id_premio']=$key['id_premio'];
+                                            $premiosNotaEntrega[$index]['tipo_inventario']=$key['tipo_inventario'];
+                                            $premiosNotaEntrega[$index]['id_inventario']=$key['id_inventario'];
+                                            $premiosNotaEntrega[$index]['id_premio_inventario']=$key['id_premio_inventario'];
+                                            $index++;
+                                            ?>
+                                            <!-- canjeoss -->
+                                            <!-- <tr class="codigoCG<?=$canjeos['id_catalogo']?>">
+                                              <td class="col1">
+                                                <?php echo ($canjeos['cantidad']*$key['unidades_inventario']); ?>
+                                              </td>
+                                              <td class="col2">
+                                                <?php
+                                                  echo $key['elemento']; 
+                                                  ?>
+                                              </td>
+                                              <td class="col3">
+                                                  Premios Canjeados
+                                              </td>
+                                              <td class="col4">
+                                              </td>
+                                              <td class="col5">
+                                              </td>
+                                              <td>
+                                                <select class="opciones" name="opts[CG<?=$canjeos['id_catalogo']?>]" id="CG<?=$canjeos['id_catalogo']?>">
+                                                  <option value="Y">SI</option>
+                                                  <option value="N">NO</option>
+                                                </select>
+                                              </td>
+                                            </tr> -->
+                                            <?php 
+                                          }
+                                        }
+                                      }
                                     }
                                   }
                                   $num++;
                                 }
+                              }
+
+                              $notaResumida = [];
+                              $index=0;
+                              foreach ($premiosNotaEntrega as $nota) {
+                                // print_r($nota);
+                                // echo "<br><br>";
+                                if(!empty($notaResumida[$nota['tipo_inventario'].$nota['id_inventario']])){
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['cantidad']+=$nota['cantidad'];
+                                  if($notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['concepto']!=$nota['concepto']){
+                                    $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['concepto'].=", ".$nota['concepto'];
+                                  }
+                                  if($notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['conceptoadd']!=$nota['conceptoadd']){
+                                    $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['conceptoadd'].=", ".$nota['conceptoadd'];
+                                  }
+                                }else{
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['cantidad']=$nota['cantidad'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['descripcion']=$nota['descripcion'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['concepto']=$nota['concepto'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['conceptoadd']=$nota['conceptoadd'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['conceptoaddc']=$nota['conceptoaddc'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['codigo']="codigo".$nota['tipo_inventario'].$nota['id_inventario'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['id_inventario']=$nota['id_inventario'];
+                                  $notaResumida[$nota['tipo_inventario'].$nota['id_inventario']]['tipo_inventario']=$nota['tipo_inventario'];
+                                }
+                                // print_r($notaResumida);
+                              }
+
+                              foreach ($notaResumida as $nota) {
+                                  ?>
+                                  <tr class="<?=$nota['codigo']?>">
+                                    <td class="col1">
+                                      <?=$nota['cantidad']; ?>
+                                    </td>
+                                    <td class="col2">
+                                      <?=$nota['descripcion']; ?>
+                                    </td>
+                                    <td class="col3">
+                                      <?php
+                                        echo $nota['concepto'];
+                                        // if($nota['conceptoaddc']!="" || $nota['conceptoadd']!=""){
+                                        //   echo " (";
+                                        //   if($nota['conceptoaddc']!=""){
+                                        //     echo $nota['conceptoaddc'].": ";
+                                        //   }
+                                        //   if($nota['conceptoadd']!=""){
+                                        //     echo $nota['conceptoadd'];
+                                        //   }
+                                        //   echo ")";
+                                        // }
+                                      ?>
+                                    </td>
+                                    <!-- <td class="col4">
+                                    </td>
+                                    <td class="col5">
+                                    </td> -->
+                                    <td>
+                                      <select class="opciones" name="opts[<?=$nota['tipo_inventario'].$nota['id_inventario']; ?>]" id="<?=$nota['tipo_inventario'].$nota['id_inventario']; ?>">
+                                        <option value="Y">SI</option>
+                                        <option value="N">NO</option>
+                                      </select>
+                                    </td>
+                                  </tr>
+                                <?php
                               }
                             ?>
                           </tbody>
@@ -943,8 +1281,7 @@ $(document).ready(function(){
 
   $(".enviar").click(function(){
     var response = validar();
-    var response = true;
-
+    // var response = true;
     if(response == true){
       $(".btn-enviar").attr("disabled");
 
@@ -1023,19 +1360,27 @@ function Capitalizar(str){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var selected = parseInt($("#selectedPedido").val());
-  var rselected = false;
-  if(selected > 0){
-    rselected = true;
-    $(".error_selected_pedido").html("");
+  // var selected = parseInt($("#selectedPedido").val());
+  // var rselected = false;
+  // if(selected > 0){
+  //   rselected = true;
+  //   $(".error_selected_pedido").html("");
+  // }else{
+  //   rselected = false;
+  //   $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+  // }
+  /*===================================================================*/
+
+  /*===================================================================*/
+  var almacen = $("#almacen").val();
+  var ralmacen = false;
+  if(almacen!=""){
+    ralmacen = true;
+    $(".error_almacen").html("");
   }else{
-    rselected = false;
-    $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+    ralmacen = false;
+    $(".error_almacen").html("Debe Seleccionar un almacen");      
   }
-  /*===================================================================*/
-
-  /*===================================================================*/
-
   // var cantidad = $("#cantidad").val();
   // var rcantidad = checkInput(cantidad, numberPattern);
   // if( rcantidad == false ){
@@ -1047,11 +1392,11 @@ function validar(){
   // }else{
   //   $("#error_cantidad").html("");
   // }
-
-
   /*===================================================================*/
   var result = false;
-  if( rselected==true){
+  // if( rselected==true && ralmacen==true){
+  if( ralmacen==true){
+
     result = true;
   }else{
     result = false;

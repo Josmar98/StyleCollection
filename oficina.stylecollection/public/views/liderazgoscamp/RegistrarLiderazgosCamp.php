@@ -66,9 +66,7 @@
                                   <?php endif ?>                            
                               <?php endif ?>
                           <?php endforeach ?> 
-                          <?php if ($data['id_liderazgo']!=($idLim+1)): ?>
-                            disabled=''
-                          <?php endif ?>
+                          <?php //if ($data['id_liderazgo']!=($idLim+1)){ echo "disabled=''"; } ?>
                           value="<?php echo $data['id_liderazgo'] ?>"><?php echo $data['nombre_liderazgo'] ?></option>
                             
                           <?php endif ?>

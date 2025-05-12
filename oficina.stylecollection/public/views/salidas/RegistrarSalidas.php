@@ -29,7 +29,7 @@
     </section>
           <br>
           <?php if($amInventarioC==1){ ?>
-            <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div>
+            <!-- <div style="width:100%;text-align:center;"><a href="?route=<?=$url; ?>" class="color_btn_sweetalert" style="text-decoration-line:underline;">Ver <?=$modulo; ?></a></div> -->
           <?php } ?>
     <!-- Main content -->
     <section class="content">
@@ -77,18 +77,22 @@
                       <select class="form-control transacciones" id="transaccion" name="transaccion"  style="width:100%">
                         <option value=""></option>
                         <option value="Desincorporacion">Desincorporación</option>
+                        <option value="Reposicion">Reposición de averia</option>
                         <!-- <option class="transaccion_comp" value="Compra">Compra</option> -->
-                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador"){ ?>
+                        <?php if($_SESSION['nombre_rol']=="Superusuario" || $_SESSION['nombre_rol']=="Administrador" || $_SESSION['nombre_rol']=="Administrativo"){ ?>
                         <option value="Venta">Venta</option>
                         <?php } ?>
                       </select>
                       <span id="error_transaccion" class="errors"></span>
                     </div>
-                    <!-- <div class="form-group col-sm-12 col-md-4">
-                      <label for="fecha_operacion">Fecha de operación (Entrada)</label>
-                      <input type="datetime-local" class="form-control" id="fecha_operacion" name="fecha_operacion" value="<?php echo date('Y-m-d H:i'); ?>" readonly>
-                      <span id="error_fecha_operacion" class="errors"></span>
-                    </div> -->
+
+                    <!--
+                      <div class="form-group col-sm-12 col-md-4">
+                        <label for="fecha_operacion">Fecha de operación (Entrada)</label>
+                        <input type="datetime-local" class="form-control" id="fecha_operacion" name="fecha_operacion" value="<?php echo date('Y-m-d H:i'); ?>" readonly>
+                        <span id="error_fecha_operacion" class="errors"></span>
+                      </div>
+                    -->
 
                     <div class="form-group col-sm-12 col-md-6">
                       <label for="fecha_documento">Fecha de documento</label>
@@ -113,8 +117,36 @@
                     
                     <div class="form-group col-sm-12 col-md-6">
                       <label for="numero_documento">Número de documento</label>
-                      <input type="number" class="form-control" id="numero_documento" name="numero_documento" step="1" placeholder="Ingresar número de documento">
+                      <input type="hidden" id="numero_control_Venta" name="numero_control_venta" value="<?=$numero_control_venta; ?>">
+                      <input type="hidden" id="numero_control_Desincorporacion" name="numero_control_desincorporacion" value="<?=$numero_control_desincorporacion; ?>">
+                      <input type="hidden" id="numero_control_Reposicion" name="numero_control_reposicion" value="<?=$numero_control_reposicion; ?>">
+                      <input type="number" class="form-control" id="numero_documento" name="numero_documento" step="1" placeholder="Ingresar número de documento" value="0" readonly>
                       <span id="error_numero_documento" class="errors"></span>
+                    </div>
+                        
+                    <div class="form-group col-sm-12 col-md-6 box-leyendaVentas d-none">
+                      <label for="leyenda">Concepto de Venta</label>
+                      <select class="form-control transacciones select2" id="leyenda" name="leyenda"  style="width:100%">
+                        <option value=""></option>
+                        <?php if($_SESSION['nombre_rol']=="Administrativo"){ ?>
+                          <option value="Credito Style">Credito Style</option>
+                          <option value="Rifas o Premios">Rifas o Premios</option>
+                          <option value="Consumo Interno">Consumo Interno</option>
+                        <?php } else { ?>
+                          <option value="Venta">Venta</option>
+                          <option value="Promociones">Promociones</option>
+                          <option value="Credito Style">Credito Style</option>
+                          <option value="Rifas o Premios">Rifas o Premios</option>
+                          <option value="Consumo Interno">Consumo Interno</option>
+                          <option value="Obsequio a terceros">Obsequio a terceros</option>
+                        <?php } ?>
+                      </select>
+                      <span id="error_leyenda" class="errors"></span>
+                    </div>
+                    <div class="form-group col-sm-12 col-md-6 box-leyendaDes d-none">
+                      <label for="leyendaDes">Leyenda de Desincorporación</label>
+                      <input type="text" class="form-control" id="leyendaDes" name="leyendaDes">
+                      <span id="error_leyendaDes" class="errors"></span>
                     </div>
                     
 
@@ -149,7 +181,46 @@
                         </select>
                         <span id="error_proveedorClientes" class="errors"></span>
                       </div>
+                      <div class="form-group col-sm-12 col-md-6 box-proveedoresClientesAutorizado box-proveedoress box-proveedoresx d-none">
+                        <label for="proveedorClientesAutorizado">Seleccionar Clientes / Autorizados</label>
+                        <select class="form-control select2 proveedores" id="proveedorClientesAutorizado" name="proveedorClientesAutorizado"  style="width:100%;">
+                          <option value=""></option>
+                          <!-- <option value="-1"> Juan Carlos Aguilar Cuellar</option> -->
+                          <?php foreach($infoInternos as $intern){ if(!empty($intern['id_interno'])){ ?>
+                            <option value="<?php echo $intern['id_interno']; ?>"><?php echo $intern['cod_rif'].$intern['rif']." ".$intern['primer_nombre']." ".$intern['primer_apellido']; ?></option>
+                          <?php } } ?>
+                          <?php foreach($clientes as $client){ if(!empty($client['id_cliente'])){ ?>
+                            <option value="<?php echo $client['id_cliente']; ?>"><?php echo $client['cod_rif'].$client['rif']." ".$client['primer_nombre']." ".$client['primer_apellido']; ?></option>
+                          <?php } } ?>
+                        </select>
+                        <span id="error_proveedorClientesAutorizado" class="errors"></span>
+                      </div>
                     <?php } ?>
+                    <?php if(!empty($empleados)){ ?>
+                      <div class="form-group col-sm-12 col-md-6 box-proveedoresEmpleados box-proveedoress box-proveedoresx d-none">
+                        <label for="proveedorEmpleados">Seleccionar Empleados</label>
+                        <select class="form-control select2 proveedores" id="proveedorEmpleados" name="proveedorEmpleados"  style="width:100%;">
+                          <option value=""></option>
+                          <!-- <option value="-1">J408497786 STYLE COLLECTION</option> -->
+                          <?php foreach($empleados as $emple){ if(!empty($emple['id_empleado'])){ ?>
+                            <option value="<?php echo $emple['id_empleado']; ?>"><?php echo $emple['cod_rif'].$emple['rif']." ".$emple['primer_nombre']." ".$emple['primer_apellido']; ?></option>
+                          <?php } } ?>
+                        </select>
+                        <span id="error_proveedorEmpleados" class="errors"></span>
+                      </div>
+                    <?php } ?>
+                      <div class="form-group col-sm-12 col-md-6 box-proveedoresAutorizado box-proveedoress box-proveedoresx d-none">
+                        <label for="proveedorAutorizado">Seleccionar Autorizados</label>
+                        <select class="form-control select2 proveedores" id="proveedorAutorizado" name="proveedorAutorizado"  style="width:100%;">
+                          <option value=""></option>
+                          <?php foreach($infoInternos as $intern){ if(!empty($intern['id_interno'])){ ?>
+                            <option value="<?php echo $intern['id_interno']; ?>"><?php echo $intern['cod_rif'].$intern['rif']." ".$intern['primer_nombre']." ".$intern['primer_apellido']; ?></option>
+                          <?php } } ?>
+                          <!-- <option class='opt-style' value="-1">J408497786 STYLE COLLECTION</option> -->
+                        </select>
+                        <span id="error_proveedorAutorizado" class="errors"></span>
+                      </div>
+                    
                     
                   </div>
                   <hr>
@@ -224,7 +295,7 @@
 
 
                       <div style="width:20%;float:right;" class=" box-inventarios<?=$z; ?> box-inventario d-none">
-                        <input type="number" class="form-control" id="total<?=$z; ?>" name="total[]" step="1" placeholder="Precio ($.150)">
+                        <input type="number" class="form-control" id="total<?=$z; ?>" name="total[]" step="0.01" placeholder="Precio ($.150)">
                         <span id="error_total<?=$z; ?>" class="errors"></span>
                       </div>
                     </div>
@@ -277,6 +348,10 @@
 <?php if(!empty($response)): ?>
 <input type="hidden" class="responses" value="<?php echo $response ?>">
 <?php endif; ?>
+<?php if(!empty($rutaPdfSalidas)): ?>
+<input type="hidden" class="rutaSalida" value="<?php echo $rutaPdfSalidas; ?>">
+<?php endif; ?>
+
 
 <style>
 .errors{
@@ -295,7 +370,6 @@ $(document).ready(function(){
 
   var response = $(".responses").val();
   if(response==undefined){
-
   }else{
     if(response == "1"){
       swal.fire({
@@ -303,7 +377,13 @@ $(document).ready(function(){
           title: '¡Datos guardados correctamente!',
           confirmButtonColor: "#ED2A77",
       }).then(function(){
-        window.location = "?route=Entradas";
+        var rutaSalida = $(".rutaSalida").val();
+        if(rutaSalida==undefined){
+        }else{
+          // alert(rutaSalida);
+          window.open(`?${rutaSalida}`, '_blank');
+        }
+        window.location = "?route=Salidas&action=Ver";
       });
     }
     if(response == "2"){
@@ -319,6 +399,11 @@ $(document).ready(function(){
   $(".box-inventarios").removeClass("d-none");
   $(".box-proveedoresx").hide();
   $(".box-proveedoresx").removeClass("d-none");
+  $(".box-leyendaVentas").hide();
+  $(".box-leyendaVentas").removeClass("d-none");
+  $(".box-leyendaDes").hide();
+  $(".box-leyendaDes").removeClass("d-none");
+  
   $("#tipoInv").on('change', function(){
     var tpInv = $(this).val();
     var transaccion = $('#transaccion').val();
@@ -359,16 +444,29 @@ $(document).ready(function(){
   $("#transaccion").on('change', function(){
     var tpInv = $("#tipoInv").val();
     var transaccion = $('#transaccion').val();
+    // if()
+    if(transaccion!=""){
+      var numControl = parseInt($("#numero_control_"+transaccion).val());
+      $("#numero_documento").val(numControl);
+    }else{
+      $("#numero_documento").val(0);
+    }
+
     var tpInvs = "";
     $(".box-inventario").hide();
     $("#cantidad_elementos").val(0);
-    $(".box-proveedoress").hide();
-    if(transaccion=="Venta"){
-      tpInvs = "Clientes";
-      $(`.box-proveedores${tpInvs}`).show();
+    $(".box-proveedoress").slideUp();
+    $(".box-leyendaVentas").slideUp();
+    $(".box-leyendaDes").slideUp();
+    // alert(transaccion.toLowerCase());
+    if(transaccion.toLowerCase()=="venta"){
+      $(".box-leyendaVentas").slideDown();
+    }else if(transaccion.toLowerCase()=="desincorporacion"){
+      $(".box-leyendaDes").slideDown();
     }else{
       // tpInvs = tpInv;
     }
+
     $(".transaccion_prod").removeAttr("disabled style");
     $(".transaccion_comp").removeAttr("disabled style");
     var inventarios = "";
@@ -393,15 +491,51 @@ $(document).ready(function(){
     }
     // $(".elementsInventario").html();
   });
+  $("#leyenda").on('change', function(){
+    var tpInv = $("#tipoInv").val();
+    var transaccion = $('#transaccion').val();
+    var leyenda = $('#leyenda').val();
+
+    var tpInvs = "";
+    // $(".box-inventario").hide();
+    // $("#cantidad_elementos").val(0);
+    $(".box-proveedoress").hide();
+    
+    if(transaccion=="Venta"){
+      if(leyenda=="Credito Style"){
+        tpInvs = "Empleados";
+      }else if(leyenda=="Obsequio a terceros" || leyenda=="Consumo Interno"){
+        tpInvs = "Autorizado";
+      } else if(leyenda=="Venta" || leyenda=="Promociones"){
+        tpInvs = "Clientes";
+      } else {
+        tpInvs = "ClientesAutorizado";
+      }
+      $(`.box-proveedores${tpInvs}`).show();
+    }else{
+      // tpInvs = tpInv;
+    }
+    
+    // $(".elementsInventario").html();
+  });
   $("#almacen").on('change', function(){
     var tpInv = $("#tipoInv").val();
     var transaccion = $('#transaccion').val();
+    var leyenda = $('#leyenda').val();
     var tpInvs = "";
     $(".box-inventario").hide();
     $("#cantidad_elementos").val(0);
     $(".box-proveedoress").hide();
     if(transaccion=="Venta"){
-      tpInvs = "Clientes";
+      if(leyenda=="Credito Style"){
+        tpInvs = "Empleados";
+      }else if(leyenda=="Obsequio a terceros" || leyenda=="Consumo Interno"){
+        tpInvs = "Autorizado";
+      } else if(leyenda=="Venta" || leyenda=="Promociones"){
+        tpInvs = "Clientes";
+      } else {
+        tpInvs = "ClientesAutorizado";
+      }
       $(`.box-proveedores${tpInvs}`).show();
     }else{
       // tpInvs = tpInv;
@@ -646,22 +780,21 @@ function validar(){
     $("#error_fecha_documento").html("");
   }
   // /*===================================================================*/
-  // /*===================================================================*/
-  // var rfecha_vencimiento = false;
-  // if(transaccion=="Desincorporacion"){
-  //   var fecha_vencimiento = $("#fecha_vencimiento").val();
-  //   rfecha_vencimiento = false;
-  //   if(fecha_vencimiento==""){
-  //     rfecha_vencimiento=false;
-  //     $("#error_fecha_vencimiento").html("Debe seleccionar la fecha de vencimiento");
-  //   }else{
-  //     rfecha_vencimiento=true;
-  //     $("#error_fecha_vencimiento").html("");
-  //   }
-  // }else{
-  //   $("#error_fecha_vencimiento").html("");
-  //   rfecha_vencimiento = true;
-  // }
+
+
+  if(transaccion=="Venta"){
+    var rleyenda = false;
+    var leyenda = $("#leyenda").val();
+    if(leyenda==""){
+      rleyenda=false;
+      $("#error_leyenda").html("Debe seleccionar un concepto de venta");
+    }else{
+      rleyenda=true;
+      $("#error_leyenda").html("");
+    }
+  }else{
+    var rleyenda = true;
+  }
   // /*===================================================================*/
   
   /*===================================================================*/
@@ -690,13 +823,33 @@ function validar(){
   var provecliente = "";
   var rproveedor = false;
   if(transaccion=="Venta"){
-    tpInvs = "Clientes";
-    provecliente = "cliente";
-    var proveedor = $("#proveedor"+tpInvs).val();
+    var proveedor = "";
+    // if(leyenda=="Credito Style"){
+    //   tpInvs = "Empleados";
+    //   provecliente = "empleado";
+    // }else{
+    //   tpInvs = "Clientes";
+    //   provecliente = "cliente";
+    // }
+    if(leyenda=="Credito Style"){
+      tpInvs = "Empleados";
+      provecliente = "empleado";
+    }else if(leyenda=="Obsequio a terceros" || leyenda=="Consumo Interno"){
+      tpInvs = "Autorizado";
+      provecliente = "Personal autorizado";
+    } else if(leyenda=="Venta" || leyenda=="Promociones"){
+      tpInvs = "Clientes";
+      provecliente = "cliente";
+    } else {
+      tpInvs = "ClientesAutorizado";
+      provecliente = "cliente";
+    }
+    // provecliente = "cliente";
+    proveedor = $("#proveedor"+tpInvs).val();
     rproveedor = false;
     if(proveedor==""){
       rproveedor=false;
-      $("#error_proveedor"+tpInvs).html("Debe seleccionar un "+provecliente+" de inventario");
+      $("#error_proveedor"+tpInvs).html("Debe seleccionar un "+provecliente+"");
     }else{
       rproveedor=true;
       $("#error_proveedor"+tpInvs).html("");

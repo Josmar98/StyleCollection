@@ -166,48 +166,79 @@
                           <td colspan="3">
                             NOMBRES Y APELLIDOS:
                             <span style="margin-left:10px;margin-right:10px;"></span>
-                            <?=$pedido['primer_nombre']." ".$pedido['segundo_nombre']." ".$pedido['primer_apellido']." ".$pedido['segundo_apellido']?>
+                            <?=$persona['primer_nombre']." ".$persona['segundo_nombre']." ".$persona['primer_apellido']." ".$persona['segundo_apellido']?>
                           </td>
                           <td colspan="2">
                             CEDULA:
                             <span style="margin-left:10px;margin-right:10px;"></span>
-                            <?=number_format($pedido['cedula'],0,'','.')?>
+                            <?=number_format($persona['cedula'],0,'','.')?>
                           </td>
                         </tr>
                         <tr>
                           <td colspan="3">
                             DIRECCION:
                             <span style="margin-left:10px;margin-right:10px;"></span>
-                            <?=$pedido['direccion']?>
+                            <?=$persona['direccion']?>
                           </td>
                           <td colspan="2">
                             TELEFONO: 
                             <span style="margin-left:10px;margin-right:10px;"></span>
                             <?php 
-                              echo separateDatosCuentaTel($pedido['telefono']);
-                              if(strlen($pedido['telefono2'])>5){
+                              echo separateDatosCuentaTel($persona['telefono']);
+                              if(strlen($persona['telefono2'])>5){
 
-                                echo " / ".separateDatosCuentaTel($pedido['telefono2']);
+                                echo " / ".separateDatosCuentaTel($persona['telefono2']);
                               }
                             ?> 
                           </td>
                         </tr>
+                        <tr>
+                            <td colspan="5">
+                              Almacenes:
+                              <span style="margin-left:10px;margin-right:10px;"></span>
+                              <select class="form-control select2 almacenes" name="almacen" id="almacen" style="width:100%;">
+                                <option value=""></option>
+                                <?php
+                                  foreach ($almacenes as $alm) { 
+                                    if(!empty($alm['id_almacen'])){
+                                      ?>
+                                      <option <?php if($notaP['id_almacen']==$alm['id_almacen']){ echo "selected='selected'"; } ?> value="<?=$alm['id_almacen']; ?>"><?=$alm['nombre_almacen']; ?></option>
+                                      <?php
+                                    }
+                                  }
+                                ?>
+                              </select>
+                              <span class="errors" id="error_almacen"></span>
+                            </td>
+                          </tr>
+                          <tr>
+                              <td colspan="5">
+                                <span style="text-align:center;display:block;font-size:0.8em;">
+                                  <label for="detalleObservacion" style='text-align:left;display:block;'>Observación</label>
+                                  <input type="text" class="form-control" id="detalleObservacion" name="detalleObservacion" maxlength="400" value="<?=$notaP['observacion']; ?>">
+                                  <!-- <small> -->
+                                  <!-- </small> -->
+                                </span>
+                              </td>
+                            </tr>
                       </table>
                     <!-- </div> -->
                   </div>
                 </div>
                 <div class="">
                   <div class="col-xs-12">
-                    <span><b style="color:<?=$fucsia; ?>;">Nota:</b> <b>Deberá llenar todas las opciones del renglón, pidiendo omitir únicamente el concepto, de lo contrario no se guardará el registro.</b></span>
+                    <span><b style="color:<?=$fucsia; ?>;">Nota:</b> <b>Deberá llenar todas las opciones del renglón, de lo contrario no se guardará el registro.</b></span>
                     <div class="table-responsive">
                       <table class="table table-bordered text-left table-striped table-hover" id="">
                         <thead style="background:#DDD;font-size:1.05em;">
                           <tr>
                             <th style="text-align:center;width:8%;">Cantidad</th>
-                            <th style="text-align:center;width:14%;">Tipo de Premio</th>
-                            <th style="text-align:left;width:34%;">Descripcion</th>
-                            <th style="text-align:left;width:38%;">Concepto</th>
-                            <th style="text-align:left;width:6%;"></th>
+                              <th style="text-align:center;width:14%;">Tipo de Premio</th>
+                              <th style="text-align:left;width:25%;">Descripcion</th>
+                              <th style="text-align:left;width:25%;">Concepto</th>
+                              <th style="text-align:left;width:15%;">Precios Venta</th>
+                              <th style="text-align:left;width:15%;">Precios Nota</th>
+                              <th style="text-align:left;width:6%;"></th>
                           </tr>
                           <style>
                             .col1{text-align:center;}
@@ -222,8 +253,10 @@
                               $cantidadTemp = "";
                               $tipoTemp = "";
                               $productoTemp = "";
-                              $premioTemp = "";
+                              $mercanciaTemp = "";
                               $conceptoTemp = "";
+                              $preciosVentaTemp="";
+                              $preciosNotaTemp="";
                               $opcionTemp = "";
                               if(!empty($_SESSION['cargaTemporalNotaPersonalizadaMod'])){
                                 $sessionTemp = $_SESSION['cargaTemporalNotaPersonalizadaMod'];
@@ -245,16 +278,28 @@
                                     $productoTemp=$prodT[$i];
                                   }
                                 }
-                                if(!empty($sessionTemp['premios'])){
-                                  $premT = $sessionTemp['premios'];
-                                  if(!empty($premT[$i])){
-                                    $premioTemp=$premT[$i];
+                                if(!empty($sessionTemp['mercancia'])){
+                                  $mer = $sessionTemp['mercancia'];
+                                  if(!empty($mer[$i])){
+                                    $mercanciaTemp=$mer[$i];
                                   }
                                 }
                                 if(!empty($sessionTemp['conceptos'])){
                                   $concepT = $sessionTemp['conceptos'];
                                   if(!empty($concepT[$i])){
                                     $conceptoTemp=$concepT[$i];
+                                  }
+                                }
+                                if(!empty($sessionTemp['precios_venta'])){
+                                  $precioV = $sessionTemp['precios_venta'];
+                                  if(!empty($precioV[$i])){
+                                    $preciosVentaTemp=$precioV[$i];
+                                  }
+                                }
+                                if(!empty($sessionTemp['precios_nota'])){
+                                  $precioN = $sessionTemp['precios_nota'];
+                                  if(!empty($precioN[$i])){
+                                    $preciosNotaTemp=$precioN[$i];
                                   }
                                 }
                                 if(!empty($sessionTemp['opciones'])){
@@ -273,7 +318,8 @@
                                 <select class="form-control tipos tipo<?=$i; ?> texts<?=$i; ?>" id="<?=$i; ?>" name="tipos[]">
                                   <option value=""></option>
                                   <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Productos"){ ?> selected <?php } } ?>>Productos</option>
-                                  <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Premios"){ ?> selected <?php } } ?>>Premios</option>
+                                  <!-- <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Premios"){ ?> selected <?php } } ?>>Premios</option> -->
+                                  <option <?php if(!empty($tipoTemp) && $tipoTemp!=""){ if($tipoTemp=="Mercancia"){ ?> selected <?php } } ?>>Mercancia</option>
                                 </select>
                               </td>
                               <td class="col3">
@@ -288,18 +334,24 @@
                                   </select>
                                 </div>
 
-                                <div class="box-premios box-premio<?=$i; ?> <?php if($tipoTemp=="Premios"){}else{ echo "d-none"; } ?>">
-                                  <select class="form-control select2 premios premio<?=$i; ?> textsOp<?=$i; ?>" style="width:100%;" name="premios[]">
+                                <div class="box-mercancias box-mercancia<?=$i; ?> <?php if($tipoTemp=="Mercancia"){}else{ echo "d-none"; } ?>">
+                                  <select class="form-control select2 mercancias mercancia<?=$i; ?> textsOp<?=$i; ?>" style="width:100%;" name="mercancia[]">
                                     <option value=""></option>
-                                    <?php foreach ($premios as $prem){ ?>
-                                      <option <?php if($prem['id_premio']==$premioTemp){ echo "selected"; } ?> value="<?=$prem['id_premio']; ?>"><?=$prem['nombre_premio']; ?></option>
-                                    <?php } ?>
+                                    <?php foreach ($mercancia as $mer){ if(!empty($mer['id_mercancia'])){ ?>
+                                      <option <?php if($mer['id_mercancia']==$mercanciaTemp){ echo "selected"; } ?> value="<?=$mer['id_mercancia']; ?>"><?=$mer['mercancia']; ?></option>
+                                    <?php } } ?>
                                   </select>
                                 </div>
                               </td>
                               <td class="col4">
                                 <input type="text" class="form-control conceptos concepto<?=$i; ?> texts<?=$i; ?>" name="conceptos[]"  <?php if(!empty($conceptoTemp) && $conceptoTemp!=""){ ?> value="<?=$conceptoTemp; ?>" <?php } ?> maxlength="250">
                               </td>
+                              <td class="col5">
+                                  <input type="number" step="0.01" class="form-control preciosVenta precioVenta<?=$i; ?> texts<?=$i; ?>" name="precios_venta[]" <?php if(!empty($preciosVentaTemp) && $preciosVentaTemp!=""){ ?> value="<?=$preciosVentaTemp; ?>" <?php } ?>>
+                                </td>
+                                <td class="col6">
+                                  <input type="number" step="0.01" class="form-control preciosNota precioNota<?=$i; ?> texts<?=$i; ?>" name="precios_nota[]" <?php if((!empty($cantidadTemp) && $cantidadTemp!="") && (!empty($tipoTemp) && $tipoTemp!="")){ ?> value="<?=$preciosNotaTemp; ?>" <?php } ?>>
+                                </td>
                               <td>
                                 <select class="opciones opcion<?=$i; ?>" name="opts[<?=$i; ?>]" id="<?=$i; ?>">
                                   <option <?php if(!empty($opcionTemp) && $opcionTemp!=""){ if($opcionTemp=="Y"){ ?> selected <?php } } ?> value="Y">SI</option>
@@ -403,15 +455,15 @@ $(document).ready(function(){
     var val = $(this).val();
     $(".ids"+id).hide();
     $(".box-producto"+id).hide();
-    $(".box-premio"+id).hide();
+    $(".box-mercancia"+id).hide();
     if(val==""){
       $(".ids"+id).show();
     }
     if(val=="Productos"){
       $(".box-producto"+id).show();
     }
-    if(val=="Premios"){
-      $(".box-premio"+id).show();
+    if(val=="Mercancia"){
+      $(".box-mercancia"+id).show();
     }
   });
   $(".cargarCantidad").click(function(){
@@ -425,15 +477,19 @@ $(document).ready(function(){
     var cantidades = Array();
     var tipos = Array();
     var productos = Array();
-    var premios = Array();
+    var mercancia = Array();
     var conceptos = Array();
+    var precios_venta = Array();
+    var precios_nota = Array();
     var opciones = Array();
     for (var i = 0; i < cant; i++) {
       cantidades[i] = $(".cantidad"+i).val();
       tipos[i] = $(".tipo"+i).val();
       productos[i] = $(".producto"+i).val();
-      premios[i] = $(".premio"+i).val();
+      mercancia[i] = $(".mercancia"+i).val();
       conceptos[i] = $(".concepto"+i).val();
+      precios_venta[i] = $(".precios_venta"+i).val();
+      precios_nota[i] = $(".precios_nota"+i).val();
       opciones[i] = $(".opcion"+i).val();
     }
     $.ajax({
@@ -444,8 +500,10 @@ $(document).ready(function(){
         cantidades: cantidades,
         tipos: tipos,
         productos: productos,
-        premios: premios,
+        mercancia: mercancia,
         conceptos: conceptos,
+        precios_venta: precios_venta,
+        precios_nota: precios_nota,
         opciones: opciones,
       },
       success: function(response){
@@ -500,7 +558,7 @@ $(document).ready(function(){
 
   $(".enviar").click(function(){
     var response = validar();
-    var response = true;
+    // var response = true;
 
     if(response == true){
       $(".btn-enviar").attr("disabled");
@@ -580,19 +638,27 @@ function Capitalizar(str){
 function validar(){
   $(".btn-enviar").attr("disabled");
   /*===================================================================*/
-  var selected = parseInt($("#selectedPedido").val());
-  var rselected = false;
-  if(selected > 0){
-    rselected = true;
-    $(".error_selected_pedido").html("");
+  // var selected = parseInt($("#selectedPedido").val());
+  // var rselected = false;
+  // if(selected > 0){
+  //   rselected = true;
+  //   $(".error_selected_pedido").html("");
+  // }else{
+  //   rselected = false;
+  //   $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+  // }
+  /*===================================================================*/
+
+  /*===================================================================*/
+  var almacen = $("#almacen").val();
+  var ralmacen = false;
+  if(almacen==""){
+    ralmacen=false;
+    $("#error_almacen").html("Debe seleccionar un almacén");
   }else{
-    rselected = false;
-    $(".error_selected_pedido").html("Debe Seleccionar un Pedido");      
+    ralmacen=true;
+    $("#error_almacen").html("");
   }
-  /*===================================================================*/
-
-  /*===================================================================*/
-
   // var cantidad = $("#cantidad").val();
   // var rcantidad = checkInput(cantidad, numberPattern);
   // if( rcantidad == false ){
@@ -605,10 +671,10 @@ function validar(){
   //   $("#error_cantidad").html("");
   // }
 
-
   /*===================================================================*/
   var result = false;
-  if( rselected==true){
+  // if( rselected==true && ralmacen==true){
+  if(ralmacen==true){
     result = true;
   }else{
     result = false;
